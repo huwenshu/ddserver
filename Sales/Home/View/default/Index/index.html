@@ -1,0 +1,48 @@
+<extend name="Public/base"/>
+
+<block name="sidebar"></block>
+
+<block name="style">
+    <style>
+        body{padding: 0}
+
+        .parkitem{list-style:none;width:490px;padding:5px 0 5px 10px;}
+
+        .gray {background:#ddd;}
+    </style>
+</block>
+
+<block name="body">
+    <!-- 主体 -->
+    <div id="indexMain" class="index-main">
+       <form action="{:U('index')}" method="get">
+                <input type="search" name="searchpark" placeholder="搜索你的停车场" />
+                <input type="submit" />
+                <a href="{:U('parkinfo')}">添加停车场</a>
+        </form>
+        <br/>
+        <div style="border-top:1px solid #000;width:500px;height:1px;"> </div>
+        <?php 
+        foreach ($parks_info as $key => $value) {
+            echo "<li class='parkitem' alt='".U('parkinfo')."/parkid/".$value['id']."/' ><p>".$value['name']."</p><p>地址：".$value['address']."</p></li>";
+            echo '<div style="border-top:1px dashed #999;width:500px;height:1px;"> </div>';
+        }
+
+        ?>
+       
+    </div>
+</block>
+
+<block name="script">
+<script type="text/javascript">
+    $(function(){
+        $('.sidebar').remove();
+        $('.parkitem').click(function(){
+            var url= $(this).attr("alt");
+            location.href = url;
+        });
+
+        $(".parkitem").hover(function() {$(this).addClass("gray")}, function() {$(this).removeClass("gray")});
+    });
+</script>
+</block>
