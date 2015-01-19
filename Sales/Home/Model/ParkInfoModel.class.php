@@ -62,6 +62,8 @@ class ParkInfoModel extends Model {
             $result = $parkInfo['id'];
         } else {
             /* 添加停车场数据 */
+            $parkInfo['creater'] = 'admin';
+            $parkInfo['createtime'] = date('Y-m-d H:i:s');
             if($this->create($parkInfo)){
                 $result = $this->add();
             } else {

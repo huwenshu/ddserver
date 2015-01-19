@@ -40,7 +40,8 @@ class ContactInfoModel extends Model {
         $dataList = array();
         for ($i=0; $i < $count ; $i++) { 
             $dataList[] = array('parkid' => $parkid,'name' => $contactinfo['contactname'][$i], 'gender' => $contactinfo['contactgender'][$i],
-                                'telephone' => $contactinfo['contactphone'][$i], 'job' => $contactinfo['contactjob'][$i]);
+                                'telephone' => $contactinfo['contactphone'][$i], 'job' => $contactinfo['contactjob'][$i], 'creater' => 'admin',
+                                'createtime' => date('Y-m-d H:i:s'));
         }
         $result = $this->addAll($dataList); 
 
