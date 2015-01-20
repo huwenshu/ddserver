@@ -23,20 +23,27 @@
             <td><input type="text" id="enterplace" name="address" value= "{$park_info[address]}" /> </td>
         </tr>
         <tr>
-            <td><label for="parkstyle">停车场类型：</label></td>
-     
-            <td> <?php  
+            <td colspan="2"><label for="parkstyle">停车场类型：</label></td>
+            <!--<td> </td>-->
+        </tr>
+        <tr>
+            <td colspan="2">
+                <?php
                 $parkstyles = C('PARK_STYLE');
                 $mystyle = $park_info[style];
                 foreach($parkstyles as $parkstyle => $value){
-                    $token = '|'.$parkstyle.'|';
-                    $checked = "";
-                    if (preg_match($token,$mystyle)) {
-                         $checked = "checked";
-                     } 
-                    echo '<input type="checkbox" name="parkstyle[]" value="'.$parkstyle.'" '.$checked.' /><span style="display: inline-block;min-width: 35%">'.$value.'</span>';
+                $token = '|'.$parkstyle.'|';
+                $checked = "";
+                if (preg_match($token,$mystyle)) {
+                $checked = "checked";
                 }
-            ?></td>
+                echo '<input type="checkbox" name="parkstyle[]" value="'.$parkstyle.'" '.$checked.' /><span style="display: inline-block;min-width: 40%">'.$value.'</span>';
+                }
+                ?>
+            </td>
+        </tr>
+        <tr>
+            <td colspan="2"><br></td>
         </tr>
         <tr>
             <td><label for="spacesum">总车位数：</label></td>
@@ -48,11 +55,21 @@
         </tr>
         <tr>
             <td><label for="chargingrules">计费规则：</label></td>
-            <td><input type="text" id="chargingrules" name="chargingrules" value= "{$park_info[chargingrules]}" /> </td>
+            <!--<td><input type="text" id="chargingrules" name="chargingrules" value= "" /> </td>-->
+        </tr>
+        <tr>
+            <td colspan="2">
+                <textarea id="chargingrules" name="chargingrules" rows="5">{$park_info[chargingrules]}</textarea>
+            </td>
         </tr>
         <tr>
             <td><label for="note">备注说明：</label></td>
-            <td><input type="text" id="note" name="note" value= "{$park_info[note]}" /> </td>
+            <!--<td><input type="text" id="note" name="note" value= "{$park_info[note]}" /> </td>-->
+        </tr>
+        <tr>
+            <td colspan="2">
+                <textarea id="note" name="note" rows="5">{$park_info[note]}</textarea>
+            </td>
         </tr>
          <tr>
             <td><label for="shortname">停车场缩写：</label></td>
