@@ -13,10 +13,10 @@
     <div id="indexMain" class="index-main">
     <form action="{:U('parkinfo')}" method="post">
     <input type="hidden"  name="id" value="{$park_info[id]}" /> 
-    <table>
+    <table style="display: flex">
         <tr>
             <td><label for="parkname">停车场名称：</label></td>
-            <td><input type="text" id="parkname" name="name" value="{$park_info[name]}" /> </td>
+            <td style="width: 100px"><input type="text" id="parkname" name="name" value="{$park_info[name]}" /> </td>
         </tr>
         <tr>
             <td><label for="enterplace">入口地址：</label></td>
