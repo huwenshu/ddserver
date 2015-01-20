@@ -237,6 +237,16 @@ body{
     /*margin: 0 20px;*/
     padding-top: 55px;
 }
+.index-main table label{
+
+}
+.index-main table input{
+    width: auto;
+}
+.index-main table input[type=checkbox]{
+    display: inline-block;
+    margin-left: 10px;
+}
 /* 首页数据 */
 .top-columns {
     margin: 0 0 5px;
