@@ -34,7 +34,7 @@
                     if (preg_match($token,$mystyle)) {
                          $checked = "checked";
                      } 
-                    echo '<input type="checkbox" name="parkstyle[]" value="'.$parkstyle.'" '.$checked.' />'.$value;
+                    echo '<input type="checkbox" name="parkstyle[]" value="'.$parkstyle.'" '.$checked.' /><span style="display: inline-block;min-width: 40%">'.$value.'</span>';
                 }
             ?></td>
         </tr>
