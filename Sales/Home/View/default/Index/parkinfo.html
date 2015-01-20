@@ -5,6 +5,10 @@
 <block name="style">
     <style>
         body{padding: 0}
+        .myborder{
+            border: solid 1px #ccc;
+            padding-bottom: 5px;
+        }
     </style>
 </block>
 
@@ -54,7 +58,7 @@
             <td><input type="text" id="opentime" name="opentime" value= "{$park_info[opentime]}" /> </td>
         </tr>
         <tr>
-            <td><label for="chargingrules">计费规则：</label></td>
+            <td colspan="2"><label for="chargingrules">计费规则：</label></td>
             <!--<td><input type="text" id="chargingrules" name="chargingrules" value= "" /> </td>-->
         </tr>
         <tr>
@@ -63,7 +67,7 @@
             </td>
         </tr>
         <tr>
-            <td><label for="note">备注说明：</label></td>
+            <td colspan="2"><label for="note">备注说明：</label></td>
             <!--<td><input type="text" id="note" name="note" value= "{$park_info[note]}" /> </td>-->
         </tr>
         <tr>
@@ -90,7 +94,7 @@
                 <?php
                     $contacts = $park_info[Contact];
                     foreach ($contacts as $key => $value) {
-                        echo  "<li>姓名：<input type='text'  name='contactname[]' value='".$value['name']."'/> 性别：<select  name='contactgender[]'><option value='1'".gender(0,$value["gender"]).">男</option><option value='0'".gender(1,$value["gender"]).">女</option></select> 电话：<input type='text'  name='contactphone[]' value='".$value['telephone']."' /> 职务：<input type='text'  name='contactjob[]' value='".$value['job']."' /> <button type='button' class='removeContact'>删除</button></li>";
+                        echo  "<li class='myborder'>姓名：<input type='text'  name='contactname[]' value='".$value['name']."'/> 性别：<select  name='contactgender[]'><option value='1'".gender(0,$value["gender"]).">男</option><option value='0'".gender(1,$value["gender"]).">女</option></select> 电话：<input type='text'  name='contactphone[]' value='".$value['telephone']."' /> 职务：<input type='text'  name='contactjob[]' value='".$value['job']."' /> <button type='button' class='removeContact'>删除</button></li>";
                     }
 
                     function gender($value1,$value2){
@@ -122,7 +126,7 @@
     $(function(){
         $('.sidebar').remove();
         $('#addContact').click(function(){
-                var temp = "<li>姓名：<input type='text'  name='contactname[]' /> 性别：<select  name='contactgender[]'><option value='1'>男</option><option value='0' selected='selected'>女</option></select> 电话：<input type='text'  name='contactphone[]' value='' /> 职务：<input type='text'  name='contactjob[]' value='' /> <button type='button' class='removeContact'>删除</button></li>";
+                var temp = "<li class='myborder'>姓名：<input type='text'  name='contactname[]' /> 性别：<select  name='contactgender[]'><option value='1'>男</option><option value='0' selected='selected'>女</option></select> 电话：<input type='text'  name='contactphone[]' value='' /> 职务：<input type='text'  name='contactjob[]' value='' /> <button type='button' class='removeContact'>删除</button></li>";
                 var row = $(temp);
                 row.find('.removeContact').click(function(){
                     $(this).parent().remove();
