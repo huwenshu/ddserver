@@ -3,6 +3,27 @@
     <head>
         <meta charset="UTF-8">
         <title>嘟嘟销售系统</title>
+        <script>
+            var deviceAgent = navigator.userAgent.toLowerCase();
+            var agentID = deviceAgent.match(/(iphone|ipod|ipad|android)/) || '';
+            var mobile = {
+                iphone:agentID.indexOf("iphone")>=0
+                ,android:agentID.indexOf("android")>=0
+                ,ipad:agentID.indexOf("ipad")>=0
+                ,ipad:agentID.indexOf("ipod")>=0
+            }
+            if(mobile.iphone){
+                //alert('iphone');
+                document.write('<meta name="viewport" content="width=device-width, initial-scale=01, user-scalable=0,minimal-ui">');
+            }else if(mobile.android){
+                //alert('android');
+                document.write('<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">');
+                //document.write('<meta name="viewport" content="target-densitydpi=device-dpi">');
+            }else{
+                //alert('other');
+                document.write('<meta name="viewport" content="width=device-width, initial-scale=0.5, user-scalable=0,minimal-ui">');
+            }
+        </script>
         <link rel="stylesheet" type="text/css" href="__CSS__/login.css" media="all">
  
     </head>
@@ -12,7 +33,7 @@
             <!-- 主体 -->
             <div class="login-body">
                 <div class="login-main pr">
-                    <form action="{:U('login')}" method="post" class="login-form">
+                    <form action="{:U('login')}" method="post" class="login-form" style="max-width: 100%;box-sizing: border-box;">
                         <h3 class="welcome"><i class="login-logo"></i>嘟嘟销售系统</h3>
                         <div id="itemBox" class="item-box">
                             <div class="item">

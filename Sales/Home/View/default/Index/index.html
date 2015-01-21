@@ -15,20 +15,28 @@
 <block name="body">
     <!-- 主体 -->
     <div id="indexMain" class="index-main">
-       <form action="{:U('index')}" method="get">
-                <input type="search" name="searchpark" placeholder="搜索你的停车场" />
-                <input type="submit" />
-                <a href="{:U('parkinfo')}">添加停车场</a>
-        </form>
-        <br/>
-        <div style="border-top:1px solid #000;width:500px;height:1px;"> </div>
-        <?php 
-        foreach ($parks_info as $key => $value) {
-            echo "<li class='parkitem' alt='".U('parkinfo')."/parkid/".$value['id']."/' ><p>".$value['name']."</p><p>地址：".$value['address']."</p></li>";
-            echo '<div style="border-top:1px dashed #999;width:500px;height:1px;"> </div>';
-        }
+        <ul class="mui-table-view">
+            <li class="mui-table-view-cell">
+               <form action="{:U('index')}" method="get">
+                   <input type="search" name="searchpark" placeholder="搜索你的停车场" />
 
+                   <table style="width: 100%;table-layout: fixed">
+                       <tr>
+                           <td><a class="mui-btn mui-btn-success" href="{:U('parkinfo')}">添加停车场</a></td>
+                           <td style="width: 50%"><input type="submit" style="float: right" value="搜索" /></td>
+                       </tr>
+                   </table>
+                </form>
+            </li>
+
+        <?php 
+            foreach ($parks_info as $key => $value) {
+                //echo "<li class='parkitem' alt='".U('parkinfo')."/parkid/".$value['id']."/' ><p>".$value['name']."</p><p>地址：".$value['address']."</p></li>";
+                echo "<li name='parkitem' class='mui-table-view-cell' alt='".U('parkinfo')."/parkid/".$value['id']."/' ><a class='mui-navigate-right'><p>".$value['name']."</p><p>地址：".$value['address']."</p></a></li>";
+                //echo '<div style="border-top:1px dashed #999;width:500px;height:1px;"> </div>';
+            }
         ?>
+        </ul>
        
     </div>
 </block>
@@ -37,7 +45,7 @@
 <script type="text/javascript">
     $(function(){
         $('.sidebar').remove();
-        $('.parkitem').click(function(){
+        $('[name=parkitem]').click(function(){
             var url= $(this).attr("alt");
             location.href = url;
         });

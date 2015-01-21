@@ -234,8 +234,22 @@ body{
     background-color: #f6f6f6;
 }
 .index-main {
-    margin: 0 20px;
-    padding-top: 30px;
+    /*margin: 0 20px;*/
+    padding-top: 55px;
+}
+.index-main table{
+    table-layout: FIXED;
+}
+
+.index-main table label{
+
+}
+.index-main table input{
+    width: auto;
+}
+.index-main table input[type=checkbox]{
+    display: inline-block;
+    margin-left: 10px;
 }
 /* 首页数据 */
 .top-columns {
@@ -390,7 +404,7 @@ body{
 /* 后台内页模块样式
 ------------------------------------------------- */
 .main {
-    padding:20px;
+    padding:5px;
 	background-color: #f6f6f6;
 }
 .main-title {
