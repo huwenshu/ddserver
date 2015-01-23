@@ -8,7 +8,7 @@ return array(
     /* 数据缓存设置 */
     'DATA_CACHE_PREFIX'    => 'dududriver_', // 缓存前缀
     'DATA_CACHE_TYPE'      => 'File', // 数据缓存类型
-    'DATA_CACHE_TIME'      =>  7200,
+    'DATA_CACHE_TIME'      =>  3600*24,
     
 
     /* 用户相关设置 */
@@ -19,7 +19,7 @@ return array(
     'DB_HOST'   => '127.0.0.1', // 服务器地址
     'DB_NAME'   => 'dudu_parking', // 数据库名
     'DB_USER'   => 'root', // 用户名
-    'DB_PWD'    => '1',  // 密码
+    'DB_PWD'    => '',  // 密码
     'DB_PORT'   => '3306', // 端口
     'DB_PREFIX' => 'dudu_', // 数据库表前缀
     
@@ -62,10 +62,20 @@ return array(
 
 
     'WX_API_URL'    =>  "https://api.weixin.qq.com/cgi-bin/",
-    'USERNAME_WEIXIN' => "gh_1b878e784651",
-    'APPID' =>  'wx7402a94935807c76',
-    'APPSECRET' =>  '59023166c76dbbb5d82e81318d514893' ,
-    'WEIXIN_TOKEN'  => 'DUDUPARK2015',
+
+    //自己公司微信参数
+//    'USERNAME_WEIXIN' => "gh_1b878e784651",
+//    'APPID' =>  'wx7402a94935807c76',
+//    'APPSECRET' =>  '59023166c76dbbb5d82e81318d514893' ,
+//    'WEIXIN_TOKEN'  => 'DUDUPARK2015',
+
+    //微信支付参数，采用别的公司的配置
+    'APPID'=>  'wxd3c766afb2b3b774',
+    'APPSECRET' =>  '72fcf4b7f001dc9e37abaadbcc692c21',
+    'APPKEY' => '9ur6qRqjSPf6dRS2leYVW3Hul5X8DdW6HOwUwYNBngh9IOt5FgGXgn6floIw55ga1GE1VlsLyEIwORojscP0Q73gCE6bnG6hHughGVabE5cL94BaeecBYtI9d51ipW4i',
+    'SIGNTYPE'  =>  'sha1',
+    'PARTNERKEY' => '0a870e4e9d1b1376587bd414316aed86',//通加密串
+
 
     'MENU' => array(
         'button'=>array(

@@ -18,7 +18,7 @@ return array(
     'DB_HOST'   => '127.0.0.1', // 服务器地址
     'DB_NAME'   => 'dudu_parking', // 数据库名
     'DB_USER'   => 'root', // 用户名
-    'DB_PWD'    => '1',  // 密码
+    'DB_PWD'    => '',  // 密码
     'DB_PORT'   => '3306', // 端口
     'DB_PREFIX' => 'dudu_', // 数据库表前缀
     
@@ -45,6 +45,7 @@ return array(
 
     /* SESSION 和 COOKIE 配置 */
     'SESSION_PREFIX' => 'dudu_sales', //session前缀
+    'SESSION_EXPIRE' => '300000',        //session过期时间
     'COOKIE_PREFIX'  => 'dudu_sales_', // Cookie前缀 避免冲突
     'VAR_SESSION_ID' => 'session_id',	//修复uploadify插件无法传递session_id的bug
 
@@ -71,7 +72,8 @@ return array(
         'JD' => '酒店',
         'DXCS' => '大型超市',
         'ZYSF' => '中央收费',
-        'ZDZJCR' => '自动闸机出入',
+        'ZDZJCR' => '自动闸机进入',
+        'USERFX' => '人工放行',
     ),
 
 );

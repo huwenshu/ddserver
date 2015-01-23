@@ -1,37 +1,45 @@
 <?php
-namespace Home\Controller;
+
 use Think\Controller;
-class IndexController extends Controller {
+
+class IndexController extends BaseController {
+
+	private $uid;
+	private $lat;
+	private $lng;
+
+	public function _initialize(){
+		$uid = I('get.uid');
+		$uuid = I('get.uuid');
+		$data = $this->getUsercache($uid);
+		if($data){
+			if ($data['uuid'] == $uuid) {
+				$this->uid = $uid;
+				return;
+			}
+			else{
+				$this->ajaxFail();
+			}
+		}
+		else{
+			$this->ajaxFail();
+		}
+	}
+
     public function index(){
-        $appid = "wx7402a94935807c76";
-        $basere = "http://115.29.160.95:81/Park.php/Home/Index/getOpenid/";
-        $basere = urlencode($basere);
-        $baseurl = "http://open.weixin.qq.com/connect/oauth2/authorize?appid={$appid}&redirect_uri={$basere}&response_type=code&scope=snsapi_base&state=STATE#wechat_redirect";
-        echo $baseurl;
+        $this->show('<style type="text/css">*{ padding: 0; margin: 0; } div{ padding: 4px 48px;} body{ background: #fff; font-family: "微软雅黑"; color: #333;font-size:24px} h1{ font-size: 100px; font-weight: normal; margin-bottom: 12px; } p{ line-height: 1.8em; font-size: 36px } a,a:hover,{color:blue;}</style><div style="padding: 24px 48px;"> <h1>:)</h1><p>欢迎使用 <b>ThinkPHP</b>！</p><br/>版本 V{$Think.version}</div><script type="text/javascript" src="http://ad.topthink.com/Public/static/client.js"></script><thinkad id="ad_55e75dfae343f5a1"></thinkad><script type="text/javascript" src="http://tajs.qq.com/stats?sId=9347272" charset="UTF-8"></script>','utf-8');
     }
 
-    public function getOpenid(){
-        $code = $_GET["code"];
-        $appid ="wx7402a94935807c76";
-        $secret = "59023166c76dbbb5d82e81318d514893";
-        $url = "https://api.weixin.qq.com/sns/oauth2/access_token?appid={$appid}&secret={$secret}&code={$code}&grant_type=authorization_code";
-        $ch = curl_init();
-        curl_setopt($ch, CURLOPT_URL, $url);
-        curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-        $a = curl_exec($ch);
-        $strjson = json_decode($a);
-        $openid = $strjson->openid;
-        echo "openid:".openid;
-        
-    }
-    public function test($username){
-    	$result = array(
+	//返回附近停车场接口
+
+	public function test($phone){
+     		$result = array(
 						'code'=>100,
-						'data'=>'Hello,'.$username.'!'
+						'data'=>'Hello,'.$phone.'!'
 				  );
 
-    $this->ajaxReturn($result,'jsonp');
-    exit;
-
+    		$this->ajaxReturn($result,'jsonp');
     }
+
+
 }

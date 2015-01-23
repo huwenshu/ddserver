@@ -3,7 +3,7 @@ return array(
 	//'配置项'=>'配置值'
 	'DATA_CACHE_PREFIX'    => 'dudupark_', // 缓存前缀
     'DATA_CACHE_TYPE'      => 'File', // 数据缓存类型
-    
+    'DATA_CACHE_TIME'      =>  3600*24,
 
     /* 用户相关设置 */
     'USER_MAX_CACHE'     => 1000, //最大缓存用户数
@@ -13,7 +13,7 @@ return array(
     'DB_HOST'   => '127.0.0.1', // 服务器地址
     'DB_NAME'   => 'dudu_parking', // 数据库名
     'DB_USER'   => 'root', // 用户名
-    'DB_PWD'    => '1',  // 密码
+    'DB_PWD'    => '',  // 密码
     'DB_PORT'   => '3306', // 端口
     'DB_PREFIX' => 'dudu_', // 数据库表前缀
     
@@ -44,9 +44,9 @@ return array(
     'VAR_SESSION_ID' => 'session_id',	//修复uploadify插件无法传递session_id的bug
 
     /* 后台错误页面模板 */
-    'TMPL_ACTION_ERROR'     =>  MODULE_PATH.'View/default/Public/error.html', // 默认错误跳转对应的模板文件
-    'TMPL_ACTION_SUCCESS'   =>  MODULE_PATH.'View/default/Public/success.html', // 默认成功跳转对应的模板文件
-    'TMPL_EXCEPTION_FILE'   =>  MODULE_PATH.'View/default/Public/exception.html',// 异常页面的模板文件
+//    'TMPL_ACTION_ERROR'     =>  MODULE_PATH.'View/default/Public/error.html', // 默认错误跳转对应的模板文件
+//    'TMPL_ACTION_SUCCESS'   =>  MODULE_PATH.'View/default/Public/success.html', // 默认成功跳转对应的模板文件
+//    'TMPL_EXCEPTION_FILE'   =>  MODULE_PATH.'View/default/Public/exception.html',// 异常页面的模板文件
     
     //模版主题
     'DEFAULT_THEME'  	=> 	'default',
