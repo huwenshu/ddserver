@@ -2,7 +2,8 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8b4ec7cd-ddbc-44bb-ae75-1452e6a6f80b" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Park/Home/Controller/IndexController.class.php" afterPath="$PROJECT_DIR$/Park/Home/Controller/IndexController.class.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/document/车主文档接口.docx" afterPath="$PROJECT_DIR$/document/车主文档接口.docx" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Driver/Home/Controller/IndexController.class.php" afterPath="$PROJECT_DIR$/Driver/Home/Controller/IndexController.class.php" />
     </list>
     <ignored path="ddserver.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -27,46 +28,14 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
-      <file leaf-file-name="BaseController.class.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Park/Home/Controller/BaseController.class.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-16.25" vertical-offset="420" max-vertical-offset="1080">
-              <caret line="54" column="30" selection-start-line="54" selection-start-column="23" selection-end-line="54" selection-end-column="30" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
       <file leaf-file-name="IndexController.class.php" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Park/Home/Controller/IndexController.class.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.5221239" vertical-offset="845" max-vertical-offset="1515">
-              <caret line="76" column="28" selection-start-line="76" selection-start-column="20" selection-end-line="76" selection-end-column="28" />
-              <folding>
-                <marker date="1421998560000" expanded="true" signature="776:795" placeholder="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="IndexController.class.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Driver/Home/Controller/IndexController.class.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-23.875" vertical-offset="1572" max-vertical-offset="2820">
-              <caret line="143" column="29" selection-start-line="143" selection-start-column="29" selection-end-line="143" selection-end-column="29" />
+            <state vertical-scroll-proportion="0.6637168" vertical-offset="2235" max-vertical-offset="3345">
+              <caret line="174" column="51" selection-start-line="174" selection-start-column="51" selection-end-line="174" selection-end-column="51" />
               <folding>
-                <marker date="1421924411000" expanded="true" signature="755:774" placeholder="..." />
+                <marker date="1422003783000" expanded="true" signature="812:831" placeholder="..." />
               </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="PublicController.class.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Park/Home/Controller/PublicController.class.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-21.875" vertical-offset="0" max-vertical-offset="1005">
-              <caret line="35" column="41" selection-start-line="35" selection-start-column="41" selection-end-line="35" selection-end-column="41" />
-              <folding />
             </state>
           </provider>
         </entry>
@@ -86,7 +55,6 @@
         <option value="$PROJECT_DIR$/Driver/Home/Common/Weixin/Pay/CommonUtil.class.php" />
         <option value="$PROJECT_DIR$/Driver/Home/Common/Weixin/Pay/MD5SignUtil.class.php" />
         <option value="$PROJECT_DIR$/Driver/Home/Common/Weixin/Pay/WxPayHelper.class.php" />
-        <option value="$PROJECT_DIR$/Driver/Home/Controller/IndexController.class.php" />
         <option value="$PROJECT_DIR$/Park/Home/Conf/config.php" />
         <option value="$PROJECT_DIR$/Driver/Home/Controller/BaseController.class.php" />
         <option value="$PROJECT_DIR$/Sales/Home/Conf/config.php" />
@@ -96,6 +64,7 @@
         <option value="$PROJECT_DIR$/Park/Home/Controller/BaseController.class.php" />
         <option value="$PROJECT_DIR$/Park/Home/Controller/PublicController.class.php" />
         <option value="$PROJECT_DIR$/Park/Home/Controller/IndexController.class.php" />
+        <option value="$PROJECT_DIR$/Driver/Home/Controller/IndexController.class.php" />
       </list>
     </option>
   </component>
@@ -648,14 +617,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Park/Home/Controller/PublicController.class.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-21.875" vertical-offset="0" max-vertical-offset="1005">
-          <caret line="35" column="41" selection-start-line="35" selection-start-column="41" selection-end-line="35" selection-end-column="41" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Park/Home/Controller/BaseController.class.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-16.25" vertical-offset="420" max-vertical-offset="1080">
@@ -664,22 +625,30 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Driver/Home/Controller/IndexController.class.php">
+    <entry file="file://$PROJECT_DIR$/Park/Home/Controller/IndexController.class.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-23.875" vertical-offset="1572" max-vertical-offset="2820">
-          <caret line="143" column="29" selection-start-line="143" selection-start-column="29" selection-end-line="143" selection-end-column="29" />
+        <state vertical-scroll-proportion="0.38938054" vertical-offset="920" max-vertical-offset="1515">
+          <caret line="76" column="28" selection-start-line="76" selection-start-column="20" selection-end-line="76" selection-end-column="28" />
           <folding>
-            <marker date="1421924411000" expanded="true" signature="755:774" placeholder="..." />
+            <marker date="1421998560000" expanded="true" signature="-1:-1" placeholder="..." />
           </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Park/Home/Controller/IndexController.class.php">
+    <entry file="file://$PROJECT_DIR$/Park/Home/Controller/PublicController.class.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.5221239" vertical-offset="845" max-vertical-offset="1515">
-          <caret line="76" column="28" selection-start-line="76" selection-start-column="20" selection-end-line="76" selection-end-column="28" />
+        <state vertical-scroll-proportion="0.9292035" vertical-offset="0" max-vertical-offset="1005">
+          <caret line="35" column="41" selection-start-line="35" selection-start-column="41" selection-end-line="35" selection-end-column="41" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Driver/Home/Controller/IndexController.class.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.6637168" vertical-offset="2235" max-vertical-offset="3345">
+          <caret line="174" column="51" selection-start-line="174" selection-start-column="51" selection-end-line="174" selection-end-column="51" />
           <folding>
-            <marker date="1421998560000" expanded="true" signature="776:795" placeholder="..." />
+            <marker date="1422003783000" expanded="true" signature="812:831" placeholder="..." />
           </folding>
         </state>
       </provider>
