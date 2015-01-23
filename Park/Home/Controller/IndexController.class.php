@@ -11,6 +11,7 @@ class IndexController extends BaseController {
 	public function _initialize(){
 		$uid = I('get.uid');
 		$uuid = I('get.uuid');
+		$this->uid = $uid;
 		$data = $this->getUsercache($uid);
 		if($data){
 			if ($data['uuid'] == $uuid) {
@@ -41,5 +42,39 @@ class IndexController extends BaseController {
     		$this->ajaxReturn($result,'jsonp');
     }
 
+	/*
+     *  @desc 获取预付，但未进场的列单
+    */
+	public function getEntries(){
+		$cache = $this->getUsercache($this->uid);
+		$data = $cache['data'];
+		$parkid = $data['parkid'];
 
+		$Order = M('ParkOrder');
+		$con = array('pid' => $parkid, 'state' => 0);
+		$orderData = $Order->where($con)->select();
+
+		$result = array();
+		foreach($orderData as $key => $value){
+			$tmp = array();
+			$tmp['oid'] = $value['id'];
+			$driverId = $value['uid'];
+			$Driver = M('DriverInfo');
+			$con1 = array('id' => $driverId);
+			$driverData = $Driver->where($con1)->find();
+			$tmp['carid'] = $driverData['carid'];
+			$tmp['orderTime'] = $value['startime'];
+
+			array_push($result, $tmp);
+		}
+
+		$this->ajaxOk($result);
+	}
+
+	/*
+     *  @desc 车辆进场
+    */
+	public function getEntrie(){
+
+	}
 }

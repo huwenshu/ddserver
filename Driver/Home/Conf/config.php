@@ -64,17 +64,17 @@ return array(
     'WX_API_URL'    =>  "https://api.weixin.qq.com/cgi-bin/",
 
     //自己公司微信参数
-//    'USERNAME_WEIXIN' => "gh_1b878e784651",
-//    'APPID' =>  'wx7402a94935807c76',
-//    'APPSECRET' =>  '59023166c76dbbb5d82e81318d514893' ,
-//    'WEIXIN_TOKEN'  => 'DUDUPARK2015',
+    'USERNAME_WEIXIN' => "gh_1b878e784651",
+    'APPID' =>  'wx7402a94935807c76',
+    'APPSECRET' =>  '59023166c76dbbb5d82e81318d514893' ,
+    'WEIXIN_TOKEN'  => 'DUDUPARK2015',
 
     //微信支付参数，采用别的公司的配置
-    'APPID'=>  'wxd3c766afb2b3b774',
-    'APPSECRET' =>  '72fcf4b7f001dc9e37abaadbcc692c21',
-    'APPKEY' => '9ur6qRqjSPf6dRS2leYVW3Hul5X8DdW6HOwUwYNBngh9IOt5FgGXgn6floIw55ga1GE1VlsLyEIwORojscP0Q73gCE6bnG6hHughGVabE5cL94BaeecBYtI9d51ipW4i',
-    'SIGNTYPE'  =>  'sha1',
-    'PARTNERKEY' => '0a870e4e9d1b1376587bd414316aed86',//通加密串
+//    'APPID'=>  'wxd3c766afb2b3b774',
+//    'APPSECRET' =>  '72fcf4b7f001dc9e37abaadbcc692c21',
+//    'APPKEY' => '9ur6qRqjSPf6dRS2leYVW3Hul5X8DdW6HOwUwYNBngh9IOt5FgGXgn6floIw55ga1GE1VlsLyEIwORojscP0Q73gCE6bnG6hHughGVabE5cL94BaeecBYtI9d51ipW4i',
+//    'SIGNTYPE'  =>  'sha1',
+//    'PARTNERKEY' => '0a870e4e9d1b1376587bd414316aed86',//通加密串
 
 
     'MENU' => array(
@@ -82,7 +82,7 @@ return array(
         array(
             'type' => 'view',
             'name' => '现场',
-            'url' => 'http://115.29.160.95/html/secenhtml/index.html' 
+            'url' => 'http://duduche.me/html/secenhtml/index.html'
         ),
         array(
             'name' => '用户',
@@ -90,24 +90,24 @@ return array(
                 array(
                     'type' => 'view',
                     'name' => '车位',
-                    'url' => 'http://115.29.160.95/html/userhtml/index.html?m=map'
+                    'url' => 'http://duduche.me/html/userhtml/index.html?m=map'
                 ),
                 array(
                     'type' => 'view',
                     'name' => '车位（找）',
-                    'url' => 'http://115.29.160.95/html/userhtml/index.html?m=mapsearch'
+                    'url' => 'http://duduche.me/html/userhtml/index.html?m=mapsearch'
                 ),
                  array(
                     'type' => 'view',
                     'name' => '我的订单',
-                    'url' => 'http://115.29.160.95/html/userhtml/index.html?m=myorder'
+                    'url' => 'http://duduche.me/html/userhtml/index.html?m=myorder'
                 ),
             )
         ),
         array(
             'type' => 'view',
             'name' => '销售',
-            'url' => 'http://115.29.160.95:81/sales.php' 
+            'url' => 'http://duduche.me/sales.php'
         ),
         )
     ),

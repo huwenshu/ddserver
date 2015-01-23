@@ -5,7 +5,7 @@
  */
 class BaseController extends \Think\Controller {
 
-    protected function createUUID($uid){
+    protected function createUUID($uid, $data){
         mt_srand((double)microtime()*10000);//optional for php 4.2.0 and up.
         $charid = strtoupper(md5(uniqid(rand(), true)));
         $hyphen = chr(45);// "-"
@@ -22,6 +22,7 @@ class BaseController extends \Think\Controller {
         S($cachekey,array(
             'uid' => $uid,
             'uuid' =>$uuid,
+            'data' =>$data,
         ),C('DATA_CACHE_TIME'));
 
         return $uuid;

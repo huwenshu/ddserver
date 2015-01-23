@@ -18,13 +18,28 @@ class PublicController extends BaseController {
 
         if(!empty($data)){
             $uid = $data['id'];
+            $permission = $data['jobfunction'];
         }
         else{
            $this->ajaxMsg('用户名或者密码错误！');
         }
 
-        $uuid = $this->createUUID($uid);
-        $temp = array('uid' => $uid, 'uuid' =>$uuid, 'permission' => $data['jobfunction']);
+        $ParkInfo = M('ParkInfo');
+        $con = array('shortname' => $parkname);
+        $parkInfo = $ParkInfo->where($con)->find();
+
+        if(!empty($parkInfo)){
+            $parkid = $parkInfo['id'];
+        }
+        else{
+            $this->ajaxMsg('用户名或者密码错误！');
+        }
+
+
+        $arr = array('parkid' => $parkid);
+        $uuid = $this->createUUID($uid,$arr);
+
+        $temp = array('uid' => $uid, 'uuid' =>$uuid, 'permission' => $permission);
         $this->ajaxOk($temp);
     }
 

@@ -30,6 +30,7 @@ class WeixinController extends Controller {
     	$ret = $this->doCurlGetRequest($url, $para);
     	$retData = json_decode($ret, true);
     	$token = $retData['access_token'];
+
     	return $token;
     }
 

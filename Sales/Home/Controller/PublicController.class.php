@@ -13,7 +13,7 @@ class PublicController extends \Think\Controller {
         if(IS_POST){
             // 检测验证码 
             if(!check_verify($verify)){
-                $this->error('验证码输入错误！');
+                //$this->error('验证码输入错误！');
             } 
             
             //调用 SalesAuth 模型的 login 方法，验证用户名、密码
