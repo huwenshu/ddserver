@@ -72,9 +72,25 @@ class IndexController extends BaseController {
 	}
 
 	/*
-     *  @desc 车辆进场
+     *  @desc 车辆进场，设置状态为在场
     */
-	public function setEntry(){
+	public function setEntry($oid){
+		$cache = $this->getUsercache($this->uid);
+		$data = $cache['data'];
+		$parkid = $data['parkid'];
+
+		$Order = M('ParkOrder');
+		$con = array('id' => $oid, 'pid' => $parkid);
+		$updateData['state'] = 1;
+		$orderData = $Order->where($con)->save($updateData);
+
+		if($orderData){
+			$this->ajaxOk("");
+		}
+		else{
+			$this->ajaxMsg("进场失败！");
+		}
+
 
 	}
 }
