@@ -8,24 +8,24 @@ class IndexController extends BaseController {
 	private $lat;
 	private $lng;
 
-//	public function _initialize(){
-//		$uid = I('get.uid');
-//		$uuid = I('get.uuid');
-//		$this->uid = $uid;
-//		$data = $this->getUsercache($uid);
-//		if($data){
-//			if ($data['uuid'] == $uuid) {
-//				$this->uid = $uid;
-//				return;
-//			}
-//			else{
-//				$this->ajaxFail();
-//			}
-//		}
-//		else{
-//			$this->ajaxFail();
-//		}
-//	}
+	public function _initialize(){
+		$uid = I('get.uid');
+		$uuid = I('get.uuid');
+		$this->uid = $uid;
+		$data = $this->getUsercache($uid);
+		if($data){
+			if ($data['uuid'] == $uuid) {
+				$this->uid = $uid;
+				return;
+			}
+			else{
+				$this->ajaxFail();
+			}
+		}
+		else{
+			$this->ajaxFail();
+		}
+	}
 
     public function index(){
         $this->show('<style type="text/css">*{ padding: 0; margin: 0; } div{ padding: 4px 48px;} body{ background: #fff; font-family: "微软雅黑"; color: #333;font-size:24px} h1{ font-size: 100px; font-weight: normal; margin-bottom: 12px; } p{ line-height: 1.8em; font-size: 36px } a,a:hover,{color:blue;}</style><div style="padding: 24px 48px;"> <h1>:)</h1><p>欢迎使用 <b>ThinkPHP</b>！</p><br/>版本 V{$Think.version}</div><script type="text/javascript" src="http://ad.topthink.com/Public/static/client.js"></script><thinkad id="ad_55e75dfae343f5a1"></thinkad><script type="text/javascript" src="http://tajs.qq.com/stats?sId=9347272" charset="UTF-8"></script>','utf-8');
@@ -94,9 +94,9 @@ class IndexController extends BaseController {
 		$temp['oid'] = $oid;
 		$temp['money'] = $parkinfo['prepay'];
 		$temp['state'] = 0;
-		$temp['creater'] = I('get.uid');
+		$temp['creater'] = $this->uid;
 		$temp['createtime'] = date("Y-m-d H:i:s");
-		$temp['updater'] = I('get.uid');
+		$temp['updater'] = $this->uid;
 		$prid = $Payment->add($temp);
 
 		if(empty($prid)){
@@ -154,7 +154,6 @@ class IndexController extends BaseController {
 	*/
 
 	public  function getOrder($last){
-		$this->uid =1;
 		$Order = M('ParkOrder');
 		if($last){
 			$con['uid'] = $this->uid;
@@ -164,7 +163,7 @@ class IndexController extends BaseController {
 			$con['uid'] = $this->uid;
 		}
 
-		$orderData = $Order->where($con)->select();
+		$orderData = $Order->where($con)->limit(15)->select();
 
 		$result = array();
 		foreach($orderData as $key => $value){
@@ -175,9 +174,103 @@ class IndexController extends BaseController {
 			$parkInfo = $Park->where('id = '.$value['pid'])->find();
 			$tmp['parkname'] = $parkInfo['name'];
 			$tmp['address'] = $parkInfo['address'];
+			$tmp['lat'] = $parkInfo['lat'];
+			$tmp['lng'] = $parkInfo['lng'];
 
 			array_push($result, $tmp);
 		}
+
+		$this->ajaxOk($result);
+	}
+
+	/*
+	 * @desc 查询具体订单详情
+	 * @last oid 订单号
+	*/
+
+	public  function  detailOrder($oid){
+		$Payment = M('PaymentRecord');
+		$map = array('oid' => $oid, 'state'=>1);
+		$payData = $Payment->where($map)->select();
+
+		$preSum = 0;
+		foreach($payData as $key => $value){
+			$preSum = $preSum + $value['money'];
+		}
+
+		$totalFee = 20;
+		$remainFee = $totalFee - $preSum;
+
+		$Order = M('ParkOrder');
+		$con = array('id' => $oid);
+		$orderData = $Order->where($con)->find();
+		$result['startTime'] = $orderData['startime'];
+
+		$pid = $orderData['pid'];
+		$uid = $orderData['uid'];
+
+		$ParkInfo = M('ParkInfo');
+		$con = array('id' => $pid);
+		$parkData = $ParkInfo->where($con)->find();
+		$result['address'] = $parkData['address'];
+
+		$Driver = M('DriverInfo');
+		$con = array('id' => $uid);
+		$driverData = $Driver->where($con)->find();
+		$result['carid'] = $driverData['carid'];
+
+		$result['totalFee'] = $totalFee;
+		$result['remainFee'] = $remainFee;
+
+		$this->ajaxOk($result);
+
+	}
+
+	/*
+	 * @desc 车费结算
+	 * @last int 0-所有订单/1-最后订单
+	*/
+
+	public  function checkOut($oid){
+		$Payment = M('PaymentRecord');
+		$map = array('oid' => $oid, 'state'=>1);
+		$payData = $Payment->where($map)->select();
+
+		$preSum = 0;
+		foreach($payData as $key => $value){
+			$preSum = $preSum + $value['money'];
+		}
+
+		$totalFee = 20;
+		$remainFee = $totalFee - $preSum;
+
+
+		$temp['oid'] = $oid;
+		$temp['money'] = $remainFee;
+		$temp['state'] = 0;
+		$temp['creater'] = $this->uid;
+		$temp['createtime'] = date("Y-m-d H:i:s");
+		$temp['updater'] = $this->uid;
+		$prid = $Payment->add($temp);
+
+		if(empty($prid)){
+			$this->ajaxMsg("创建支付消息失败");
+		}
+
+		$commonUtil = new \Home\Common\Weixin\Pay\CommonUtil();
+		$wxPayHelper = new \Home\Common\Weixin\Pay\WxPayHelper();
+
+		$wxPayHelper->setParameter("bank_type", "WX");
+		$wxPayHelper->setParameter("body", "预付停车费");
+		$wxPayHelper->setParameter("partner", "1220503701");
+		$wxPayHelper->setParameter("out_trade_no", $prid);
+		$wxPayHelper->setParameter("total_fee", "1");	//todo 更新成remainFee
+		$wxPayHelper->setParameter("fee_type", "1");
+		$wxPayHelper->setParameter("notify_url", "http://duduparking.com/test/test_receiver.php");
+		$wxPayHelper->setParameter("spbill_create_ip", get_client_ip());
+		$wxPayHelper->setParameter("input_charset", "UTF-8");
+
+		$result = $wxPayHelper->create_biz_package();
 
 		$this->ajaxOk($result);
 	}
