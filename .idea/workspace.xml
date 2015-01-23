@@ -2,14 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8b4ec7cd-ddbc-44bb-ae75-1452e6a6f80b" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/document/现场管理后台.docx" afterPath="$PROJECT_DIR$/document/现场管理后台.docx" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Park/Home/Controller/BaseController.class.php" afterPath="$PROJECT_DIR$/Park/Home/Controller/BaseController.class.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Park/Home/Controller/IndexController.class.php" afterPath="$PROJECT_DIR$/Park/Home/Controller/IndexController.class.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Park/Home/Controller/PublicController.class.php" afterPath="$PROJECT_DIR$/Park/Home/Controller/PublicController.class.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Sales/Home/Controller/PublicController.class.php" afterPath="$PROJECT_DIR$/Sales/Home/Controller/PublicController.class.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Driver/Home/Controller/WeixinController.class.php" afterPath="$PROJECT_DIR$/Driver/Home/Controller/WeixinController.class.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Driver/Home/Conf/config.php" afterPath="$PROJECT_DIR$/Driver/Home/Conf/config.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="ddserver.iws" />
     <ignored path=".idea/workspace.xml" />
@@ -47,10 +40,10 @@
       <file leaf-file-name="IndexController.class.php" pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/Park/Home/Controller/IndexController.class.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.7345133" vertical-offset="695" max-vertical-offset="1275">
-              <caret line="74" column="18" selection-start-line="74" selection-start-column="18" selection-end-line="74" selection-end-column="18" />
+            <state vertical-scroll-proportion="0.7345133" vertical-offset="695" max-vertical-offset="1350">
+              <caret line="74" column="73" selection-start-line="74" selection-start-column="73" selection-end-line="74" selection-end-column="73" />
               <folding>
-                <marker date="1421993708000" expanded="true" signature="776:795" placeholder="..." />
+                <marker date="1421995690000" expanded="true" signature="776:795" placeholder="..." />
               </folding>
             </state>
           </provider>
@@ -59,7 +52,7 @@
       <file leaf-file-name="PublicController.class.php" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Park/Home/Controller/PublicController.class.php">
           <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-15.0" vertical-offset="210" max-vertical-offset="990">
+            <state vertical-scroll-proportion="-10.625" vertical-offset="315" max-vertical-offset="990">
               <caret line="38" column="28" selection-start-line="38" selection-start-column="22" selection-end-line="38" selection-end-column="28" />
               <folding />
             </state>
@@ -599,14 +592,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Park/Home/Controller/PublicController.class.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-15.0" vertical-offset="210" max-vertical-offset="990">
-          <caret line="38" column="28" selection-start-line="38" selection-start-column="22" selection-end-line="38" selection-end-column="28" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Park/Home/Controller/BaseController.class.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-21.25" vertical-offset="0" max-vertical-offset="1080">
@@ -615,12 +600,20 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Park/Home/Controller/PublicController.class.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-10.625" vertical-offset="315" max-vertical-offset="990">
+          <caret line="38" column="28" selection-start-line="38" selection-start-column="22" selection-end-line="38" selection-end-column="28" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Park/Home/Controller/IndexController.class.php">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.7345133" vertical-offset="695" max-vertical-offset="1275">
-          <caret line="74" column="18" selection-start-line="74" selection-start-column="18" selection-end-line="74" selection-end-column="18" />
+        <state vertical-scroll-proportion="0.7345133" vertical-offset="695" max-vertical-offset="1350">
+          <caret line="74" column="73" selection-start-line="74" selection-start-column="73" selection-end-line="74" selection-end-column="73" />
           <folding>
-            <marker date="1421993708000" expanded="true" signature="776:795" placeholder="..." />
+            <marker date="1421995690000" expanded="true" signature="776:795" placeholder="..." />
           </folding>
         </state>
       </provider>

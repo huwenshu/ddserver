@@ -50,11 +50,15 @@ class IndexController extends BaseController {
 		$data = $cache['data'];
 		$parkid = $data['parkid'];
 
+		$Park = M('ParkInfo');
+		$con0 = array('id' => $parkid);
+		$parkData = $Park->where($con0)->select();
+
 		$Order = M('ParkOrder');
 		$con = array('pid' => $parkid, 'state' => 0);
 		$orderData = $Order->where($con)->select();
 
-		$result = array();
+		$list = array();
 		foreach($orderData as $key => $value){
 			$tmp = array();
 			$tmp['oid'] = $value['id'];
@@ -65,16 +69,17 @@ class IndexController extends BaseController {
 			$tmp['carid'] = $driverData['carid'];
 			$tmp['orderTime'] = $value['startime'];
 
-			array_push($result, $tmp);
+			array_push($list, $tmp);
 		}
 
+		$result = array('parkname' => $parkData['name'],'list' => $list);
 		$this->ajaxOk($result);
 	}
 
 	/*
      *  @desc 车辆进场
     */
-	public function getEntrie(){
+	public function setEntry(){
 
 	}
 }
