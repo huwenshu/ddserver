@@ -73,6 +73,7 @@ class IndexController extends BaseController {
 
 	/*
      *  @desc 车辆进场，设置状态为在场
+	 *  @param oid	订单id
     */
 	public function setEntry($oid){
 		$cache = $this->getUsercache($this->uid);
@@ -82,6 +83,93 @@ class IndexController extends BaseController {
 		$Order = M('ParkOrder');
 		$con = array('id' => $oid, 'pid' => $parkid);
 		$updateData['state'] = 1;
+		$orderData = $Order->where($con)->save($updateData);
+
+		if($orderData){
+			$this->ajaxOk("");
+		}
+		else{
+			$this->ajaxMsg("进场失败！");
+		}
+
+
+	}
+
+	/*
+     *  @desc 获取在场车辆列表
+    */
+	public function getStops(){
+		$cache = $this->getUsercache($this->uid);
+		$data = $cache['data'];
+		$parkid = $data['parkid'];
+
+		$Order = M('ParkOrder');
+		$con = array('pid' => $parkid, 'state' => 1);
+		$orderData = $Order->where($con)->select();
+
+		$result = array();
+		foreach($orderData as $key => $value){
+			$tmp = array();
+			$tmp['oid'] = $value['id'];
+			$driverId = $value['uid'];
+			$Driver = M('DriverInfo');
+			$con1 = array('id' => $driverId);
+			$driverData = $Driver->where($con1)->find();
+			$tmp['carid'] = $driverData['carid'];
+			$tmp['startTime'] = $value['startime'];
+
+			array_push($result, $tmp);
+		}
+
+		$this->ajaxOk($result);
+
+
+	}
+
+	/*
+     *  @desc 获取准备离场车辆列表
+    */
+	public function getLeavings(){
+		$cache = $this->getUsercache($this->uid);
+		$data = $cache['data'];
+		$parkid = $data['parkid'];
+
+		$Order = M('ParkOrder');
+		$con = array('pid' => $parkid, 'state' => 2);
+		$orderData = $Order->where($con)->select();
+
+		$result = array();
+		foreach($orderData as $key => $value){
+			$tmp = array();
+			$tmp['oid'] = $value['id'];
+			$driverId = $value['uid'];
+			$Driver = M('DriverInfo');
+			$con1 = array('id' => $driverId);
+			$driverData = $Driver->where($con1)->find();
+			$tmp['carid'] = $driverData['carid'];
+			$tmp['startTime'] = $value['startime'];
+			$tmp['endTime'] = $value['endtime'];
+
+			array_push($result, $tmp);
+		}
+
+		$this->ajaxOk($result);
+
+
+	}
+
+	/*
+     *  @desc 车辆离场
+	 *  @param oid	订单id
+    */
+	public function setLeave($oid){
+		$cache = $this->getUsercache($this->uid);
+		$data = $cache['data'];
+		$parkid = $data['parkid'];
+
+		$Order = M('ParkOrder');
+		$con = array('id' => $oid, 'pid' => $parkid);
+		$updateData['state'] = 3;
 		$orderData = $Order->where($con)->save($updateData);
 
 		if($orderData){

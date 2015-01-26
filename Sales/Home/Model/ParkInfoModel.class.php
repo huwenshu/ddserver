@@ -38,6 +38,11 @@ class ParkInfoModel extends Model {
         $ContactInfo = D('ContactInfo');
         $Contact = $ContactInfo->findContacts($parkid);
         $Park["Contact"] = $Contact;
+
+        $VisitRecord = D('VisitRecord');
+        $visitData = $VisitRecord->where('parkid = '.$parkid)->select();
+        $Park["Visit"] = $visitData;
+
 		if(is_array($Park)){
             return $Park;
 		} else {
@@ -49,7 +54,7 @@ class ParkInfoModel extends Model {
      * 保存停车场信息
      * @param  string  $parkid 停车场id
      */
-    public function SaveParkInfo($parkInfo, $contactInfo){
+    public function SaveParkInfo($parkInfo){
         $map = array(); 
         $map['id'] = $parkInfo['id'];     
         /* 获取停车场数据 */
@@ -58,12 +63,14 @@ class ParkInfoModel extends Model {
         $result = NULL;
         if(is_array($Park)){
             /* 更新停车场数据 */
+            $parkInfo['updater'] = UID;
             $this->save($parkInfo);
             $result = $parkInfo['id'];
         } else {
             /* 添加停车场数据 */
-            $parkInfo['creater'] = 'admin';
+            $parkInfo['creater'] = UID;
             $parkInfo['createtime'] = date('Y-m-d H:i:s');
+            $parkInfo['updater'] = UID;
             if($this->create($parkInfo)){
                 $result = $this->add();
             } else {
@@ -71,16 +78,8 @@ class ParkInfoModel extends Model {
             }
         }
 
-        //更新合作联系人信息
-        $Contact = D('ContactInfo');
-        $saveInfo = $Contact->SaveContactInfo($result, $contactInfo);
 
-        if ($saveInfo) {
-            return $result;
-        }
-        else{
-            return false;
-        }
+       return $result;
     }
 
  

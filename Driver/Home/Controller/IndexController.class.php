@@ -123,7 +123,7 @@ class IndexController extends BaseController {
 
 	}
 
-	//处理预付回调函数
+	//预付成功，微信调用的回调函数
 	public function genOrderDone(){
 
 
@@ -213,6 +213,8 @@ class IndexController extends BaseController {
 		$con = array('id' => $pid);
 		$parkData = $ParkInfo->where($con)->find();
 		$result['address'] = $parkData['address'];
+		$result['lat'] = $parkData['lat'];
+		$result['lng'] = $parkData['lng'];
 
 		$Driver = M('DriverInfo');
 		$con = array('id' => $uid);
@@ -266,7 +268,7 @@ class IndexController extends BaseController {
 		$wxPayHelper->setParameter("out_trade_no", $prid);
 		$wxPayHelper->setParameter("total_fee", "1");	//todo 更新成remainFee
 		$wxPayHelper->setParameter("fee_type", "1");
-		$wxPayHelper->setParameter("notify_url", "http://duduparking.com/test/test_receiver.php");
+		$wxPayHelper->setParameter("notify_url", "http://duduche.me/driver.php/home/index/checkOutDone/");
 		$wxPayHelper->setParameter("spbill_create_ip", get_client_ip());
 		$wxPayHelper->setParameter("input_charset", "UTF-8");
 
@@ -275,6 +277,14 @@ class IndexController extends BaseController {
 		$this->ajaxOk($result);
 	}
 
+
+	/*
+	 * @desc 车费付款成功微信的回调接口
+	*/
+
+	public  function checkOutDone(){
+
+	}
 	//获得IP地址
 	protected function get_client_ip() {
 		if ($_SERVER['REMOTE_ADDR']) { $cip = $_SERVER['REMOTE_ADDR']; }

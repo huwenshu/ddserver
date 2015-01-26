@@ -38,18 +38,14 @@ class IndexController extends  BaseController {
  			$parkInfo['chargingrules'] = I('chargingrules');
  			$parkInfo['note'] = I('note');
  			$parkInfo['shortname'] = I('shortname');
- 			$parkInfo['status'] = I('status');
-
- 			$contactInfo = array('contactname' => I('contactname'), 'contactgender' => I('contactgender'),'contactphone' => I('contactphone'),
- 				'contactjob' => I('contactjob'));
 
     		$Park = D('ParkInfo');
-    		$saveParkId = $Park->SaveParkInfo($parkInfo, $contactInfo);
+    		$saveParkId = $Park->SaveParkInfo($parkInfo);
     		if ($saveParkId) {
-    			$this->redirect('/Home/Index/parkinfo/parkid/'.$saveParkId.'/');
+    			$this->redirect('/Home/Index/parkinfo/parkid/'.$saveParkId.'/#panel-1');
     		}
     		else{
-    			$this->error($error);
+    			$this->error();
     		}
 
     	}
@@ -61,5 +57,62 @@ class IndexController extends  BaseController {
     		$this->display();
     	}
     }
+
+
+	//保存拜访记录
+	public function savevisit(){
+		$parkid = I('post.id');
+		$status = I('post.status');
+		$contactInfo = array('contactname' => I('contactname'), 'contactgender' => I('contactgender'),'contactphone' => I('contactphone'),
+			'contactjob' => I('contactjob'));
+
+		$visitRecord = array('visitime' => I('visitime'), 'note' => I('note'), 'intention' => I('intention'));
+
+		//更新合作状态
+		$Park = D('ParkInfo');
+		$Park->status = $status;
+		$Park->where('id = '.$parkid)->save();
+
+		//更新联系人数据
+		$Contact = D('ContactInfo');
+		//先把数据全部删除
+		$map = array();
+		$map['parkid'] = $parkid;
+		$Contact->where($map)->delete();
+		//再添加新数据
+		$count = count($contactInfo['contactname']);
+		$dataList1 = array();
+		for ($i=0; $i < $count ; $i++) {
+			$dataList1[] = array('parkid' => $parkid,'name' => $contactInfo['contactname'][$i], 'gender' => $contactInfo['contactgender'][$i],
+				'telephone' => $contactInfo['contactphone'][$i], 'job' => $contactInfo['contactjob'][$i], 'creater' => UID,
+				'createtime' => date('Y-m-d H:i:s'),'updater' => UID);
+		}
+		$result1 = $Contact->addAll($dataList1);
+
+
+		//更新拜访记录
+		$Visit = D('VisitRecord');
+		//先把数据全部删除
+		$map = array();
+		$map['parkid'] = $parkid;
+		$Visit->where($map)->delete();
+		//再添加新数据
+		$count = count($visitRecord['visitime']);
+		$dataList2 = array();
+		for ($i=0; $i < $count ; $i++) {
+			$dataList2[] = array('parkid' => $parkid,'visitime' => $visitRecord['visitime'][$i], 'intention' => $visitRecord['intention'][$i],
+				'note' => $visitRecord['note'][$i], 'creater' => UID, 'createtime' => date('Y-m-d H:i:s'),'updater' => UID);
+		}
+		$result2 = $Visit->addAll($dataList2);
+
+
+		if($result1 && $result2){
+			$this->redirect('/Home/Index/parkinfo/parkid/'.$parkid.'/#panel-2');
+		}
+		else{
+			$this->error();
+		}
+
+	}
 
 }
