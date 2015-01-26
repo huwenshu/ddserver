@@ -28,6 +28,8 @@ class IndexController extends  BaseController {
  			$parkInfo['name'] = I('post.name');
  			$parkInfo['address'] = I('post.address');
 			$parkInfo['address2'] = I('post.address2');
+			$parkInfo['lat'] = I('lat');
+			$parkInfo['lng'] = I('lng');
  			$parkInfo['spacesum'] = I('post.spacesum');
  			$styles = I('post.parkstyle');
  			$parkstyle = "|";
