@@ -1,18 +1,69 @@
-<extend name="Public/base"/>
+<extend name="Public/base" xmlns="http://www.w3.org/1999/html"/>
 
 <block name="style">
     <style>
         body{padding: 0}
         .myborder{
-            border: solid 1px #ccc;
-            padding-bottom: 5px;
         }
+        #panel-2 .myborder input,#panel-2 .myborder select,#panel-1 .myborder input,#panel-1 .myborder select{
+            width: 65%;
+        }
+        #panel-1 .myborder textarea,#panel-2 .myborder textarea{
+            height: 100px;
+        }
+        .ui-tabs-nav{
+            position: relative;
+            display: table;
+            width: 100%;
+            overflow: hidden;
+            font-size: 15px;
+            font-weight: 400;
+            table-layout: fixed;
+            background-color: transparent;
+            border: 1px solid #007aff;
+            border-radius: 3px;
+        }
+        .ui-tabs-nav>li{
+            display: table-cell;
+             width: 1%;
+            padding-top: 6px;
+            padding-bottom: 7px;
+            overflow: hidden;
+            line-height: 1;
+            color: #007aff;
+            text-align: center;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            border-color: #007aff;
+            border-left: 1px solid #007aff;
+            -webkit-transition: background-color .1s linear;
+            transition: background-color .1s linear;
+        }
+        .ui-tabs-nav>li.ui-tabs-active{
+            color: #fff;
+            background-color: #383838;
+        }
+        .ui-tabs-nav>li>a{
+            color: #007aff;
+        }
+        .ui-tabs-nav>li.ui-tabs-active>a{
+            color:#fff;
+            text-decoration: underline;
+        }
+        form button{
+
+        }
+        #panel-2 input{
+            width: 95%;
+        }
+
+
     </style>
 </block>
 
 <block name="body">
     <!-- 主体 -->
-    <div id="indexMain" class="index-main">
+    <div id="indexMain" class="index-main" style="padding-top: 35px">
         <div class="tabs">
         <ul>
             <li><a href="#panel-1">基本资料</a></li>
@@ -21,10 +72,10 @@
         <div id="panel-1">
             <form action="{:U('parkinfo')}" method="post">
                 <input type="hidden"  name="id" value="{$park_info[id]}" />
-                <table style="display: flex">
+                <table style="display: flex;width: 95%;margin: 0 auto;margin-top: 10px">
                     <tr>
-                        <td><label for="parkname">停车场名称：</label></td>
-                        <td style="width: 100px"><input type="text" id="parkname" name="name" value="{$park_info[name]}" /> </td>
+                        <td style="width: 33%"><label for="parkname">停车场名称：</label></td>
+                        <td style="width: 66%"><input type="text" id="parkname" name="name" value="{$park_info[name]}" /> </td>
                     </tr>
                     <tr>
                         <td><label for="enterplace">入口地址：</label></td>
@@ -36,8 +87,11 @@
                     </tr>
                     <tr>
                         <td><label>导航坐标：</label></td>
-                        <td>经度：<input type="text"  name="lat" value= "{$park_info[lat]}" /> </td>
-                        <td>纬度：<input type="text"  name="lng" value= "{$park_info[lng]}" /> </td>
+                        <td>经度：<br>
+                            <input type="text"  name="lat" value= "{$park_info[lat]}" />
+                            纬度：<br>
+                            <input type="text"  name="lng" value= "{$park_info[lng]}" />
+                        </td>
                     </tr>
                     <tr>
                         <td colspan="2"><label for="parkstyle">停车场类型：</label></td>
@@ -71,8 +125,7 @@
                         <td><input type="text" id="opentime" name="opentime" value= "{$park_info[opentime]}" /> </td>
                     </tr>
                     <tr>
-                        <td colspan="2"><label for="chargingrules">计费规则：</label></td>
-                        <td><a href="{$feeurl}" target="newwindow">规则库中共{$rulecount}条纪录</a></td>
+                        <td colspan="2"><label for="chargingrules">计费规则：</label><a href="{$feeurl}" target="newwindow">规则库中共{$rulecount}条纪录</a></td>
                     </tr>
                     <tr>
                         <td colspan="2">
@@ -105,24 +158,36 @@
         <div id="panel-2">
             <form action="{:U('savevisit')}" method="post">
                 <input type="hidden"  name="id" value="{$park_info[id]}" />
-                <table style="display: flex">
+                <table style="display: flex;width: 95%;margin: 0 auto;margin-top: 10px">
                     <tr>
-                        <td><label for="status">合作状态：</label></td>
+                        <td style="width: 100%"><label for="status">合作状态：</label></td>
+                    </tr><tr>
                         <td><select id="status" name="status">
                             <option value="1"  <?php if ($park_info[status]==1)  echo 'selected="selected"';?>>已合作</option>
                             <option value="0"  <?php if ($park_info[status]==0)  echo 'selected="selected"';?>>正在洽谈</option>
                             <option value="-1" <?php if ($park_info[status]==-1) echo 'selected="selected"';?>>未接触</option>
                         </select>
                         </td>
-                    </tr>
-                    <tr>
-                        <td><label>拜访记录：</label></td>
+                    </tr><tr>
                         <td>
-                            <ul>
+                            <fieldset>
+                                <legend>拜访记录:</legend>
+                            <ul style="width: 100%">
                                 <?php
                                     $visits = $park_info[Visit];
                                     foreach ($visits as $key => $value) {
-                                        echo  "<li class='myborder'>拜访时间：<input type='text'  name='visitime[]' value='".$value['visitime']."'/> 合作意愿：<select  name='intention[]'><option value='0'".intention(0,$value["intention"]).">明确拒绝</option><option value='1'".intention(1,$value["intention"]).">很弱</option><option value='2'".intention(2,$value["intention"]).">一般</option><option value='3'".intention(3,$value["intention"]).">强</option></select> 备注：<input type='text'  name='note[]' value='".$value['note']."' /> <button type='button' class='removeVisit'>删除</button></li>";
+                                        //echo  "<li style='width: 100%' class='myborder'>拜访时间：<input style="width: 50%" type='text'  name='visitime[]' value='".$value['visitime']."'/> <br>合作意愿：<select  name='intention[]'><option value='0'".intention(0,$value["intention"])."><br>明确拒绝</option><option value='1'".intention(1,$value["intention"])."><br>很弱</option><option value='2'".intention(2,$value["intention"])."><br>一般</option><option value='3'".intention(3,$value["intention"]).">强</option></select> 备注：<input type='text'  name='note[]' value='".$value['note']."' /> <button type='button' class='removeVisit mui-btn-danger'>删除</button></li>";
+                                        echo  "<li class='myborder' style='overflow: hidden'>";
+                                        echo "拜访时间：<input style='width: 50%' type='text'  name='visitime[]' value='".$value['visitime']."'/><br>";
+                                        echo " 合作意愿：<select style='width: 50%'  name='intention[]'><option value='0'".intention(0,$value["intention"]).">明确拒绝</option><nobr>";
+                                        echo "<option value='1'".intention(1,$value["intention"]).">很弱</option>";
+                                        echo "<option value='2'".intention(2,$value["intention"]).">一般</option>";
+                                        echo "<option value='3'".intention(3,$value["intention"]).">强</option>";
+                                        echo "</select> <br>";
+                                        //echo "备注：<input type='text'  name='note[]' value='".$value['note']."' /> <button type='button' class='removeVisit'>删除</button></li>";
+                                        echo "备注：<br><textarea   name='note[]' value='' />".$value['note']."</textarea>";
+                                        echo "<button style='float: right;margin: 10px;' type='button' class='removeVisit mui-btn mui-btn-danger'>删除</button><hr style='clear: both;margin: 5px'></li>";
+
                                     }
 
                                     function intention($value1,$value2){
@@ -135,17 +200,25 @@
 
                                 ?>
                             </ul>
-                            <button type="button" id="addVisit">添加拜访记录</button>
+                            <button class="mui-btn mui-btn-success mui-btn-block" id="addVisit">添加拜访记录</button>
+                            </fieldset>
                         </td>
-                    </tr>
-                    <tr>
-                    <td><label>合作联系人：</label></td>
+                    </tr><tr>
                     <td>
+                        <fieldset>
+                            <legend>合作联系人:</legend>
                         <ul>
                             <?php
                     $contacts = $park_info[Contact];
                     foreach ($contacts as $key => $value) {
-                            echo  "<li class='myborder'>姓名：<input type='text'  name='contactname[]' value='".$value['name']."'/> 性别：<select  name='contactgender[]'><option value='1'".gender(0,$value["gender"]).">男</option><option value='0'".gender(1,$value["gender"]).">女</option></select> 电话：<input type='text'  name='contactphone[]' value='".$value['telephone']."' /> 职务：<input type='text'  name='contactjob[]' value='".$value['job']."' /> <button type='button' class='removeContact'>删除</button></li>";
+                                //echo  "<li class='myborder'>姓名：<input type='text'  name='contactname[]' value='".$value['name']."'/> 性别：<select  name='contactgender[]'><option value='1'".gender(0,$value["gender"]).">男</option><option value='0'".gender(1,$value["gender"]).">女</option></select> 电话：<input type='text'  name='contactphone[]' value='".$value['telephone']."' /> 职务：<input type='text'  name='contactjob[]' value='".$value['job']."' /> <button type='button' class='removeContact mui-btn-danger'>删除</button></li>";
+                                echo  "<li class='myborder'>";
+                                echo "姓名：<input type='text'  name='contactname[]' value='".$value['name']."'/><br>";
+                                echo "性别：<select  name='contactgender[]'><option value='1'".gender(0,$value["gender"]).">男</option><option value='0'".gender(1,$value["gender"]).">女</option></select><br>";
+                                echo "电话：<input type='text'  name='contactphone[]' value='".$value['telephone']."' /><br>";
+                                echo "职务：<input type='text'  name='contactjob[]' value='".$value['job']."' /><br>";
+                                echo "<button style='float: right;margin: 10px' type='button' class='removeContact mui-btn mui-btn-danger'>删除</button><hr style='clear: both;margin: 5px'></li>";
+
                             }
 
                             function gender($value1,$value2){
@@ -158,12 +231,13 @@
 
                             ?>
                         </ul>
-                        <button type="button" id="addContact">添加联系人</button>
+                        <button type="button" class="mui-btn mui-btn-success mui-btn-block" id="addContact">添加联系人</button>
+                        </fieldset>
                     </td>
                     </tr>
                     <tr>
                         <td colspan=2>
-                            <input type="submit" />
+                            <input type="submit" class="mui-btn mui-btn-success mui-btn-blue" style="margin: 10px" />
                         </td>
                     </tr>
                 </table>
@@ -180,7 +254,8 @@
     $(function(){
         $(".tabs").tabs();
         $('#addContact').click(function(){
-                var temp = "<li class='myborder'>姓名：<input type='text'  name='contactname[]' /> 性别：<select  name='contactgender[]'><option value='1'>男</option><option value='0' selected='selected'>女</option></select> 电话：<input type='text'  name='contactphone[]' value='' /> 职务：<input type='text'  name='contactjob[]' value='' /> <button type='button' class='removeContact'>删除</button></li>";
+                //var temp = "<li class='myborder'>姓名：<input type='text'  name='contactname[]' /> 性别：<select  name='contactgender[]'><option value='1'>男</option><option value='0' selected='selected'>女</option></select> 电话：<input type='text'  name='contactphone[]' value='' /> 职务：<input type='text'  name='contactjob[]' value='' /> <button type='button' class='removeContact'>删除</button></li>";
+                var temp = '<li class="myborder">姓名：<input type="text" name="contactname[]" value=""><br>性别：<select name="contactgender[]"><option value="1" selected="selected">男</option><option value="0">女</option></select><br>电话：<input type="text" name="contactphone[]" value=""><br>职务：<input type="text" name="contactjob[]" value=""><br><button style="float: right;margin: 10px" type="button" class="removeContact mui-btn mui-btn-danger">删除</button><hr style="clear: both;margin: 5px"></li>';
                 var row = $(temp);
                 row.find('.removeContact').click(function(){
                     $(this).parent().remove();
@@ -194,12 +269,18 @@
             }
         );
         $('#addVisit').click(function(){
-                    var tmp = "<li class='myborder'>拜访时间：<input type='text'  name='visitime[]' /> 合作意愿：<select  name='intention[]'><option value='0'>明确拒绝</option><option value='1'>很弱</option><option value='2'>一般</option><option value='3'>强</option></select> 备注：<input type='text'  name='note[]' value='' /> <button type='button' class='removeVisit'>删除</button></li>";
+                    //var tmp = "<li class='myborder'>拜访时间：<input type='text'  name='visitime[]' /> 合作意愿：<select  name='intention[]'><option value='0'>明确拒绝</option><option value='1'>很弱</option><option value='2'>一般</option><option value='3'>强</option></select> 备注：<input type='text'  name='note[]' value='' /> <button type='button' class='removeVisit'>删除</button></li>";
+                    var tmp = '<li class="myborder">拜访时间：<input style="width: 50%" type="text" name="visitime[]" value=""><br> ' +
+                            '合作意愿：<select style="width: 50%" name="intention[]"><option value="0" selected="selected">明确拒绝</option><option value="1">很弱</option><option value="2">一般</option><option value="3">强</option></select> <br>' +
+                            '备注：<br><textarea name="note[]" value=""></textarea>' +
+                            '<button style="float: right;margin: 10px;" type="button" class="removeVisit mui-btn mui-btn-danger">删除</button>' +
+                            '<hr style="clear: both;margin: 5px"></li>';
                     var row = $(tmp);
                     row.find('.removeVisit').click(function(){
                         $(this).parent().remove();
                     });
                     $(this).prev().append(row);
+                    return false;
                 }
         );
 
