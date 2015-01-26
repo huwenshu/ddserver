@@ -57,17 +57,17 @@ class IndexController extends  BaseController {
     		$onePark = $Park->onePark($parkid);
     		$this->park_info = $onePark;
     		$this->meta_title = '停车场 | 嘟嘟销售系统';
-    		$this->feeurl = U('Home/Index/parkfee',array('parkid'=>$parkid,'parkname'=>$onePark['name'],'rules'=>$onePark['chargingrules']));
-    		$rulestime = M('rules_time');
-    		$con1 = "parkid=".$parkid;
-				$this->rulecount = $rulestime->where($con1)->count();
-					
+    		$this->feeurl = U('Home/Index/parkfee',array('parkid'=>$parkid));
+			$rulestime = M('rules_time');
+			$cond = array();
+			$cond['parkid'] = $parkid;
+			$this->rulecount = $rulestime->where($cond)->count();
     		$this->display();
     	}
     }
     
-    public function parkfee($parkid = null,$parkname = null,$rules = null){
-    	$this->formurl=U('parkfee',array('parkid'=>$parkid,'parkname'=>$parkname,'rules'=>$rules));
+    public function parkfee($parkid = null){
+    	$this->formurl=U('parkfee',array('parkid'=>$parkid));
     	$rulestime = M('rules_time');
     	$rulesmoney = M('rules_money');
     	
@@ -76,9 +76,12 @@ class IndexController extends  BaseController {
     		$ruleop = I('post.ruleop');
     		if($ruleid > 0){
     			if($ruleop == ''){//del rule
-    				$con1 = "id=".$ruleid;
+
+					$con1 = array();
+					$con1['id'] = $ruleid;
     				$rulestime->where($con1)->delete();
-    				$con2 = "rulesid=".$ruleid;
+					$con2 = array();
+					$con2['rulesid'] = $ruleid;
     				$rulesmoney->where($con2)->delete();
     			}else{//modify rule
     				$rulesArr = explode(';',$ruleop);
@@ -90,8 +93,12 @@ class IndexController extends  BaseController {
 	    			$starttime = $rulesArr[0];
 	    			$endtime = $rulesArr[1];
 	    			$ruledata = array('startime'=>$starttime,'endtime'=>$endtime);
-	    			$rulestime->where("id=".$ruleid)->save($ruledata);
-	    			$rulesmoney->where("rulesid=".$ruleid)->delete();
+					$con3 = array();
+					$con3['id'] = $ruleid;
+	    			$rulestime->where($con3)->save($ruledata);
+					$con4 = array();
+					$con4['rulesid'] = $ruleid;
+	    			$rulesmoney->where($con4)->delete();
 	    			for($i=2;$i<$rulesCount;$i++){//保存费用信息
     					$feeArr=explode(',',$rulesArr[$i]);
     					$feedata = array('rulesid'=>$ruleid,'mins'=>$feeArr[0],'money'=>$feeArr[1],'createtime'=>time());
@@ -120,15 +127,21 @@ class IndexController extends  BaseController {
     			}
     		}
     	}
-    	
-    		$con1 = "parkid=".$parkid;
-				$this->rulesdata = $rulestime->where($con1)->order('startime')->select();
-				$this->rulesmoney = $rulesmoney;
+			$con5 = array();
+			$con5['parkid'] = $parkid;
+			$this->rulesdata = $rulestime->where($con5)->order('startime')->select();
+			$this->rulesmoney = $rulesmoney;
 			
 	    	$this->meta_title = '计费规则库 | 嘟嘟销售系统';
 	    	$this->parkid=$parkid;
-	    	$this->parkname=$parkname;
-	    	$this->rules=$rules;
+
+			$Park = D('ParkInfo');
+			$con6 = array();
+			$con6['id'] = $parkid;
+			$parkData = $Park->where($con6)->find();
+
+	    	$this->parkname=$parkData['name'];
+	    	$this->rules=$parkData['chargingrules'];
 	    	$this->display();
     }
 
@@ -145,7 +158,9 @@ class IndexController extends  BaseController {
 		//更新合作状态
 		$Park = D('ParkInfo');
 		$Park->status = $status;
-		$Park->where('id = '.$parkid)->save();
+		$con = array();
+		$con['id'] = $parkid;
+		$Park->where($con)->save();
 
 		//更新联系人数据
 		$Contact = D('ContactInfo');
