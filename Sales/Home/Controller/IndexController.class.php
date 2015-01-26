@@ -54,8 +54,79 @@ class IndexController extends  BaseController {
     		$onePark = $Park->onePark($parkid);
     		$this->park_info = $onePark;
     		$this->meta_title = '停车场 | 嘟嘟销售系统';
+    		$this->feeurl = U('Home/Index/parkfee',array('parkid'=>$parkid,'parkname'=>$onePark['name'],'rules'=>$onePark['chargingrules']));
+    		$rulestime = M('rules_time');
+    		$con1 = "parkid=".$parkid;
+				$this->rulecount = $rulestime->where($con1)->count();
+					
     		$this->display();
     	}
+    }
+    
+    public function parkfee($parkid = null,$parkname = null,$rules = null){
+    	$this->formurl=U('parkfee',array('parkid'=>$parkid,'parkname'=>$parkname,'rules'=>$rules));
+    	$rulestime = M('rules_time');
+    	$rulesmoney = M('rules_money');
+    	
+    	if (IS_POST) {
+    		$ruleid = I('post.ruleid');
+    		$ruleop = I('post.ruleop');
+    		if($ruleid > 0){
+    			if($ruleop == ''){//del rule
+    				$con1 = "id=".$ruleid;
+    				$rulestime->where($con1)->delete();
+    				$con2 = "rulesid=".$ruleid;
+    				$rulesmoney->where($con2)->delete();
+    			}else{//modify rule
+    				$rulesArr = explode(';',$ruleop);
+	    			$rulesCount = count($rulesArr);
+	    			if($rulesCount < 3){
+	    				$this->error("停车规则参数不足，无法保存！");
+	    				return;
+	    			}
+	    			$starttime = $rulesArr[0];
+	    			$endtime = $rulesArr[1];
+	    			$ruledata = array('startime'=>$starttime,'endtime'=>$endtime);
+	    			$rulestime->where("id=".$ruleid)->save($ruledata);
+	    			$rulesmoney->where("rulesid=".$ruleid)->delete();
+	    			for($i=2;$i<$rulesCount;$i++){//保存费用信息
+    					$feeArr=explode(',',$rulesArr[$i]);
+    					$feedata = array('rulesid'=>$ruleid,'mins'=>$feeArr[0],'money'=>$feeArr[1],'createtime'=>time());
+    					$rulesmoney->add($feedata);
+    				}
+    			}
+    		}else if($ruleop != ''){//add rule
+    			$rulesArr = explode(';',$ruleop);
+    			$rulesCount = count($rulesArr);
+    			if($rulesCount < 3){
+    				$this->error("停车规则参数不足，无法保存！");
+    				return;
+    			}
+    			$starttime = $rulesArr[0];
+    			$endtime = $rulesArr[1];
+    			$ruledata = array('parkid'=>$parkid,'startime'=>$starttime,'endtime'=>$endtime,'createtime'=>time());
+    			$ruleid = $rulestime->add($ruledata);//保存规则
+    			if($ruleid){
+    				for($i=2;$i<$rulesCount;$i++){//保存费用信息
+    					$feeArr=explode(',',$rulesArr[$i]);
+    					$feedata = array('rulesid'=>$ruleid,'mins'=>$feeArr[0],'money'=>$feeArr[1],'createtime'=>time());
+    					$rulesmoney->add($feedata);
+    				}
+    			}else{
+    				$this->error($error);
+    			}
+    		}
+    	}
+    	
+    		$con1 = "parkid=".$parkid;
+				$this->rulesdata = $rulestime->where($con1)->order('startime')->select();
+				$this->rulesmoney = $rulesmoney;
+			
+	    	$this->meta_title = '计费规则库 | 嘟嘟销售系统';
+	    	$this->parkid=$parkid;
+	    	$this->parkname=$parkname;
+	    	$this->rules=$rules;
+	    	$this->display();
     }
 
 

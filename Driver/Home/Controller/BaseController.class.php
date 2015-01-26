@@ -107,9 +107,45 @@ class BaseController extends \Think\Controller {
     */
 
     protected function parkingFee($startTime, $parkid){
-
-
-
-        return 0;
+        return $this->_parkingFee($startTime, time(), $parkid);
+    }
+    //实际计算方法，增加$endTime参数便于测试
+    protected function _parkingFee($startTime, $endTime, $parkid){
+				$fee = 0;
+				$rulestime = M('rules_time');
+				$rulesmoney = M('rules_money');
+				while($startTime < $endTime){
+					$timeStr = date("H:i:s",$startTime);
+					//找到开始停车那个时间点所适用规则
+					$con1 = "parkid=".$parkid." and startime<='".$timeStr."' and endtime>='".$timeStr."'";
+					$ruleid = $rulestime->where($con1)->getField('id');
+					if(!$ruleid){//没有合适的规则
+						break;
+					}
+					//根据停车时长计算费用
+					$mins = ceil(($endTime-$startTime)/60);
+					$con2 = "rulesid=".$ruleid;
+					$moneyArr = $rulesmoney->where($con2)->order('mins')->select();
+					$arrLength = count($moneyArr);
+					$money=0;
+					for($i=0;$i < $arrLength;$i++){
+						if($moneyArr[$i]['mins']>=$mins){
+							$money=$moneyArr[$i]['money'];
+							break;
+						}
+					}
+					if($i >= $arrLength){//超过规则所支持的时长，需要用最长所支持的时间
+						$money = $moneyArr[$arrLength-1]['money'];
+						$mins = $moneyArr[$arrLength-1]['mins'];
+					}
+					$fee += $money;
+					$startTime += $mins*60;
+					/*if($mins <= 0){
+						dump($moneyArr);
+						break;
+					}*/
+				}
+				
+        return $fee;
     }
 }
