@@ -2,9 +2,7 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="8b4ec7cd-ddbc-44bb-ae75-1452e6a6f80b" name="Default" comment="">
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/document/车主文档接口.docx" afterPath="$PROJECT_DIR$/document/车主文档接口.docx" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Sales/Home/Controller/IndexController.class.php" afterPath="$PROJECT_DIR$/Sales/Home/Controller/IndexController.class.php" />
-      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Sales/Home/Model/ParkInfoModel.class.php" afterPath="$PROJECT_DIR$/Sales/Home/Model/ParkInfoModel.class.php" />
+      <change type="MODIFICATION" beforePath="$PROJECT_DIR$/Driver/Home/Controller/IndexController.class.php" afterPath="$PROJECT_DIR$/Driver/Home/Controller/IndexController.class.php" />
       <change type="MODIFICATION" beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
     </list>
     <ignored path="ddserver.iws" />
@@ -30,55 +28,26 @@
   </component>
   <component name="FileEditorManager">
     <leaf>
+      <file leaf-file-name="parkinfo.html" pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Sales/Home/View/default/Index/parkinfo.html">
+          <provider selected="true" editor-type-id="text-editor">
+            <state vertical-scroll-proportion="-2.557522" vertical-offset="3920" max-vertical-offset="4485">
+              <caret line="165" column="47" selection-start-line="165" selection-start-column="41" selection-end-line="165" selection-end-column="47" />
+              <folding>
+                <element signature="n#style#0;n#table#0;n#form#0;n#div#0;n#div#0;n#div#0;n#block#1;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#td#1;n#tr#0;n#table#0;n#form#0;n#div#0;n#div#0;n#div#0;n#block#1;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#span#0;n#td#0;n#tr#5;n#table#0;n#form#0;n#div#0;n#div#0;n#div#0;n#block#1;n#!!top" expanded="true" />
+                <element signature="n#style#0;n#table#0;n#form#0;n#div#1;n#div#0;n#div#0;n#block#1;n#!!top" expanded="true" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file leaf-file-name="parkfee.html" pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/Sales/Home/View/default/Index/parkfee.html">
           <provider selected="true" editor-type-id="text-editor">
             <state vertical-scroll-proportion="-10.625" vertical-offset="165" max-vertical-offset="2100">
               <caret line="28" column="27" selection-start-line="28" selection-start-column="19" selection-end-line="28" selection-end-column="27" />
-              <folding>
-                <marker date="1422245884000" expanded="true" signature="3733:3745" placeholder="..." />
-                <marker date="1422245884000" expanded="true" signature="3899:3910" placeholder="..." />
-                <marker date="1422245884000" expanded="true" signature="3979:3990" placeholder="..." />
-                <marker date="1422245884000" expanded="true" signature="4303:4316" placeholder="..." />
-                <marker date="1422245884000" expanded="true" signature="4347:4363" placeholder="..." />
-                <marker date="1422245884000" expanded="true" signature="4546:4557" placeholder="..." />
-                <marker date="1422245884000" expanded="true" signature="4635:4646" placeholder="..." />
-                <marker date="1422245884000" expanded="true" signature="4665:4681" placeholder="..." />
-                <marker date="1422245884000" expanded="true" signature="4797:4809" placeholder="..." />
-                <marker date="1422245884000" expanded="true" signature="4963:4974" placeholder="..." />
-                <marker date="1422245884000" expanded="true" signature="5043:5054" placeholder="..." />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="base.html" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Sales/Home/View/default/Public/base.html">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="52.5" vertical-offset="1305" max-vertical-offset="3435">
-              <caret line="3" column="4" selection-start-line="3" selection-start-column="4" selection-end-line="3" selection-end-column="26" />
-              <folding>
-                <element signature="n#style#0;n#span#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
-              </folding>
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="ParkInfoModel.class.php" pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/Sales/Home/Model/ParkInfoModel.class.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="-8.75" vertical-offset="435" max-vertical-offset="1410">
-              <caret line="43" column="33" selection-start-line="43" selection-start-column="33" selection-end-line="43" selection-end-column="33" />
-              <folding />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file leaf-file-name="IndexController.class.php" pinned="false" current-in-tab="true">
-        <entry file="file://$PROJECT_DIR$/Sales/Home/Controller/IndexController.class.php">
-          <provider selected="true" editor-type-id="text-editor">
-            <state vertical-scroll-proportion="0.49814126" vertical-offset="2117" max-vertical-offset="3135">
-              <caret line="162" column="35" selection-start-line="162" selection-start-column="35" selection-end-line="162" selection-end-column="35" />
               <folding />
             </state>
           </provider>
@@ -110,10 +79,10 @@
         <option value="$PROJECT_DIR$/Sales/Home/Conf/config.php" />
         <option value="$PROJECT_DIR$/Sales/Home/View/default/Index/parkinfo.html" />
         <option value="$PROJECT_DIR$/Driver/Home/Controller/PublicController.class.php" />
-        <option value="$PROJECT_DIR$/Driver/Home/Controller/IndexController.class.php" />
         <option value="$PROJECT_DIR$/Sales/Home/View/default/Public/base.html" />
         <option value="$PROJECT_DIR$/Sales/Home/Model/ParkInfoModel.class.php" />
         <option value="$PROJECT_DIR$/Sales/Home/Controller/IndexController.class.php" />
+        <option value="$PROJECT_DIR$/Driver/Home/Controller/IndexController.class.php" />
       </list>
     </option>
   </component>
@@ -601,14 +570,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Driver/Home/Controller/BaseController.class.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-0.48672566" vertical-offset="1790" max-vertical-offset="2355">
-          <caret line="101" column="3" selection-start-line="101" selection-start-column="3" selection-end-line="106" selection-end-column="6" />
-          <folding />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Driver/Home/Common/Weixin/Pay/CommonUtil.class.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.6637168" vertical-offset="0" max-vertical-offset="1935">
@@ -665,16 +626,6 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/Driver/Home/Controller/IndexController.class.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="5.1238937" vertical-offset="300" max-vertical-offset="4515">
-          <caret line="213" column="16" selection-start-line="213" selection-start-column="16" selection-end-line="213" selection-end-column="16" />
-          <folding>
-            <marker date="1422254422000" expanded="true" signature="-1:-1" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/Sales/Home/Model/ContactInfoModel.class.php">
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="0.6902655" vertical-offset="285" max-vertical-offset="960">
@@ -683,13 +634,47 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$PROJECT_DIR$/Sales/Home/Model/ParkInfoModel.class.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.37168142" vertical-offset="435" max-vertical-offset="1410">
+          <caret line="43" column="33" selection-start-line="43" selection-start-column="33" selection-end-line="43" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Driver/Home/Controller/IndexController.class.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="-1.0353982" vertical-offset="3300" max-vertical-offset="4515">
+          <caret line="181" column="36" selection-start-line="181" selection-start-column="36" selection-end-line="181" selection-end-column="36" />
+          <folding>
+            <marker date="1422265523000" expanded="true" signature="-1:-1" placeholder="..." />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Driver/Home/Controller/BaseController.class.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.40530974" vertical-offset="1391" max-vertical-offset="2355">
+          <caret line="108" column="33" selection-start-line="108" selection-start-column="23" selection-end-line="108" selection-end-column="33" />
+          <folding />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/Sales/Home/View/default/Public/base.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="52.5" vertical-offset="1305" max-vertical-offset="3435">
-          <caret line="3" column="4" selection-start-line="3" selection-start-column="4" selection-end-line="3" selection-end-column="26" />
+        <state vertical-scroll-proportion="3.2654867" vertical-offset="450" max-vertical-offset="3435">
+          <caret line="153" column="65" selection-start-line="153" selection-start-column="64" selection-end-line="153" selection-end-column="65" />
           <folding>
             <element signature="n#style#0;n#span#0;n#div#0;n#body#0;n#html#0;n#!!top" expanded="true" />
           </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Sales/Home/Controller/IndexController.class.php">
+      <provider selected="true" editor-type-id="text-editor">
+        <state vertical-scroll-proportion="0.31504425" vertical-offset="617" max-vertical-offset="3135">
+          <caret line="56" column="45" selection-start-line="56" selection-start-column="38" selection-end-line="56" selection-end-column="45" />
+          <folding />
         </state>
       </provider>
     </entry>
@@ -697,48 +682,20 @@
       <provider selected="true" editor-type-id="text-editor">
         <state vertical-scroll-proportion="-10.625" vertical-offset="165" max-vertical-offset="2100">
           <caret line="28" column="27" selection-start-line="28" selection-start-column="19" selection-end-line="28" selection-end-column="27" />
-          <folding>
-            <marker date="1422245884000" expanded="true" signature="3733:3745" placeholder="..." />
-            <marker date="1422245884000" expanded="true" signature="3899:3910" placeholder="..." />
-            <marker date="1422245884000" expanded="true" signature="3979:3990" placeholder="..." />
-            <marker date="1422245884000" expanded="true" signature="4303:4316" placeholder="..." />
-            <marker date="1422245884000" expanded="true" signature="4347:4363" placeholder="..." />
-            <marker date="1422245884000" expanded="true" signature="4546:4557" placeholder="..." />
-            <marker date="1422245884000" expanded="true" signature="4635:4646" placeholder="..." />
-            <marker date="1422245884000" expanded="true" signature="4665:4681" placeholder="..." />
-            <marker date="1422245884000" expanded="true" signature="4797:4809" placeholder="..." />
-            <marker date="1422245884000" expanded="true" signature="4963:4974" placeholder="..." />
-            <marker date="1422245884000" expanded="true" signature="5043:5054" placeholder="..." />
-          </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Sales/Home/Model/ParkInfoModel.class.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="-8.75" vertical-offset="435" max-vertical-offset="1410">
-          <caret line="43" column="33" selection-start-line="43" selection-start-column="33" selection-end-line="43" selection-end-column="33" />
           <folding />
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/Sales/Home/View/default/Index/parkinfo.html">
       <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.6884956" vertical-offset="1486" max-vertical-offset="3270">
-          <caret line="125" column="37" selection-start-line="124" selection-start-column="40" selection-end-line="125" selection-end-column="37" />
+        <state vertical-scroll-proportion="-2.557522" vertical-offset="3920" max-vertical-offset="4485">
+          <caret line="165" column="47" selection-start-line="165" selection-start-column="41" selection-end-line="165" selection-end-column="47" />
           <folding>
             <element signature="n#style#0;n#table#0;n#form#0;n#div#0;n#div#0;n#div#0;n#block#1;n#!!top" expanded="true" />
             <element signature="n#style#0;n#td#1;n#tr#0;n#table#0;n#form#0;n#div#0;n#div#0;n#div#0;n#block#1;n#!!top" expanded="true" />
             <element signature="n#style#0;n#span#0;n#td#0;n#tr#5;n#table#0;n#form#0;n#div#0;n#div#0;n#div#0;n#block#1;n#!!top" expanded="true" />
             <element signature="n#style#0;n#table#0;n#form#0;n#div#1;n#div#0;n#div#0;n#block#1;n#!!top" expanded="true" />
           </folding>
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/Sales/Home/Controller/IndexController.class.php">
-      <provider selected="true" editor-type-id="text-editor">
-        <state vertical-scroll-proportion="0.49814126" vertical-offset="2117" max-vertical-offset="3135">
-          <caret line="162" column="35" selection-start-line="162" selection-start-column="35" selection-end-line="162" selection-end-column="35" />
-          <folding />
         </state>
       </provider>
     </entry>

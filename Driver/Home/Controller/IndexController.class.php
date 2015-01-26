@@ -179,7 +179,7 @@ class IndexController extends BaseController {
 			$preSum = $preSum + $value['money'];
 		}
 
-		$totalFee = 20;
+		$totalFee = 20; //todo ，添加计费
 		$remainFee = $totalFee - $preSum;
 
 		$Order = M('ParkOrder');
