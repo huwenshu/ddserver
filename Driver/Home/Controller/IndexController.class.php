@@ -127,25 +127,6 @@ class IndexController extends BaseController {
 	public function genOrderDone(){
 
 
-
-		if(!trade_state){
-			$prid = I('post.out_trade_no');
-
-			$Payment = M('PaymentRecord');
-			$data['state'] = 1;
-			$con1 = 'id='.$prid;
-			$Payment->where($con1)->save($data); // 根据条件更新记录
-			$pay = $Payment->where($con1)->find();
-
-			$Order = M('ParkOrder');
-			$arr['state'] = 0;
-			$con2 = 'id='.$pay['oid'];
-			$Order->where($con2)->save($arr); // 根据条件更新记录
-
-			return "Success";
-
-		}
-
 	}
 
 	/*
@@ -229,8 +210,8 @@ class IndexController extends BaseController {
 	}
 
 	/*
-	 * @desc 车费结算
-	 * @last int 0-所有订单/1-最后订单
+	 * @desc 车费结算借口
+	 * @oid	订单id
 	*/
 
 	public  function checkOut($oid){
@@ -278,13 +259,7 @@ class IndexController extends BaseController {
 	}
 
 
-	/*
-	 * @desc 车费付款成功微信的回调接口
-	*/
 
-	public  function checkOutDone(){
-
-	}
 	//获得IP地址
 	protected function get_client_ip() {
 		if ($_SERVER['REMOTE_ADDR']) { $cip = $_SERVER['REMOTE_ADDR']; }

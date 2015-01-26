@@ -46,7 +46,25 @@ class PublicController extends BaseController {
         }
 
     }
-    
+
+
+	/*
+	 * @desc 预付成功，微信调用的回调函数
+	*/
+	public function genOrderDone(){
+
+
+	}
+
+	/*
+	 * @desc 车费结算付款成功微信的回调接口
+	*/
+
+	public  function checkOutDone(){
+
+	}
+
+
     //test
     public function parkingFeeTest($parkid, $min = 30, $hour = 10, $year = 2015, $month = 1, $day = 23){
     	
