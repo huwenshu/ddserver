@@ -20,7 +20,7 @@
             font-weight: 400;
             table-layout: fixed;
             background-color: transparent;
-            border: 1px solid #007aff;
+            border: 1px solid #383838;
             border-radius: 3px;
         }
         .ui-tabs-nav>li{
@@ -34,7 +34,7 @@
             text-align: center;
             text-overflow: ellipsis;
             white-space: nowrap;
-            border-color: #007aff;
+            border-color: #383838;
             border-left: 1px solid #007aff;
             -webkit-transition: background-color .1s linear;
             transition: background-color .1s linear;
@@ -87,10 +87,22 @@
                     </tr>
                     <tr>
                         <td><label>导航坐标：</label></td>
-                        <td>经度：<br>
-                            <input type="text"  name="lat" value= "{$park_info[lat]}" />
-                            纬度：<br>
-                            <input type="text"  name="lng" value= "{$park_info[lng]}" />
+                        <td>
+                            <table style="width: 100%" border="0">
+                                <tr>
+                                    <td>经度</td>
+                                    <td>纬度</td>
+                                </tr>
+                                <tr>
+                                    <td><input style="width: 100%" type="text" readonly  name="lat1" value= "{$park_info[lat]}" /></td>
+                                    <td><input style="width: 100%" type="text" readonly  name="lng1" value= "{$park_info[lng]}" /></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2">
+                                        <div id="btgetloc" class="mui-btn mui-btn-warning mui-btn-block">获取坐标</div>
+                                    </td>
+                                </tr>
+                            </table>
                         </td>
                     </tr>
                     <tr>
@@ -250,8 +262,143 @@
 </block>
 
 <block name="script">
+    <!--<script src="http://webapi.amap.com/maps?v=1.3&key=5b768e7a9bc53cf2286ba6122e599bb4" type="text/javascript"></script>-->
+    <script src="http://webapi.amap.com/maps?v=1.3&key=bc59f27d65900532cc4f3c1048dd6122" type="text/javascript"></script>
+    <script>
+        (function($){
+                $.fn.Maplocation = (function(){
+                    var mapcontaion = $('<div></div>');
+                    var mapmake = $('<div></div>');
+                    var mapdom = $('<div></div>');
+                    var mapoppanel = $('<div>' +
+                            '<div name="info" style="clear: both;padding: 10px;border-bottom: solid 1px #ccc;">当前坐标:</div>' +
+                            '<div name="btclose" style="width: 38%;float: left;padding-top: 10px;padding-bottom: 10px;text-align: center;border: solid 1px #ccc;margin: 5%;">关闭退出</div>' +
+                            '<div name="btselect" style="width: 38%;float: right;padding-top: 10px;padding-bottom: 10px;text-align: center;border: solid 1px #ccc;margin: 5%;">确认选择</div>' +
+                            '</div>');
+                    var mapid = '__________mapid';
+
+                    mapdom.attr('id',mapid);
+                    mapcontaion.append(mapmake).append(mapdom).append(mapoppanel);
+                    mapcontaion.css({
+                        position:'absolute'
+                        ,display:'none'
+                        ,width:'100%'
+                        ,height:'100%'
+                        ,'zIndex':'10000'
+                        ,left:0
+                        ,top:0
+                        ,backgroundColor:'rgba(0,0,0,.5)'
+                    });
+                    mapmake.css({
+                        position:'absolute'
+                        ,width:'100%'
+                        ,height:'100%'
+                    }).click(function(){
+                        mapcontaion.hide();
+                    });
+                    mapdom.css({
+                       position:'absolute'
+                        ,width:'100%'
+                        ,height:'60%'
+                        ,left:0
+                        ,top:0
+
+                    });
+                    mapoppanel.css({
+                        position:'absolute'
+                        ,width:'100%'
+                        ,height:'40%'
+                        ,left:0
+                        ,top:'60%'
+                        ,backgroundColor:'#fff'
+                    }).find('[name=btclose]').click(function(){
+                       obj.close();
+                    }).end().find('[name=btselect]').click(function(){
+                       obj.select();
+                    });
+                    $(document.body).append(mapcontaion);
+                    function loadmapScript() {
+                      var script = document.createElement("script");
+                      script.type = "text/javascript";
+                      script.src = "http://webapi.amap.com/maps?v=1.3&key=5b768e7a9bc53cf2286ba6122e599bb4&callback=loadmapScriptinit";
+                      document.body.appendChild(script);
+                    }
+                    function loadmapScriptinit(){
+                        alert('loadmapScriptinit');
+
+                    }
+                    var loadcallback = null;
+
+                    var obj = {
+                        mapobj:null
+                        ,onclose:null
+                        ,init:function(callback){
+                            //loadmapScript();
+                            this.loadinit(callback);
+                        }
+                        ,loadinit:function(callback){
+                            mapcontaion.show();
+                            this.onclose = callback || null;
+                            var position=new AMap.LngLat(116.397428,39.90923);
+                            var view =  new AMap.View2D({
+                                  center:position,//创建中心点坐标
+                                zoom:17, //设置地图缩放级别      //1 -  17
+                               rotation:0 //设置地图旋转角度
+                             });
+                            var mapObj = this.mapobj = new AMap.Map(mapid,{
+                              view:view,
+                             lang:"zh_cn"//设置地图语言类型，默认：中文简体
+                            });//创建地图实例
+                            mapObj.plugin(["AMap.ToolBar","AMap.OverView","AMap.Scale"],function(){
+                              //加载工具条
+                              var tool = new AMap.ToolBar({
+                                direction:false,//隐藏方向导航
+                                ruler:false,//隐藏视野级别控制尺
+                                autoPosition:true//自动定位
+                              });
+                              mapObj.addControl(tool);
+                              //加载鹰眼
+                              var view = new AMap.OverView();
+                              mapObj.addControl(view);
+                              //加载比例尺
+                              var scale = new AMap.Scale();
+                              mapObj.addControl(scale);
+                            });
+
+                            navigator.geolocation.getCurrentPosition(function(a){
+                                console.log(a)
+                                //alert('当前支持获取位置');
+                            }, function(e){
+                                console.log('error',e);
+                                alert('当前不支持获取地理位置');
+                            })
+                        }
+                        ,close:function(){
+                            this.mapobj.destroy();
+                            this.mapobj = null;
+                            this.onclose = null;
+                            mapcontaion.hide();
+                        }
+                        ,select:function(){
+                            this.onclose && this.onclose(this.mapobj.getCenter());
+                            this.close();
+                        }
+                    }
+                    return function(callback){
+                        $(this).click(function(){
+                            obj.init(callback);
+                        });
+                    }
+                })();
+            })(jQuery);
+    </script>
 <script type="text/javascript">
     $(function(){
+        $('#btgetloc').Maplocation(function(position){
+                console.log(position);
+                $('[name=lng1]').val(position.lng);
+                $('[name=lat1]').val(position.lat);
+            });
         $(".tabs").tabs();
         $('#addContact').click(function(){
                 //var temp = "<li class='myborder'>姓名：<input type='text'  name='contactname[]' /> 性别：<select  name='contactgender[]'><option value='1'>男</option><option value='0' selected='selected'>女</option></select> 电话：<input type='text'  name='contactphone[]' value='' /> 职务：<input type='text'  name='contactjob[]' value='' /> <button type='button' class='removeContact'>删除</button></li>";
