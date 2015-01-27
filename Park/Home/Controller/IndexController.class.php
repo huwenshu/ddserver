@@ -83,6 +83,8 @@ class IndexController extends BaseController {
 		$Order = M('ParkOrder');
 		$con = array('id' => $oid, 'pid' => $parkid);
 		$updateData['state'] = 1;
+		$updateData['entrytime'] = date('Y-m-d H:i:s');
+		$updateData['updater'] = $this->uid;
 		$orderData = $Order->where($con)->save($updateData);
 
 		if($orderData){
@@ -170,6 +172,8 @@ class IndexController extends BaseController {
 		$Order = M('ParkOrder');
 		$con = array('id' => $oid, 'pid' => $parkid);
 		$updateData['state'] = 3;
+		$updateData['leavetime'] = date('Y-m-d H:i:s');
+		$updateData['updater'] = $this->uid;
 		$orderData = $Order->where($con)->save($updateData);
 
 		if($orderData){
@@ -179,6 +183,83 @@ class IndexController extends BaseController {
 			$this->ajaxMsg("进场失败！");
 		}
 
+
+	}
+
+	/*
+     *  @desc 获取一周交易信息
+	 *  @param oid	订单id
+    */
+	public function getDeals(){
+
+		$cache = $this->getUsercache($this->uid);
+		$data = $cache['data'];
+		$parkid = $data['parkid'];
+
+		$Order = M('ParkOrder');
+		$beroreWeek = time() - (7 * 24 * 60 * 60);
+		$map = array();
+		$map['pid'] = $parkid;
+		$map['state'] = 3;
+		$map['leavetime'] = array('EGT', $beroreWeek);
+		$orderData = $Order->where($map)->select();
+
+		$result = array();
+		foreach($orderData as $key => $value){
+			$tmp = array();
+			$tmp['startime'] = $value['startime'];
+			$tmp['endtime'] = $value['endtime'];
+
+			$Payment = M('PaymentRecord');
+			$map = array('oid' => $value['id'], 'state'=>1);
+			$payData = $Payment->where($map)->select();
+			$sum = 0;
+			foreach($payData as $key => $value){
+				$sum = $sum + $value['money'];
+			}
+			$tmp['money'] = $sum;
+
+			$Driver = $this->getDriver($value['uid']);
+			if(!empty($Driver)) {
+				$tmp['carid'] = $Driver['carid'];
+			}
+
+			$ParkAdmin = $this->getAdmin($this->uid );
+			if(!empty($ParkAdmin)) {
+				$tmp['admin'] =  $ParkAdmin['name'];
+			}
+
+			array_push($result, $tmp);
+
+		}
+
+
+		$this->ajaxOk($result);
+
+	}
+
+	/*
+     *  @desc 设置停车场空位情况
+	 *  @param $state 车位情况 0-已满 1-较少 2-较多
+    */
+	public function setParkState($state){
+		$cache = $this->getUsercache($this->uid);
+		$data = $cache['data'];
+		$parkid = $data['parkid'];
+
+		$Park = M('ParkInfo');
+		$data = array();
+		$data['id'] = $parkid;
+		$data['parkstate'] = $state;
+
+		$result = $Park->save($data);
+
+		if(empty($result)){
+			$this->ajaxMsg("修改状态失败！");
+		}
+		else{
+			$this->ajaxOk(null);
+		}
 
 	}
 }
