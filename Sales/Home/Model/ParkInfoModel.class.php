@@ -40,8 +40,10 @@ class ParkInfoModel extends Model {
         $Park["Contact"] = $Contact;
 
         $VisitRecord = D('VisitRecord');
-        $visitData = $VisitRecord->where('parkid = '.$parkid)->select();
-        $Park["Visit"] = $visitData;
+        $con = array();
+        $con['parkid'] = $parkid;
+        $visitData = $VisitRecord->where($con)->select();
+        $Park['Visit'] = $visitData;
 
 		if(is_array($Park)){
             return $Park;
