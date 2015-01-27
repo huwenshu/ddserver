@@ -113,7 +113,7 @@ class IndexController extends BaseController {
 		$wxPayHelper->setParameter("out_trade_no", $prid);
 		$wxPayHelper->setParameter("total_fee", "1");
 		$wxPayHelper->setParameter("fee_type", "1");
-		$wxPayHelper->setParameter("notify_url", "http://duduparking.com/test/test_receiver.php");
+		$wxPayHelper->setParameter("notify_url", "http://duduche.me/driver.php/home/public/genOrderDone/");
 		$wxPayHelper->setParameter("spbill_create_ip", get_client_ip());
 		$wxPayHelper->setParameter("input_charset", "UTF-8");
 
@@ -123,11 +123,6 @@ class IndexController extends BaseController {
 
 	}
 
-	//预付成功，微信调用的回调函数
-	public function genOrderDone(){
-
-
-	}
 
 	/*
 	 * @desc 查询最后的若干数量的订单，或者查询最新的一条未支付订单
@@ -249,7 +244,7 @@ class IndexController extends BaseController {
 		$wxPayHelper->setParameter("out_trade_no", $prid);
 		$wxPayHelper->setParameter("total_fee", "1");	//todo 更新成remainFee
 		$wxPayHelper->setParameter("fee_type", "1");
-		$wxPayHelper->setParameter("notify_url", "http://duduche.me/driver.php/home/index/checkOutDone/");
+		$wxPayHelper->setParameter("notify_url", "http://duduche.me/driver.php/home/public/checkOutDone/");
 		$wxPayHelper->setParameter("spbill_create_ip", get_client_ip());
 		$wxPayHelper->setParameter("input_charset", "UTF-8");
 

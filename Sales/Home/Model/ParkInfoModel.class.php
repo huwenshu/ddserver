@@ -16,7 +16,7 @@ class ParkInfoModel extends Model {
         $map = array(); 
         $map['name'] = array('like','%'.$parkname.'%');     
         /* 获取数据 */
-        $Park = $this->where($map)->limit(50)->select();
+        $Park = $this->where($map)->order('updatetime desc')->limit(100)->select();
 
         if(is_array($Park)){
             return $Park;
