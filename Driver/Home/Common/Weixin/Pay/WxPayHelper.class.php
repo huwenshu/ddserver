@@ -60,7 +60,7 @@ class WxPayHelper
 		}
 
 	}
-	protected function get_biz_sign($bizObj){
+	function get_biz_sign($bizObj){
 		 foreach ($bizObj as $k => $v){
 			 $bizParameters[strtolower($k)] = $v;
 		 }
