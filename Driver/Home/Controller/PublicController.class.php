@@ -35,7 +35,7 @@ class PublicController extends BaseController {
         $data = $this->getUsercache($uid);
         if($data){
             if ($data['uuid'] == $uuid) {
-                $this->ajaxOk();
+                $this->ajaxOk('');
             }
             else{
                 $this->ajaxFail();
@@ -133,4 +133,8 @@ class PublicController extends BaseController {
 				
         return $fee;
     }
+
+
+
+	
 }

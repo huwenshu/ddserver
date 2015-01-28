@@ -262,4 +262,27 @@ class IndexController extends BaseController {
 		}
 
 	}
+
+
+	/*
+     *  @desc 设置pushid
+	 *  @param $pushid
+    */
+	public function setPushId($pushid){
+
+		$ParkAdmin = M('ParkAdmin');
+		$data = array();
+		$data['id'] = $this->uid;
+		$data['pushid'] = $pushid;
+
+		$result = $ParkAdmin->save($data);
+
+		if(empty($result)){
+			$this->ajaxMsg("更新pushid失败！");
+		}
+		else{
+			$this->ajaxOk(null);
+		}
+
+	}
 }
