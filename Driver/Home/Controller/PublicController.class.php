@@ -171,13 +171,18 @@ class PublicController extends BaseController {
     $payment_record = M('payment_record');
     $park_order = M('park_order');
     $oid = $payment_record->where(array('id'=>$out_trade_no))->getField('oid');
-    $parkid = $park_order->where(array('id'=>$oid))->getField('pid');
+    $park_order_data = $park_order->where(array('id'=>$oid))->find();
+    $parkid = $park_order_data['pid'];
+    $now = time();
 		if($isIn){
 			$payment_record->where(array('id'=>$out_trade_no))->save(array('state'=>1));
-			$park_order->where(array('id'=>$oid,'state'=>-1))->save(array('state'=>0,'startime'=>date("Y-m-d H:i:s")));
+			$endtime = $this->_parkingEndTime($now, $now+100, $parkid);
+			$park_order->where(array('id'=>$oid,'state'=>-1))->save(array('state'=>0,'startime'=>date("Y-m-d H:i:s", $now),'endtime'=>date("Y-m-d H:i:s", $endtime)));
 		}else{
 			$payment_record->where(array('id'=>$out_trade_no))->save(array('state'=>1));
-			$park_order->where(array('id'=>$oid))->save(array('state'=>2,'endtime'=>date("Y-m-d H:i:s")));
+			$starttime = strtotime($park_order_data['startime']);
+			$endtime = $this->_parkingEndTime($starttime, $now, $parkid);
+			$park_order->where(array('id'=>$oid))->save(array('state'=>2,'endtime'=>date("Y-m-d H:i:s", $endtime)));
 		}
 		
 		/*推送*/
@@ -233,6 +238,11 @@ class PublicController extends BaseController {
 	*/
 	public  function checkOutDone(){
 		return $this->doOrderDone(false);
+	}
+	public function parkingTimeTest($parkid, $mins){
+		$now = time();
+		$endtime = $this->_parkingEndTime($now, $now + $mins*60, $parkid);
+		echo $endtime;
 	}
 	//test
 	public function parkingFeeTest($parkid, $min = 30, $hour = 10, $year = 2015, $month = 1, $day = 23){
@@ -302,6 +312,45 @@ class PublicController extends BaseController {
 		}
 
 		return $fee;
+	}
+	//计算当前时间下，用户付费可以停到的时间
+	protected function _parkingEndTime($startTime, $endTime, $parkid){
+		$myt = $startTime;
+		$rulestime = M('rules_time');
+		$rulesmoney = M('rules_money');
+		while($startTime < $endTime){
+			$timeStr = date("H:i:s",$startTime);
+			//找到开始停车那个时间点所适用规则
+			$con1 = "parkid=".$parkid." and startime<='".$timeStr."' and endtime>='".$timeStr."'";
+			$ruleid = $rulestime->where($con1)->getField('id');
+			if(!$ruleid){//没有合适的规则
+				break;
+			}
+			//根据停车时长计算费用
+			$mins = ceil(($endTime-$startTime)/60);
+			$con2 = "rulesid=".$ruleid;
+			$moneyArr = $rulesmoney->where($con2)->order('mins')->select();
+			$arrLength = count($moneyArr);
+			$t=0;
+			for($i=0;$i < $arrLength;$i++){
+				if($moneyArr[$i]['mins']>=$mins){
+					$t=$moneyArr[$i]['mins']*60;
+					break;
+				}
+			}
+			if($i >= $arrLength){//超过规则所支持的时长，需要用最长所支持的时间
+				$t = $moneyArr[$arrLength-1]['mins']*60;
+				$mins = $moneyArr[$arrLength-1]['mins'];
+			}
+			$myt += $t;
+			$startTime += $mins*60;
+			/*if($mins <= 0){
+                dump($moneyArr);
+                break;
+            }*/
+		}
+
+		return $myt;
 	}
 
 	/**
