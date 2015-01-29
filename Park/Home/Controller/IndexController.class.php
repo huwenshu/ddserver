@@ -285,4 +285,58 @@ class IndexController extends BaseController {
 		}
 
 	}
+
+	/*
+     *  @desc 获取管理员端基本信息
+    */
+	public function getBaseInfo()
+	{
+		$cache = $this->getUsercache($this->uid);
+		$data = $cache['data'];
+		$parkid =  1;//$data['parkid'];
+
+		$Park = M('ParkInfo');
+		$con = array();
+		$con[id] = $parkid;
+		$parkData =  $Park->where($con)->find();
+
+		$result['parkstate'] = $parkData['parkstate'];
+
+		$Order = M('ParkOrder');
+		$map = array();
+		$map['pid'] = $parkid;
+		$map['state'] = 0;
+		$orderData = $Order->where($map)->select();
+		$result['way'] = count($orderData);
+
+		$map = array();
+		$map['pid'] = $parkid;
+		$map['state'] = 1;
+		$orderData = $Order->where($map)->select();
+		$result['in'] = count($orderData);
+
+		$map = array();
+		$map['pid'] = $parkid;
+		$map['state'] = 2;
+		$orderData = $Order->where($map)->select();
+		$result['out'] = count($orderData);
+
+		$map = array();
+		$map['pid'] = $parkid;
+		$map['state'] = 2;
+		$orderData = $Order->where($map)->select();
+		$result['out'] = count($orderData);
+
+
+		$beroreWeek = time() - (7 * 24 * 60 * 60);
+		$map = array();
+		$map['pid'] = $parkid;
+		$map['state'] = 3;
+		$map['leavetime'] = array('EGT', $beroreWeek);
+		$orderData = $Order->where($map)->select();
+		$result['deals'] = count($orderData);
+
+		$this->ajaxOk($result);
+
+	}
 }

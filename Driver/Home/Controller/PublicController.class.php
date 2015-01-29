@@ -174,10 +174,10 @@ class PublicController extends BaseController {
     $parkid = $park_order->where(array('id'=>$oid))->getField('pid');
 		if($isIn){
 			$payment_record->where(array('id'=>$out_trade_no))->save(array('state'=>1));
-			$park_order->where(array('id'=>$oid,'state'=>-1))->save(array('state'=>0,'startime'=>time()));
+			$park_order->where(array('id'=>$oid,'state'=>-1))->save(array('state'=>0,'startime'=>date("Y-m-d H:i:s")));
 		}else{
 			$payment_record->where(array('id'=>$out_trade_no))->save(array('state'=>1));
-			$park_order->where(array('id'=>$oid))->save(array('state'=>2,'endtime'=>time()));
+			$park_order->where(array('id'=>$oid))->save(array('state'=>2,'endtime'=>date("Y-m-d H:i:s")));
 		}
 		
 		/*推送*/
@@ -187,7 +187,8 @@ class PublicController extends BaseController {
 		$txt = $isIn?"车主已预付，注意请放行入库":"车主已付款，注意请放行出库";
 		$igt = new IGeTui(GT_HOST,GT_APPKEY,GT_MASTERSECRET);
 		//接收方
-		$cids = array('cbb4eaa0824d4b4b28cb5ba267dba9ed','7f1cbe039539576448ee0e7b0a78b7ad','7e15f5387abc091893d62420ae56ab52');
+		//$cids = array('cbb4eaa0824d4b4b28cb5ba267dba9ed','7f1cbe039539576448ee0e7b0a78b7ad','7e15f5387abc091893d62420ae56ab52');
+		$cids = $this->getPushIds($parkid, $isIn);
 		$targetList = array();
 		foreach($cids as $cid){
 			$target1 = new IGtTarget();
@@ -301,5 +302,64 @@ class PublicController extends BaseController {
 		}
 
 		return $fee;
+	}
+
+	/**
+	 *  @desc 获取通知的Pushid接口
+	 *  @param int $pid 停车场id
+	 *  @param boolean $type 通知阶段 true-预付完成 false-结算完成
+	 */
+	protected function getPushIds($pid, $type)
+	{
+		$Park = M('ParkInfo');
+		$map = array();
+		$map['id'] = $pid;
+		$parkData = $Park->where($map)->find();
+
+		if(empty($parkData)){
+			return null;
+		}
+		else{
+			$shortname = $parkData['shortname'];
+		}
+
+		$ParkAdmin = M('ParkAdmin');
+		$map = array();
+		$map['parkname'] = $shortname;
+		$adminData = $ParkAdmin->where($map)->select();
+
+		$result = array();
+		if(empty($adminData)){
+			return null;
+		}
+		else{
+			foreach($adminData as $key => $value){
+				if($type){
+					if($this->perCompare($value['jobfunction'], 1)){
+						$result[] = $value['pushid'];
+					}
+				}
+				else{
+					if($this->perCompare($value['jobfunction'], 2)){
+						$result[] = $value['pushid'];
+					}
+				}
+			}
+		}
+		return $result;
+	}
+
+	/**
+	 *  @desc 判断是否具有某项权限
+	 *  @param int $per 权限判断值
+	 *  @param int $base 权限比较值
+	 */
+	protected function perCompare($per, $base){
+		if(($per&$base) > 0){
+			return true;
+		}
+		else{
+			return false;
+		}
 	}
 }

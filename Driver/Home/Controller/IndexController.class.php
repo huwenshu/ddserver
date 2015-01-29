@@ -117,7 +117,9 @@ class IndexController extends BaseController {
 		$wxPayHelper->setParameter("spbill_create_ip", get_client_ip());
 		$wxPayHelper->setParameter("input_charset", "UTF-8");
 
-		$result = $wxPayHelper->create_biz_package();
+		$result = array();
+		$result['oid'] = $oid;
+		$result['paydata'] = $wxPayHelper->create_biz_package();
 		//$this->ajaxReturn($result,'jsonp');
 		$this->ajaxOk($result);
 
@@ -131,32 +133,44 @@ class IndexController extends BaseController {
 
 	public  function getOrder($last){
 		$Order = M('ParkOrder');
-		if($last){
-			$con['uid'] = $this->uid;
-			$con['state'] = array(0,1,'OR');
+		if($last == 1 ){
+			$map = array();
+			$map['uid'] = $this->uid;
+			$map['state'] = array(0,1,2,'OR');
+			$orderData = $Order->where($map)->order('updatetime desc')->find();
+			if(empty($orderData)){
+				$this->ajaxOk(null);
+			}
+			else{
+				$this->detailOrder($orderData['id']);
+			}
 		}
 		else{
+			$con = array();
 			$con['uid'] = $this->uid;
+			$orderData = $Order->where($con)->order('updatetime desc')->limit(15)->select();
+
+			$result = array();
+			foreach($orderData as $key => $value){
+				$tmp['oid'] = $value['id'];
+				$tmp['startTime'] = $value['startime'];
+				$tmp['state'] = $value['state'];
+				$tmp['remaintime'] = strtotime($value['endtime']) + C(DRIVER_LEAVE_TIME) - time();
+
+				$Park = M('ParkInfo');
+				$parkInfo = $Park->where('id = '.$value['pid'])->find();
+				$tmp['parkname'] = $parkInfo['name'];
+				$tmp['address'] = $parkInfo['address'];
+				$tmp['lat'] = $parkInfo['lat'];
+				$tmp['lng'] = $parkInfo['lng'];
+
+				array_push($result, $tmp);
+			}
+
+			$this->ajaxOk($result);
 		}
 
-		$orderData = $Order->where($con)->limit(15)->select();
 
-		$result = array();
-		foreach($orderData as $key => $value){
-			$tmp['oid'] = $value['id'];
-			$tmp['startTime'] = $value['startime'];
-
-			$Park = M('ParkInfo');
-			$parkInfo = $Park->where('id = '.$value['pid'])->find();
-			$tmp['parkname'] = $parkInfo['name'];
-			$tmp['address'] = $parkInfo['address'];
-			$tmp['lat'] = $parkInfo['lat'];
-			$tmp['lng'] = $parkInfo['lng'];
-
-			array_push($result, $tmp);
-		}
-
-		$this->ajaxOk($result);
 	}
 
 	/*
@@ -180,7 +194,10 @@ class IndexController extends BaseController {
 		$Order = M('ParkOrder');
 		$con = array('id' => $oid);
 		$orderData = $Order->where($con)->find();
+		$result['oid'] = $oid;
 		$result['startTime'] = $orderData['startime'];
+		$result['state'] = $orderData['state'];
+		$result['remaintime'] = strtotime($orderData['endtime']) + C(DRIVER_LEAVE_TIME) - time();
 
 		$pid = $orderData['pid'];
 		$uid = $orderData['uid'];
@@ -191,6 +208,7 @@ class IndexController extends BaseController {
 		$result['address'] = $parkData['address'];
 		$result['lat'] = $parkData['lat'];
 		$result['lng'] = $parkData['lng'];
+		$result['name'] = $parkData['name'];
 
 		$Driver = M('DriverInfo');
 		$con = array('id' => $uid);
