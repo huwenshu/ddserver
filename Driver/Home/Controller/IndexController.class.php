@@ -108,7 +108,7 @@ class IndexController extends BaseController {
 		$wxPayHelper = new \Home\Common\Weixin\Pay\WxPayHelper();
 
 		$wxPayHelper->setParameter("bank_type", "WX");
-		$wxPayHelper->setParameter("body", "预付停车费");
+		$wxPayHelper->setParameter("body", "预付停车费:".$temp['money']);
 		$wxPayHelper->setParameter("partner", "1220503701");
 		$wxPayHelper->setParameter("out_trade_no", $prid);
 		$wxPayHelper->setParameter("total_fee", "1");
@@ -155,7 +155,7 @@ class IndexController extends BaseController {
 				$tmp['oid'] = $value['id'];
 				$tmp['startTime'] = $value['startime'];
 				$tmp['state'] = $value['state'];
-				$tmp['remaintime'] = strtotime($value['endtime']) + C(DRIVER_LEAVE_TIME) - time();
+				$tmp['remaintime'] = strtotime($value['endtime'])  - time();
 
 				$Park = M('ParkInfo');
 				$parkInfo = $Park->where('id = '.$value['pid'])->find();
@@ -188,7 +188,11 @@ class IndexController extends BaseController {
 			$preSum = $preSum + $value['money'];
 		}
 
-		$totalFee = 20; //todo ，添加计费
+		$Order = M('ParkOrder');
+		$map = array();
+		$map['id'] = $oid;
+		$orderData = $Order->where($map)->find();
+		$totalFee = $this->parkingFee(strtotime($orderData['startime']), $orderData['pid']);
 		$remainFee = $totalFee - $preSum;
 
 		$Order = M('ParkOrder');
@@ -197,7 +201,7 @@ class IndexController extends BaseController {
 		$result['oid'] = $oid;
 		$result['startTime'] = $orderData['startime'];
 		$result['state'] = $orderData['state'];
-		$result['remaintime'] = strtotime($orderData['endtime']) + C(DRIVER_LEAVE_TIME) - time();
+		$result['remaintime'] = strtotime($orderData['endtime'])  - time();
 
 		$pid = $orderData['pid'];
 		$uid = $orderData['uid'];
@@ -237,7 +241,11 @@ class IndexController extends BaseController {
 			$preSum = $preSum + $value['money'];
 		}
 
-		$totalFee = 20;
+		$Order = M('ParkOrder');
+		$map = array();
+		$map['id'] = $oid;
+		$orderData = $Order->where($map)->find();
+		$totalFee = $this->parkingFee(strtotime($orderData['startime']), $orderData['pid']);
 		$remainFee = $totalFee - $preSum;
 
 
@@ -257,7 +265,7 @@ class IndexController extends BaseController {
 		$wxPayHelper = new \Home\Common\Weixin\Pay\WxPayHelper();
 
 		$wxPayHelper->setParameter("bank_type", "WX");
-		$wxPayHelper->setParameter("body", "预付停车费");
+		$wxPayHelper->setParameter("body", "结算停车费(还需付款)：".$remainFee);
 		$wxPayHelper->setParameter("partner", "1220503701");
 		$wxPayHelper->setParameter("out_trade_no", $prid);
 		$wxPayHelper->setParameter("total_fee", "1");	//todo 更新成remainFee

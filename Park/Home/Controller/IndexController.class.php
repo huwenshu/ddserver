@@ -118,6 +118,7 @@ class IndexController extends BaseController {
 			$con1 = array('id' => $driverId);
 			$driverData = $Driver->where($con1)->find();
 			$tmp['carid'] = $driverData['carid'];
+			$tmp['telephone'] = $driverData['telephone'];
 			$tmp['startTime'] = $value['startime'];
 
 			array_push($result, $tmp);
@@ -137,7 +138,8 @@ class IndexController extends BaseController {
 		$parkid = $data['parkid'];
 
 		$Order = M('ParkOrder');
-		$con = array('pid' => $parkid, 'state' => 2);
+		$con['pid'] = $parkid;
+		$con['endtime'] = array('EGT', time());
 		$orderData = $Order->where($con)->select();
 
 		$result = array();
@@ -149,8 +151,9 @@ class IndexController extends BaseController {
 			$con1 = array('id' => $driverId);
 			$driverData = $Driver->where($con1)->find();
 			$tmp['carid'] = $driverData['carid'];
-			$tmp['startTime'] = $value['startime'];
-			$tmp['endTime'] = $value['endtime'];
+			$tmp['startime'] = $value['startime'];
+			$tmp['endtime'] = $value['endtime'];
+			$tmp['remaintime'] = $value['endtime'] - time();
 
 			array_push($result, $tmp);
 		}
@@ -176,7 +179,7 @@ class IndexController extends BaseController {
 		$updateData['updater'] = $this->uid;
 		$orderData = $Order->where($con)->save($updateData);
 
-		if($orderData){
+		if($orderData !== false){
 			$this->ajaxOk("");
 		}
 		else{
@@ -277,8 +280,8 @@ class IndexController extends BaseController {
 
 		$result = $ParkAdmin->save($data);
 
-		if(empty($result)){
-			$this->ajaxMsg("更新pushid失败！");
+		if($result === false){
+			$this->ajaxMsg("更新pushid失败！id：".$this->uid);
 		}
 		else{
 			$this->ajaxOk(null);
@@ -321,11 +324,6 @@ class IndexController extends BaseController {
 		$orderData = $Order->where($map)->select();
 		$result['out'] = count($orderData);
 
-		$map = array();
-		$map['pid'] = $parkid;
-		$map['state'] = 2;
-		$orderData = $Order->where($map)->select();
-		$result['out'] = count($orderData);
 
 
 		$beroreWeek = time() - (7 * 24 * 60 * 60);
