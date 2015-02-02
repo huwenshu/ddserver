@@ -106,7 +106,9 @@ class IndexController extends BaseController {
 		$parkid = $data['parkid'];
 
 		$Order = M('ParkOrder');
-		$con = array('pid' => $parkid, 'state' => 1);
+		$con = array();
+		$con['pid'] = $parkid;
+		$con['state'] = array(1,2, 'OR');
 		$orderData = $Order->where($con)->select();
 
 		$result = array();
@@ -139,7 +141,8 @@ class IndexController extends BaseController {
 
 		$Order = M('ParkOrder');
 		$con['pid'] = $parkid;
-		$con['endtime'] = array('EGT', time());
+		$con['state'] = array('NEQ',3);
+		$con['endtime'] = array('EGT', date('Y-m-d H:i:s'));
 		$orderData = $Order->where($con)->select();
 
 		$result = array();
@@ -153,7 +156,7 @@ class IndexController extends BaseController {
 			$tmp['carid'] = $driverData['carid'];
 			$tmp['startime'] = $value['startime'];
 			$tmp['endtime'] = $value['endtime'];
-			$tmp['remaintime'] = $value['endtime'] - time();
+			$tmp['remaintime'] = strtotime($value['endtime']) - time();
 
 			array_push($result, $tmp);
 		}
@@ -310,17 +313,20 @@ class IndexController extends BaseController {
 		$map['pid'] = $parkid;
 		$map['state'] = 0;
 		$orderData = $Order->where($map)->select();
-		$result['way'] = count($orderData);
-
-		$map = array();
-		$map['pid'] = $parkid;
-		$map['state'] = 1;
-		$orderData = $Order->where($map)->select();
 		$result['in'] = count($orderData);
 
+
 		$map = array();
 		$map['pid'] = $parkid;
-		$map['state'] = 2;
+		$map['state'] = array(1,2, 'OR');
+		$orderData = $Order->where($map)->select();
+		$result['at'] = count($orderData);
+
+
+		$map = array();
+		$map['pid'] = $parkid;
+		$map['state'] = array('NEQ',3);
+		$map['endtime'] = array('EGT', date('Y-m-d H:i:s'));
 		$orderData = $Order->where($map)->select();
 		$result['out'] = count($orderData);
 
