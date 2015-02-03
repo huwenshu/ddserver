@@ -18,6 +18,7 @@ class PublicController extends BaseController {
 
         if(!empty($data)){
             $uid = $data['id'];
+            $parkid = $data['parkid'];
             $permission = $data['jobfunction'];
         }
         else{
@@ -25,11 +26,10 @@ class PublicController extends BaseController {
         }
 
         $ParkInfo = M('ParkInfo');
-        $con = array('shortname' => $parkname);
+        $con = array('id' => $parkid);
         $parkInfo = $ParkInfo->where($con)->find();
 
         if(!empty($parkInfo)){
-            $parkid = $parkInfo['id'];
             $parkFullName = $parkInfo['name'];
         }
         else{
@@ -48,7 +48,7 @@ class PublicController extends BaseController {
         $data = $this->getUsercache($uid);
         if($data){
             if ($data['uuid'] == $uuid) {
-                $this->ajaxOk();
+                $this->ajaxOk('');
             }
             else{
                 $this->ajaxFail();

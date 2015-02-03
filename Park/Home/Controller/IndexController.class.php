@@ -297,16 +297,23 @@ class IndexController extends BaseController {
     */
 	public function getBaseInfo()
 	{
+
 		$cache = $this->getUsercache($this->uid);
 		$data = $cache['data'];
-		$parkid =  1;//$data['parkid'];
+		$parkid = $data['parkid'];
 
 		$Park = M('ParkInfo');
 		$con = array();
 		$con[id] = $parkid;
 		$parkData =  $Park->where($con)->find();
 
-		$result['parkstate'] = $parkData['parkstate'];
+		if(empty($parkData)){
+			$this->ajaxMsg("用户名错误:".$this->uid);
+		}
+		else{
+			$result['parkstate'] = $parkData['parkstate'];
+		}
+
 
 		$Order = M('ParkOrder');
 		$map = array();
