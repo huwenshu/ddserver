@@ -23,7 +23,7 @@ return array(
     'APP_USE_NAMESPACE'    =>    false,
     
     /* 调试配置 */
-    'SHOW_PAGE_TRACE' => true,
+    'SHOW_PAGE_TRACE' => false,
     
     /* URL配置 */
     'URL_CASE_INSENSITIVE' => true, //默认false 表示URL区分大小写 true则表示不区分大小写
@@ -70,6 +70,14 @@ return array(
 //    'SIGNTYPE'  =>  'sha1',
 //    'PARTNERKEY' => '0a870e4e9d1b1376587bd414316aed86',//通加密串
 
+
+    'HINT_TPL' => '<xml>
+	<ToUserName><![CDATA[%s]]></ToUserName>
+	<FromUserName><![CDATA[%s]]></FromUserName>
+	<CreateTime>%s</CreateTime>
+	<MsgType><![CDATA[%s]]></MsgType>
+	<Content><![CDATA[%s]]></Content>
+</xml>',
 
     'MENU' => array(
         'button'=>array(

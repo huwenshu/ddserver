@@ -42,20 +42,35 @@ class PublicController extends BaseController {
 
     public function checkLogin($uid, $uuid){
         $data = $this->getUsercache($uid);
-        if($data){
+        if(!empty($data)){
             if ($data['uuid'] == $uuid) {
                 $this->ajaxOk('');
             }
             else{
-                $this->ajaxFail();
+                //$this->ajaxFail();
+				$this->ajaxMsg('uuid无效,uid'.$uid);
             }
         }
         else{
-            $this->ajaxFail();
+            //$this->ajaxFail();
+			$this->ajaxMsg('uid无效');
         }
 
     }
 
+	//todo
+	//用于测试登陆
+	public function checkUid($uid){
+		$data = $this->getUsercache($uid);
+		if(!empty($data)){
+			$this->ajaxOk('uuid:'.$data['uuid']);
+		}
+		else{
+			//$this->ajaxFail();
+			$this->ajaxMsg('uuid不存在!');
+		}
+
+	}
 
 	protected function IGtNotificationTemplateDemo($title, $notice, $msg){
         $template =  new IGtNotificationTemplate();

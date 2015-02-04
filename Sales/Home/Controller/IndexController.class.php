@@ -150,10 +150,10 @@ class IndexController extends  BaseController {
 	public function savevisit(){
 		$parkid = I('post.id');
 		$status = I('post.status');
-		$contactInfo = array('contactname' => I('contactname'), 'contactgender' => I('contactgender'),'contactphone' => I('contactphone'),
-			'contactjob' => I('contactjob'));
+		$contactInfo = array('contactname' => I('post.contactname'), 'contactgender' => I('post.contactgender'),'contactphone' => I('post.contactphone'),
+			'contactjob' => I('post.contactjob'));
 
-		$visitRecord = array('visitime' => I('visitime'), 'note' => I('note'), 'intention' => I('intention'));
+		$visitRecord = array('visitime' => I('post.visitime'), 'note' => I('post.note'), 'intention' => I('post.intention'));
 
 		//更新合作状态
 		$Park = D('ParkInfo');
@@ -176,7 +176,9 @@ class IndexController extends  BaseController {
 				'telephone' => $contactInfo['contactphone'][$i], 'job' => $contactInfo['contactjob'][$i], 'creater' => UID,
 				'createtime' => date('Y-m-d H:i:s'),'updater' => UID);
 		}
-		$result1 = $Contact->addAll($dataList1);
+		if($count  != 0){
+			$result1 = $Contact->addAll($dataList1);
+		}
 
 
 		//更新拜访记录
@@ -192,7 +194,10 @@ class IndexController extends  BaseController {
 			$dataList2[] = array('parkid' => $parkid,'visitime' => $visitRecord['visitime'][$i], 'intention' => $visitRecord['intention'][$i],
 				'note' => $visitRecord['note'][$i], 'creater' => UID, 'createtime' => date('Y-m-d H:i:s'),'updater' => UID);
 		}
-		$result2 = $Visit->addAll($dataList2);
+		if(!empty($dataList2)){
+			$result2 = $Visit->addAll($dataList2);
+		}
+
 
 
 		if($result1 && $result2){

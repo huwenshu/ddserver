@@ -2,8 +2,28 @@
 use Think\Controller;
 class WeixinController extends Controller {
     public function index(){
- 		echo $this->checkSignature();
+		if($this->checkSignature()) {
+			if($_GET["echostr"]) {
+				echo $_GET["echostr"];
+				exit(0);
+			}
+
+		} else {
+			exit(0);
+		}
+		$postStr = file_get_contents ( "php://input" );
+		if (!empty ( $postStr )) {
+			$postObj = simplexml_load_string ( $postStr, 'SimpleXMLElement', LIBXML_NOCDATA );
+			if(NULL == $postObj) {
+				exit(0);
+			}
+			else{
+				$this->process($postObj);
+			}
+		}
     }
+
+
 
 
     public function creatMenu(){
@@ -30,7 +50,6 @@ class WeixinController extends Controller {
     	$ret = $this->doCurlGetRequest($url, $para);
     	$retData = json_decode($ret, true);
     	$token = $retData['access_token'];
-
     	return $token;
     }
 
@@ -39,23 +58,58 @@ class WeixinController extends Controller {
 		$signature = $_GET["signature"];
 		$timestamp = $_GET["timestamp"];
 		$nonce = $_GET["nonce"];
-
 		$token = C('WEIXIN_TOKEN');
 		$tmpArr = array($token, $timestamp, $nonce);
-		sort($tmpArr);
+		sort($tmpArr,SORT_STRING);
 		$tmpStr = implode( $tmpArr );
 		$tmpStr = sha1( $tmpStr );
-
 		if( $tmpStr == $signature ){
-			if($_GET["echostr"]) {
-				echo $_GET["echostr"];
-				exit(0);
-			}
+			return true;
 		}else{
-			//恶意请求：获取来来源ip，并写日志
-			echo "error!";
-			exit(0);	
+			return false;
 		}
+	}
+
+	//处理微信消息
+	protected function process($postObj){
+
+		$_openid  =  (string)trim($postObj->FromUserName);
+		$_msgType =  (string)trim($postObj->MsgType);
+
+		$nearURL = "http://duduche.me/html/userhtml/index.html?m=map&openid=".$_openid;
+		$findURL = "http://duduche.me/html/userhtml/index.html?m=mapsearch&openid=".$_openid;
+		$feeURL  = "http://duduche.me/html/userhtml/index.html?m=myjiesuan&openid=".$_openid;
+
+		if ($_msgType == 'event') {
+			$_event = (string)$postObj->Event;
+			$_eventKey = (string)$postObj->EventKey;
+			if($_event == 'subscribe'){
+				$content = '欢迎您关注嘟嘟停车！我们专注于解决您的停车难问题，目前尚只在上海提供服务，其他城市正在准备中。
+嘟嘟停车有如下功能，请点击下面的链接使用：
+
+1-找附近的空车位：<a href="'.$nearURL.'">单击这里</a>
+
+2-搜索地址找空车位：<a href="'.$findURL.'">单击这里</a>
+
+3-停车缴费：<a href="'.$feeURL.'">单击这里</a>';
+				$resultStr = sprintf ( C('HINT_TPL'), $_openid, C('USERNAME_WEIXIN'), time(), 'text', $content );
+				echo  $resultStr;
+			}
+		}
+		else{
+			$content = '欢迎您关注嘟嘟停车！我们专注于解决您的停车难问题，目前尚只在上海提供服务，其他城市正在准备中。
+嘟嘟停车有如下功能，请点击下面的链接使用：
+
+1-找附近的空车位：<a href="'.$nearURL.'">单击这里</a>
+
+2-搜索地址找空车位：<a href="'.$findURL.'">单击这里</a>
+
+3-停车缴费：<a href="'.$feeURL.'">单击这里</a>';
+			$resultStr = sprintf ( C('HINT_TPL'), $_openid,  C('USERNAME_WEIXIN'), time(), 'text', $content );
+			//Think\Log::write($resultStr,'ERR');
+			echo  $resultStr;
+		}
+
 	}
 
 protected function doCurlPostRequest($url, $requestString, $timeout = 5) {   
