@@ -1,6 +1,6 @@
 <?php
 use Think\Controller;
-class WeixinController extends Controller {
+class WeixinController extends BaseController {
     public function index(){
 		if($this->checkSignature()) {
 			if($_GET["echostr"]) {
@@ -76,9 +76,24 @@ class WeixinController extends Controller {
 		$_openid  =  (string)trim($postObj->FromUserName);
 		$_msgType =  (string)trim($postObj->MsgType);
 
-		$nearURL = "http://duduche.me/html/userhtml/index.html?m=map&openid=".$_openid;
-		$findURL = "http://duduche.me/html/userhtml/index.html?m=mapsearch&openid=".$_openid;
-		$feeURL  = "http://duduche.me/html/userhtml/index.html?m=myjiesuan&openid=".$_openid;
+		//数据库中是否已经有这个openid
+		$DriverInfo = M('DriverInfo');
+		$map = array();
+		$map['openid'] = $_openid;
+		$driverData = $DriverInfo->where($map)->find();
+		$tmpStr = '';
+		if(empty($driverData)){
+			$tmpStr = '&type=2';//还没有这个openid
+		}
+		else{
+			$uid = $driverData['id'];
+			$uuid = $this->createUUID($uid);
+			$tmpStr = '&type=3&uid='.$uid.'$uuid='.$uuid;//已经有这个openid,返回uid和uuid
+		}
+
+		$nearURL = "http://duduche.me/html/userhtml/index.html?m=map&openid=".$_openid.$tmpStr;
+		$findURL = "http://duduche.me/html/userhtml/index.html?m=mapsearch&openid=".$_openid.$tmpStr;
+		$feeURL  = "http://duduche.me/html/userhtml/index.html?m=myjiesuan&openid=".$_openid.$tmpStr;
 
 		if ($_msgType == 'event') {
 			$_event = (string)$postObj->Event;

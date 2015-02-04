@@ -40,6 +40,49 @@ class PublicController extends BaseController {
         $this->ajaxOk($temp);
     }
 
+	/**
+	 * 用户登录
+	 */
+	public function wxlogin($openid=null, $phone = null, $carid = null){
+
+		$Driver = M('DriverInfo');
+
+		$map = array('openid' => $openid);
+		$data = $Driver->where($map)->find();
+		if(!empty($data)){//openid已经存在
+			$uid = $data['id'];
+		}
+		else{//openid不存在
+
+			$map = array('telephone' => $phone);
+			$data = $Driver->where($map)->find();
+
+			if(!empty($data)){//电话号码已经存在
+				$uid = $data['id'];
+				$map = array('id' => $uid);
+				$temp['openid'] = $openid;
+				$temp['updater'] = UID;
+				$temp['updatetime'] = date('Y-m-d H:i:s');
+				$Driver->where($map)->save($temp);
+				//todo:更新车牌号
+			}
+			else{
+				$arr['openid'] = $openid;
+				$arr['telephone'] = $phone;
+				$arr['carid'] = $carid;
+				$arr['creater'] = UID;
+				$arr['createtime'] = date('Y-m-d H:i:s');
+				$uid = $Driver->add($arr);
+			}
+		}
+
+
+		$uuid = $this->createUUID($uid);
+		$temp = array('uid' => $uid, 'uuid' =>$uuid);
+		$this->ajaxOk($temp);
+	}
+
+
     public function checkLogin($uid, $uuid){
         $data = $this->getUsercache($uid);
         if(!empty($data)){

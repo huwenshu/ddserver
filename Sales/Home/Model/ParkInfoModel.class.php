@@ -66,6 +66,7 @@ class ParkInfoModel extends Model {
         if(is_array($Park)){
             /* 更新停车场数据 */
             $parkInfo['updater'] = UID;
+            $parkInfo['updatetime'] = date('Y-m-d H:i:s');
             $this->save($parkInfo);
             $result = $parkInfo['id'];
         } else {
@@ -73,6 +74,7 @@ class ParkInfoModel extends Model {
             $parkInfo['creater'] = UID;
             $parkInfo['createtime'] = date('Y-m-d H:i:s');
             $parkInfo['updater'] = UID;
+            $parkInfo['updatetime'] = date('Y-m-d H:i:s');
             if($this->create($parkInfo)){
                 $result = $this->add();
             } else {

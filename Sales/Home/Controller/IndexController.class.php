@@ -158,6 +158,8 @@ class IndexController extends  BaseController {
 		//更新合作状态
 		$Park = D('ParkInfo');
 		$Park->status = $status;
+		$Park->updater = UID;
+		$Park->updatetime = date('Y-m-d H:i:s');
 		$con = array();
 		$con['id'] = $parkid;
 		$Park->where($con)->save();
