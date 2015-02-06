@@ -45,6 +45,12 @@ class ParkInfoModel extends Model {
         $visitData = $VisitRecord->where($con)->select();
         $Park['Visit'] = $visitData;
 
+        $ParkAdmin = D('ParkAdmin');
+        $con = array();
+        $con['parkid'] = $parkid;
+        $adminData = $ParkAdmin->where($con)->select();
+        $Park['Admin'] = $adminData;
+
 		if(is_array($Park)){
             return $Park;
 		} else {

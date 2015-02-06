@@ -148,12 +148,14 @@ class IndexController extends BaseController {
 		else{
 			$con = array();
 			$con['uid'] = $this->uid;
+			$con['state'] = array(0,1,2,3,'OR');
 			$orderData = $Order->where($con)->order('updatetime desc')->limit(15)->select();
 
 			$result = array();
 			foreach($orderData as $key => $value){
 				$tmp['oid'] = $value['id'];
 				$tmp['startTime'] = $value['startime'];
+				$tmp['startTimeStamp'] = strtotime($value['startime']);
 				$tmp['state'] = $value['state'];
 				$tmp['remaintime'] = strtotime($value['endtime'])  - time();
 

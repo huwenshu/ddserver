@@ -168,39 +168,54 @@
 
         </div>
         <div id="panel-2">
-            <form action="{:U('savevisit')}" method="post">
-                <input type="hidden"  name="id" value="{$park_info[id]}" />
                 <table style="display: flex;width: 95%;margin: 0 auto;margin-top: 10px">
                     <tr>
-                        <td style="width: 100%"><label for="status">合作状态：</label></td>
-                    </tr><tr>
-                        <td><select id="status" name="status">
-                            <option value="1"  <?php if ($park_info[status]==1)  echo 'selected="selected"';?>>已合作</option>
-                            <option value="0"  <?php if ($park_info[status]==0)  echo 'selected="selected"';?>>正在洽谈</option>
-                            <option value="-1" <?php if ($park_info[status]==-1) echo 'selected="selected"';?>>未接触</option>
-                        </select>
+                        <td>
+                            <fieldset>
+                                <legend>合作状态:</legend>
+                                <form action="{:U('savecorp')}" method="post">
+                                    <input type="hidden"  name="id" value="{$park_info[id]}" />
+                                    <select id="status" name="status">
+                                        <option value="1"  <?php if ($park_info[status]==1)  echo 'selected="selected"';?>>已合作</option>
+                                        <option value="0"  <?php if ($park_info[status]==0)  echo 'selected="selected"';?>>正在洽谈</option>
+                                        <option value="-1" <?php if ($park_info[status]==-1) echo 'selected="selected"';?>>未接触</option>
+                                    </select>
+                                    <input type="submit" class="mui-btn mui-btn-success mui-btn-blue" style="margin-top: 1px" value="保存合作状态"/>
+                                </form>
                         </td>
-                    </tr><tr>
+                    </tr>
+
+
+                    <tr>
                         <td>
                             <fieldset>
                                 <legend>拜访记录:</legend>
                             <ul style="width: 100%">
+
                                 <?php
                                     $visits = $park_info[Visit];
                                     foreach ($visits as $key => $value) {
                                         //echo  "<li style='width: 100%' class='myborder'>拜访时间：<input style="width: 50%" type='text'  name='visitime[]' value='".$value['visitime']."'/> <br>合作意愿：<select  name='intention[]'><option value='0'".intention(0,$value["intention"])."><br>明确拒绝</option><option value='1'".intention(1,$value["intention"])."><br>很弱</option><option value='2'".intention(2,$value["intention"])."><br>一般</option><option value='3'".intention(3,$value["intention"]).">强</option></select> 备注：<input type='text'  name='note[]' value='".$value['note']."' /> <button type='button' class='removeVisit mui-btn-danger'>删除</button></li>";
+
                                         echo  "<li class='myborder' style='overflow: hidden'>";
-                                        echo "拜访时间：<input style='width: 50%' type='text'  name='visitime[]' value='".$value['visitime']."'/><br>";
-                                        echo " 合作意愿：<select style='width: 50%'  name='intention[]'><option value='0'".intention(0,$value["intention"]).">明确拒绝</option><nobr>";
+                                        echo "<form action=".U('savevisit')." method=post>";
+                                        echo "<input type='hidden'  name='parkid' value=$park_info[id] />";
+                                        echo "<input type='hidden'  name='id' value=$value[id] />";
+                                        echo "拜访时间：<input style='width: 50%' type='text'  name='visitime' value='".$value['visitime']."'/><br>";
+                                        echo " 合作意愿：<select style='width: 50%'  name='intention'><option value='0'".intention(0,$value["intention"]).">明确拒绝</option><nobr>";
                                         echo "<option value='1'".intention(1,$value["intention"]).">很弱</option>";
                                         echo "<option value='2'".intention(2,$value["intention"]).">一般</option>";
                                         echo "<option value='3'".intention(3,$value["intention"]).">强</option>";
                                         echo "</select> <br>";
-                                        //echo "备注：<input type='text'  name='note[]' value='".$value['note']."' /> <button type='button' class='removeVisit'>删除</button></li>";
-                                        echo "备注：<br><textarea   name='note[]' value='' />".$value['note']."</textarea>";
+                                        echo "备注：<br><textarea   name='note' value='' />".$value['note']."</textarea>";
+                                        echo "<button style='float: left;margin: 10px;' type='button' class='saveVisit mui-btn mui-btn-danger'>保存</button>";
+                                        echo " </form>";
+                                        echo "<form action=".U('delvisit')." method=post>";
+                                        echo "<input type='hidden'  name='parkid' value=$park_info[id] />";
+                                        echo "<input type='hidden'  name='id' value=$value[id] />";
                                         echo "<button style='float: right;margin: 10px;' type='button' class='removeVisit mui-btn mui-btn-danger'>删除</button><hr style='clear: both;margin: 5px'></li>";
-
-                                    }
+                                        echo " </form>";
+                                }
 
                                     function intention($value1,$value2){
                                         if($value1 == $value2){
@@ -211,6 +226,7 @@
                                     }
 
                                 ?>
+
                             </ul>
                             <button class="mui-btn mui-btn-success mui-btn-block" id="addVisit">添加拜访记录</button>
                             </fieldset>
@@ -225,12 +241,20 @@
                     foreach ($contacts as $key => $value) {
                                 //echo  "<li class='myborder'>姓名：<input type='text'  name='contactname[]' value='".$value['name']."'/> 性别：<select  name='contactgender[]'><option value='1'".gender(0,$value["gender"]).">男</option><option value='0'".gender(1,$value["gender"]).">女</option></select> 电话：<input type='text'  name='contactphone[]' value='".$value['telephone']."' /> 职务：<input type='text'  name='contactjob[]' value='".$value['job']."' /> <button type='button' class='removeContact mui-btn-danger'>删除</button></li>";
                                 echo  "<li class='myborder'>";
-                                echo "姓名：<input type='text'  name='contactname[]' value='".$value['name']."'/><br>";
-                                echo "性别：<select  name='contactgender[]'><option value='1'".gender(0,$value["gender"]).">男</option><option value='0'".gender(1,$value["gender"]).">女</option></select><br>";
-                                echo "电话：<input type='text'  name='contactphone[]' value='".$value['telephone']."' /><br>";
-                                echo "职务：<input type='text'  name='contactjob[]' value='".$value['job']."' /><br>";
+                                echo "<form action=".U('savecontact')." method=post>";
+                                echo "<input type='hidden'  name='parkid' value=$park_info[id] />";
+                                echo "<input type='hidden'  name='id' value=$value[id] />";
+                                echo "姓名：<input type='text'  name='contactname' value='".$value['name']."'/><br>";
+                                echo "性别：<select  name='contactgender'><option value='0'".gender('0',$value["gender"]).">男</option><option value='1'".gender('1',$value["gender"]).">女</option></select><br>";
+                                echo "电话：<input type='text'  name='contactphone' value='".$value['telephone']."' /><br>";
+                                echo "职务：<input type='text'  name='contactjob' value='".$value['job']."' /><br>";
+                                echo "<button style='float: left;margin: 10px;' type='button' class='saveContact mui-btn mui-btn-danger'>保存</button>";
+                                echo " </form>";
+                                echo "<form action=".U('delcontact')." method=post>";
+                                echo "<input type='hidden'  name='parkid' value=$park_info[id] />";
+                                echo "<input type='hidden'  name='id' value=$value[id] />";
                                 echo "<button style='float: right;margin: 10px' type='button' class='removeContact mui-btn mui-btn-danger'>删除</button><hr style='clear: both;margin: 5px'></li>";
-
+                                echo " </form>";
                             }
 
                             function gender($value1,$value2){
@@ -246,14 +270,81 @@
                         <button type="button" class="mui-btn mui-btn-success mui-btn-block" id="addContact">添加联系人</button>
                         </fieldset>
                     </td>
-                    </tr>
-                    <tr>
-                        <td colspan=2>
-                            <input type="submit" class="mui-btn mui-btn-success mui-btn-blue" style="margin: 10px" />
-                        </td>
-                    </tr>
+                    </tr><tr>
+                    <td>
+                        <fieldset>
+                            <legend>车场管理员:</legend>
+                            <ul>
+                                <?php
+                                $admins = $park_info[Admin];
+                                foreach ($admins as $key => $value) {
+                                    echo  "<li class='myborder'>";
+                                    echo "<form action=".U('saveadmin')." method=post>";
+                                    echo "<input type='hidden'  name='parkid' value=$park_info[id] />";
+                                    echo "<input type='hidden'  name='id' value=$value[id] />";
+                                    echo "停车场：<input type='text'  name='parkname' readonly value='".$value['parkname']."'/><br>";
+                                    echo "用户名：<input type='text'  name='username' value='".$value['username']."'/><br>";
+                                    echo "密码：<input type='password'  name='password' value='".$value['password']."' /><br>";
+                                    echo "姓名：<input type='text'  name='name' value='".$value['name']."' /><br>";
+                                    echo "职能:<br>".getJobs($value['jobfunction']);
+                                    echo "<br>";
+                                    echo "<button style='float: left;margin: 10px;' type='button' class='saveAdmin mui-btn mui-btn-danger'>保存</button>";
+                                    echo " </form>";
+                                    echo "<form action=".U('deladmin')." method=post>";
+                                    echo "<input type='hidden'  name='parkid' value=$park_info[id] />";
+                                    echo "<input type='hidden'  name='id' value=$value[id] />";
+                                    echo "<button style='float: right;margin: 10px' type='button' class='removeAdmin mui-btn mui-btn-danger'>删除</button><hr style='clear: both;margin: 5px'></li>";
+                                    echo " </form>";
+                                }
+
+                                function getJobs($jobs){
+                                $tmp = '';
+
+                                if(($jobs & 1) == 1){
+                                    $tmp .= '<input style="width: 10%" type="checkbox" name="jobfunction[]" value="1" checked /><span>入口管理</span>';
+                                }
+                                else{
+                                    $tmp .= '<input style="width: 10%" type="checkbox" name="jobfunction[]" value="1" /><span>入口管理</span>';
+                                }
+
+                                if(($jobs & 2) == 2){
+                                    $tmp .= '<input style="width: 10%" type="checkbox" name="jobfunction[]" value="2" checked /><span>出口管理</span>';
+                                }
+                                else{
+                                    $tmp .= '<input style="width: 10%" type="checkbox" name="jobfunction[]" value="2" /><span>出口管理</span>';
+                                }
+
+                                if(($jobs & 4) == 4){
+                                    $tmp .= '<input style="width: 10%" type="checkbox" name="jobfunction[]" value="4" checked /><span>收费</span><br>';
+                                }
+                                else{
+                                    $tmp .= '<input style="width: 10%" type="checkbox" name="jobfunction[]" value="4" /><span>收费</span><br>';
+                                }
+
+                                if(($jobs & 8) == 8){
+                                    $tmp .= '<input style="width: 10%" type="checkbox" name="jobfunction[]" value="8" checked /><span>公司管理</span>';
+                                }
+                                else{
+                                    $tmp .= '<input style="width: 10%" type="checkbox" name="jobfunction[]" value="8" /><span>公司管理</span>';
+                                }
+
+                                if(($jobs & 16) == 16){
+                                    $tmp .= '<input style="width: 10%" type="checkbox" name="jobfunction[]" value="16" checked /><span>金额提现</span>';
+                                }
+                                else{
+                                    $tmp .= '<input style="width: 10%" type="checkbox" name="jobfunction[]" value="16" /><span>金额提现</span>';
+                                }
+
+                                return $tmp;
+                                }
+                                ?>
+                            </ul>
+                            <button type="button" class="mui-btn mui-btn-success mui-btn-block" id="addAdmin">添加管理员</button>
+                        </fieldset>
+                    </td>
+
                 </table>
-            </form>
+
         </div>
         </div>
 
@@ -527,29 +618,50 @@
         $(".tabs").tabs();
         $('#addContact').click(function(){
                 //var temp = "<li class='myborder'>姓名：<input type='text'  name='contactname[]' /> 性别：<select  name='contactgender[]'><option value='1'>男</option><option value='0' selected='selected'>女</option></select> 电话：<input type='text'  name='contactphone[]' value='' /> 职务：<input type='text'  name='contactjob[]' value='' /> <button type='button' class='removeContact'>删除</button></li>";
-                var temp = '<li class="myborder">姓名：<input type="text" name="contactname[]" value=""><br>性别：<select name="contactgender[]"><option value="1" selected="selected">男</option><option value="0">女</option></select><br>电话：<input type="text" name="contactphone[]" value=""><br>职务：<input type="text" name="contactjob[]" value=""><br><button style="float: right;margin: 10px" type="button" class="removeContact mui-btn mui-btn-danger">删除</button><hr style="clear: both;margin: 5px"></li>';
-                var row = $(temp);
+
+                    var temp = '<li class="myborder"><form action="{:U('savecontact')}" method=post><input type="hidden"  name="parkid" value="{$park_info[id]}" /> <input type="hidden"  name="id" value="" />姓名：<input type="text" name="contactname" value=""><br>性别：<select name="contactgender"><option value="1" selected="selected">男</option><option value="0">女</option></select><br>电话：<input type="text" name="contactphone" value=""><br>职务：<input type="text" name="contactjob" value=""><br>'
+                    +  '<button style="float: left;margin: 10px;" type="button" class="saveContact mui-btn mui-btn-danger">保存</button>'+
+                    '</form>'+  '<form action="{:U('delcontact')}" method=post>'+
+                    '<input type="hidden"  name="parkid" value="{$park_info[id]}" /> <input type="hidden"  name="id" value="" />'+
+                    '<button style="float: right;margin: 10px" type="button" class="removeContact mui-btn mui-btn-danger">删除</button><hr style="clear: both;margin: 5px"></li>'+'</form>';
+                    var row = $(temp);
                 row.find('.removeContact').click(function(){
-                    $(this).parent().remove();
-                });
+                    //$(this).parent().remove();
+                    $(this).parent().submit();
+                });row.find('.saveContact').click(function(){
+                        $(this).parent().submit();
+                    });
                 $(this).prev().append(row);
             }
         );
         
         $('.removeContact').click(function(){
-                $(this).parent().remove();
+                    //$(this).parent().remove();
+                    $(this).parent().submit();
             }
+        );
+        $('.saveContact').click(function(){
+                    $(this).parent().submit();
+                }
         );
         $('#addVisit').click(function(){
                     //var tmp = "<li class='myborder'>拜访时间：<input type='text'  name='visitime[]' /> 合作意愿：<select  name='intention[]'><option value='0'>明确拒绝</option><option value='1'>很弱</option><option value='2'>一般</option><option value='3'>强</option></select> 备注：<input type='text'  name='note[]' value='' /> <button type='button' class='removeVisit'>删除</button></li>";
-                    var tmp = '<li class="myborder">拜访时间：<input style="width: 50%" type="text" name="visitime[]" value=""><br> ' +
-                            '合作意愿：<select style="width: 50%" name="intention[]"><option value="0" selected="selected">明确拒绝</option><option value="1">很弱</option><option value="2">一般</option><option value="3">强</option></select> <br>' +
-                            '备注：<br><textarea name="note[]" value=""></textarea>' +
-                            '<button style="float: right;margin: 10px;" type="button" class="removeVisit mui-btn mui-btn-danger">删除</button>' +
-                            '<hr style="clear: both;margin: 5px"></li>';
+                    var tmp = '<li class="myborder"> <form action="{:U('savevisit')}" method=post><input type="hidden"  name="parkid" value="{$park_info[id]}" /> <input type="hidden"  name="id" value="" />拜访时间：<input style="width: 50%" type="text" name="visitime" value=""><br> ' +
+                    '合作意愿：<select style="width: 50%" name="intention"><option value="0" selected="selected">明确拒绝</option><option value="1">很弱</option><option value="2">一般</option><option value="3">强</option></select> <br>' +
+                    '备注：<br><textarea name="note" value=""></textarea>' +
+                    '<button style="float: left;margin: 10px;" type="button" class="saveVisit mui-btn mui-btn-danger">保存</button>'+
+                    '</form>'+
+                    '<form action="{:U('delvisit')}" method=post>'+
+                    '<input type="hidden"  name="parkid" value="{$park_info[id]}" /> <input type="hidden"  name="id" value="" />'+
+                    '<button style="float: right;margin: 10px;" type="button" class="removeVisit mui-btn mui-btn-danger">删除</button>' +
+                    '<hr style="clear: both;margin: 5px"></li>'+'</form>';
                     var row = $(tmp);
                     row.find('.removeVisit').click(function(){
-                        $(this).parent().remove();
+                        //$(this).parent().remove();
+                        $(this).parent().submit();
+                    });
+                    row.find('.saveVisit').click(function(){
+                        $(this).parent().submit();
                     });
                     $(this).prev().append(row);
                     return false;
@@ -557,7 +669,55 @@
         );
 
         $('.removeVisit').click(function(){
-                    $(this).parent().remove();
+                    //$(this).parent().remove();
+                    $(this).parent().submit();
+                }
+        );
+        $('.saveVisit').click(function(){
+                    $(this).parent().submit();
+                }
+        );
+
+
+        $('#addAdmin').click(function(){
+                    var tmp = '<li class="myborder"> <form action="{:U('saveadmin')}" method=post><input type="hidden"  name="parkid" value="{$park_info[id]}" /> <input type="hidden"  name="id" value="" />停车场：<input type="text" name="parkname" readonly value="{$park_info[shortname]}"><br> ' +
+                    '用户名：<input type="text"  name="username" value=""/>' +
+                    '<h6>*用户名以001,002自增长</h6>'  +
+                    '密码：<input type="password"  name="password" value=""/>' +
+                    '<h6>*默认密码以前两位小写缩写字母+0102</h6>'   +
+                    '姓名：<input type="text"  name="name" value=""/><br>' +
+                    '职能：<br>' +
+                    '<input style="width: 10%" type="checkbox" name="jobfunction[]" value="1" /><span>公司管理</span>'+
+                    '<input style="width: 10%" type="checkbox" name="jobfunction[]" value="2" /><span>出口管理</span>'+
+                    '<input style="width: 10%" type="checkbox" name="jobfunction[]" value="4" /><span>收费</span>'+'<br>'+
+                    '<input style="width: 10%" type="checkbox" name="jobfunction[]" value="8" /><span>公司管理</span>'+
+                    '<input style="width: 10%" type="checkbox" name="jobfunction[]" value="16" /><span>金额提现</span>'+'<br>'+
+                    '<button style="float: left;margin: 10px;" type="button" class="saveAdmin mui-btn mui-btn-danger">保存</button>'+
+                    '</form>'+
+                    '<form action="{:U('delAdmin')}" method=post>'+
+                    '<input type="hidden"  name="parkid" value="{$park_info[id]}" /> <input type="hidden"  name="id" value="" />'+
+                    '<button style="float: right;margin: 10px;" type="button" class="removeAdmin mui-btn mui-btn-danger">删除</button>' +
+                    '<hr style="clear: both;margin: 5px"></li>'+'</form>';
+                    var row = $(tmp);
+                    row.find('.removeAdmin').click(function(){
+                        //$(this).parent().remove();
+                        $(this).parent().submit();
+                    });
+                    row.find('.saveAdmin').click(function(){
+                        $(this).parent().submit();
+                    });
+                    $(this).prev().append(row);
+                    return false;
+                }
+        );
+
+        $('.removeAdmin').click(function(){
+                    //$(this).parent().remove();
+                    $(this).parent().submit();
+                }
+        );
+        $('.saveAdmin').click(function(){
+                    $(this).parent().submit();
                 }
         );
        

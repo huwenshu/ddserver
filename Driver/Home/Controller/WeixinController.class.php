@@ -76,24 +76,9 @@ class WeixinController extends BaseController {
 		$_openid  =  (string)trim($postObj->FromUserName);
 		$_msgType =  (string)trim($postObj->MsgType);
 
-		//数据库中是否已经有这个openid
-		$DriverInfo = M('DriverInfo');
-		$map = array();
-		$map['openid'] = $_openid;
-		$driverData = $DriverInfo->where($map)->find();
-		$tmpStr = '';
-		if(empty($driverData)){
-			$tmpStr = '&type=2';//还没有这个openid
-		}
-		else{
-			$uid = $driverData['id'];
-			$uuid = $this->createUUID($uid);
-			$tmpStr = '&type=3&uid='.$uid.'$uuid='.$uuid;//已经有这个openid,返回uid和uuid
-		}
-
-		$nearURL = "http://duduche.me/html/userhtml/index.html?m=map&openid=".$_openid.$tmpStr;
-		$findURL = "http://duduche.me/html/userhtml/index.html?m=mapsearch&openid=".$_openid.$tmpStr;
-		$feeURL  = "http://duduche.me/html/userhtml/index.html?m=myjiesuan&openid=".$_openid.$tmpStr;
+		$nearURL = "http://duduche.me/driver.php/home/weixin/redirectURL/m/near/openid/".$_openid;
+		$findURL = "http://duduche.me/driver.php/home/weixin/redirectURL/m/find/openid/".$_openid;
+		$feeURL  = "http://duduche.me/driver.php/home/weixin/redirectURL/m/fee/openid/".$_openid;
 
 		if ($_msgType == 'event') {
 			$_event = (string)$postObj->Event;
@@ -124,6 +109,40 @@ class WeixinController extends BaseController {
 			//Think\Log::write($resultStr,'ERR');
 			echo  $resultStr;
 		}
+
+	}
+
+
+	//根据用户链接跳转
+	public function  redirectURL($m = 'near',$openid){
+
+		//数据库中是否已经有这个openid
+		$DriverInfo = M('DriverInfo');
+		$map = array();
+		$map['openid'] = $openid;
+		$driverData = $DriverInfo->where($map)->find();
+		$tmpStr = '';
+		if(empty($driverData)){
+			$tmpStr = '&type=2';//还没有这个openid
+		}
+		else{
+			$uid = $driverData['id'];
+			$uuid = $this->createUUID($uid);
+			$tmpStr = '&type=3&uid='.$uid.'&uuid='.$uuid;//已经有这个openid,返回uid和uuid
+		}
+
+		$nearURL = "http://duduche.me/html/userhtml/index.html?m=map&openid=".$openid.$tmpStr;
+		$findURL = "http://duduche.me/html/userhtml/index.html?m=mapsearch&openid=".$openid.$tmpStr;
+		$feeURL  = "http://duduche.me/html/userhtml/index.html?m=myjiesuan&openid=".$openid.$tmpStr;
+
+
+		switch($m){
+			case 'near' : header("Location:".$nearURL); break;
+			case 'find' : header("Location:".$findURL); break;
+			case 'fee' : header("Location:".$feeURL); break;
+			default : header("Location:".$nearURL); break;
+		}
+
 
 	}
 

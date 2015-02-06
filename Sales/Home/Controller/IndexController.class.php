@@ -146,15 +146,11 @@ class IndexController extends  BaseController {
     }
 
 
-	//保存拜访记录
-	public function savevisit(){
+
+	//保存合作状态
+	public function savecorp(){
 		$parkid = I('post.id');
 		$status = I('post.status');
-		$contactInfo = array('contactname' => I('post.contactname'), 'contactgender' => I('post.contactgender'),'contactphone' => I('post.contactphone'),
-			'contactjob' => I('post.contactjob'));
-
-		$visitRecord = array('visitime' => I('post.visitime'), 'note' => I('post.note'), 'intention' => I('post.intention'));
-
 		//更新合作状态
 		$Park = D('ParkInfo');
 		$Park->status = $status;
@@ -164,51 +160,256 @@ class IndexController extends  BaseController {
 		$con['id'] = $parkid;
 		$Park->where($con)->save();
 
-		//更新联系人数据
-		$Contact = D('ContactInfo');
-		//先把数据全部删除
-		$map = array();
-		$map['parkid'] = $parkid;
-		$Contact->where($map)->delete();
-		//再添加新数据
-		$count = count($contactInfo['contactname']);
-		$dataList1 = array();
-		for ($i=0; $i < $count ; $i++) {
-			$dataList1[] = array('parkid' => $parkid,'name' => $contactInfo['contactname'][$i], 'gender' => $contactInfo['contactgender'][$i],
-				'telephone' => $contactInfo['contactphone'][$i], 'job' => $contactInfo['contactjob'][$i], 'creater' => UID,
-				'createtime' => date('Y-m-d H:i:s'),'updater' => UID);
-		}
-		if($count  != 0){
-			$result1 = $Contact->addAll($dataList1);
-		}
-
-
-		//更新拜访记录
-		$Visit = D('VisitRecord');
-		//先把数据全部删除
-		$map = array();
-		$map['parkid'] = $parkid;
-		$Visit->where($map)->delete();
-		//再添加新数据
-		$count = count($visitRecord['visitime']);
-		$dataList2 = array();
-		for ($i=0; $i < $count ; $i++) {
-			$dataList2[] = array('parkid' => $parkid,'visitime' => $visitRecord['visitime'][$i], 'intention' => $visitRecord['intention'][$i],
-				'note' => $visitRecord['note'][$i], 'creater' => UID, 'createtime' => date('Y-m-d H:i:s'),'updater' => UID);
-		}
-		if(!empty($dataList2)){
-			$result2 = $Visit->addAll($dataList2);
-		}
-
-
-
-		if($result1 && $result2){
-			$this->redirect('/Home/Index/parkinfo/parkid/'.$parkid.'/#panel-2');
-		}
-		else{
-			$this->error();
-		}
-
+		$this->redirect('/Home/Index/parkinfo/parkid/'.$parkid.'/#panel-2');
 	}
+
+
+	//保存每条拜访记录
+	public function savevisit(){
+
+		$parkid = I('post.parkid');
+		$id = I('post.id');
+		$visitime = I('post.visitime');
+		$note = I('post.note');
+		$intention = I('post.intention');
+
+		$Visit = D('VisitRecord');
+		$data['parkid'] = $parkid;
+		$data['visitime'] = $visitime;
+		$data['note'] = $note;
+		$data['intention'] = $intention;
+
+		if($id  == ''){//新建
+			$data['creater'] = UID;
+			$data['createtime'] = date('Y-m-d H:i:s');
+			$data['updater'] = UID;
+
+			$Visit->add($data);
+		}
+		else{//更新
+			$data['updater'] = UID;
+
+			$map = array();
+			$map['id'] = $id;
+
+			$Visit->where($map)->save($data);
+		}
+
+		//更新主表的更新日期，表示其有过修改
+		$Park = D('ParkInfo');
+		$Park->updatetime = date('Y-m-d H:i:s');
+		$con = array();
+		$con['id'] = $parkid;
+		$Park->where($con)->save();
+
+		$this->redirect('/Home/Index/parkinfo/parkid/'.$parkid.'/#panel-2');
+	}
+
+	//保存拜访记录
+	public function delvisit(){
+		$parkid = I('post.parkid');
+		$id = I('post.id');
+
+		$Visit = D('VisitRecord');
+		$map = array();
+		$map['id'] = $id;
+		$Visit->where($map)->limit('1')->delete();
+
+		//更新主表的更新日期，表示其有过修改
+		$Park = D('ParkInfo');
+		$Park->updatetime = date('Y-m-d H:i:s');
+		$con = array();
+		$con['id'] = $parkid;
+		$Park->where($con)->save();
+
+		$this->redirect('/Home/Index/parkinfo/parkid/'.$parkid.'/#panel-2');
+	}
+
+	//保存每条联系人
+	public function savecontact(){
+		$parkid = I('post.parkid');
+		$id = I('post.id');
+		$contactname = I('post.contactname');
+		$contactgender = I('post.contactgender');
+		$contactphone = I('post.contactphone');
+		$contactjob = I('post.contactjob');
+
+		$Contact = D('ContactInfo');
+		$data['parkid'] = $parkid;
+		$data['name'] = $contactname;
+		$data['gender'] = $contactgender;
+		$data['telephone'] = $contactphone;
+		$data['job'] = $contactjob;
+
+		if($id  == ''){//新建
+			$data['creater'] = UID;
+			$data['createtime'] = date('Y-m-d H:i:s');
+			$data['updater'] = UID;
+
+			$Contact->add($data);
+		}
+		else{//更新
+			$data['updater'] = UID;
+
+			$map = array();
+			$map['id'] = $id;
+
+			$Contact->where($map)->save($data);
+		}
+
+		//更新主表的更新日期，表示其有过修改
+		$Park = D('ParkInfo');
+		$Park->updatetime = date('Y-m-d H:i:s');
+		$con = array();
+		$con['id'] = $parkid;
+		$Park->where($con)->save();
+
+		$this->redirect('/Home/Index/parkinfo/parkid/'.$parkid.'/#panel-2');
+	}
+
+
+	//删除联系人
+	public function delcontact(){
+		$parkid = I('post.parkid');
+		$id = I('post.id');
+
+		$Contact = D('ContactInfo');
+		$map = array();
+		$map['id'] = $id;
+		$Contact->where($map)->limit('1')->delete();
+
+		//更新主表的更新日期，表示其有过修改
+		$Park = D('ParkInfo');
+		$Park->updatetime = date('Y-m-d H:i:s');
+		$con = array();
+		$con['id'] = $parkid;
+		$Park->where($con)->save();
+
+		$this->redirect('/Home/Index/parkinfo/parkid/'.$parkid.'/#panel-2');
+	}
+
+	//保存车场管理员
+	public function saveadmin(){
+		$parkid = I('post.parkid');
+		$id = I('post.id');
+
+		$Admin = D('ParkAdmin');
+		$data['parkid'] = $parkid;
+		$data['parkname'] = I('post.parkname');
+		$data['username'] = I('post.username');
+		$data['password'] = strtoupper(md5(I('post.password')));
+		$data['name'] = I('post.name');
+
+		$jobs= I('post.jobfunction');
+		$jobfun = 0;
+		foreach ($jobs as $key => $value) {
+			$jobfun += intval($value);
+		}
+		$data['jobfunction'] = $jobfun;
+
+		if($id  == ''){//新建
+			$data['creater'] = UID;
+			$data['createtime'] = date('Y-m-d H:i:s');
+			$data['updater'] = UID;
+
+			$Admin->add($data);
+		}
+		else{//更新
+			$data['updater'] = UID;
+
+			$map = array();
+			$map['id'] = $id;
+
+			$Admin->where($map)->save($data);
+		}
+
+
+		//更新主表的更新日期，表示其有过修改
+		$Park = D('ParkInfo');
+		$Park->updatetime = date('Y-m-d H:i:s');
+		$con = array();
+		$con['id'] = $parkid;
+		$Park->where($con)->save();
+
+		$this->redirect('/Home/Index/parkinfo/parkid/'.$parkid.'/#panel-2');
+	}
+
+
+	//删除车场管理员
+	public function deladmin(){
+		$parkid = I('post.parkid');
+		$id = I('post.id');
+
+		$Admin = D('ParkAdmin');
+		$map = array();
+		$map['id'] = $id;
+		$Admin->where($map)->limit('1')->delete();
+
+		//更新主表的更新日期，表示其有过修改
+		$Park = D('ParkInfo');
+		$Park->updatetime = date('Y-m-d H:i:s');
+		$con = array();
+		$con['id'] = $parkid;
+		$Park->where($con)->save();
+
+		$this->redirect('/Home/Index/parkinfo/parkid/'.$parkid.'/#panel-2');
+	}
+
+//	//保存所以拜访记录，早期的，不能记录每条记录的改变。
+//	public function savevisit1(){
+//		$parkid = I('post.id');
+//		$status = I('post.status');
+//		$contactInfo = array('contactname' => I('post.contactname'), 'contactgender' => I('post.contactgender'),'contactphone' => I('post.contactphone'),
+//			'contactjob' => I('post.contactjob'));
+//
+//		$visitRecord = array('visitime' => I('post.visitime'), 'note' => I('post.note'), 'intention' => I('post.intention'));
+//
+//		//更新合作状态
+//		$Park = D('ParkInfo');
+//		$Park->status = $status;
+//		$Park->updater = UID;
+//		$Park->updatetime = date('Y-m-d H:i:s');
+//		$con = array();
+//		$con['id'] = $parkid;
+//		$Park->where($con)->save();
+//
+//		//更新联系人数据
+//		$Contact = D('ContactInfo');
+//		//先把数据全部删除
+//		$map = array();
+//		$map['parkid'] = $parkid;
+//		$Contact->where($map)->delete();
+//		//再添加新数据
+//		if(is_array($contactInfo['contactname'])){//判断是否有传入的值
+//			$count = count($contactInfo['contactname']);
+//			$dataList1 = array();
+//			for ($i=0; $i < $count ; $i++) {
+//				$dataList1[] = array('parkid' => $parkid,'name' => $contactInfo['contactname'][$i], 'gender' => $contactInfo['contactgender'][$i],
+//					'telephone' => $contactInfo['contactphone'][$i], 'job' => $contactInfo['contactjob'][$i], 'creater' => UID,
+//					'createtime' => date('Y-m-d H:i:s'),'updater' => UID);
+//			}
+//			$Contact->addAll($dataList1);
+//		}
+//
+//
+//		//更新拜访记录
+//		$Visit = D('VisitRecord');
+//		//先把数据全部删除
+//		$map = array();
+//		$map['parkid'] = $parkid;
+//		$Visit->where($map)->delete();
+//		//再添加新数据
+//		if(is_array($visitRecord['visitime'])){
+//			$count = count($visitRecord['visitime']);
+//			$dataList2 = array();
+//			for ($i=0; $i < $count ; $i++) {
+//				$dataList2[] = array('parkid' => $parkid,'visitime' => $visitRecord['visitime'][$i], 'intention' => $visitRecord['intention'][$i],
+//					'note' => $visitRecord['note'][$i], 'creater' => UID, 'createtime' => date('Y-m-d H:i:s'),'updater' => UID);
+//			}
+//			$Visit->addAll($dataList2);
+//		}
+//		$this->redirect('/Home/Index/parkinfo/parkid/'.$parkid.'/#panel-2');
+//
+//	}
 
 }

@@ -61,7 +61,7 @@ class PublicController extends BaseController {
 				$uid = $data['id'];
 				$map = array('id' => $uid);
 				$temp['openid'] = $openid;
-				$temp['updater'] = UID;
+				$temp['updater'] = $uid;
 				$temp['updatetime'] = date('Y-m-d H:i:s');
 				$Driver->where($map)->save($temp);
 				//todo:更新车牌号
@@ -70,7 +70,6 @@ class PublicController extends BaseController {
 				$arr['openid'] = $openid;
 				$arr['telephone'] = $phone;
 				$arr['carid'] = $carid;
-				$arr['creater'] = UID;
 				$arr['createtime'] = date('Y-m-d H:i:s');
 				$uid = $Driver->add($arr);
 			}
@@ -90,13 +89,13 @@ class PublicController extends BaseController {
                 $this->ajaxOk('');
             }
             else{
-                //$this->ajaxFail();
-				$this->ajaxMsg('uuid无效,uid'.$uid);
+                $this->ajaxFail();
+				//$this->ajaxMsg('uuid无效,uid'.$uid);
             }
         }
         else{
-            //$this->ajaxFail();
-			$this->ajaxMsg('uid无效');
+            $this->ajaxFail();
+			//$this->ajaxMsg('uid无效');
         }
 
     }
@@ -109,8 +108,8 @@ class PublicController extends BaseController {
 			$this->ajaxOk('uuid:'.$data['uuid']);
 		}
 		else{
-			//$this->ajaxFail();
-			$this->ajaxMsg('uuid不存在!');
+			$this->ajaxFail();
+			//$this->ajaxMsg('uuid不存在!');
 		}
 
 	}
