@@ -8,24 +8,24 @@ class IndexController extends BaseController {
 	private $lat;
 	private $lng;
 
-//	public function _initialize(){
-//		$uid = I('get.uid');
-//		$uuid = I('get.uuid');
-//		$this->uid = $uid;
-//		$data = $this->getUsercache($uid);
-//		if($data){
-//			if ($data['uuid'] == $uuid) {
-//				$this->uid = $uid;
-//				return;
-//			}
-//			else{
-//				$this->ajaxFail();
-//			}
-//		}
-//		else{
-//			$this->ajaxFail();
-//		}
-//	}
+	public function _initialize(){
+		$uid = I('get.uid');
+		$uuid = I('get.uuid');
+		$this->uid = $uid;
+		$data = $this->getUsercache($uid);
+		if($data){
+			if ($data['uuid'] == $uuid) {
+				$this->uid = $uid;
+				return;
+			}
+			else{
+				$this->ajaxFail();
+			}
+		}
+		else{
+			$this->ajaxFail();
+		}
+	}
 
     public function index(){
         $this->show('<style type="text/css">*{ padding: 0; margin: 0; } div{ padding: 4px 48px;} body{ background: #fff; font-family: "微软雅黑"; color: #333;font-size:24px} h1{ font-size: 100px; font-weight: normal; margin-bottom: 12px; } p{ line-height: 1.8em; font-size: 36px } a,a:hover,{color:blue;}</style><div style="padding: 24px 48px;"> <h1>:)</h1><p>欢迎使用 <b>ThinkPHP</b>！</p><br/>版本 V{$Think.version}</div><script type="text/javascript" src="http://ad.topthink.com/Public/static/client.js"></script><thinkad id="ad_55e75dfae343f5a1"></thinkad><script type="text/javascript" src="http://tajs.qq.com/stats?sId=9347272" charset="UTF-8"></script>','utf-8');
@@ -203,8 +203,9 @@ class IndexController extends BaseController {
 		$parkid = $data['parkid'];
 
 		$Order = M('ParkOrder');
-		$beroreWeek = time() - (7 * 24 * 60 * 60);
+		$beroreWeek = date("Y-m-d",strtotime("-1 week"));
 		$map = array();
+
 		$map['pid'] = $parkid;
 		$map['state'] = 3;
 		$map['leavetime'] = array('EGT', $beroreWeek);
@@ -230,11 +231,7 @@ class IndexController extends BaseController {
 				$tmp['carid'] = $Driver['carid'];
 			}
 
-			$ParkAdmin = $this->getAdmin($value['updater']);
-			if(!empty($ParkAdmin)) {
-				$tmp['admin'] =  $ParkAdmin['name'];
-			}
-
+			$tmp['admin'] = $this->getAdmin($value['updater']);
 			array_push($result, $tmp);
 
 		}
@@ -339,7 +336,7 @@ class IndexController extends BaseController {
 
 
 
-		$beroreWeek = time() - (7 * 24 * 60 * 60);
+		$beroreWeek = date("Y-m-d",strtotime("-1 week"));
 		$map = array();
 		$map['pid'] = $parkid;
 		$map['state'] = 3;
@@ -397,11 +394,7 @@ class IndexController extends BaseController {
 		dump($dayend);
 
 		foreach ($orderData as $key => $value) {
-			$map = array();
-			$map['oid'] = $value['id'];
-			$map['state'] = 1;
-			$map['updatetime']= array('egt', $daybegin);
-			$map['updatetime']= array('lt', $dayend);
+			$map = 'oid = '.$value['id'].' AND state = 1 AND TO_DAYS(updatetime) = TO_DAYS(NOW())';
 			$today += $Payment->where($map)->sum('money');
 		}
 		$result['todaysum'] = $today;
@@ -414,6 +407,28 @@ class IndexController extends BaseController {
 		$remainMoney = $sum - $drawSum;
 		$result['remainSum'] = $remainMoney;
 
+
+		//提现记录
+		$map = array();
+		$map['pid'] = $parkid;
+		$drawLogs = $DrawMoney->where($map)->select();
+
+
+		$drawLists = array();
+		foreach($drawLogs as $key => $value){
+			$tmp = array();
+			$tmp['accountname'] = $value['accountname'];
+			$tmp['bankname'] = $value['bankname'];
+			$tmp['account'] = $value['account'];
+			$tmp['money'] = $value['money'];
+ 			$tmp['opttime'] = $value['createtime'];
+			$tmp['optname'] = $this->getAdmin($value['creater']);
+			$tmp['state'] = $value['state'];
+
+			array_push($drawLists, $tmp);
+		}
+
+		$result['drawLists'] = $drawLists;
 		dump($result);
 
 	}

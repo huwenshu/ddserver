@@ -90,7 +90,12 @@ class BaseController extends \Think\Controller {
         $map = array();
         $map['id'] = $adid;
         $adminData = $ParkAdmin->where($map)->find();
-        return $adminData;
+        if(!empty($adminData)) {
+            return  $adminData['name'];
+        }
+        else{
+            return null;
+        }
 
     }
 
