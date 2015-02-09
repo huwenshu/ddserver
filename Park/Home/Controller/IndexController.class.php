@@ -203,8 +203,9 @@ class IndexController extends BaseController {
 		$parkid = $data['parkid'];
 
 		$Order = M('ParkOrder');
-		$beroreWeek = time() - (7 * 24 * 60 * 60);
+		$beroreWeek = date("Y-m-d",strtotime("-1 week"));
 		$map = array();
+
 		$map['pid'] = $parkid;
 		$map['state'] = 3;
 		$map['leavetime'] = array('EGT', $beroreWeek);
@@ -230,11 +231,7 @@ class IndexController extends BaseController {
 				$tmp['carid'] = $Driver['carid'];
 			}
 
-			$ParkAdmin = $this->getAdmin($this->uid );
-			if(!empty($ParkAdmin)) {
-				$tmp['admin'] =  $ParkAdmin['name'];
-			}
-
+			$tmp['admin'] = $this->getAdmin($value['updater']);
 			array_push($result, $tmp);
 
 		}
@@ -339,7 +336,7 @@ class IndexController extends BaseController {
 
 
 
-		$beroreWeek = time() - (7 * 24 * 60 * 60);
+		$beroreWeek = date("Y-m-d",strtotime("-1 week"));
 		$map = array();
 		$map['pid'] = $parkid;
 		$map['state'] = 3;
@@ -348,6 +345,91 @@ class IndexController extends BaseController {
 		$result['deals'] = count($orderData);
 
 		$this->ajaxOk($result);
+
+	}
+
+
+	/*
+     *  @desc 获取提现的基本信息
+    */
+	public function getMoneyBase()
+	{
+		$cache = $this->getUsercache($this->uid);
+		$data = $cache['data'];
+		$parkid = 1;//$data['parkid'];
+
+		$result = array();
+
+		$Order = M('ParkOrder');
+
+
+		//计算总交易次数
+		$map = array();
+		$map['pid'] = $parkid;
+		$map['state'] = 3;
+		$dealNum = $Order->where($map)->count();
+		$result['dealNum'] = $dealNum;
+
+		//计算总收益
+		$map = array();
+		$map['pid'] = $parkid;
+		$orderData = $Order->where($map)->select();
+
+		$Payment = M('PaymentRecord');
+		$sum = 0;
+		foreach ($orderData as $key => $value) {
+			$map = array();
+			$map['oid'] = $value['id'];
+			$map['state'] = 1;
+			$sum += $Payment->where($map)->sum('money');
+		}
+		$result['sum'] = $sum;
+
+		//计算今日收益
+		$today = 0;
+		$daybegin = strtotime(date("Y-m-d"));
+		$dayend = $daybegin + 60*60*24;
+		dump($daybegin);
+		dump(strtotime("2015-02-09 16:34:45"));
+		dump($dayend);
+
+		foreach ($orderData as $key => $value) {
+			$map = 'oid = '.$value['id'].' AND state = 1 AND TO_DAYS(updatetime) = TO_DAYS(NOW())';
+			$today += $Payment->where($map)->sum('money');
+		}
+		$result['todaysum'] = $today;
+
+		//计算可提现金额
+		$DrawMoney = M('DrawMoney');
+		$map = array();
+		$map['pid'] = $parkid;
+		$drawSum = $DrawMoney->where($map)->sum('money');
+		$remainMoney = $sum - $drawSum;
+		$result['remainSum'] = $remainMoney;
+
+
+		//提现记录
+		$map = array();
+		$map['pid'] = $parkid;
+		$drawLogs = $DrawMoney->where($map)->select();
+
+
+		$drawLists = array();
+		foreach($drawLogs as $key => $value){
+			$tmp = array();
+			$tmp['accountname'] = $value['accountname'];
+			$tmp['bankname'] = $value['bankname'];
+			$tmp['account'] = $value['account'];
+			$tmp['money'] = $value['money'];
+ 			$tmp['opttime'] = $value['createtime'];
+			$tmp['optname'] = $this->getAdmin($value['creater']);
+			$tmp['state'] = $value['state'];
+
+			array_push($drawLists, $tmp);
+		}
+
+		$result['drawLists'] = $drawLists;
+		dump($result);
 
 	}
 }

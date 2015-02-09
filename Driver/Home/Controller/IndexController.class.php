@@ -81,21 +81,22 @@ class IndexController extends BaseController {
 		$arr['state'] = -1;
 		$arr['startime'] = date("Y-m-d H:i:s",0);
 		$arr['endtime'] = date("Y-m-d H:i:s",0);
-		$arr['creater'] = I('get.uid');
+		$arr['creater'] = $this->uid;
 		$arr['createtime'] = date("Y-m-d H:i:s");
-		$arr['updater'] = I('get.uid');
+		$arr['updater'] = $this->uid;
 		$oid = $Order->add($arr);
 
 		if(empty($oid)){
 			$this->ajaxMsg("创建订单失败");
 		}
 
+		$currentTime = time();
 		$Payment = M('PaymentRecord');
 		$temp['oid'] = $oid;
 		$temp['money'] = $parkinfo['prepay'];
 		$temp['state'] = 0;
 		$temp['creater'] = $this->uid;
-		$temp['createtime'] = date("Y-m-d H:i:s");
+		$temp['createtime'] = date("Y-m-d H:i:s",$currentTime);
 		$temp['updater'] = $this->uid;
 		$prid = $Payment->add($temp);
 
@@ -107,10 +108,12 @@ class IndexController extends BaseController {
 		$commonUtil = new \Home\Common\Weixin\Pay\CommonUtil();
 		$wxPayHelper = new \Home\Common\Weixin\Pay\WxPayHelper();
 
+		$trade_no = date("YmdHis",$currentTime).$prid;
+
 		$wxPayHelper->setParameter("bank_type", "WX");
 		$wxPayHelper->setParameter("body", "预付停车费:".$temp['money']);
 		$wxPayHelper->setParameter("partner", "1220503701");
-		$wxPayHelper->setParameter("out_trade_no", $prid);
+		$wxPayHelper->setParameter("out_trade_no", $trade_no);
 		$wxPayHelper->setParameter("total_fee", "1");
 		$wxPayHelper->setParameter("fee_type", "1");
 		$wxPayHelper->setParameter("notify_url", "http://duduche.me/driver.php/home/public/genOrderDone/");
@@ -250,12 +253,12 @@ class IndexController extends BaseController {
 		$totalFee = $this->parkingFee(strtotime($orderData['startime']), $orderData['pid']);
 		$remainFee = $totalFee - $preSum;
 
-
+		$currentTime = time();
 		$temp['oid'] = $oid;
 		$temp['money'] = $remainFee;
 		$temp['state'] = 0;
 		$temp['creater'] = $this->uid;
-		$temp['createtime'] = date("Y-m-d H:i:s");
+		$temp['createtime'] = date("Y-m-d H:i:s",$currentTime);
 		$temp['updater'] = $this->uid;
 		$prid = $Payment->add($temp);
 
@@ -266,10 +269,12 @@ class IndexController extends BaseController {
 		$commonUtil = new \Home\Common\Weixin\Pay\CommonUtil();
 		$wxPayHelper = new \Home\Common\Weixin\Pay\WxPayHelper();
 
+		$trade_no = date("YmdHis",$currentTime).$prid;
+
 		$wxPayHelper->setParameter("bank_type", "WX");
 		$wxPayHelper->setParameter("body", "结算停车费(还需付款)：".$remainFee);
 		$wxPayHelper->setParameter("partner", "1220503701");
-		$wxPayHelper->setParameter("out_trade_no", $prid);
+		$wxPayHelper->setParameter("out_trade_no", $trade_no);
 		$wxPayHelper->setParameter("total_fee", "1");	//todo 更新成remainFee
 		$wxPayHelper->setParameter("fee_type", "1");
 		$wxPayHelper->setParameter("notify_url", "http://duduche.me/driver.php/home/public/checkOutDone/");
