@@ -204,10 +204,11 @@ class PublicController extends BaseController {
 		}
 		//写log
 		$wxlog = M('payment_wx_log');
-		$out_trade_no = $_GET['out_trade_no'];
-		if(!$out_trade_no){
+		$trade_no = $_GET['out_trade_no'];
+		if(!$trade_no){
 			return;
 		}
+		$out_trade_no = substr($trade_no,14); //截取付款号，去除时间戳
 		if($wxlog->where(array('out_trade_no'=>$out_trade_no))->getField('out_trade_no')){//已存在纪录
 			echo 'success';
 			return;

@@ -8,24 +8,24 @@ class IndexController extends BaseController {
 	private $lat;
 	private $lng;
 
-	public function _initialize(){
-		$uid = I('get.uid');
-		$uuid = I('get.uuid');
-		$this->uid = $uid;
-		$data = $this->getUsercache($uid);
-		if($data){
-			if ($data['uuid'] == $uuid) {
-				$this->uid = $uid;
-				return;
-			}
-			else{
-				$this->ajaxFail();
-			}
-		}
-		else{
-			$this->ajaxFail();
-		}
-	}
+//	public function _initialize(){
+//		$uid = I('get.uid');
+//		$uuid = I('get.uuid');
+//		$this->uid = $uid;
+//		$data = $this->getUsercache($uid);
+//		if($data){
+//			if ($data['uuid'] == $uuid) {
+//				$this->uid = $uid;
+//				return;
+//			}
+//			else{
+//				$this->ajaxFail();
+//			}
+//		}
+//		else{
+//			$this->ajaxFail();
+//		}
+//	}
 
     public function index(){
         $this->show('<style type="text/css">*{ padding: 0; margin: 0; } div{ padding: 4px 48px;} body{ background: #fff; font-family: "微软雅黑"; color: #333;font-size:24px} h1{ font-size: 100px; font-weight: normal; margin-bottom: 12px; } p{ line-height: 1.8em; font-size: 36px } a,a:hover,{color:blue;}</style><div style="padding: 24px 48px;"> <h1>:)</h1><p>欢迎使用 <b>ThinkPHP</b>！</p><br/>版本 V{$Think.version}</div><script type="text/javascript" src="http://ad.topthink.com/Public/static/client.js"></script><thinkad id="ad_55e75dfae343f5a1"></thinkad><script type="text/javascript" src="http://tajs.qq.com/stats?sId=9347272" charset="UTF-8"></script>','utf-8');
@@ -230,7 +230,7 @@ class IndexController extends BaseController {
 				$tmp['carid'] = $Driver['carid'];
 			}
 
-			$ParkAdmin = $this->getAdmin($this->uid );
+			$ParkAdmin = $this->getAdmin($value['updater']);
 			if(!empty($ParkAdmin)) {
 				$tmp['admin'] =  $ParkAdmin['name'];
 			}
@@ -348,6 +348,73 @@ class IndexController extends BaseController {
 		$result['deals'] = count($orderData);
 
 		$this->ajaxOk($result);
+
+	}
+
+
+	/*
+     *  @desc 获取提现的基本信息
+    */
+	public function getMoneyBase()
+	{
+		$cache = $this->getUsercache($this->uid);
+		$data = $cache['data'];
+		$parkid = 1;//$data['parkid'];
+
+		$result = array();
+
+		$Order = M('ParkOrder');
+
+
+		//计算总交易次数
+		$map = array();
+		$map['pid'] = $parkid;
+		$map['state'] = 3;
+		$dealNum = $Order->where($map)->count();
+		$result['dealNum'] = $dealNum;
+
+		//计算总收益
+		$map = array();
+		$map['pid'] = $parkid;
+		$orderData = $Order->where($map)->select();
+
+		$Payment = M('PaymentRecord');
+		$sum = 0;
+		foreach ($orderData as $key => $value) {
+			$map = array();
+			$map['oid'] = $value['id'];
+			$map['state'] = 1;
+			$sum += $Payment->where($map)->sum('money');
+		}
+		$result['sum'] = $sum;
+
+		//计算今日收益
+		$today = 0;
+		$daybegin = strtotime(date("Y-m-d"));
+		$dayend = $daybegin + 60*60*24;
+		dump($daybegin);
+		dump(strtotime("2015-02-09 16:34:45"));
+		dump($dayend);
+
+		foreach ($orderData as $key => $value) {
+			$map = array();
+			$map['oid'] = $value['id'];
+			$map['state'] = 1;
+			$map['updatetime']= array('egt', $daybegin);
+			$map['updatetime']= array('lt', $dayend);
+			$today += $Payment->where($map)->sum('money');
+		}
+		$result['todaysum'] = $today;
+
+		//计算可提现金额
+		$DrawMoney = M('DrawMoney');
+		$map = array();
+		$map['pid'] = $parkid;
+		$drawSum = $DrawMoney->where($map)->sum('money');
+		$remainMoney = $sum - $drawSum;
+		$result['remainSum'] = $remainMoney;
+
+		dump($result);
 
 	}
 }
