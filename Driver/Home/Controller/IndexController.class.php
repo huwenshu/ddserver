@@ -36,10 +36,11 @@ class IndexController extends BaseController {
 		$this->lat = $lat;
 		$this->lng = $lng;
 		$Park = M('ParkInfo');
-		$gap = 0.1;
-		$condition = ($lat - $gap).'<lat and lat<'.($lat + $gap).' and '.($lng - $gap).'<lng and lng<'.($lng + $gap);//.' and status=1';
-		$list = $Park->where($condition)->limit(10)->select();
-
+		$gap = 0.01;
+		$con = array();
+		$con['lat'] = array(array('gt',$lat - $gap),array('lt',$lat + $gap));
+		$con['lng'] = array(array('gt',$lng - $gap),array('lt',$lng + $gap));
+		$list = $Park->where($con)->select();
 		usort($list, array($this, "distance_sort"));	//按距离远近排序
 
 		//封装返回值

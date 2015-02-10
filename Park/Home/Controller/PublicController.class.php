@@ -59,4 +59,8 @@ class PublicController extends BaseController {
         }
 
     }
+
+    public function testemail(){
+        $this->sendEmail('295142831@qq.com','TEST','TEST content!');
+    }
 }
