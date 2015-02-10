@@ -99,5 +99,33 @@ class BaseController extends \Think\Controller {
 
     }
 
+    /**
+     *  @desc $pid 获取停车场名字
+     *  @param $pid
+     */
+    protected function getParkName($pid)
+    {
+        $ParkInfo = M('ParkInfo');
+        $map = array();
+        $map['id'] = $pid;
+        $parkData = $ParkInfo->where($map)->find();
+        if(!empty($parkData)) {
+            return  $parkData['name'];
+        }
+        else{
+            return null;
+        }
+
+    }
+
+    /**
+     *  @desc  发送邮件
+     *  @param $adid
+     */
+    protected function sendEmail($mail, $title, $content)
+    {
+        return SendMail($mail, $title, $content);
+    }
+
 
 }

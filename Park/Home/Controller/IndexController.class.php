@@ -52,7 +52,7 @@ class IndexController extends BaseController {
 
 		$Order = M('ParkOrder');
 		$con = array('pid' => $parkid, 'state' => 0);
-		$orderData = $Order->where($con)->select();
+		$orderData = $Order->where($con)->order('startime desc')->select();
 
 		$result = array();
 		foreach($orderData as $key => $value){
@@ -193,10 +193,10 @@ class IndexController extends BaseController {
 	}
 
 	/*
-     *  @desc 获取一周交易信息
-	 *  @param oid	订单id
+     *  @desc 获取交易信息
+	 *  @param $lastWeek	0-全部，1-最近一周交易
     */
-	public function getDeals(){
+	public function getDeals($lastWeek = 1){
 
 		$cache = $this->getUsercache($this->uid);
 		$data = $cache['data'];
@@ -208,7 +208,9 @@ class IndexController extends BaseController {
 
 		$map['pid'] = $parkid;
 		$map['state'] = 3;
-		$map['leavetime'] = array('EGT', $beroreWeek);
+		if($lastWeek == 1){
+			$map['leavetime'] = array('EGT', $beroreWeek);
+		}
 		$orderData = $Order->where($map)->select();
 
 		$result = array();
@@ -221,8 +223,8 @@ class IndexController extends BaseController {
 			$map = array('oid' => $value['id'], 'state'=>1);
 			$payData = $Payment->where($map)->select();
 			$sum = 0;
-			foreach($payData as $key => $value){
-				$sum = $sum + $value['money'];
+			foreach($payData as $key1 => $value1){
+				$sum = $sum + $value1['money'];
 			}
 			$tmp['money'] = $sum;
 
@@ -344,6 +346,8 @@ class IndexController extends BaseController {
 		$orderData = $Order->where($map)->select();
 		$result['deals'] = count($orderData);
 
+		$result['name'] = $this->getAdmin($this->uid);
+
 		$this->ajaxOk($result);
 
 	}
@@ -356,7 +360,7 @@ class IndexController extends BaseController {
 	{
 		$cache = $this->getUsercache($this->uid);
 		$data = $cache['data'];
-		$parkid = 1;//$data['parkid'];
+		$parkid = $data['parkid'];
 
 		$result = array();
 
@@ -387,12 +391,6 @@ class IndexController extends BaseController {
 
 		//计算今日收益
 		$today = 0;
-		$daybegin = strtotime(date("Y-m-d"));
-		$dayend = $daybegin + 60*60*24;
-		dump($daybegin);
-		dump(strtotime("2015-02-09 16:34:45"));
-		dump($dayend);
-
 		foreach ($orderData as $key => $value) {
 			$map = 'oid = '.$value['id'].' AND state = 1 AND TO_DAYS(updatetime) = TO_DAYS(NOW())';
 			$today += $Payment->where($map)->sum('money');
@@ -411,7 +409,7 @@ class IndexController extends BaseController {
 		//提现记录
 		$map = array();
 		$map['pid'] = $parkid;
-		$drawLogs = $DrawMoney->where($map)->select();
+		$drawLogs = $DrawMoney->where($map)->limit(10)->select();
 
 
 		$drawLists = array();
@@ -430,6 +428,44 @@ class IndexController extends BaseController {
 
 		$result['drawLists'] = $drawLists;
 		dump($result);
+
+	}
+
+
+	/*
+     *  @desc 提现的请求处理
+    */
+	public function drawMoney(){
+		$bankname = I('post.bankname');
+		$accountname = I('post.accountname');
+		$accout = I('post.account');
+		$money = I('post.money');
+		$name = I('post.name');
+		$telephone = I('post.telephone');
+
+		$cache = $this->getUsercache($this->uid);
+		$data = $cache['data'];
+		$parkid = $data['parkid'];
+
+		$DrawMoney = M('DrawMoney');
+		$data =array('bankname' => $bankname, 'accountname' => $accountname, 'accout' => $accout, 'money' => $money,
+			'name' => $name, 'telephone' => $telephone, 'pid' => $parkid, 'state' => 0, 'creater' => $this->uid,
+			'createtime' =>  date('Y-m-d H:i:s'), 'updater' =>$this->uid);
+
+		$drawId = $DrawMoney->add($data);
+
+		$title = '[提现请求]';
+		$parkName = $this->getParkName($parkid);
+		$content = '停车场：'.$parkName.'<br>账户名：'.$accountname.'<br>开户银行：'.$bankname.'<br>账号：'.$accout.
+			'<br>姓名：'.$name.'<br>提现金额：'.$money.'<br>提现表ID：'.$drawId;
+
+		if(empty($drawId)){
+			$this->ajaxMsg('提现请求失败！');
+		}
+		else{
+			$send = $this->sendEmail('295142831@qq.com', $title, $content);
+			$this->ajaxOk('');
+		}
 
 	}
 }
