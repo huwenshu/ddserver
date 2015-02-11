@@ -349,7 +349,11 @@ class IndexController extends BaseController {
 		$result['name'] = $this->getAdmin($this->uid);
 
 		//积分
-		$result['score'] = 400;
+		$ParkAdmin = M('ParkAdmin');
+		$map = array();
+		$map['id'] = $this->uid;
+		$admin = $ParkAdmin->where($map)->find();
+		$result['score'] = $admin['score'];
 
 		//今日收益
 		$map = array();
