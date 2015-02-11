@@ -119,6 +119,25 @@ class BaseController extends \Think\Controller {
     }
 
     /**
+     *  @desc $gid 获取礼品名字
+     *  @param $gid
+     */
+    protected function getGiftName($gid)
+    {
+        $ParkInfo = M('GiftList');
+        $map = array();
+        $map['id'] = $gid;
+        $giftData = $ParkInfo->where($map)->find();
+        if(!empty($giftData)) {
+            return  $giftData['name'];
+        }
+        else{
+            return null;
+        }
+
+    }
+
+    /**
      *  @desc  发送邮件
      *  @param $adid
      */

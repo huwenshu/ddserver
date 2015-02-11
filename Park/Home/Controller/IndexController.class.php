@@ -196,7 +196,7 @@ class IndexController extends BaseController {
      *  @desc 获取交易信息
 	 *  @param $lastWeek	0-全部，1-最近一周交易
     */
-	public function getDeals($lastWeek = 1){
+	public function getDeals($lastweek){
 
 		$cache = $this->getUsercache($this->uid);
 		$data = $cache['data'];
@@ -208,10 +208,10 @@ class IndexController extends BaseController {
 
 		$map['pid'] = $parkid;
 		$map['state'] = 3;
-		if($lastWeek == 1){
+		if($lastweek == 1){
 			$map['leavetime'] = array('EGT', $beroreWeek);
 		}
-		$orderData = $Order->where($map)->select();
+		$orderData = $Order->where($map)->order('leavetime desc')->select();
 
 		$result = array();
 		foreach($orderData as $key => $value){
@@ -348,6 +348,38 @@ class IndexController extends BaseController {
 
 		$result['name'] = $this->getAdmin($this->uid);
 
+		//积分
+		$result['score'] = 400;
+
+		//今日收益
+		$map = array();
+		$map['pid'] = $parkid;
+		$orderDatas = $Order->where($map)->select();
+		$Payment = M('PaymentRecord');
+		$today = 0;
+		foreach ($orderDatas as $key => $value) {
+			$map = 'oid = '.$value['id'].' AND state = 1 AND TO_DAYS(updatetime) = TO_DAYS(NOW())';
+			$today += $Payment->where($map)->sum('money');
+		}
+		$result['todaysum'] = $today;
+		//可以提现
+		$sum = 0;
+		foreach ($orderDatas as $key => $value) {
+			$map = array();
+			$map['oid'] = $value['id'];
+			$map['state'] = 1;
+			$sum += $Payment->where($map)->sum('money');
+		}
+
+		$DrawMoney = M('DrawMoney');
+		$map = array();
+		$map['pid'] = $parkid;
+		$drawSum = $DrawMoney->where($map)->sum('money');
+		$remainMoney = $sum - $drawSum;
+		$result['remainsum'] = $remainMoney;
+
+
+
 		$this->ajaxOk($result);
 
 	}
@@ -409,7 +441,7 @@ class IndexController extends BaseController {
 		//提现记录
 		$map = array();
 		$map['pid'] = $parkid;
-		$drawLogs = $DrawMoney->where($map)->limit(10)->select();
+		$drawLogs = $DrawMoney->where($map)->limit(10)->order('createtime desc')->select();
 
 
 		$drawLists = array();
@@ -427,7 +459,7 @@ class IndexController extends BaseController {
 		}
 
 		$result['drawLists'] = $drawLists;
-		dump($result);
+		$this->ajaxOk($result);
 
 	}
 
@@ -436,19 +468,49 @@ class IndexController extends BaseController {
      *  @desc 提现的请求处理
     */
 	public function drawMoney(){
-		$bankname = I('post.bankname');
-		$accountname = I('post.accountname');
-		$accout = I('post.account');
-		$money = I('post.money');
-		$name = I('post.name');
-		$telephone = I('post.telephone');
+		$bankname = I('get.bankname');
+		$accountname = I('get.accountname');
+		$account = I('get.account');
+		$money = I('get.money');
+		$name = I('get.name');
+		$telephone = I('get.telephone');
 
 		$cache = $this->getUsercache($this->uid);
 		$data = $cache['data'];
 		$parkid = $data['parkid'];
 
 		$DrawMoney = M('DrawMoney');
-		$data =array('bankname' => $bankname, 'accountname' => $accountname, 'accout' => $accout, 'money' => $money,
+
+		//判断是否超过可提现额度
+		//计算总收益
+		$Order = M('ParkOrder');
+		$map = array();
+		$map['pid'] = $parkid;
+		$orderData = $Order->where($map)->select();
+
+		$Payment = M('PaymentRecord');
+		$sum = 0;
+		foreach ($orderData as $key => $value) {
+			$map = array();
+			$map['oid'] = $value['id'];
+			$map['state'] = 1;
+			$sum += $Payment->where($map)->sum('money');
+		}
+		$result['sum'] = $sum;
+
+		//计算可提现金额
+
+		$map = array();
+		$map['pid'] = $parkid;
+		$drawSum = $DrawMoney->where($map)->sum('money');
+		$remainMoney = $sum - $drawSum;
+
+		if($money > $remainMoney){
+			$this->ajaxMsg('超过最大可提现金额！');
+		}
+
+
+		$data =array('bankname' => $bankname, 'accountname' => $accountname, 'account' => $account, 'money' => $money,
 			'name' => $name, 'telephone' => $telephone, 'pid' => $parkid, 'state' => 0, 'creater' => $this->uid,
 			'createtime' =>  date('Y-m-d H:i:s'), 'updater' =>$this->uid);
 
@@ -456,7 +518,7 @@ class IndexController extends BaseController {
 
 		$title = '[提现请求]';
 		$parkName = $this->getParkName($parkid);
-		$content = '停车场：'.$parkName.'<br>账户名：'.$accountname.'<br>开户银行：'.$bankname.'<br>账号：'.$accout.
+		$content = '停车场：'.$parkName.'<br>账户名：'.$accountname.'<br>开户银行：'.$bankname.'<br>账号：'.$account.
 			'<br>姓名：'.$name.'<br>提现金额：'.$money.'<br>提现表ID：'.$drawId;
 
 		if(empty($drawId)){
@@ -466,6 +528,90 @@ class IndexController extends BaseController {
 			$send = $this->sendEmail('295142831@qq.com', $title, $content);
 			$this->ajaxOk('');
 		}
+
+	}
+	/*
+         *  @desc 获取礼品列表的基本信息
+        */
+	public function getGiftBase(){
+
+		$result = array();
+		$ParkAdmin = M('ParkAdmin');
+		$map = array();
+		$map['id'] = $this->uid;
+		$admin = $ParkAdmin->where($map)->find();
+		$result['score'] = $admin['score'];
+
+		$GiftList = M('GiftList');
+		$map = array();
+		$map['valid'] = 1;
+		$giftData = $GiftList->where($map)->order('weight desc')->select();
+
+		$giftList = array();
+
+		foreach($giftData as $key => $value){
+			$tmp = array();
+			$tmp['gid'] = $value['id'];
+			$tmp['name'] = $value['name'];
+			$tmp['score'] = $value['score'];
+			$tmp['image'] = $value['image'];
+
+			array_push($giftList, $tmp);
+		}
+
+		$result['giftList'] = $giftList;
+
+		$this->ajaxOk($result);
+	}
+
+
+	/*
+     *  @desc 提现的请求处理
+    */
+	public function exchangeGift()
+	{
+		$name = I('get.name');
+		$address = I('get.address');
+		$telephone = I('get.telephone');
+		$score = I('get.score');
+		$gid = I('get.gid');
+
+		$cache = $this->getUsercache($this->uid);
+		$data = $cache['data'];
+		$parkid = $data['parkid'];
+
+		$ParkAdmin = M('ParkAmdin');
+		$map = array();
+		$map['id'] = $this->uid;
+		$admin = $ParkAdmin->where($map)->find();
+
+		$scoreSum = $admin['score'];
+
+		if($score > $scoreSum){
+			$this->ajaxMsg('积分不够！');
+		}
+
+		$ExchangeGift = M('ExchangeGift');
+		$data =array('name' => $name, 'address' => $address, 'telephone' => $telephone, 'score' => $score,
+			'pid' => $parkid, 'gid' => $gid, 'state' => 0, 'creater' => $this->uid, 'createtime' =>  date('Y-m-d H:i:s'), 'updater' =>$this->uid);
+
+		$exid = $ExchangeGift->add($data);
+
+		$title = '[兑换礼品请求]';
+		$parkName = $this->getParkName($parkid);
+		$giftName = $this->getGiftName($gid);
+		$adminName = $this->getAdmin($this->uid);
+		$content = '停车场：'.$parkName.'<br>姓名：'.$name.'<br>地址：'.$address.'<br>电话：'.$telephone.
+			'<br>礼品名称：'.$giftName.'<br>兑换管理员：'.$adminName.'<br>提现积分：'.$score.'<br>兑换表ID：'.$exid;
+
+		if(empty($exid)){
+			$this->ajaxMsg('兑换请求失败！');
+		}
+		else{
+			$send = $this->sendEmail('295142831@qq.com', $title, $content);
+			$this->ajaxOk('');
+		}
+
 
 	}
 }

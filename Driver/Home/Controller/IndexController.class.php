@@ -40,9 +40,11 @@ class IndexController extends BaseController {
 		$con = array();
 		$con['lat'] = array(array('gt',$lat - $gap),array('lt',$lat + $gap));
 		$con['lng'] = array(array('gt',$lng - $gap),array('lt',$lng + $gap));
-		$list = $Park->where($con)->select();
-		usort($list, array($this, "distance_sort"));	//按距离远近排序
+		$con['status'] = 1;
+		$listdata = $Park->where($con)->select();
+		usort($listdata, array($this, "distance_sort"));	//按距离远近排序
 
+		$list = array_slice($listdata,0,10,true);
 		//封装返回值
 		$result = array();
 		foreach($list as $key => $value){
@@ -115,7 +117,7 @@ class IndexController extends BaseController {
 		$wxPayHelper->setParameter("body", "预付停车费:".$temp['money']);
 		$wxPayHelper->setParameter("partner", "1220503701");
 		$wxPayHelper->setParameter("out_trade_no", $trade_no);
-		$wxPayHelper->setParameter("total_fee", "1");
+		$wxPayHelper->setParameter("total_fee", $temp['money']*100);
 		$wxPayHelper->setParameter("fee_type", "1");
 		$wxPayHelper->setParameter("notify_url", "http://duduche.me/driver.php/home/public/genOrderDone/");
 		$wxPayHelper->setParameter("spbill_create_ip", get_client_ip());
@@ -276,7 +278,7 @@ class IndexController extends BaseController {
 		$wxPayHelper->setParameter("body", "结算停车费(还需付款)：".$remainFee);
 		$wxPayHelper->setParameter("partner", "1220503701");
 		$wxPayHelper->setParameter("out_trade_no", $trade_no);
-		$wxPayHelper->setParameter("total_fee", "1");	//todo 更新成remainFee
+		$wxPayHelper->setParameter("total_fee", $remainFee*100);	//todo 更新成remainFee
 		$wxPayHelper->setParameter("fee_type", "1");
 		$wxPayHelper->setParameter("notify_url", "http://duduche.me/driver.php/home/public/checkOutDone/");
 		$wxPayHelper->setParameter("spbill_create_ip", get_client_ip());
