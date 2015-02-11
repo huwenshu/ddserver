@@ -602,7 +602,7 @@ class IndexController extends BaseController {
 		$giftName = $this->getGiftName($gid);
 		$adminName = $this->getAdmin($this->uid);
 		$content = '停车场：'.$parkName.'<br>姓名：'.$name.'<br>地址：'.$address.'<br>电话：'.$telephone.
-			'<br>礼品名称：'.$giftName.'<br>兑换管理员：'.$adminName.'<br>提现积分：'.$score.'<br>兑换表ID：'.$exid;
+			'<br>礼品名称：'.$giftName.'<br>兑换管理员：'.$adminName.'<br>兑换积分：'.$score.'<br>兑换表ID：'.$exid;
 
 		if(empty($exid)){
 			$this->ajaxMsg('兑换请求失败！');
