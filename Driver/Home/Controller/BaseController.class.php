@@ -118,12 +118,26 @@ class BaseController extends \Think\Controller {
 					$timeStr = date("H:i:s",$startTime);
 					//找到开始停车那个时间点所适用规则
 					$con1 = "parkid=".$parkid." and startime<='".$timeStr."' and endtime>='".$timeStr."'";
-					$ruleid = $rulestime->where($con1)->getField('id');
-					if(!$ruleid){//没有合适的规则
+					$ruleArr = $rulestime->where($con1)->limit(1)->select();
+					if(!$ruleArr || count($ruleArr) == 0){//没有合适的规则
 						break;
 					}
-					//根据停车时长计算费用
 					$mins = ceil(($endTime-$startTime)/60);
+					$ruleid = $ruleArr[0]['id'];
+					$stopatend = $ruleArr[0]['stopatend'];
+					$mins_rule = 0;
+					if($stopatend){//该段规则有截止时间
+						$mydaystr = date("Y-m-d",$startTime);
+						$ruleend = strtotime($mydaystr.' '.$ruleArr[0]['endtime']);
+						$stoptime = strtotime($mydaystr.' '.$ruleArr[0]['stoptime']);
+						if($stoptime < $ruleend){//如果规则stoptime小于endtime，则认为stoptime在第二天
+							$stoptime+=24*60*60;
+						}
+						$mins_rule = ceil(($stoptime-$startTime)/60);
+						if($mins_rule < $mins){//结算时间大于该段规则截止时间：则根据规则截止时间计算费用
+							$mins = $mins_rule;
+						}
+					}
 					$con2 = "rulesid=".$ruleid;
 					$moneyArr = $rulesmoney->where($con2)->order('mins')->select();
 					$arrLength = count($moneyArr);
