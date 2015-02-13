@@ -118,6 +118,13 @@ class BaseController extends \Think\Controller {
     }
 
 
+    /*
+     *  @desc 计算停车费用
+     *  @param int $parkid 停车场id
+     *  @param Date $startTime 车主进场时间
+     *
+    */
+
     protected function parkingFee($startTime, $parkid){
         return $this->_parkingFee($startTime, time(), $parkid);
     }

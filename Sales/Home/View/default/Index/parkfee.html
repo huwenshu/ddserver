@@ -39,13 +39,17 @@
 	    foreach($rulesdata as $index => $value){
 	    	echo '<table style="display: flex">
 					      <tr>
-					          <td width="300px" style="border:2px solid"><input type="hidden" class="ruleid" value="'.$value['id'].'" /> <button type="button" class="delrule">删除</button>&nbsp<input type="text" class="starttime" name="starttime" value="'.$value['startime'].'" style="width:100px"/>到<input type="text" class="endtime" name="endtime" value="'.$value['endtime'].'" style="width:100px"/></td>
+					          <td width="300px" style="border:2px solid"><input type="hidden" class="ruleid" value="'.$value['id'].'" /> <button type="button" class="delrule">删除</button>&nbsp;<input type="text" class="starttime" name="starttime" value="'.$value['startime'].'" style="width:100px"/>到<input type="text" class="endtime" name="endtime" value="'.$value['endtime'].'" style="width:100px"/><br><input type="checkbox" class="stopatend"';
+				if($value['stopatend']){
+					echo ' checked="checked"';
+				}
+				echo	'/>规则截止时间<input type="text" class="stoptime" name="stoptime" value="'.$value['stoptime'].'" style="width:100px"/></td>
 					          <td style="border:2px solid">
 					          	<ul>';
 				$con1 = "rulesid=".$value['id'];
 				$moneydata = $rulesmoney->where($con1)->order('mins')->select();
 				foreach($moneydata as $index1=>$value1){
-					echo '<li><button type="button" class="delruletime">删除</button>&nbsp<select class="ruletype" name="ruletype" style="width: 100px"><option value="1">小于等于</option><option value="2">到截止时间</option></select><span class="rule1disp"><input type="text" class="rulemins" value="'.$value1['mins'].'" style="width:70px;"/>分钟</span>，费用为<input type="text" class="rulefee" value="'.$value1['money'].'" style="width:60px;"/>元</li>';
+					echo '<li><button type="button" class="delruletime">删除</button>&nbsp;小于等于<span class="rule1disp"><input type="text" class="rulemins" value="'.$value1['mins'].'" style="width:70px;"/>分钟</span>，费用为<input type="text" class="rulefee" value="'.$value1['money'].'" style="width:60px;"/>元</li>';
 				}
 				echo '</ul>
 					          	<button type="button" class="addruletime">添加费用</button><button type="button" class="saverule">保存本条规则</button>
@@ -66,11 +70,6 @@
 	function delruletime(){
 		$(this).parent().remove();
 	}
-	function changeruletype(){
-		//$(this).parent().find(".rule1disp").toggle();
-    $(this).val("1");
-    alert("尚不支持该模式，如果遇到此类案例，请联系开发团队！");
-	}
 	function delrule(){
 		var ruleid = $(this).parent().find(".ruleid").val();
 		if(ruleid == 0){
@@ -82,10 +81,13 @@
 		}
 	}
 	function saverule(){
-		var ruleid = $(this).parent().prev().find(".ruleid").val();
-		var starttime = $(this).parent().prev().find(".starttime").val();
-		var endtime = $(this).parent().prev().find(".endtime").val();
-		var ruleop = starttime+";"+endtime;
+		var rulefield = $(this).parent().prev();
+		var ruleid = rulefield.find(".ruleid").val();
+		var starttime = rulefield.find(".starttime").val();
+		var endtime = rulefield.find(".endtime").val();
+		var stopatend = rulefield.find(".stopatend").is(':checked')?1:0;
+		var stoptime = rulefield.find(".stoptime").val();
+		var ruleop = starttime+";"+endtime+";"+stopatend+";"+stoptime;
 		$(this).parent().find("li").each(function(li){
 			//console.log($(this));
 			ruleop+=";"+$(this).find(".rulemins").val()+","+$(this).find(".rulefee").val();
@@ -95,10 +97,9 @@
 		$("#ruleform").submit();
 	}
 	function addruletime(){
-		var temp = '<li><button type="button" class="delruletime">删除</button>&nbsp<select class="ruletype" name="ruletype" style="width: 100px"><option value="1">小于等于</option><option value="2">到截止时间</option></select><span class="rule1disp"><input type="text" class="rulemins" value="1800" style="width:70px;"/>分钟</span>，费用为<input type="text" class="rulefee" value="10" style="width:60px;"/>元</li>';
+		var temp = '<li><button type="button" class="delruletime">删除</button>&nbsp;小于等于<span class="rule1disp"><input type="text" class="rulemins" value="1800" style="width:70px;"/>分钟</span>，费用为<input type="text" class="rulefee" value="10" style="width:60px;"/>元</li>';
     var row = $(temp);
     row.find('.delruletime').click(delruletime);
-    row.find('.ruletype').change(changeruletype);
     
     $(this).prev().append(row);
 	}
@@ -110,11 +111,10 @@
 		else{
 			newrule = 1;
 		}
-		var temp = '<table style="display: flex"><tr><td width="300px" style="border:2px solid"><input type="hidden" class="ruleid" value="0" /> <button type="button" class="delrule">删除</button>&nbsp<input type="text" class="starttime" name="starttime" value="00:00:00" style="width:100px"/>到<input type="text" class="endtime" name="endtime" value="23:59:59" style="width:100px"/></td><td style="border:2px solid"><ul><li><button type="button" class="delruletime">删除</button>&nbsp<select class="ruletype" name="ruletype" style="width: 100px"><option value="1">小于等于</option><option value="2">到截止时间</option></select><span class="rule1disp"><input type="text" class="rulemins" value="1800" style="width:70px;"/>分钟</span>，费用为<input type="text" class="rulefee" value="10" style="width:60px;"/>元</li></ul><button type="button" class="addruletime">添加费用</button><button type="button" class="saverule">保存本条规则</button></td></tr></table>';
+		var temp = '<table style="display: flex"><tr><td width="300px" style="border:2px solid"><input type="hidden" class="ruleid" value="0" /> <button type="button" class="delrule">删除</button>&nbsp;<input type="text" class="starttime" name="starttime" value="00:00:00" style="width:100px"/>到<input type="text" class="endtime" name="endtime" value="23:59:59" style="width:100px"/><br><input type="checkbox" class="stopatend"/>规则截止时间<input type="text" class="stoptime" name="stoptime" value="00:00:00" style="width:100px"/></td><td style="border:2px solid"><ul><li><button type="button" class="delruletime">删除</button>&nbsp;小于等于<span class="rule1disp"><input type="text" class="rulemins" value="1800" style="width:70px;"/>分钟</span>，费用为<input type="text" class="rulefee" value="10" style="width:60px;"/>元</li></ul><button type="button" class="addruletime">添加费用</button><button type="button" class="saverule">保存本条规则</button></td></tr></table>';
     var row = $(temp);
     row.find('.addruletime').click(addruletime);
     row.find('.delruletime').click(delruletime);
-    row.find('.ruletype').change(changeruletype);
     row.find('.delrule').click(delrule);
     row.find('.saverule').click(saverule);
     
@@ -126,7 +126,6 @@
         
         $('.addruletime').click(addruletime);
         $('.delruletime').click(delruletime);
-        $('.ruletype').change(changeruletype);
         $('.delrule').click(delrule);
        	$('.saverule').click(saverule);
         $('.addrule').click(addrule);

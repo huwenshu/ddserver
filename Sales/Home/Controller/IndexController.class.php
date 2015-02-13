@@ -86,20 +86,22 @@ class IndexController extends  BaseController {
     			}else{//modify rule
     				$rulesArr = explode(';',$ruleop);
 	    			$rulesCount = count($rulesArr);
-	    			if($rulesCount < 3){
+	    			if($rulesCount < 5){
 	    				$this->error("停车规则参数不足，无法保存！");
 	    				return;
 	    			}
 	    			$starttime = $rulesArr[0];
 	    			$endtime = $rulesArr[1];
-	    			$ruledata = array('startime'=>$starttime,'endtime'=>$endtime);
+	    			$stopatend = $rulesArr[2];
+	    			$stoptime = $rulesArr[3];
+	    			$ruledata = array('startime'=>$starttime,'endtime'=>$endtime,'stopatend'=>$stopatend,'stoptime'=>$stoptime);
 					$con3 = array();
 					$con3['id'] = $ruleid;
 	    			$rulestime->where($con3)->save($ruledata);
 					$con4 = array();
 					$con4['rulesid'] = $ruleid;
 	    			$rulesmoney->where($con4)->delete();
-	    			for($i=2;$i<$rulesCount;$i++){//保存费用信息
+	    			for($i=4;$i<$rulesCount;$i++){//保存费用信息
     					$feeArr=explode(',',$rulesArr[$i]);
     					$feedata = array('rulesid'=>$ruleid,'mins'=>$feeArr[0],'money'=>$feeArr[1],'createtime'=>time());
     					$rulesmoney->add($feedata);
@@ -108,16 +110,18 @@ class IndexController extends  BaseController {
     		}else if($ruleop != ''){//add rule
     			$rulesArr = explode(';',$ruleop);
     			$rulesCount = count($rulesArr);
-    			if($rulesCount < 3){
+    			if($rulesCount < 5){
     				$this->error("停车规则参数不足，无法保存！");
     				return;
     			}
     			$starttime = $rulesArr[0];
     			$endtime = $rulesArr[1];
-    			$ruledata = array('parkid'=>$parkid,'startime'=>$starttime,'endtime'=>$endtime,'createtime'=>time());
+    			$stopatend = $rulesArr[2];
+    			$stoptime = $rulesArr[3];
+    			$ruledata = array('parkid'=>$parkid,'startime'=>$starttime,'endtime'=>$endtime,'stopatend'=>$stopatend,'stoptime'=>$stoptime,'createtime'=>time());
     			$ruleid = $rulestime->add($ruledata);//保存规则
     			if($ruleid){
-    				for($i=2;$i<$rulesCount;$i++){//保存费用信息
+    				for($i=4;$i<$rulesCount;$i++){//保存费用信息
     					$feeArr=explode(',',$rulesArr[$i]);
     					$feedata = array('rulesid'=>$ruleid,'mins'=>$feeArr[0],'money'=>$feeArr[1],'createtime'=>time());
     					$rulesmoney->add($feedata);
