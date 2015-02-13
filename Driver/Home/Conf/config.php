@@ -81,42 +81,34 @@ return array(
 
     'MENU' => array(
         'button'=>array(
-        array(
-            'type' => 'view',
-            'name' => '现场',
-            'url' => 'http://duduche.me/html/secenhtml/index.html'
-        ),
-        array(
-            'name' => '用户',
-            'sub_button' => array(
-                array(
-                    'type' => 'view',
-                    'name' => '车位',
-                    'url' => 'http://duduche.me/html/userhtml/index.html?m=map'
-                ),
-                array(
-                    'type' => 'view',
-                    'name' => '车位（找）',
-                    'url' => 'http://duduche.me/html/userhtml/index.html?m=mapsearch'
-                ),
-                 array(
-                    'type' => 'view',
-                    'name' => '我-订单',
-                    'url' => 'http://duduche.me/html/userhtml/index.html?m=myorder'
-                ),
-                array(
-                    'type' => 'view',
-                    'name' => '我-缴费',
-                    'url' => 'http://duduche.me/html/userhtml/index.html?m=myjiesuan'
-                ),
-            )
-        ),
 
-        array(
-            'type' => 'view',
-            'name' => '销售',
-            'url' => 'http://duduche.me/sales.php'
-        ),
+            array(
+                'name' => '找车位',
+                'sub_button' => array(
+                    array(
+                        'type' => 'view',
+                        'name' => '附近',
+                        'url' => 'http://duduche.me/html/userhtml/index.html?m=map'
+                    ),
+                    array(
+                        'type' => 'view',
+                        'name' => '搜索',
+                        'url' => 'http://duduche.me/html/userhtml/index.html?m=mapsearch'
+                    ),
+                )
+            ),
+            array(
+                'type' => 'view',
+                'name' => '缴费',
+                'url' => 'http://duduche.me/html/userhtml/index.html?m=myjiesuan'
+            ),
+            array(
+                'type' => 'view',
+                'name' => '我的',
+                'url' => 'http://duduche.me/html/userhtml/index.html?m=myorder'
+            ),
         )
     ),
+
+    'OPENID' => array('oTlYLj275XRH9M_n7d3KrpItav6g','oTlYLj6hKfcPIc5N-zmCmWvVsxVU','oTlYLj7oAHMG2WaO4Bthla0Um8U8'),
 );

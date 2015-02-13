@@ -84,27 +84,22 @@ class WeixinController extends BaseController {
 			$_event = (string)$postObj->Event;
 			$_eventKey = (string)$postObj->EventKey;
 			if($_event == 'subscribe'){
-				$content = '欢迎您关注嘟嘟停车！我们专注于解决您的停车难问题，目前尚只在上海提供服务，其他城市正在准备中。
+				$content = '欢迎您关注嘟嘟停车！我们专注于解决您的停车难问题。
 嘟嘟停车有如下功能，请点击下面的链接使用：
 
-1-找附近的空车位：<a href="'.$nearURL.'">单击这里</a>
+1-找附近的空车位：<a href="'.$nearURL.'">点击这里>></a>
 
-2-搜索地址找空车位：<a href="'.$findURL.'">单击这里</a>
+2-搜索地址找空车位：<a href="'.$findURL.'">点击这里>></a>
 
-3-停车缴费：<a href="'.$feeURL.'">单击这里</a>';
+3-停车缴费：<a href="'.$feeURL.'">点击这里>></a>
+
+目前只在上海提供服务，其他城市正在准备中。';
 				$resultStr = sprintf ( C('HINT_TPL'), $_openid, C('USERNAME_WEIXIN'), time(), 'text', $content );
 				echo  $resultStr;
 			}
 		}
 		else{
-			$content = '欢迎您关注嘟嘟停车！我们专注于解决您的停车难问题，目前尚只在上海提供服务，其他城市正在准备中。
-嘟嘟停车有如下功能，请点击下面的链接使用：
-
-1-找附近的空车位：<a href="'.$nearURL.'">单击这里</a>
-
-2-搜索地址找空车位：<a href="'.$findURL.'">单击这里</a>
-
-3-停车缴费：<a href="'.$feeURL.'">单击这里</a>';
+			$content = '谢谢您的反馈，我们会努力做的更好！';
 			$resultStr = sprintf ( C('HINT_TPL'), $_openid,  C('USERNAME_WEIXIN'), time(), 'text', $content );
 			//Think\Log::write($resultStr,'ERR');
 			echo  $resultStr;

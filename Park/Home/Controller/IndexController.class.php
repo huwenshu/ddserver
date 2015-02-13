@@ -87,6 +87,9 @@ class IndexController extends BaseController {
 		$updateData['updater'] = $this->uid;
 		$orderData = $Order->where($con)->save($updateData);
 
+		$state = C('SCORE');
+		$this->addScore($this->uid, $state['in']);
+
 		if($orderData){
 			$this->ajaxOk("");
 		}
@@ -182,11 +185,14 @@ class IndexController extends BaseController {
 		$updateData['updater'] = $this->uid;
 		$orderData = $Order->where($con)->save($updateData);
 
+		$state = C('SCORE');
+		$this->addScore($this->uid, $state['out']);
+
 		if($orderData !== false){
 			$this->ajaxOk("");
 		}
 		else{
-			$this->ajaxMsg("进场失败！");
+			$this->ajaxMsg("车辆离场失败！");
 		}
 
 
@@ -258,6 +264,9 @@ class IndexController extends BaseController {
 		$data['parkstate'] = $state;
 
 		$result = $Park->save($data);
+
+		$state = C('SCORE');
+		$this->addScore($this->uid, $state['state']);
 
 		if(empty($result)){
 			$this->ajaxMsg("修改状态失败！");
@@ -549,7 +558,7 @@ class IndexController extends BaseController {
 		$GiftList = M('GiftList');
 		$map = array();
 		$map['valid'] = 1;
-		$giftData = $GiftList->where($map)->order('weight desc')->select();
+		$giftData = $GiftList->where($map)->order('weight')->select();
 
 		$giftList = array();
 
@@ -577,14 +586,24 @@ class IndexController extends BaseController {
 		$name = I('get.name');
 		$address = I('get.address');
 		$telephone = I('get.telephone');
-		$score = I('get.score');
 		$gid = I('get.gid');
+
+		$GifgList = M('GiftList');
+		$map = array();
+		$map['id'] = $gid;
+		$giftData = $GifgList->where($map)->find();
+		if(empty($giftData)){
+			$this->ajaxMsg('该礼物已兑换完！');
+		}
+		else{
+			$score = $giftData['score'];
+		}
 
 		$cache = $this->getUsercache($this->uid);
 		$data = $cache['data'];
 		$parkid = $data['parkid'];
 
-		$ParkAdmin = M('ParkAmdin');
+		$ParkAdmin = M('ParkAdmin');
 		$map = array();
 		$map['id'] = $this->uid;
 		$admin = $ParkAdmin->where($map)->find();
@@ -607,6 +626,13 @@ class IndexController extends BaseController {
 		$adminName = $this->getAdmin($this->uid);
 		$content = '停车场：'.$parkName.'<br>姓名：'.$name.'<br>地址：'.$address.'<br>电话：'.$telephone.
 			'<br>礼品名称：'.$giftName.'<br>兑换管理员：'.$adminName.'<br>兑换积分：'.$score.'<br>兑换表ID：'.$exid;
+
+		//更新积分
+		$scoreSum = $scoreSum - $score;
+		$map = array();
+		$map['id'] = $this->uid;
+		$savedata['score'] = $scoreSum;
+		$ParkAdmin->where($map)->save($savedata);
 
 		if(empty($exid)){
 			$this->ajaxMsg('兑换请求失败！');

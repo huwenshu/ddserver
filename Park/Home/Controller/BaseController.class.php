@@ -138,6 +138,32 @@ class BaseController extends \Think\Controller {
     }
 
     /**
+     *  @desc 积分方法
+     *  @param int $aid 管理员id
+     *  @param int $add 增加的积分
+     */
+    protected function addScore($aid, $add){
+
+        $ParkAdmin = M('ParkAdmin');
+        $map = array();
+        $map['id'] = $aid;
+        $adminData = $ParkAdmin->where($map)->find();
+
+        $score = $adminData['score'];
+        $score = $score + $add;
+
+        $data['score'] = $score;
+        $addData = $ParkAdmin->where($map)->save($data);
+
+        if(empty($addData)){
+            return false;
+        }
+        else{
+            return true;
+        }
+    }
+
+    /**
      *  @desc  发送邮件
      *  @param $adid
      */

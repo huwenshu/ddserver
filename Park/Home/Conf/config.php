@@ -68,4 +68,7 @@ return array(
     'MAIL_PASSWORD' =>'njudb07',
     'MAIL_CHARSET' =>'utf-8',
     'MAIL_ISHTML' =>TRUE, // 是否HTML格式邮件
+
+    'SCORE' => array('state' => 1, 'in' => 1, 'out' =>1),
+
 );

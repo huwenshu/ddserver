@@ -60,7 +60,13 @@ class PublicController extends BaseController {
 
     }
 
-    public function testemail(){
-        $this->sendEmail('295142831@qq.com','TEST','TEST content!');
+    public function testscore(){
+        $result = $this->addScore(1,10);
+       if($result){
+            echo "YES";
+       }
+       else{
+            echo "False";
+       }
     }
 }
