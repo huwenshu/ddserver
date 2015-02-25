@@ -247,6 +247,12 @@ class IndexController extends BaseController {
 
 		$result['totalFee'] = $totalFee;
 		$result['remainFee'] = $remainFee;
+		
+		$ParkAdmin = M('ParkAdmin');
+		$con = "parkid=".$pid." && jobfunction&1<>0";
+		$adminData = $ParkAdmin->where($con)->field("name,phone")->select();
+		$result['admin'] = $adminData;
+		
 
 		$this->ajaxOk($result);
 

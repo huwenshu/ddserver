@@ -305,6 +305,7 @@ class IndexController extends  BaseController {
 			$data['password'] = strtoupper(md5(I('post.password')));
 		}
 		$data['name'] = I('post.name');
+		$data['phone'] = I('post.phone');
 
 		$jobs= I('post.jobfunction');
 		$jobfun = 0;
