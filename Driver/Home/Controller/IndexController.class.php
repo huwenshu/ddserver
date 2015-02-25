@@ -40,6 +40,39 @@ class IndexController extends BaseController {
 		$con = array();
 		$con['lat'] = array(array('gt',$lat - $gap),array('lt',$lat + $gap));
 		$con['lng'] = array(array('gt',$lng - $gap),array('lt',$lng + $gap));
+		$now = getdate();
+		$startstr='startsun';
+		$endstr='endsun';
+		switch($now['wday']){
+			case 1:
+			$startstr='startmon';
+			$endstr='endmon';
+			break;
+			case 2:
+			$startstr='starttue';
+			$endstr='endtue';
+			break;
+			case 3:
+			$startstr='startwed';
+			$endstr='endwed';
+			break;
+			case 4:
+			$startstr='startthu';
+			$endstr='endthu';
+			break;
+			case 5:
+			$startstr='startfri';
+			$endstr='endfri';
+			break;
+			case 6:
+			$startstr='startsat';
+			$endstr='endsat';
+			break;
+		}
+		$nowstr = date("H:i:s");
+		$con[$startstr] = array('elt',$nowstr);
+		$con[$endstr] = array('gt',$nowstr);
+		
 
 		//HardCode 用于测试
 		$openid = $this->getOpenID($this->uid);

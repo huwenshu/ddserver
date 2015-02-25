@@ -133,8 +133,17 @@
                         <td><input type="text" id="spacesum" name="spacesum" value= "{$park_info[spacesum]}" /> </td>
                     </tr>
                     <tr>
-                        <td><label for="opentime">开发时间段：</label></td>
-                        <td><input type="text" id="opentime" name="opentime" value= "{$park_info[opentime]}" /> </td>
+                        <td><label for="opentime">开放时间段：</label></td>
+                        <td>
+                        	<input type="text" id="opentime" name="opentime" value= "{$park_info[opentime]}" /> <br>
+                        	周一：<input type="text" id="startmon" name="startmon" value= "{$park_info[startmon]}" style="width: 110px;"/> - <input type="text" id="endmon" name="endmon" value= "{$park_info[endmon]}" style="width: 110px;"/><br>
+                        	周二：<input type="text" id="starttue" name="starttue" value= "{$park_info[starttue]}" style="width: 110px;"/> - <input type="text" id="endtue" name="endtue" value= "{$park_info[endtue]}" style="width: 110px;"/><br>
+                        	周三：<input type="text" id="startwed" name="startwed" value= "{$park_info[startwed]}" style="width: 110px;"/> - <input type="text" id="endwed" name="endwed" value= "{$park_info[endwed]}" style="width: 110px;"/><br>
+                        	周四：<input type="text" id="startthu" name="startthu" value= "{$park_info[startthu]}" style="width: 110px;"/> - <input type="text" id="endthu" name="endthu" value= "{$park_info[endthu]}" style="width: 110px;"/><br>
+                        	周五：<input type="text" id="startfri" name="startfri" value= "{$park_info[startfri]}" style="width: 110px;"/> - <input type="text" id="endfri" name="endfri" value= "{$park_info[endfri]}" style="width: 110px;"/><br>
+                        	周六：<input type="text" id="startsat" name="startsat" value= "{$park_info[startsat]}" style="width: 110px;"/> - <input type="text" id="endsat" name="endsat" value= "{$park_info[endsat]}" style="width: 110px;"/><br>
+                        	周日：<input type="text" id="startsun" name="startsun" value= "{$park_info[startsun]}" style="width: 110px;"/> - <input type="text" id="endsun" name="endsun" value= "{$park_info[endsun]}" style="width: 110px;"/>
+                        </td>
                     </tr>
                     <tr>
                         <td colspan="2"><label for="chargingrules">计费规则：</label><a href="{$feeurl}" target="newwindow">规则库中共{$rulecount}条纪录</a></td>
