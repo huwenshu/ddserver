@@ -176,12 +176,14 @@ class IndexController extends BaseController {
 			$orderData = $Order->where($con)->order('updatetime desc')->limit(15)->select();
 
 			$result = array();
+			$now = time();
 			foreach($orderData as $key => $value){
 				$tmp['oid'] = $value['id'];
 				$tmp['startTime'] = $value['startime'];
 				$tmp['startTimeStamp'] = strtotime($value['startime']);
 				$tmp['state'] = $value['state'];
-				$tmp['remaintime'] = strtotime($value['endtime'])  - time();
+				$tmp['remaintime'] = strtotime($value['endtime'])  - $now;
+				$tmp['leaveTimeStamp'] = strtotime($value['leavetime']);
 
 				$Park = M('ParkInfo');
 				$parkInfo = $Park->where('id = '.$value['pid'])->find();
