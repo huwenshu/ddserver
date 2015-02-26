@@ -261,6 +261,7 @@ class IndexController extends BaseController {
 		$orderData = $Order->where($con)->find();
 		$result['oid'] = $oid;
 		$result['startTime'] = $orderData['startime'];
+		$result['startTimeStamp'] = strtotime($orderData['startime']);
 		$result['state'] = $orderData['state'];
 		$result['remaintime'] = strtotime($orderData['endtime'])  - time();
 
