@@ -285,7 +285,7 @@ class IndexController extends BaseController {
 		
 		$ParkAdmin = M('ParkAdmin');
 		$con = "parkid=".$pid." && jobfunction&1<>0";
-		$adminData = $ParkAdmin->where($con)->field("name,phone")->select();
+		$adminData = $ParkAdmin->where($con)->order('lastop desc')->field("name,phone")->select();
 		$result['admin'] = $adminData;
 		
 
@@ -358,7 +358,29 @@ class IndexController extends BaseController {
 		$this->ajaxOk($result);
 	}
 
+	/*
+     *  @desc 车辆离场
+	 *  @param oid	订单id
+    */
+	public function setLeave($oid){
+		$Order = M('ParkOrder');
+		$con = array('id' => $oid, 'uid' => $this->uid, 'state'=>2);
+		$updateData['state'] = 3;
+		$updateData['leavetime'] = date('Y-m-d H:i:s');
+		$updateData['updater'] = $this->uid;
+		$updateData['driverleave'] = 1;
+		$orderData = $Order->where($con)->save($updateData);
+		/*
+		if($orderData !== false){
+			$this->ajaxOk("");
+		}
+		else{
+			$this->ajaxMsg("手工操作离场失败！");
+		}
+		*/
+		$this->ajaxOk("");
 
+	}
 
 	//获得IP地址
 	protected function get_client_ip() {

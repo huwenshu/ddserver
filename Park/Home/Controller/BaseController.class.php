@@ -147,13 +147,7 @@ class BaseController extends \Think\Controller {
         $ParkAdmin = M('ParkAdmin');
         $map = array();
         $map['id'] = $aid;
-        $adminData = $ParkAdmin->where($map)->find();
-
-        $score = $adminData['score'];
-        $score = $score + $add;
-
-        $data['score'] = $score;
-        $addData = $ParkAdmin->where($map)->save($data);
+        $addData = $ParkAdmin->where($map)->save(array('score'=>array('exp','score+'.$add),'lastop'=>time()));
 
         if(empty($addData)){
             return false;

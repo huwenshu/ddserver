@@ -20,6 +20,8 @@ class PublicController extends BaseController {
             $uid = $data['id'];
             $parkid = $data['parkid'];
             $permission = $data['jobfunction'];
+            
+            $ParkAdmin->where(array('id'=>$uid))->data(array('lastop'=>time()))->save();//更新上次操作时间戳
         }
         else{
            $this->ajaxMsg('用户名或者密码错误！');
