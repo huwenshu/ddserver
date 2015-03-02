@@ -120,15 +120,17 @@ class IndexController extends BaseController {
 
 		$trade_no = date("YmdHis",$currentTime).$prid;
 
-		//HardCode 用于测试
-		$openid = $this->getOpenID($this->uid);
-		$opens = C('OPENID');
-		if(in_array($openid, $opens)){
-			$fee = 0.01;
-		}
-		else{
-			$fee = $temp['money'];
-		}
+//		//HardCode 用于测试
+//		$openid = $this->getOpenID($this->uid);
+//		$opens = C('OPENID');
+//		if(in_array($openid, $opens)){
+//			$fee = 0.01;
+//		}
+//		else{
+//			$fee = $temp['money'];
+//		}
+
+		$fee = $temp['money'];
 
 
 		$wxPayHelper->setParameter("bank_type", "WX");
@@ -293,14 +295,16 @@ class IndexController extends BaseController {
 		$trade_no = date("YmdHis",$currentTime).$prid;
 
 		//HardCode 用于测试
-		$openid = $this->getOpenID($this->uid);
-		$opens = C('OPENID');
-		if(in_array($openid, $opens)){
-			$fee = 0.01;
-		}
-		else{
-			$fee = $remainFee;
-		}
+//		$openid = $this->getOpenID($this->uid);
+//		$opens = C('OPENID');
+//		if(in_array($openid, $opens)){
+//			$fee = 0.01;
+//		}
+//		else{
+//			$fee = $remainFee;
+//		}
+
+		$fee = $remainFee;
 
 		$wxPayHelper->setParameter("bank_type", "WX");
 		$wxPayHelper->setParameter("body", "结算停车费(还需付款)：".$fee);

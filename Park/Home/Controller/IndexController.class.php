@@ -262,11 +262,16 @@ class IndexController extends BaseController {
 		$data = array();
 		$data['id'] = $parkid;
 		$data['parkstate'] = $state;
-
+		$data['updater'] = $this->uid;
 		$result = $Park->save($data);
 
-		$state = C('SCORE');
-		$this->addScore($this->uid, $state['state']);
+		$score = C('SCORE');
+		$this->addScore($this->uid, $score['state']);
+
+		$states = array('已满','较少','较多');
+		$logStr = '停车场：'.$this->getParkName($parkid).' 管理员：'.$this->getAdmin($this->uid).' 设置状态：'.$states[$state]
+			.' 积分：'.$score['state'].' 时间：'.date('Y-m-d H:i:s');
+		Think\Log::write($logStr,'setparkstate.log');
 
 		if(empty($result)){
 			$this->ajaxMsg("修改状态失败！");
