@@ -38,6 +38,20 @@ class IndexController extends  BaseController {
  			}
  			$parkInfo['style'] = $parkstyle;
  			$parkInfo['opentime'] = I('post.opentime');
+ 			$parkInfo['startmon'] = I('post.startmon');
+ 			$parkInfo['starttue'] = I('post.starttue');
+ 			$parkInfo['startwed'] = I('post.startwed');
+ 			$parkInfo['startthu'] = I('post.startthu');
+ 			$parkInfo['startfri'] = I('post.startfri');
+ 			$parkInfo['startsat'] = I('post.startsat');
+ 			$parkInfo['startsun'] = I('post.startsun');
+ 			$parkInfo['endmon'] = I('post.endmon');
+ 			$parkInfo['endtue'] = I('post.endtue');
+ 			$parkInfo['endwed'] = I('post.endwed');
+ 			$parkInfo['endthu'] = I('post.endthu');
+ 			$parkInfo['endfri'] = I('post.endfri');
+ 			$parkInfo['endsat'] = I('post.endsat');
+ 			$parkInfo['endsun'] = I('post.endsun');
  			$parkInfo['chargingrules'] = I('chargingrules');
  			$parkInfo['note'] = I('note');
  			$parkInfo['shortname'] = I('shortname');
@@ -305,6 +319,7 @@ class IndexController extends  BaseController {
 			$data['password'] = strtoupper(md5(I('post.password')));
 		}
 		$data['name'] = I('post.name');
+		$data['phone'] = I('post.phone');
 
 		$jobs= I('post.jobfunction');
 		$jobfun = 0;

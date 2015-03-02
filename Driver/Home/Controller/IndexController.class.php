@@ -40,6 +40,39 @@ class IndexController extends BaseController {
 		$con = array();
 		$con['lat'] = array(array('gt',$lat - $gap),array('lt',$lat + $gap));
 		$con['lng'] = array(array('gt',$lng - $gap),array('lt',$lng + $gap));
+		$now = getdate();
+		$startstr='startsun';
+		$endstr='endsun';
+		switch($now['wday']){
+			case 1:
+			$startstr='startmon';
+			$endstr='endmon';
+			break;
+			case 2:
+			$startstr='starttue';
+			$endstr='endtue';
+			break;
+			case 3:
+			$startstr='startwed';
+			$endstr='endwed';
+			break;
+			case 4:
+			$startstr='startthu';
+			$endstr='endthu';
+			break;
+			case 5:
+			$startstr='startfri';
+			$endstr='endfri';
+			break;
+			case 6:
+			$startstr='startsat';
+			$endstr='endsat';
+			break;
+		}
+		$nowstr = date("H:i:s");
+		$con[$startstr] = array('elt',$nowstr);
+		$con[$endstr] = array('gt',$nowstr);
+		
 
 		//HardCode 用于测试
 		$openid = $this->getOpenID($this->uid);
@@ -178,12 +211,14 @@ class IndexController extends BaseController {
 			$orderData = $Order->where($con)->order('updatetime desc')->limit(15)->select();
 
 			$result = array();
+			$now = time();
 			foreach($orderData as $key => $value){
 				$tmp['oid'] = $value['id'];
 				$tmp['startTime'] = $value['startime'];
 				$tmp['startTimeStamp'] = strtotime($value['startime']);
 				$tmp['state'] = $value['state'];
-				$tmp['remaintime'] = strtotime($value['endtime'])  - time();
+				$tmp['remaintime'] = strtotime($value['endtime'])  - $now;
+				$tmp['leaveTimeStamp'] = strtotime($value['leavetime']);
 
 				$Park = M('ParkInfo');
 				$parkInfo = $Park->where('id = '.$value['pid'])->find();
@@ -228,6 +263,7 @@ class IndexController extends BaseController {
 		$orderData = $Order->where($con)->find();
 		$result['oid'] = $oid;
 		$result['startTime'] = $orderData['startime'];
+		$result['startTimeStamp'] = strtotime($orderData['startime']);
 		$result['state'] = $orderData['state'];
 		$result['remaintime'] = strtotime($orderData['endtime'])  - time();
 
@@ -249,6 +285,12 @@ class IndexController extends BaseController {
 
 		$result['totalFee'] = $totalFee;
 		$result['remainFee'] = $remainFee;
+		
+		$ParkAdmin = M('ParkAdmin');
+		$con = "parkid=".$pid." && jobfunction&1<>0";
+		$adminData = $ParkAdmin->where($con)->order('lastop desc')->field("name,phone")->select();
+		$result['admin'] = $adminData;
+		
 
 		$this->ajaxOk($result);
 
@@ -321,7 +363,29 @@ class IndexController extends BaseController {
 		$this->ajaxOk($result);
 	}
 
+	/*
+     *  @desc 车辆离场
+	 *  @param oid	订单id
+    */
+	public function setLeave($oid){
+		$Order = M('ParkOrder');
+		$con = array('id' => $oid, 'uid' => $this->uid, 'state'=>2);
+		$updateData['state'] = 3;
+		$updateData['leavetime'] = date('Y-m-d H:i:s');
+		$updateData['updater'] = $this->uid;
+		$updateData['driverleave'] = 1;
+		$orderData = $Order->where($con)->save($updateData);
+		/*
+		if($orderData !== false){
+			$this->ajaxOk("");
+		}
+		else{
+			$this->ajaxMsg("手工操作离场失败！");
+		}
+		*/
+		$this->ajaxOk("");
 
+	}
 
 	//获得IP地址
 	protected function get_client_ip() {

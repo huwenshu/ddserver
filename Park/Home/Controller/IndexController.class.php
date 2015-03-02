@@ -71,6 +71,8 @@ class IndexController extends BaseController {
 		$this->ajaxOk($result);
 	}
 
+
+
 	/*
      *  @desc 车辆进场，设置状态为在场
 	 *  @param oid	订单id
