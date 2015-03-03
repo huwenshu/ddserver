@@ -6,6 +6,7 @@
  * Time: 上午12:00
  */
 
+//发送email
 function sendMail($to, $subject, $content) {
 
     Vendor('PHPMailer.PHPMailerAutoload');
@@ -26,5 +27,14 @@ function sendMail($to, $subject, $content) {
     $mail->Body = $content; //邮件内容
     $mail->AltBody = "This is the body in plain text for non-HTML mail clients"; //邮件正文不支持HTML的备用显示
     return($mail->Send());
+}
+
+//记录日志
+function takeLog($msg, $level, $destination){
+
+    //使用Thinkphp日志方法记录日志
+    Think\Log::write($msg, $level, 'File', $destination);
+
+
 }
 ?>

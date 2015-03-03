@@ -186,8 +186,10 @@
                                     <input type="hidden"  name="id" value="{$park_info[id]}" />
                                     <select id="status" name="status">
                                         <option value="1"  <?php if ($park_info[status]==1)  echo 'selected="selected"';?>>已合作</option>
+                                        <option value="2"  <?php if ($park_info[status]==2)  echo 'selected="selected"';?>>测试中</option>
                                         <option value="0"  <?php if ($park_info[status]==0)  echo 'selected="selected"';?>>正在洽谈</option>
                                         <option value="-1" <?php if ($park_info[status]==-1) echo 'selected="selected"';?>>未接触</option>
+
                                     </select>
                                     <input type="submit" class="mui-btn mui-btn-success mui-btn-blue" style="margin-top: 1px" value="保存合作状态"/>
                                 </form>

@@ -273,7 +273,8 @@ class IndexController extends BaseController {
 		$states = array('已满','较少','较多');
 		$logStr = '停车场：'.$this->getParkName($parkid).' 管理员：'.$this->getAdmin($this->uid).' 设置状态：'.$states[$state]
 			.' 积分：'.$score['state'].' 时间：'.date('Y-m-d H:i:s');
-		Think\Log::write($logStr,'setparkstate.log');
+
+		takeLog($logStr, 'INFO', C('LOG_PATH').'parkstate.log');
 
 		if(empty($result)){
 			$this->ajaxMsg("修改状态失败！");

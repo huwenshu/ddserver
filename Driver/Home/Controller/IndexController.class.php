@@ -77,7 +77,10 @@ class IndexController extends BaseController {
 		//HardCode 用于测试
 		$openid = $this->getOpenID($this->uid);
 		$opens = C('OPENID');
-		if(!in_array($openid, $opens)){
+		if(in_array($openid, $opens)){
+			$con['status'] = array('in', '1,2');
+		}
+		else{
 			$con['status'] = 1;
 		}
 
@@ -163,8 +166,13 @@ class IndexController extends BaseController {
 //			$fee = $temp['money'];
 //		}
 
-		$fee = $temp['money'];
-
+		//HardCode 测试人员生成订单0.01元
+		if($parkinfo['status'] == 2){
+			$fee = 0.01;
+		}
+		else{
+			$fee = $temp['money'];
+		}
 
 		$wxPayHelper->setParameter("bank_type", "WX");
 		$wxPayHelper->setParameter("body", "预付停车费:".$fee);
@@ -346,7 +354,18 @@ class IndexController extends BaseController {
 //			$fee = $remainFee;
 //		}
 
-		$fee = $remainFee;
+		//HardCode 测试人员结算订单0.01元
+		$parkid = $orderData['pid'];
+		$Park = M('ParkInfo');
+		$map = array();
+		$map['id'] = $parkid;
+		$parkinfo = $Park->where($map)->find();
+		if($parkinfo['status'] == 2){
+			$fee = 0.01;
+		}
+		else{
+			$fee = $remainFee;
+		}
 
 		$wxPayHelper->setParameter("bank_type", "WX");
 		$wxPayHelper->setParameter("body", "结算停车费(还需付款)：".$fee);
