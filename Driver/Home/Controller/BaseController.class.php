@@ -15,7 +15,7 @@ class BaseController extends \Think\Controller {
                 .substr($charid,16, 4).$hyphen
                 .substr($charid,20,12);
 
-        $cachekey = $this->getCacheKey($uid);
+        $cachekey = $this->getCacheKey($uuid);
 
 
 
@@ -27,12 +27,12 @@ class BaseController extends \Think\Controller {
         return $uuid;
     }
 
-    protected function getCacheKey($uid){
-        return '____usercachekey___'.$uid;
+    protected function getCacheKey($uuid){
+        return '____usercachekey___'.$uuid;
     }
 
-    protected function getUsercache($uid){
-        $key = $this->getCacheKey($uid);
+    protected function getUsercache($uuid){
+        $key = $this->getCacheKey($uuid);
         $data = S($key);
         return $data;
     }

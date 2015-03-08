@@ -37,4 +37,6 @@ function takeLog($msg, $level, $destination){
 
 
 }
+
+
 ?>
