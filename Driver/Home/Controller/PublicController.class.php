@@ -83,9 +83,9 @@ class PublicController extends BaseController {
 
 
     public function checkLogin($uid, $uuid){
-        $data = $this->getUsercache($uid);
+        $data = $this->getUsercache($uuid);
         if(!empty($data)){
-            if ($data['uuid'] == $uuid) {
+            if ($data['uid'] == $uid) {
                 $this->ajaxOk('');
             }
             else{

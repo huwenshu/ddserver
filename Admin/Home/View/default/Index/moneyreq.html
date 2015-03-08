@@ -1,0 +1,53 @@
+<extend name="Public/base"/>
+
+<block name="sidebar"></block>
+
+<block name="style">
+    <style>
+        body{padding: 0}
+
+        .moneyitem{list-style:none;width:490px;padding:5px 0 5px 10px;}
+
+        .gray {background:#ddd;}
+    </style>
+</block>
+
+<block name="body">
+    <!-- 主体 -->
+    <div id="indexMain" class="index-main">
+        <h4>提现申请列表：</h4>
+        <ul class="mui-table-view">
+            <?php
+            foreach ($reqList as $key => $value) {
+                $temp = "<li name='moneyitem' class='mui-table-view-cell'><p>停车场：".$value['park']." 申请人：".$value['name']."</p>
+                            <p>开户行：".$value['bankname']." 账户名：".$value['accountname']."</p>
+                            <p>账号：".$value['account']." 金额：".$value['money']."元</p>
+                            <p>电话：".$value['telephone']." 申请时间：".$value['createtime']."</p>";
+                if($value['state'] == 0){
+                    $url = U('reqDone')."/rid/".$value['id'];
+                    $temp = $temp."<a href='".$url."'>完成提现</a>";
+                }
+                else{
+                    $temp = $temp."<span>已提现</span>";
+                }
+                echo $temp;
+            }
+            ?>
+        </ul>
+
+    </div>
+</block>
+
+<block name="script">
+    <script type="text/javascript">
+        $(function(){
+            $('.sidebar').remove();
+            $('[name=moneyitem]').click(function(){
+                var url= $(this).attr("alt");
+                location.href = url;
+            });
+
+            $(".moneyitem").hover(function() {$(this).addClass("gray")}, function() {$(this).removeClass("gray")});
+        });
+    </script>
+</block>

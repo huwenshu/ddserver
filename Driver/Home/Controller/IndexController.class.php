@@ -12,9 +12,9 @@ class IndexController extends BaseController {
 		$uid = I('get.uid');
 		$uuid = I('get.uuid');
 		$this->uid = $uid;
-		$data = $this->getUsercache($uid);
+		$data = $this->getUsercache($uuid);
 		if($data){
-			if ($data['uuid'] == $uuid) {
+			if ($data['uid'] == $uid) {
 				$this->uid = $uid;
 				return;
 			}

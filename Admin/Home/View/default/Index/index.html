@@ -1,0 +1,43 @@
+<extend name="Public/base"/>
+
+<block name="sidebar"></block>
+
+<block name="style">
+    <style>
+        body{padding: 0}
+
+        .parkitem{list-style:none;width:490px;padding:5px 0 5px 10px;}
+
+        .gray {background:#ddd;}
+
+        #nav_table td{border: solid #ccc 1px;}
+        #nav_table td a{display: block;padding: 10px 0;text-decoration: none;color: deepskyblue;}
+        #nav_table td a:hover{color: #0000ff;background: gainsboro;}
+    </style>
+</block>
+
+<block name="body">
+    <!-- 主体 -->
+    <div id="indexMain" class="index-main">
+        <table id="nav_table" style="width: 80%;margin: 0 auto;text-align: center;cellspacing=0;cellpadding=0">
+            <tr>
+                <td><a href="{:U(moneyReq)}">提现<br>申请</a></td>
+                <td><a href="">异常<br>状态</a></td>
+                <td><a href="">空车位<br>状态</a></td>
+            </tr>
+            <tr>
+                <td><a href="">兑换<br>申请</a></td>
+                <td><a href="">礼品<br>录入</a></td>
+                <td></td>
+            </tr>
+        </table>
+    </div>
+</block>
+
+<block name="script">
+<script type="text/javascript">
+    $(function(){
+        $('.sidebar').remove();
+    });
+</script>
+</block>

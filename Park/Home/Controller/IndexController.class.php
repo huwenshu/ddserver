@@ -587,7 +587,7 @@ class IndexController extends BaseController {
 
 
 	/*
-     *  @desc 提现的请求处理
+     *  @desc 积分的请求处理
     */
 	public function exchangeGift()
 	{
