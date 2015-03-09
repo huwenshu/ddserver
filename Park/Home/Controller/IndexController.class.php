@@ -261,20 +261,39 @@ class IndexController extends BaseController {
 		$parkid = $data['parkid'];
 
 		$Park = M('ParkInfo');
+        $map = array();
+        $map['id'] = $parkid;
+        $park = $Park->where($map)->find();
+        $oldState = $park['parkstate'];
+
 		$data = array();
 		$data['id'] = $parkid;
 		$data['parkstate'] = $state;
 		$data['updater'] = $this->uid;
 		$result = $Park->save($data);
 
+        //增加操作积分
 		$score = C('SCORE');
 		$this->addScore($this->uid, $score['state']);
 
-		$states = array('已满','较少','较多');
-		$logStr = '停车场：'.$this->getParkName($parkid).' 管理员：'.$this->getAdmin($this->uid).' 设置状态：'.$states[$state]
-			.' 积分：'.$score['state'].' 时间：'.date('Y-m-d H:i:s');
+        //记录日志到csv
+        $ctime = time();
+        $msgs = array();
+        $optid = $parkid.$this->uid.'1'.time();
+        $msgs[0] = $optid;//操作编号
+        $msgs[1] = date("Y-m-d H:i:s", $ctime);//当前时间
+        $msgs[2] = $_SERVER['REMOTE_ADDR'];//用户ip
+        $msgs[3] = $parkid;//停车场编号
+        $msgs[4] = $this->uid;//操作者id
+        $msgs[5] = 1;//1-代表空车位变更的操作类型
+        $msgs[6] = $oldState;//原值
+        $msgs[7] = $state;//新值
+        $msgs[8] = $score['state'];//获得积分
+        $msgs[9] = '';//补充信息
 
-		takeLog($logStr, 'INFO', C('LOG_PATH').'parkstate.log');
+        $filename = '/admin_'.date("Ymd", $ctime).'.csv';
+
+		takeCSV($msgs, C('LOG_PATH').$filename);
 
 		if(empty($result)){
 			$this->ajaxMsg("修改状态失败！");

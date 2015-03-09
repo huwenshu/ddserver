@@ -38,5 +38,20 @@ function takeLog($msg, $level, $destination){
 
 }
 
+//记录csv
+function takeCSV($msgs, $destination){
+
+    $log_dir = dirname($destination);
+    if (!is_dir($log_dir)) {
+        mkdir($log_dir, 0755, true);
+    }
+
+    $fp = fopen($destination, 'a');
+    fputcsv($fp, $msgs);
+    fclose($fp);
+
+
+}
+
 
 ?>

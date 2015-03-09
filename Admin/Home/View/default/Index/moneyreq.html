@@ -42,10 +42,6 @@
     <script type="text/javascript">
         $(function(){
             $('.sidebar').remove();
-            $('[name=moneyitem]').click(function(){
-                var url= $(this).attr("alt");
-                location.href = url;
-            });
 
             $(".moneyitem").hover(function() {$(this).addClass("gray")}, function() {$(this).removeClass("gray")});
         });
