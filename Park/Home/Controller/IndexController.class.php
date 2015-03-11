@@ -269,6 +269,7 @@ class IndexController extends BaseController {
 		$data = array();
 		$data['id'] = $parkid;
 		$data['parkstate'] = $state;
+        $data['laststateop'] =  date('Y-m-d H:i:s');
 		$data['updater'] = $this->uid;
 		$result = $Park->save($data);
 

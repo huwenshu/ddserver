@@ -88,24 +88,24 @@ return array(
                     array(
                         'type' => 'view',
                         'name' => '附近',
-                        'url' => 'http://duduche.me/html/userhtml/index.html?m=map'
+                        'url' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx7402a94935807c76&redirect_uri=http%3a%2f%2fduduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=near#wechat_redirect'
                     ),
                     array(
                         'type' => 'view',
                         'name' => '搜索',
-                        'url' => 'http://duduche.me/html/userhtml/index.html?m=mapsearch'
+                        'url' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx7402a94935807c76&redirect_uri=http%3a%2f%2fduduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=find#wechat_redirect'
                     ),
                 )
             ),
             array(
                 'type' => 'view',
                 'name' => '缴费',
-                'url' => 'http://duduche.me/html/userhtml/index.html?m=myjiesuan'
+                'url' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx7402a94935807c76&redirect_uri=http%3a%2f%2fduduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=fee#wechat_redirect'
             ),
             array(
                 'type' => 'view',
                 'name' => '我的',
-                'url' => 'http://duduche.me/html/userhtml/index.html?m=myorder'
+                'url' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx7402a94935807c76&redirect_uri=http%3a%2f%2fduduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=order#wechat_redirect'
             ),
         )
     ),

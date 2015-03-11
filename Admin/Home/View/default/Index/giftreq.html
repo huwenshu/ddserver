@@ -1,0 +1,49 @@
+<extend name="Public/base"/>
+
+<block name="sidebar"></block>
+
+<block name="style">
+    <style>
+        body{padding: 0}
+
+        .moneyitem{list-style:none;width:490px;padding:5px 0 5px 10px;}
+
+        .gray {background:#ddd;}
+    </style>
+</block>
+
+<block name="body">
+    <!-- 主体 -->
+    <div id="indexMain" class="index-main">
+        <h4>礼品兑换列表：</h4>
+        <ul class="mui-table-view">
+            <?php
+            foreach ($reqList as $key => $value) {
+            $temp = "<li name='giftitem' class='mui-table-view-cell'><p>停车场：".$value['park']." 申请人：".$value['adminName']."</p>
+            <p>礼品：".$value['giftName']." 花费积分：".$value['score']."</p>
+            <p>收件人：".$value['name']." 地址：".$value['address']."</p>
+            <p>电话：".$value['telephone']." 申请时间：".$value['createtime']."</p>";
+            if($value['state'] == 0){
+            $url = U('giftreqDone')."/gid/".$value['id'];
+            $temp = $temp."<a href='".$url."'>完成兑换</a></li>";
+            }
+            else{
+            $temp = $temp."<span>已兑换</span></li>";
+            }
+            echo $temp;
+            }
+            ?>
+        </ul>
+
+    </div>
+</block>
+
+<block name="script">
+    <script type="text/javascript">
+        $(function(){
+            $('.sidebar').remove();
+
+            $(".giftitem").hover(function() {$(this).addClass("gray")}, function() {$(this).removeClass("gray")});
+        });
+    </script>
+</block>

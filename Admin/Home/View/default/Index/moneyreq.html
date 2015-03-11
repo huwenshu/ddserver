@@ -24,7 +24,7 @@
                             <p>账号：".$value['account']." 金额：".$value['money']."元</p>
                             <p>电话：".$value['telephone']." 申请时间：".$value['createtime']."</p>";
                 if($value['state'] == 0){
-                    $url = U('reqDone')."/rid/".$value['id'];
+                    $url = U('moneyreqDone')."/rid/".$value['id'];
                     $temp = $temp."<a href='".$url."'>完成提现</a>";
                 }
                 else{

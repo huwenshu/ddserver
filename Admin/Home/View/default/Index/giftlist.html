@@ -1,0 +1,49 @@
+<extend name="Public/base"/>
+
+<block name="sidebar"></block>
+
+<block name="style">
+    <style>
+        body{padding: 0}
+
+        .parkitem{list-style:none;width:490px;padding:5px 0 5px 10px;}
+
+        .gray {background:#ddd;}
+    </style>
+</block>
+
+<block name="body">
+    <!-- 主体 -->
+    <div id="indexMain" class="index-main">
+        <a class="mui-btn mui-btn-success" href="{:U('giftInfo')}">新添礼品</a>
+
+        <ul class="mui-table-view">
+            <?php
+            foreach ($gifts as $key => $value) {
+            $show = array(0 => '否', 1 => '是');
+             $temp =  "<li name='giftitem' class='mui-table-view-cell' alt='".U('giftInfo')."/gid/".$value['id']."/' >
+                            <a class='mui-navigate-right'>
+                                <p>".$value['name']."</p>
+                                <p>礼品积分：".$value['score']."</p><p>是否显示：".$show[$value['valid']]."</p><p>权重(越小越靠前)：".$value['weight']."  </p>
+                            </a></li>";
+            echo $temp;
+            }
+            ?>
+        </ul>
+
+    </div>
+</block>
+
+<block name="script">
+    <script type="text/javascript">
+        $(function(){
+            $('.sidebar').remove();
+            $('[name=giftitem]').click(function(){
+                var url= $(this).attr("alt");
+                location.href = url;
+            });
+
+            $(".giftitem").hover(function() {$(this).addClass("gray")}, function() {$(this).removeClass("gray")});
+        });
+    </script>
+</block>

@@ -1,0 +1,118 @@
+<extend name="Public/base" xmlns="http://www.w3.org/1999/html"/>
+
+<block name="style">
+    <style>
+        body{padding: 0}
+        .myborder{
+        }
+        #panel-2 .myborder input,#panel-2 .myborder select,#panel-1 .myborder input,#panel-1 .myborder select{
+            width: 65%;
+        }
+        #panel-1 .myborder textarea,#panel-2 .myborder textarea{
+            height: 100px;
+        }
+        .ui-tabs-nav{
+            position: relative;
+            display: table;
+            width: 100%;
+            overflow: hidden;
+            font-size: 15px;
+            font-weight: 400;
+            table-layout: fixed;
+            background-color: transparent;
+            border: 1px solid #383838;
+            border-radius: 3px;
+        }
+        .ui-tabs-nav>li{
+            display: table-cell;
+            width: 1%;
+            padding-top: 6px;
+            padding-bottom: 7px;
+            overflow: hidden;
+            line-height: 1;
+            color: #007aff;
+            text-align: center;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            border-color: #383838;
+            border-left: 1px solid #007aff;
+            -webkit-transition: background-color .1s linear;
+            transition: background-color .1s linear;
+        }
+        .ui-tabs-nav>li.ui-tabs-active{
+            color: #fff;
+            background-color: #383838;
+        }
+        .ui-tabs-nav>li>a{
+            color: #007aff;
+        }
+        .ui-tabs-nav>li.ui-tabs-active>a{
+            color:#fff;
+            text-decoration: underline;
+        }
+        form button{
+
+        }
+        #panel-2 input{
+            width: 95%;
+        }
+
+
+    </style>
+</block>
+
+<block name="body">
+<!-- 主体 -->
+<div id="indexMain" class="index-main" style="padding-top: 35px">
+    <form action="{:U('giftInfo')}" method="post" enctype="multipart/form-data">
+        <input type="hidden"  name="id" value="{$giftInfo[id]}" />
+        <table style="display: flex;width: 95%;margin: 0 auto;margin-top: 10px">
+            <tr>
+                <td style="width: 33%"><label for="giftname">礼品名称：</label></td>
+                <td style="width: 66%"><input type="text" id="giftname" name="name" value="{$giftInfo[name]}" /> </td>
+            </tr>
+            <tr>
+                <td><label for="giftscore">礼品积分：</label></td>
+                <td><input type="text" id="giftscore" name="score" value= "{$giftInfo[score]}" /> </td>
+            </tr>
+            <tr>
+                <td><label for="giftpic">礼品图片：</label></td>
+                <td><input type="file" id="giftpic" name="pic" value= "" /><span style="color:red">{$fileError}</span> </td>
+            </tr>
+            <tr>
+                <td><label for="giftvalid">是否显示：</label></td>
+                <td>
+                <select id="giftvalid" name="valid">
+                    <option value="0"  <?php if ($giftInfo[valid]==0)  echo 'selected="selected"';?>>否</option>
+                    <option value="1"  <?php if ($giftInfo[valid]==1)  echo 'selected="selected"';?>>是</option>
+                </select>
+                </td>
+            </tr>
+            <tr>
+                <td><label for="giftweight">权重：</label></td>
+                <td><input type="text" id="giftweight" name="weight" value= "{$giftInfo[weight]}" /> </td>
+            </tr>
+            <tr>
+                <td>
+                    礼品图片：
+                </td>
+                <td>
+                    <img src="{$imageRoot}/{$giftInfo[image]}">
+                </td>
+            </tr>
+            <tr>
+                <td colspan=2>
+                    <input type="submit" />
+                </td>
+            </tr>
+        </table>
+    </form>
+
+</div>
+</block>
+
+<block name="script">
+<!--<script src="http://webapi.amap.com/maps?v=1.3&key=5b768e7a9bc53cf2286ba6122e599bb4" type="text/javascript"></script>-->
+<script type="text/javascript" src="__STATIC__/iscroll.js"></script>
+
+</block>

@@ -1,0 +1,43 @@
+<extend name="Public/base"/>
+
+<block name="sidebar"></block>
+
+<block name="style">
+    <style>
+        body{padding: 0}
+
+        .moneyitem{list-style:none;width:490px;padding:5px 0 5px 10px;}
+
+        .gray {background:#ddd;}
+    </style>
+</block>
+
+<block name="body">
+    <!-- 主体 -->
+    <div id="indexMain" class="index-main">
+        <h4>空车位状态异常列表：</h4>
+        <ul class="mui-table-view">
+            <?php
+            foreach ($spaces as $key => $value) {
+            $temp = "<li name='spaceitem' class='mui-table-view-cell'>
+                        <p>停车场：".$value['park']."</p>
+                        <p>当前状态：".$value['state']."</p>
+                        <p>上次更新时间：".$value['lastTime']."</p></li>";
+
+            echo $temp;
+            }
+            ?>
+        </ul>
+
+    </div>
+</block>
+
+<block name="script">
+    <script type="text/javascript">
+        $(function(){
+            $('.sidebar').remove();
+
+            $(".spaceitem").hover(function() {$(this).addClass("gray")}, function() {$(this).removeClass("gray")});
+        });
+    </script>
+</block>

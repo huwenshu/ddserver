@@ -50,4 +50,63 @@ class BaseController extends \Think\Controller {
         }
 
     }
+
+
+
+    /**
+     *  @desc $gid 获取礼品名字
+     *  @param $gid
+     */
+    protected function getGiftName($gid)
+    {
+        $ParkInfo = M('GiftList');
+        $map = array();
+        $map['id'] = $gid;
+        $giftData = $ParkInfo->where($map)->find();
+        if(!empty($giftData)) {
+            return  $giftData['name'];
+        }
+        else{
+            return null;
+        }
+
+    }
+
+    /**
+     *  @desc 根据adid 获取管理员名字
+     *  @param $adid
+     */
+    protected function getAdmin($adid)
+    {
+        $ParkAdmin = M('ParkAdmin');
+        $map = array();
+        $map['id'] = $adid;
+        $adminData = $ParkAdmin->where($map)->find();
+        if(!empty($adminData)) {
+            return  $adminData['name'];
+        }
+        else{
+            return null;
+        }
+
+    }
+
+    /**
+     *  @desc 根据uid 去车主的车牌
+     *  @param $uid
+     */
+    protected function getDriver($uid)
+    {
+        $Driver = M('DriverInfo');
+        $map = array();
+        $map['id'] = $uid;
+        $driverData = $Driver->where($map)->find();
+        if(!empty($driverData)){
+            return $driverData;
+        }
+        else{
+            return null;
+        }
+
+    }
 }

@@ -59,4 +59,13 @@ return array(
     'THEME_LIST'		=>	'default',
     'TMPL_DETECT_THEME' => 	true, // 自动侦测模板主题
 
+    //订单状态
+    'ORDER_STATE' => array(-1 =>'生成订单', 0 => '预付',  1 => '进场', 2 => '结清', 3 => '离场'),
+
+    //车位状态
+    'PARK_STATE'  => array( 0 => '车位已满',  1 => '车位较少', 2 => '车位较多'),
+
+    //礼品图片保存位置
+    'GIFT_IMG' => __ROOT__ . '/Uploads/images',
+
 );

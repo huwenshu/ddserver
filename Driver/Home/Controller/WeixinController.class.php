@@ -107,6 +107,16 @@ class WeixinController extends BaseController {
 
 	}
 
+    //处理公共号跳转，获取openid
+    public  function menuCallBack($code,$state = 'near'){
+        //访问微信接口，获取openid
+        $URL = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid='.C('APPID').'&secret='.C('APPSECRET').'&code='.$code.'&grant_type=authorization_code';
+        $data = json_decode($this->doCurlGetRequest($URL),true);
+        $openid = $data['openid'];
+
+        $this->redirectURL($state,$openid);
+    }
+
 
 	//根据用户链接跳转
 	public function  redirectURL($m = 'near',$openid){
@@ -129,12 +139,14 @@ class WeixinController extends BaseController {
 		$nearURL = "http://duduche.me/html/userhtml/index.html?m=map&openid=".$openid.$tmpStr;
 		$findURL = "http://duduche.me/html/userhtml/index.html?m=mapsearch&openid=".$openid.$tmpStr;
 		$feeURL  = "http://duduche.me/html/userhtml/index.html?m=myjiesuan&openid=".$openid.$tmpStr;
+        $orderURL  = "http://duduche.me/html/userhtml/index.html?m=myorder&openid=".$openid.$tmpStr;
 
 
 		switch($m){
 			case 'near' : header("Location:".$nearURL); break;
 			case 'find' : header("Location:".$findURL); break;
 			case 'fee' : header("Location:".$feeURL); break;
+            case 'order' : header("Location:".$orderURL); break;
 			default : header("Location:".$nearURL); break;
 		}
 
