@@ -137,6 +137,27 @@ class BaseController extends \Think\Controller {
 
     }
 
+
+
+    /**
+     *  @desc 根据UID获得默认车牌号
+     *  @param int $uid
+     */
+    protected function getDefualtCarid($uid){
+        $DriverCar = M('DriverCar');
+        $map = array();
+        $map['id'] = $uid;
+        $map['status'] = 1;
+        $car = $DriverCar->where($map)->find();
+        if(empty($car)){
+            return null;
+        }
+        else{
+            return $car['carid'];
+        }
+    }
+
+
     /**
      *  @desc 积分方法
      *  @param int $aid 管理员id

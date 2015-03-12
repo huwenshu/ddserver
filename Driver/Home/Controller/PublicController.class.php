@@ -18,7 +18,7 @@ class PublicController extends BaseController {
     /**
      * 用户登录
      */
-    public function login($phone = null, $carid = null){
+    public function login($phone = null){
         $uid=null;
 
         $Driver = M('DriverInfo');
@@ -31,7 +31,7 @@ class PublicController extends BaseController {
         }
         else{
             $arr['telephone'] = $phone;
-            $arr['carid'] = $carid;
+            //$arr['carid'] = $carid;
             $arr['createtime'] = date('Y-m-d H:i:s');
             $uid = $Driver->add($arr);
         }
@@ -41,38 +41,21 @@ class PublicController extends BaseController {
     }
 
 	/**
-	 * 用户登录
+	 * 微信用户登录
 	 */
-	public function wxlogin($openid=null, $phone = null, $carid = null){
+	public function wxlogin($openid=null, $phone = null){
 
 		$Driver = M('DriverInfo');
 
 		$map = array('openid' => $openid);
 		$data = $Driver->where($map)->find();
-		if(!empty($data)){//openid已经存在
-			$uid = $data['id'];
+		if(!empty($data)){//openid已经存在,先解除绑定
+			$data['openid'] = null;
+            $Driver->where($map)->save($data);
+            $uid = $this->_wxlogin($openid,$phone);
 		}
 		else{//openid不存在
-
-			$map = array('telephone' => $phone);
-			$data = $Driver->where($map)->find();
-
-			if(!empty($data)){//电话号码已经存在
-				$uid = $data['id'];
-				$map = array('id' => $uid);
-				$temp['openid'] = $openid;
-				$temp['updater'] = $uid;
-				$temp['updatetime'] = date('Y-m-d H:i:s');
-				$Driver->where($map)->save($temp);
-				//todo:更新车牌号
-			}
-			else{
-				$arr['openid'] = $openid;
-				$arr['telephone'] = $phone;
-				$arr['carid'] = $carid;
-				$arr['createtime'] = date('Y-m-d H:i:s');
-				$uid = $Driver->add($arr);
-			}
+            $uid = $this->_wxlogin($openid,$phone);
 		}
 
 
@@ -81,6 +64,30 @@ class PublicController extends BaseController {
 		$this->ajaxOk($temp);
 	}
 
+    //数据库里面还没有这个openid，采取登录方式
+
+    protected  function _wxlogin($openid, $phone){
+
+        $Driver = M('DriverInfo');
+        $map = array('telephone' => $phone);
+        $data = $Driver->where($map)->find();
+
+        if(!empty($data)){//电话号码已经存在
+            $uid = $data['id'];
+            $map = array('id' => $uid);
+            $temp['openid'] = $openid;
+            $temp['updater'] = $uid;
+            $Driver->where($map)->save($temp);
+        }
+        else{
+            $arr['openid'] = $openid;
+            $arr['telephone'] = $phone;
+            $arr['createtime'] = date('Y-m-d H:i:s');
+            $uid = $Driver->add($arr);
+        }
+
+        return $uid;
+    }
 
     public function checkLogin($uid, $uuid){
         $data = $this->getUsercache($uuid);

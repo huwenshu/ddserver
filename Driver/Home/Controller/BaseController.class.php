@@ -62,7 +62,7 @@ class BaseController extends \Think\Controller {
 
     /**
      *  @desc 根据UID获得openid
-     *  @param int $uid 纬度值
+     *  @param int $uid
      */
     protected function getOpenID($uid){
         $DriverInfo = M('DriverInfo');
@@ -74,6 +74,25 @@ class BaseController extends \Think\Controller {
         }
         else{
             return $driverData['openid'];
+        }
+    }
+
+
+    /**
+     *  @desc 根据UID获得默认车牌号
+     *  @param int $uid
+     */
+    protected function getDefualtCarid($uid){
+        $DriverCar = M('DriverCar');
+        $map = array();
+        $map['driverid'] = $uid;
+        $map['status'] = 1;
+        $car = $DriverCar->where($map)->find();
+        if(empty($car)){
+            return null;
+        }
+        else{
+            return $car['carid'];
         }
     }
 

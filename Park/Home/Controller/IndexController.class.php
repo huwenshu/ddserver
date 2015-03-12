@@ -59,10 +59,7 @@ class IndexController extends BaseController {
 			$tmp = array();
 			$tmp['oid'] = $value['id'];
 			$driverId = $value['uid'];
-			$Driver = M('DriverInfo');
-			$con1 = array('id' => $driverId);
-			$driverData = $Driver->where($con1)->find();
-			$tmp['carid'] = $driverData['carid'];
+			$tmp['carid'] = $this->getDefualtCarid($driverId);
 			$tmp['orderTime'] = $value['startime'];
 
 			array_push($result, $tmp);
@@ -124,7 +121,7 @@ class IndexController extends BaseController {
 			$Driver = M('DriverInfo');
 			$con1 = array('id' => $driverId);
 			$driverData = $Driver->where($con1)->find();
-			$tmp['carid'] = $driverData['carid'];
+			$tmp['carid'] = $this->getDefualtCarid($driverId);
 			$tmp['telephone'] = $driverData['telephone'];
 			$tmp['startTime'] = $value['startime'];
 
@@ -155,10 +152,7 @@ class IndexController extends BaseController {
 			$tmp = array();
 			$tmp['oid'] = $value['id'];
 			$driverId = $value['uid'];
-			$Driver = M('DriverInfo');
-			$con1 = array('id' => $driverId);
-			$driverData = $Driver->where($con1)->find();
-			$tmp['carid'] = $driverData['carid'];
+			$tmp['carid'] = $this->getDefualtCarid($driverId);
 			$tmp['startime'] = $value['startime'];
 			$tmp['endtime'] = $value['endtime'];
 			$tmp['remaintime'] = strtotime($value['endtime']) - time();
@@ -235,12 +229,7 @@ class IndexController extends BaseController {
 				$sum = $sum + $value1['money'];
 			}
 			$tmp['money'] = $sum;
-
-			$Driver = $this->getDriver($value['uid']);
-			if(!empty($Driver)) {
-				$tmp['carid'] = $Driver['carid'];
-			}
-
+			$tmp['carid'] = $this->getDefualtCarid($value['uid']);
 			$tmp['admin'] = $this->getAdmin($value['updater']);
 			array_push($result, $tmp);
 

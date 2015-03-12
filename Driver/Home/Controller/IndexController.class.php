@@ -102,6 +102,7 @@ class IndexController extends BaseController {
 			$tmp['spacesum'] = $value['spacesum'];
 			$tmp['parkstate'] = $value['parkstate'];
 			$tmp['note'] = $value['note'];
+            $tmp['carid'] = $this->getDefualtCarid($this->uid);
 //			$tmp['dis'] = $this->getDistance($value['lat'],$value['lng'],$this->lat,$this->lng);
 //			$tmp['llat'] = $this->lat;
 //			$tmp['llng'] = $this->lng;
@@ -405,6 +406,134 @@ class IndexController extends BaseController {
 		$this->ajaxOk("");
 
 	}
+
+
+    /*
+     *  @desc 获取车主基本信息
+    */
+    public function getDriverInfo(){
+        $DriverInfo = M('DriverInfo');
+        $map = array();
+        $map['id'] = $this->uid;
+        $dirver = $DriverInfo->where($map)->find();
+        $DriverCar = M('DriverCar');
+        $map = array();
+        $map['driverid'] = $this->uid;
+        $cars = $DriverCar->where($map)->select();
+
+        $result = array();
+        $result['telephone'] = $dirver['telephone'];
+        $result['carids'] = $cars;
+
+        $this->ajaxOk($result);
+
+
+    }
+
+    /*
+     *  @desc 新增车牌
+     *  @param carid	车牌号码
+    */
+    public function addCarid($carid){
+
+        $DriverCar = M('DriverCar');
+        $map = array();
+        $map['driverid'] = $this->uid;
+        $cars = $DriverCar->where($map)->select();
+
+        //判断是否车牌是否重复
+        foreach($cars as $key => $value){
+            if($carid == $value['carid']){
+                $this->ajaxMsg('您已经拥有此车牌！');
+            }
+        }
+
+        //如果是第一两车，默认设置成默认车辆
+        $sum = count($cars);
+        if($sum == 0 ){
+            $status = 1;
+        }else{
+            $status = 0;
+        }
+
+        //保存数据
+        $temp = array();
+        $temp['driverid'] = $this->uid;
+        $temp['carid'] = $carid;
+        $temp['status'] = $status;
+        $temp['creater'] = $this->uid;
+        $temp['createtime'] = date("Y-m-d H:i:s",time());
+        $temp['updater'] = $this->uid;
+        $DriverCar->add($temp);
+
+        $this->getDriverInfo();
+
+
+    }
+
+    /*
+     *  @desc 修改车牌
+     *  @param id	车牌表id
+     *  @param newCarid	新车牌号码
+    */
+    public function modifyCarid($id,$newCarid){
+
+        $DriverCar = M('DriverCar');
+        $map = array();
+        $map['driverid'] = $this->uid;
+        $cars = $DriverCar->where($map)->select();
+
+        //判断是否车牌是否重复
+        foreach($cars as $key => $value){
+            if($newCarid == $value['carid']){
+                $this->ajaxMsg('您已经拥有此车牌！');
+            }
+        }
+
+        //保存数据
+        $map = array();
+        $map['id'] = $id;
+
+        $data  = array();
+        $data['carid'] = $newCarid;
+        $data['updater'] = $this->uid;
+        $DriverCar->where($map)->save($data);
+
+        $this->getDriverInfo();
+
+
+    }
+
+    /*
+    *  @desc 设置默认车牌
+    *  @param id	车牌表id
+   */
+    public function setDefaultCar($id){
+
+        //把原先默认的车设成0
+        $DriverCar = M('DriverCar');
+        $map = array();
+        $map['driverid'] = $this->uid;
+        $map['status'] = 1;
+        $data['status'] = 0;
+        $data['updater'] = $this->uid;
+        $DriverCar->where($map)->save($data);
+
+
+        //保存数据
+        $map = array();
+        $map['id'] = $id;
+
+        $data  = array();
+        $data['status'] = 1;
+        $data['updater'] = $this->uid;
+        $DriverCar->where($map)->save($data);
+
+        $this->ajaxOk('');
+
+
+    }
+
 
 	//获得IP地址
 	protected function get_client_ip() {
