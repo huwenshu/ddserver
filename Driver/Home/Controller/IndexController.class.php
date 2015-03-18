@@ -267,9 +267,6 @@ class IndexController extends BaseController {
 		$totalFee = $this->parkingFee(strtotime($orderData['startime']), $orderData['pid']);
 		$remainFee = $totalFee - $preSum;
 
-		$Order = M('ParkOrder');
-		$con = array('id' => $oid);
-		$orderData = $Order->where($con)->find();
 		$result['oid'] = $oid;
 		$result['startTime'] = $orderData['startime'];
 		$result['startTimeStamp'] = strtotime($orderData['startime']);
