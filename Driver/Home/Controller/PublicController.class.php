@@ -410,4 +410,25 @@ class PublicController extends BaseController {
 			return false;
 		}
 	}
+	
+	//测试区
+	public function testCreateGiftPack(){
+		print_r($this->_createGiftPack(0, 0, date("Y-m-d H:i:s"), date("Y-m-d H:i:s",time()+3600), date("Y-m-d H:i:s",time()+60), date("Y-m-d H:i:s",time()+7200), 1, rand(2,5), 1));
+	}
+	public function testCreateCoupon(){
+		print_r($this->_createCoupon(0, 0, 1, date("Y-m-d H:i:s"), date("Y-m-d H:i:s",time()+3600), 0));
+	}
+	public function testCreateCoupon1(){
+		print_r($this->_createCoupon1(0, date("Y-m-d H:i:s"), date("Y-m-d H:i:s",time()+3600)));
+	}
+	public function testUseGiftPack($code){
+		print_r($this->_useGiftPack(0, $code));
+	}
+	public function testListCoupon(){
+		print_r($this->_listCoupon(0));
+	}
+	public function testUseCoupon($id){
+		print_r($this->_useCoupon(0, $id, 10));
+	}
+	//测试区
 }

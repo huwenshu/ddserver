@@ -259,4 +259,130 @@ class BaseController extends \Think\Controller {
 
 		return $myt;
 	}
+	
+	protected function guid(){
+    if (function_exists('com_create_guid')){
+        return trim(com_create_guid(), '{}');
+    }else{
+        mt_srand((double)microtime()*10000);//optional for php 4.2.0 and up.
+        $charid = strtoupper(md5(uniqid(rand(), true)));
+        $hyphen = chr(45);// "-"
+        $uuid = substr($charid, 0, 8).$hyphen
+                .substr($charid, 8, 4).$hyphen
+                .substr($charid,12, 4).$hyphen
+                .substr($charid,16, 4).$hyphen
+                .substr($charid,20,12);
+        return $uuid;
+    }
+	}
+
+	//生成红包
+	//返回值：
+	//null		创建失败
+	//string	礼包码
+	protected function _createGiftPack($type, $uid, $starttime, $endtime, $coupon_starttime, $coupon_endtime, $minmoney, $maxmoney, $maxnum){
+		$code = $this->guid();
+		if($type == 0){
+			//随机红包
+			$giftpack = M('driver_giftpack');
+			$data = array('code'=>$code,'type'=>$type,'uid'=>$uid,'starttime'=>$starttime, 'endtime'=>$endtime, 'coupon_starttime'=>$coupon_starttime, 'coupon_endtime'=>$coupon_endtime, 'minmoney'=>$minmoney, 'maxmoney'=>$maxmoney, 'maxnum'=>$maxnum);
+			$giftpack->add($data);
+			
+			return $code;
+		}
+		return null;
+	}
+	
+	//生成折扣劵
+	//返回值：
+	//array			折扣劵信息
+	protected function _createCoupon($uid, $type, $money, $starttime, $endtime, $source){
+		$coupon = M('driver_coupon');
+		$data = array('type'=>$type,'uid'=>$uid,'starttime'=>$starttime, 'endtime'=>$endtime, 'money'=>$money, 'source'=>$source);
+		$data['id'] = $coupon->add($data);
+		return $data;
+	}
+	
+	//生成1元折扣劵
+	//返回值：
+	//array			折扣劵信息
+	protected function _createCoupon1($uid, $starttime, $endtime){
+		return $this->_createCoupon($uid, -1, 0, $starttime, $endtime, 0);
+	}
+	
+	//使用红包来获得折扣劵
+	//返回值：
+	//0				没有合适的红包
+	//-1			已领完
+	//-2			活动还没开始
+	//-3			活动已结束
+	//array			折扣劵信息
+	protected function _useGiftPack($uid, $code){
+		$giftpack = M('driver_giftpack');
+		$con1 = "code='".$code."' and (uid=0 or uid=".$uid.")";
+		$giftArr = $giftpack->where($con1)->limit(1)->select();
+		if(!$giftArr || count($giftArr) == 0){//没有合适的红包
+			return 0;
+		}
+		else if($giftArr[0]['maxnum']<=$giftArr[0]['num']){//已领完
+			return -1;
+		}
+		$starttime = strtotime($giftArr[0]['starttime']);
+		$endtime = strtotime($giftArr[0]['endtime']);
+		$now = time();
+		if($now < $starttime){//还没开始
+			return -2;
+		}
+		else if($now > $endtime){//已结束
+			return -3;
+		}
+		$id = $giftArr[0]['id'];
+		$giftpack->where(array('id'=>$id))->setInc('num',1);//计数器＋1
+		return $this->_createCoupon($uid, $giftArr[0]['type'], rand($giftArr[0]['minmoney'],$giftArr[0]['maxmoney']), $giftArr[0]['coupon_starttime'], $giftArr[0]['coupon_endtime'], $id);
+	}
+	
+	//列出可用折扣劵
+	//返回值：
+	//array			折扣劵列表（二维）
+	protected function _listCoupon($uid){
+		$nowStr = date("Y-m-d H:i:s");
+		$coupon = M('driver_coupon');
+		$con1 = "uid=".$uid." and starttime<='".$nowStr."' and endtime>='".$nowStr."' and status=0";
+		$couponArr = $coupon->where($con1)->order('type asc,money desc')->select();
+		return $couponArr;
+	}
+	
+	//使用折扣劵
+	//返回值：
+	//0				抵用劵不存在
+	//-1			已领完
+	//-2			活动还没开始
+	//-3			活动已结束
+	//int			抵扣金额
+	protected function _useCoupon($uid, $id, $bill){
+		$coupon = M('driver_coupon');
+		$con1 = array('id'=>$id,'uid'=>$uid);
+		$couponArr = $coupon->where($con1)->limit(1)->select();
+		if(!$couponArr || count($couponArr) == 0){//抵用劵不存在
+			return 0;
+		}
+		else if($couponArr[0]['status']!=0){//已领完
+			return -1;
+		}
+		$starttime = strtotime($couponArr[0]['starttime']);
+		$endtime = strtotime($couponArr[0]['endtime']);
+		$now = time();
+		if($now < $starttime){//还没开始
+			return -2;
+		}
+		else if($now > $endtime){//已结束
+			return -3;
+		}
+		$coupon->where(array('id'=>$id))->setInc('status',1);//计数器＋1
+		if($couponArr[0]['type'] == -1){//1元折扣劵
+			return $bill>1?$bill-1:0;
+		}
+		return $couponArr[0]['money'];
+	}
+	
 }
