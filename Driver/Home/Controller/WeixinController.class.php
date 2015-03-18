@@ -140,6 +140,7 @@ class WeixinController extends BaseController {
 		$findURL = "http://duduche.me/html/userhtml/index.html?m=mapsearch&openid=".$openid.$tmpStr;
 		$feeURL  = "http://duduche.me/html/userhtml/index.html?m=myjiesuan&openid=".$openid.$tmpStr;
         $orderURL  = "http://duduche.me/html/userhtml/index.html?m=myorder&openid=".$openid.$tmpStr;
+        $userinfoURL  = "http://duduche.me/html/userhtml/index.html?m=userinfo&openid=".$openid.$tmpStr;
 
 
 		switch($m){
@@ -147,6 +148,7 @@ class WeixinController extends BaseController {
 			case 'find' : header("Location:".$findURL); break;
 			case 'fee' : header("Location:".$feeURL); break;
             case 'order' : header("Location:".$orderURL); break;
+            case 'userinfo' : header("Location:".$userinfoURL); break;
 			default : header("Location:".$nearURL); break;
 		}
 

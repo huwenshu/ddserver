@@ -5,8 +5,7 @@ use Think\Controller;
 class IndexController extends BaseController {
 
 	private $uid;
-	private $lat;
-	private $lng;
+
 
 	public function _initialize(){
 		$uid = I('get.uid');
@@ -86,8 +85,29 @@ class IndexController extends BaseController {
 		$updateData['updater'] = $this->uid;
 		$orderData = $Order->where($con)->save($updateData);
 
+        $ParkAdmin = M('ParkAdmin');
+        $map = array();
+        $map['id'] = $this->uid;
+        $parkadmin = $ParkAdmin->where($map)->find();
+        $oldScore = $parkadmin['score'];
+
 		$state = C('SCORE');
 		$this->addScore($this->uid, $state['in']);
+
+        $newScore = $oldScore + $state['in'];
+
+        //记录日志到csv
+        $msgs = array();
+        $msgs['ip'] = $_SERVER['REMOTE_ADDR'];//用户ip
+        $msgs['parkid'] = $parkid;//停车场编号
+        $msgs['uid'] = $this->uid;//操作者id
+        $msgs['opt'] = 2;//2-代表车辆进场的操作类型
+        $msgs['oldValue'] = $oldScore;//原值
+        $msgs['newValue'] = $newScore;//新值
+        $msgs['change'] = $state['in'];//获得积分
+        $msgs['note'] = '';//补充信息
+
+        takeCSV($msgs);
 
 		if($orderData){
 			$this->ajaxOk("");
@@ -181,10 +201,34 @@ class IndexController extends BaseController {
 		$updateData['updater'] = $this->uid;
 		$orderData = $Order->where($con)->save($updateData);
 
-		$state = C('SCORE');
+        $ParkAdmin = M('ParkAdmin');
+        $map = array();
+        $map['id'] = $this->uid;
+        $parkadmin = $ParkAdmin->where($map)->find();
+        $oldScore = $parkadmin['score'];
+
+
+        $state = C('SCORE');
 		$this->addScore($this->uid, $state['out']);
 
-		if($orderData !== false){
+        $newScore = $oldScore + $state['out'];
+
+
+        //记录日志到csv
+        $msgs = array();
+        $msgs['ip'] = $_SERVER['REMOTE_ADDR'];//用户ip
+        $msgs['parkid'] = $parkid;//停车场编号
+        $msgs['uid'] = $this->uid;//操作者id
+        $msgs['opt'] = 3;//3-代表车辆离场的操作类型
+        $msgs['oldValue'] = $oldScore;//原值
+        $msgs['newValue'] = $newScore;//新值
+        $msgs['change'] = $state['out'];//获得积分
+        $msgs['note'] = '';//补充信息
+
+        takeCSV($msgs);
+
+
+        if($orderData !== false){
 			$this->ajaxOk("");
 		}
 		else{
@@ -249,12 +293,13 @@ class IndexController extends BaseController {
 		$data = $cache['data'];
 		$parkid = $data['parkid'];
 
-		$Park = M('ParkInfo');
+        $ParkAdmin = M('ParkAdmin');
         $map = array();
-        $map['id'] = $parkid;
-        $park = $Park->where($map)->find();
-        $oldState = $park['parkstate'];
+        $map['id'] = $this->uid;
+        $parkadmin = $ParkAdmin->where($map)->find();
+        $oldScore = $parkadmin['score'];
 
+		$Park = M('ParkInfo');
 		$data = array();
 		$data['id'] = $parkid;
 		$data['parkstate'] = $state;
@@ -266,24 +311,20 @@ class IndexController extends BaseController {
 		$score = C('SCORE');
 		$this->addScore($this->uid, $score['state']);
 
+        $newScore = $oldScore + $score['state'];
+
         //记录日志到csv
-        $ctime = time();
         $msgs = array();
-        $optid = $parkid.$this->uid.'1'.time();
-        $msgs[0] = $optid;//操作编号
-        $msgs[1] = date("Y-m-d H:i:s", $ctime);//当前时间
-        $msgs[2] = $_SERVER['REMOTE_ADDR'];//用户ip
-        $msgs[3] = $parkid;//停车场编号
-        $msgs[4] = $this->uid;//操作者id
-        $msgs[5] = 1;//1-代表空车位变更的操作类型
-        $msgs[6] = $oldState;//原值
-        $msgs[7] = $state;//新值
-        $msgs[8] = $score['state'];//获得积分
-        $msgs[9] = '';//补充信息
+        $msgs['ip'] = $_SERVER['REMOTE_ADDR'];//用户ip
+        $msgs['parkid'] = $parkid;//停车场编号
+        $msgs['uid'] = $this->uid;//操作者id
+        $msgs['opt'] = 1;//1-代表空车位变更的操作类型
+        $msgs['oldValue'] = $oldScore;//原值
+        $msgs['newValue'] = $newScore;//新值
+        $msgs['change'] = $score['state'];//获得积分
+        $msgs['note'] = '';//补充信息
 
-        $filename = '/admin_'.date("Ymd", $ctime).'.csv';
-
-		takeCSV($msgs, C('LOG_PATH').$filename);
+        takeCSV($msgs);
 
 		if(empty($result)){
 			$this->ajaxMsg("修改状态失败！");
@@ -337,6 +378,7 @@ class IndexController extends BaseController {
 		}
 		else{
 			$result['parkstate'] = $parkData['parkstate'];
+            $balance = $parkData['balance'];
 		}
 
 
@@ -393,19 +435,13 @@ class IndexController extends BaseController {
 		}
 		$result['todaysum'] = $today;
 		//可以提现
-		$sum = 0;
-		foreach ($orderDatas as $key => $value) {
-			$map = array();
-			$map['oid'] = $value['id'];
-			$map['state'] = 1;
-			$sum += $Payment->where($map)->sum('money');
-		}
 
 		$DrawMoney = M('DrawMoney');
 		$map = array();
 		$map['pid'] = $parkid;
+        $map['state'] = 0;
 		$drawSum = $DrawMoney->where($map)->sum('money');
-		$remainMoney = $sum - $drawSum;
+		$remainMoney = $balance - $drawSum;//余额-未兑现的提现
 		$result['remainsum'] = $remainMoney;
 
 
@@ -460,11 +496,19 @@ class IndexController extends BaseController {
 		$result['todaysum'] = $today;
 
 		//计算可提现金额
+        $Park = M('ParkInfo');
+        $con = array();
+        $con[id] = $parkid;
+        $parkData =  $Park->where($con)->find();
+        $balance = $parkData['balance'];
+
 		$DrawMoney = M('DrawMoney');
 		$map = array();
 		$map['pid'] = $parkid;
+        $map['state'] = 0;
 		$drawSum = $DrawMoney->where($map)->sum('money');
-		$remainMoney = $sum - $drawSum;
+
+		$remainMoney = $balance - $drawSum;//余额-未兑现的提现
 		$result['remainSum'] = $remainMoney;
 
 
@@ -509,31 +553,20 @@ class IndexController extends BaseController {
 		$data = $cache['data'];
 		$parkid = $data['parkid'];
 
-		$DrawMoney = M('DrawMoney');
-
 		//判断是否超过可提现额度
-		//计算总收益
-		$Order = M('ParkOrder');
-		$map = array();
-		$map['pid'] = $parkid;
-		$orderData = $Order->where($map)->select();
+        $Park = M('ParkInfo');
+        $con = array();
+        $con[id] = $parkid;
+        $parkData =  $Park->where($con)->find();
+        $balance = $parkData['balance'];
 
-		$Payment = M('PaymentRecord');
-		$sum = 0;
-		foreach ($orderData as $key => $value) {
-			$map = array();
-			$map['oid'] = $value['id'];
-			$map['state'] = 1;
-			$sum += $Payment->where($map)->sum('money');
-		}
-		$result['sum'] = $sum;
+        $DrawMoney = M('DrawMoney');
+        $map = array();
+        $map['pid'] = $parkid;
+        $map['state'] = 0;
+        $drawSum = $DrawMoney->where($map)->sum('money');
 
-		//计算可提现金额
-
-		$map = array();
-		$map['pid'] = $parkid;
-		$drawSum = $DrawMoney->where($map)->sum('money');
-		$remainMoney = $sum - $drawSum;
+        $remainMoney = $balance - $drawSum;//余额-未兑现的提现
 
 		if($money > $remainMoney){
 			$this->ajaxMsg('超过最大可提现金额！');
@@ -596,7 +629,7 @@ class IndexController extends BaseController {
 
 
 	/*
-     *  @desc 积分的请求处理
+     *  @desc 积分兑换礼品的请求处理
     */
 	public function exchangeGift()
 	{
@@ -656,6 +689,24 @@ class IndexController extends BaseController {
 		}
 		else{
 			$send = $this->sendEmail('295142831@qq.com', $title, $content);
+
+            //记录日志到csv
+            $newScore = $scoreSum;
+            $change = $score;
+            $oldScore = $newScore - $change;
+            $msgs = array();
+            $msgs['ip'] = $_SERVER['REMOTE_ADDR'];//用户ip
+            $msgs['parkid'] = $parkid;//停车场编号
+            $msgs['uid'] = $this->uid;//操作者id
+            $msgs['opt'] = 4;//4-代表兑换积分
+            $msgs['oldValue'] = $oldScore;//原值
+            $msgs['newValue'] = $newScore;//新值
+            $msgs['change'] = $change;//获得积分
+            $msgs['note'] = $gid;//补充信息,兑换礼品表的id
+
+            takeCSV($msgs);
+
+
 			$this->ajaxOk('');
 		}
 

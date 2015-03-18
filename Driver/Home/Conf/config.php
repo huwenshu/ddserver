@@ -103,10 +103,21 @@ return array(
                 'url' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx7402a94935807c76&redirect_uri=http%3a%2f%2fduduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=fee#wechat_redirect'
             ),
             array(
-                'type' => 'view',
-                'name' => '我的',
-                'url' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx7402a94935807c76&redirect_uri=http%3a%2f%2fduduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=order#wechat_redirect'
+                'name' => '我',
+                'sub_button' => array(
+                    array(
+                        'type' => 'view',
+                        'name' => '我的订单',
+                        'url' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx7402a94935807c76&redirect_uri=http%3a%2f%2fduduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=order#wechat_redirect'
+                    ),
+                    array(
+                        'type' => 'view',
+                        'name' => '我的信息',
+                        'url' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx7402a94935807c76&redirect_uri=http%3a%2f%2fduduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=userinfo#wechat_redirect'
+                    ),
+                )
             ),
+
         )
     ),
 

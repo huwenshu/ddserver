@@ -249,7 +249,38 @@ class PublicController extends BaseController {
 			$endtime = $this->_parkingEndTime($starttime, $now, $parkid);
 			$park_order->where(array('id'=>$oid))->save(array('state'=>2,'endtime'=>date("Y-m-d H:i:s", $endtime)));
 		}
-		
+
+        //账户余额
+        $ParkInfo = M('ParkInfo');
+        $map['id'] = $parkid;
+        $parkData = $ParkInfo->where($map)->find();
+        $balance = $parkData['balance'];
+        //-本次付费的钱
+        $Payment = M('PaymentRecord');
+        $map = array();
+        $map['id'] = $out_trade_no;
+        $pay = $Payment->where($map)->find();
+        $change = $pay['money'];
+        $note = $pay['id'];
+
+        $ParkInfo->where($map)->setInc('balance',$change); //账户余额更新
+
+        $newMoney = $balance + $change;
+
+
+        /*记录金钱变化到CSV文件*/
+        $msgs = array();
+        $msgs['ip'] = $_SERVER['REMOTE_ADDR'];//用户ip
+        $msgs['parkid'] = $parkid;//停车场编号
+        $msgs['uid'] = $this->uid;//操作者id
+        $msgs['opt'] = 6;//6-用户付费记录
+        $msgs['oldValue'] = $balance;//原值
+        $msgs['newValue'] = $newMoney;//新值
+        $msgs['change'] = $change;//获得积分
+        $msgs['note'] = $note ;//补充信息
+
+        takeCSV($msgs);
+
 		/*推送*/
 		$fee = $_GET['total_fee']/100;
 		$msg = json_encode(array('t'=>$isIn?'in':'out'));

@@ -54,7 +54,7 @@ function takeCSV($msgs){
     $data[8] = $msgs['change'];
     $data[9] = $msgs['note'];
 
-    $filename =  './Logs/admin_'.date("Ymd", $ctime).'.csv';
+    $filename =  __ROOT__.'/admin_'.date("Ymd", $ctime).'.csv';
 
     $log_dir = dirname($filename);
     if (!is_dir($log_dir)) {

@@ -47,7 +47,32 @@ class IndexController extends BaseController {
         $result = $Money->where($map)->save($data);
 
         if($result){
-            $this->success('完成提现成功！', U('Index/moneyReq'));
+            $draw = $Money->where($map)->find();
+            $parkid = $draw['pid'];
+            $change = $draw['money'];//提现金额
+
+            $ParkInfo = M('ParkInfo');
+            $con = array();
+            $con['id'] = $parkid;
+            $balance = $ParkInfo->where($con)->getField('balance');//获取账户余额
+
+            $ParkInfo->where($con)->setDec('balance',$change); //账户余额更新
+
+            $newMoney = $balance - $change; //更新过账户应有的值
+
+            /*记录金钱变化到CSV文件*/
+            $msgs = array();
+            $msgs['ip'] = $_SERVER['REMOTE_ADDR'];//用户ip
+            $msgs['parkid'] = $parkid;//停车场编号
+            $msgs['uid'] = UID;//操作者id
+            $msgs['opt'] = 5;//5-提现记录
+            $msgs['oldValue'] = $balance;//原值
+            $msgs['newValue'] = $newMoney;//新值
+            $msgs['change'] = $change;//提取金额
+            $msgs['note'] = $rid ;//补充信息，draw_money纪录id
+            takeCSV($msgs);
+            $this->success('完成提现成功！'.$newMoney, U('Index/moneyReq'));
+
         }
         else{
             $this->error('完成提现申请失败，请联系开发人员！');
@@ -77,7 +102,7 @@ class IndexController extends BaseController {
         $this->display();
     }
 
-    //完成提现请求
+    //完成兑换请求
     public function giftreqDone($gid){
         $Gift = M('ExchangeGift');
         $data['state'] = 1;
@@ -103,7 +128,7 @@ class IndexController extends BaseController {
         $ctime = time();
         $timeout1 = date("Y-m-d H:i:s",$ctime - 30*60);
         $timeout2 = date("Y-m-d H:i:s",$ctime - 24*60*60);
-        $condition1 = '(state = 2 AND updatetime < "'.$timeout1.'") OR (state = 0 AND updatetime < "'.$timeout2.'")';
+        $condition1 = '(state = 2 AND updatetime < "'.$timeout1.'") OR (state in(0,1) AND updatetime < "'.$timeout2.'")';
         $outs = $ParkOrder->where($condition1)->order('updatetime')->select();
 
         //进场确认异常
@@ -121,7 +146,7 @@ class IndexController extends BaseController {
             $temp['startime'] = $value['startime'];
             $temp['endtime'] = $value['endtime'];
             $temp['entrytime'] = $value['entrytime'];
-            $temp['carid'] = $this->getDriver($value['uid'])['carid'];
+            $temp['carid'] = $this->getDefualtCarid($value['uid']);
             $temp['telephone'] = $this->getDriver($value['uid'])['telephone'];
             $temp['oid'] = $value['id'];
             array_push($outList,$temp);
@@ -136,7 +161,7 @@ class IndexController extends BaseController {
             $temp['startime'] = $value['startime'];
             $temp['endtime'] = $value['endtime'];
             $temp['entrytime'] = $value['entrytime'];
-            $temp['carid'] = $this->getDriver($value['uid'])['carid'];
+            $temp['carid'] = $this->getDefualtCarid($value['uid']);
             $temp['telephone'] = $this->getDriver($value['uid'])['telephone'];
             $temp['oid'] = $value['id'];
             array_push($inList,$temp);
