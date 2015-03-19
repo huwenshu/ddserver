@@ -113,7 +113,7 @@ class IndexController extends BaseController {
 	}
 
    //生成预付订单借口
-	public function genOrder($pid){
+	public function genOrder($pid, $cid = 0){
 
 		$Park = M('ParkInfo');
 		$map = array('id' => $pid);
@@ -137,10 +137,33 @@ class IndexController extends BaseController {
 			$this->ajaxMsg("创建订单失败");
 		}
 
+		//计算折扣劵
+		$remainFee = $parkinfo['prepay'];
+		$remianFee_r = $remainFee;
+		if($cid > 0){
+			$cpamount = $this->_checkCoupon($this->uid, $cid, $remainFee);
+			//0				抵用劵不存在
+			//-1			已领完
+			//-2			活动还没开始
+			//-3			活动已结束
+			//int			抵扣金额
+			if($cpamount == 0){
+				$this->ajaxMsg("该抵用劵信息不正确，请重新选择");
+			}else if($cpamount == -1){
+				$this->ajaxMsg("该抵用劵已被使用过，请重新选择");
+			}else if($cpamount == -2){
+				$this->ajaxMsg("该抵用劵活动尚未开始，请重新选择");
+			}else if($cpamount == -3){
+				$this->ajaxMsg("该抵用劵已过期，请重新选择");
+			}
+			$remianFee_r-=$cpamount;
+		}
 		$currentTime = time();
 		$Payment = M('PaymentRecord');
 		$temp['oid'] = $oid;
-		$temp['money'] = $parkinfo['prepay'];
+		$temp['money'] = $remainFee;
+		$temp['money_r'] = $remianFee_r;
+		$temp['cid'] = $cid;
 		$temp['state'] = 0;
 		$temp['creater'] = $this->uid;
 		$temp['createtime'] = date("Y-m-d H:i:s",$currentTime);
@@ -172,7 +195,7 @@ class IndexController extends BaseController {
 			$fee = 0.01;
 		}
 		else{
-			$fee = $temp['money'];
+			$fee = $remianFee_r;
 		}
 
 		$wxPayHelper->setParameter("bank_type", "WX");
@@ -244,6 +267,47 @@ class IndexController extends BaseController {
 
 
 	}
+	
+	/*
+	 * @desc 使用红包来获得折扣劵
+	*/
+	public  function  openGiftPack($code){
+		$coupon = $this->_useGiftPack($this->uid, $code);
+		if(is_array($coupon)){
+			$result = array();
+			$result['coupon'] = array('id'=>$coupon['id'],'t'=>$coupon['type'],'m'=>$coupon['money'],'e'=>$coupon['endtime']);
+			$this->ajaxOk($result);
+		}else{
+			//0				没有合适的红包
+			//-1			已领完
+			//-2			活动还没开始
+			//-3			活动已结束
+			if($coupon == 0){
+				$this->ajaxMsg("红包不存在，或您无法领取该红包");
+			}else if($coupon == -1){
+				$this->ajaxMsg("该红包已被领完，谢谢！");
+			}else if($coupon == -2){
+				$this->ajaxMsg("该红包活动尚未开始，敬请期待！");
+			}else if($coupon == -3){
+				$this->ajaxMsg("该红包已过期，谢谢！");
+			}
+		}
+	}
+	
+	/*
+	 * @desc 获得折扣劵列表，用于预定界面
+	*/
+	public  function  listMyCoupons(){
+		$result = array();
+		$coupons = array();
+		$couponArr = $this->_listCoupon($this->uid);
+		foreach($couponArr as $key => $value){
+			$coupons[$value['id']] = array('t'=>$value['type'],'m'=>$value['money'],'e'=>$value['endtime']);
+		}
+		$result['list'] = $coupons;
+
+		$this->ajaxOk($result);
+	}
 
 	/*
 	 * @desc 查询具体订单详情
@@ -296,6 +360,12 @@ class IndexController extends BaseController {
 		$con = "parkid=".$pid." && jobfunction&1<>0";
 		$adminData = $ParkAdmin->where($con)->order('lastop desc')->field("name,phone")->select();
 		$result['admin'] = $adminData;
+		//折扣卷
+		$result['coupon'] = array();
+		$couponArr = $this->_listCoupon($uid);
+		foreach($couponArr as $key => $value){
+			$result['coupon'][$value['id']] = array('t'=>$value['type'],'m'=>$value['money'],'e'=>$value['endtime']);
+		}
 		
 
 		$this->ajaxOk($result);
@@ -307,7 +377,7 @@ class IndexController extends BaseController {
 	 * @oid	订单id
 	*/
 
-	public  function checkOut($oid){
+	public  function checkOut($oid, $cid = 0){
 		$Payment = M('PaymentRecord');
 		$map = array('oid' => $oid, 'state'=>1);
 		$payData = $Payment->where($map)->select();
@@ -323,10 +393,32 @@ class IndexController extends BaseController {
 		$orderData = $Order->where($map)->find();
 		$totalFee = $this->parkingFee(strtotime($orderData['startime']), $orderData['pid']);
 		$remainFee = $totalFee - $preSum;
+		//计算折扣劵
+		$remianFee_r = $remainFee;
+		if($cid > 0){
+			$cpamount = $this->_checkCoupon($this->uid, $cid, $remainFee);
+			//0				抵用劵不存在
+			//-1			已领完
+			//-2			活动还没开始
+			//-3			活动已结束
+			//int			抵扣金额
+			if($cpamount == 0){
+				$this->ajaxMsg("该抵用劵信息不正确，请重新选择");
+			}else if($cpamount == -1){
+				$this->ajaxMsg("该抵用劵已被使用过，请重新选择");
+			}else if($cpamount == -2){
+				$this->ajaxMsg("该抵用劵活动尚未开始，请重新选择");
+			}else if($cpamount == -3){
+				$this->ajaxMsg("该抵用劵已过期，请重新选择");
+			}
+			$remianFee_r-=$cpamount;
+		}
 
 		$currentTime = time();
 		$temp['oid'] = $oid;
 		$temp['money'] = $remainFee;
+		$temp['money_r'] = $remianFee_r;
+		$temp['cid'] = $cid;
 		$temp['state'] = 0;
 		$temp['creater'] = $this->uid;
 		$temp['createtime'] = date("Y-m-d H:i:s",$currentTime);
@@ -362,7 +454,7 @@ class IndexController extends BaseController {
 			$fee = 0.01;
 		}
 		else{
-			$fee = $remainFee;
+			$fee = $remianFee_r;
 		}
 
 		$wxPayHelper->setParameter("bank_type", "WX");

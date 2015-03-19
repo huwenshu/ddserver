@@ -380,9 +380,47 @@ class BaseController extends \Think\Controller {
 		}
 		$coupon->where(array('id'=>$id))->setInc('status',1);//计数器＋1
 		if($couponArr[0]['type'] == -1){//1元折扣劵
-			return $bill>1?$bill-1:0;
+			return $bill>1?$bill-1:$bill-0.01;
 		}
 		return $couponArr[0]['money'];
+	}
+	
+	//检查折扣劵
+	//返回值：
+	//0				抵用劵不存在
+	//-1			已领完
+	//-2			活动还没开始
+	//-3			活动已结束
+	//int			抵扣金额
+	protected function _checkCoupon($uid, $id, $bill){
+		$coupon = M('driver_coupon');
+		$con1 = array('id'=>$id,'uid'=>$uid);
+		$couponArr = $coupon->where($con1)->limit(1)->select();
+		if(!$couponArr || count($couponArr) == 0){//抵用劵不存在
+			return 0;
+		}
+		else if($couponArr[0]['status']!=0){//已领完
+			return -1;
+		}
+		$starttime = strtotime($couponArr[0]['starttime']);
+		$endtime = strtotime($couponArr[0]['endtime']);
+		$now = time();
+		if($now < $starttime){//还没开始
+			return -2;
+		}
+		else if($now > $endtime){//已结束
+			return -3;
+		}
+		if($couponArr[0]['type'] == -1){//1元折扣劵
+			return $bill>1?$bill-1:$bill-0.01;
+		}
+		return $couponArr[0]['money'];
+	}
+	
+	//不检查，直接消耗折扣劵
+	protected function _consumeCoupon($id){
+		$coupon = M('driver_coupon');
+		$coupon->where(array('id'=>$id))->setInc('status',1);//计数器＋1
 	}
 	
 }
