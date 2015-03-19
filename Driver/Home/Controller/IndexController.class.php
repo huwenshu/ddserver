@@ -267,6 +267,47 @@ class IndexController extends BaseController {
 
 
 	}
+	
+	/*
+	 * @desc 使用红包来获得折扣劵
+	*/
+	public  function  openGiftPack($code){
+		$coupon = $this->_useGiftPack($this->uid, $code);
+		if(is_array($coupon)){
+			$result = array();
+			$result['coupon'] = array('id'=>$coupon['id'],'t'=>$coupon['type'],'m'=>$coupon['money'],'e'=>$coupon['endtime']);
+			$this->ajaxOk($result);
+		}else{
+			//0				没有合适的红包
+			//-1			已领完
+			//-2			活动还没开始
+			//-3			活动已结束
+			if($coupon == 0){
+				$this->ajaxMsg("红包不存在，或您无法领取该红包");
+			}else if($coupon == -1){
+				$this->ajaxMsg("该红包已被领完，谢谢！");
+			}else if($coupon == -2){
+				$this->ajaxMsg("该红包活动尚未开始，敬请期待！");
+			}else if($coupon == -3){
+				$this->ajaxMsg("该红包已过期，谢谢！");
+			}
+		}
+	}
+	
+	/*
+	 * @desc 获得折扣劵列表，用于预定界面
+	*/
+	public  function  listMyCoupons(){
+		$result = array();
+		$coupons = array();
+		$couponArr = $this->_listCoupon($this->uid);
+		foreach($couponArr as $key => $value){
+			$coupons[$value['id']] = array('t'=>$value['type'],'m'=>$value['money'],'e'=>$value['endtime']);
+		}
+		$result['list'] = $coupons;
+
+		$this->ajaxOk($result);
+	}
 
 	/*
 	 * @desc 查询具体订单详情
