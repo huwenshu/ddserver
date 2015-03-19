@@ -235,7 +235,16 @@ class PublicController extends BaseController {
     //处理订单逻辑
     $payment_record = M('payment_record');
     $park_order = M('park_order');
-    $oid = $payment_record->where(array('id'=>$out_trade_no))->getField('oid');
+    $prdata = $payment_record->where(array('id'=>$out_trade_no))->limit(1)->select();
+    if(!$prdata || count($prdata) == 0){//订单不存在
+			return;
+		}
+		//处理折扣劵
+		if($prdata[0]['cid'] > 0){
+			$this->_consumeCoupon($prdata[0]['cid']);
+		}
+		//修改订单状态
+    $oid = $prdata[0]['oid'];
     $park_order_data = $park_order->where(array('id'=>$oid))->find();
     $parkid = $park_order_data['pid'];
     $now = time();
