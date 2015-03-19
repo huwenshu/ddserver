@@ -1,0 +1,1703 @@
+[ 2015-03-19T10:54:02+08:00 ] ::1 /ddserver/admin.php/home/index/moneyreq
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000022s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000737s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001215s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001316s ]
+SQL: SHOW COLUMNS FROM `dudu_draw_money` [ RunTime:0.0089s ]
+SQL: SELECT * FROM `dudu_draw_money` ORDER BY state,createtime desc  [ RunTime:0.0009s ]
+SQL: SHOW COLUMNS FROM `dudu_park_info` [ RunTime:0.0044s ]
+SQL: SELECT * FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0014s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000073s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000117s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 64 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.014905s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.014957s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000374s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000413s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001249s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001369s ]
+
+[ 2015-03-19T12:17:55+08:00 ] ::1 /ddserver/admin.php/home/index/index
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000030s ]
+INFO: [ app_init ] --END-- [ RunTime:0.002504s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001173s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001295s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000220s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000286s ]
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 68 行.
+NOTIC: [8] Use of undefined constant moneyReq - assumed 'moneyReq' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 116 行.
+NOTIC: [8] Use of undefined constant unusual - assumed 'unusual' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 117 行.
+NOTIC: [8] Use of undefined constant emptySpace - assumed 'emptySpace' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 118 行.
+NOTIC: [8] Use of undefined constant giftReq - assumed 'giftReq' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 121 行.
+NOTIC: [8] Use of undefined constant giftList - assumed 'giftList' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 122 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.027213s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.027306s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000589s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000643s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001500s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001658s ]
+
+[ 2015-03-19T12:17:59+08:00 ] ::1 /ddserver/admin.php/home/index/moneyreq
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000012s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000264s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000674s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000870s ]
+SQL: SHOW COLUMNS FROM `dudu_draw_money` [ RunTime:0.0372s ]
+SQL: SELECT * FROM `dudu_draw_money` ORDER BY state,createtime desc  [ RunTime:0.0042s ]
+SQL: SHOW COLUMNS FROM `dudu_park_info` [ RunTime:0.0034s ]
+SQL: SELECT * FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0070s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000138s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000204s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 64 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.011392s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.011451s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000118s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000271s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000533s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000587s ]
+
+[ 2015-03-19T12:18:12+08:00 ] ::1 /ddserver/admin.php/home/index/moneyreq
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000021s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000549s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000583s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000712s ]
+SQL: SHOW COLUMNS FROM `dudu_draw_money` [ RunTime:0.0017s ]
+SQL: SELECT * FROM `dudu_draw_money` ORDER BY state,createtime desc  [ RunTime:0.0003s ]
+SQL: SHOW COLUMNS FROM `dudu_park_info` [ RunTime:0.0017s ]
+SQL: SELECT * FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0008s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000085s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000135s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 64 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.010657s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.010698s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000131s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000161s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000444s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000482s ]
+
+[ 2015-03-19T12:18:13+08:00 ] ::1 /ddserver/admin.php/home/index/index
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000016s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000351s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000638s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000742s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000063s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000102s ]
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 68 行.
+NOTIC: [8] Use of undefined constant moneyReq - assumed 'moneyReq' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 116 行.
+NOTIC: [8] Use of undefined constant unusual - assumed 'unusual' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 117 行.
+NOTIC: [8] Use of undefined constant emptySpace - assumed 'emptySpace' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 118 行.
+NOTIC: [8] Use of undefined constant giftReq - assumed 'giftReq' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 121 行.
+NOTIC: [8] Use of undefined constant giftList - assumed 'giftList' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 122 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.007903s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.007945s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000097s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000120s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000379s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000417s ]
+
+[ 2015-03-19T12:18:15+08:00 ] ::1 /ddserver/admin.php/home/index/moneyreq
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000010s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000265s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000303s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000339s ]
+SQL: SHOW COLUMNS FROM `dudu_draw_money` [ RunTime:0.0102s ]
+SQL: SELECT * FROM `dudu_draw_money` ORDER BY state,createtime desc  [ RunTime:0.0004s ]
+SQL: SHOW COLUMNS FROM `dudu_park_info` [ RunTime:0.0029s ]
+SQL: SELECT * FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0006s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000117s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000181s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 64 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.010705s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.010763s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000183s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000224s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000620s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000677s ]
+
+[ 2015-03-19T12:18:17+08:00 ] ::1 /ddserver/admin.php/home/index/moneyreqdone/rid/1
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000009s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000210s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000323s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000366s ]
+SQL: SHOW COLUMNS FROM `dudu_draw_money` [ RunTime:0.0022s ]
+SQL: UPDATE `dudu_draw_money` SET `state`='1',`updater`='a-1' WHERE `id` = 1 [ RunTime:0.0019s ]
+SQL: SELECT * FROM `dudu_draw_money` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0004s ]
+SQL: SHOW COLUMNS FROM `dudu_park_info` [ RunTime:0.0017s ]
+SQL: SELECT `balance` FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0003s ]
+SQL: UPDATE `dudu_park_info` SET `balance`=balance-0.20 WHERE `id` = 1 [ RunTime:0.0036s ]
+NOTIC: [2] mkdir(): Permission denied /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Home/Common/function.php 第 39 行.
+NOTIC: [2] fopen(/ddserver/logs/admin_20150319.csv): failed to open stream: No such file or directory /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Home/Common/function.php 第 42 行.
+NOTIC: [2] fputcsv() expects parameter 1 to be resource, boolean given /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Home/Common/function.php 第 43 行.
+NOTIC: [2] fclose() expects parameter 1 to be resource, boolean given /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Home/Common/function.php 第 44 行.
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000036s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000085s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.005184s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.005244s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000162s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000204s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000536s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000583s ]
+
+[ 2015-03-19T12:18:18+08:00 ] ::1 /ddserver/admin.php/home/index/moneyreq
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000012s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000280s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000347s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000382s ]
+SQL: SHOW COLUMNS FROM `dudu_draw_money` [ RunTime:0.0015s ]
+SQL: SELECT * FROM `dudu_draw_money` ORDER BY state,createtime desc  [ RunTime:0.0004s ]
+SQL: SHOW COLUMNS FROM `dudu_park_info` [ RunTime:0.0025s ]
+SQL: SELECT * FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0004s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000092s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000180s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 64 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.009064s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.009106s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000127s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000156s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000434s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000470s ]
+
+[ 2015-03-19T12:20:50+08:00 ] ::1 /ddserver/admin.php/home/index/moneyreq
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000018s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000660s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001073s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001162s ]
+SQL: SHOW COLUMNS FROM `dudu_draw_money` [ RunTime:0.0016s ]
+SQL: SELECT * FROM `dudu_draw_money` ORDER BY state,createtime desc  [ RunTime:0.0003s ]
+SQL: SHOW COLUMNS FROM `dudu_park_info` [ RunTime:0.0017s ]
+SQL: SELECT * FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0004s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000077s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000126s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 64 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.013117s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.013162s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000460s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000495s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001017s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001091s ]
+
+[ 2015-03-19T12:20:51+08:00 ] ::1 /ddserver/admin.php/home/index/moneyreqdone/rid/1
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000027s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000372s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000454s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000510s ]
+SQL: SHOW COLUMNS FROM `dudu_draw_money` [ RunTime:0.0016s ]
+SQL: UPDATE `dudu_draw_money` SET `state`='1',`updater`='a-1' WHERE `id` = 1 [ RunTime:0.0003s ]
+SQL: SELECT * FROM `dudu_draw_money` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0003s ]
+SQL: SHOW COLUMNS FROM `dudu_park_info` [ RunTime:0.0014s ]
+SQL: SELECT `balance` FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0003s ]
+SQL: UPDATE `dudu_park_info` SET `balance`=balance-0.20 WHERE `id` = 1 [ RunTime:0.0005s ]
+NOTIC: [2] mkdir(): Permission denied /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Home/Common/function.php 第 39 行.
+NOTIC: [2] fopen(/ddserver/Uploads/admin_20150319.csv): failed to open stream: No such file or directory /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Home/Common/function.php 第 42 行.
+NOTIC: [2] fputcsv() expects parameter 1 to be resource, boolean given /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Home/Common/function.php 第 43 行.
+NOTIC: [2] fclose() expects parameter 1 to be resource, boolean given /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Home/Common/function.php 第 44 行.
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000047s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000117s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.006307s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.006371s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000111s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000135s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000449s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000482s ]
+
+[ 2015-03-19T12:20:52+08:00 ] ::1 /ddserver/admin.php/home/index/moneyreq
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000017s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000331s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000327s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000369s ]
+SQL: SHOW COLUMNS FROM `dudu_draw_money` [ RunTime:0.0017s ]
+SQL: SELECT * FROM `dudu_draw_money` ORDER BY state,createtime desc  [ RunTime:0.0003s ]
+SQL: SHOW COLUMNS FROM `dudu_park_info` [ RunTime:0.0018s ]
+SQL: SELECT * FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0005s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000064s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000104s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 64 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.011009s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.011072s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000134s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000163s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000472s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000513s ]
+
+[ 2015-03-19T12:22:13+08:00 ] ::1 /ddserver/admin.php/home/index/moneyreq
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000020s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000777s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001042s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001129s ]
+SQL: SHOW COLUMNS FROM `dudu_draw_money` [ RunTime:0.0023s ]
+SQL: SELECT * FROM `dudu_draw_money` ORDER BY state,createtime desc  [ RunTime:0.0004s ]
+SQL: SHOW COLUMNS FROM `dudu_park_info` [ RunTime:0.0029s ]
+SQL: SELECT * FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0007s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000071s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000117s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 64 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.011463s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.011516s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000404s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000440s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001390s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001468s ]
+
+[ 2015-03-19T12:22:14+08:00 ] ::1 /ddserver/admin.php/home/index/moneyreqdone/rid/1
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000020s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000445s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000624s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000698s ]
+SQL: SHOW COLUMNS FROM `dudu_draw_money` [ RunTime:0.0019s ]
+SQL: UPDATE `dudu_draw_money` SET `state`='1',`updater`='a-1' WHERE `id` = 1 [ RunTime:0.0003s ]
+SQL: SELECT * FROM `dudu_draw_money` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0004s ]
+SQL: SHOW COLUMNS FROM `dudu_park_info` [ RunTime:0.0019s ]
+SQL: SELECT `balance` FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0003s ]
+SQL: UPDATE `dudu_park_info` SET `balance`=balance-0.20 WHERE `id` = 1 [ RunTime:0.0005s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000038s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000088s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.005673s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.005723s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000125s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000149s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000394s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000423s ]
+
+[ 2015-03-19T12:22:15+08:00 ] ::1 /ddserver/admin.php/home/index/moneyreq
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000017s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000331s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000410s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000463s ]
+SQL: SHOW COLUMNS FROM `dudu_draw_money` [ RunTime:0.0099s ]
+SQL: SELECT * FROM `dudu_draw_money` ORDER BY state,createtime desc  [ RunTime:0.0003s ]
+SQL: SHOW COLUMNS FROM `dudu_park_info` [ RunTime:0.0019s ]
+SQL: SELECT * FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0004s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000094s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000144s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 64 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.007484s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.007528s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000145s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000173s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000705s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000761s ]
+
+[ 2015-03-19T12:27:09+08:00 ] ::1 /ddserver/admin.php/home/index/moneyreq
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000027s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000706s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000875s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000940s ]
+SQL: SHOW COLUMNS FROM `dudu_draw_money` [ RunTime:0.0017s ]
+SQL: SELECT * FROM `dudu_draw_money` ORDER BY state,createtime desc  [ RunTime:0.0003s ]
+SQL: SHOW COLUMNS FROM `dudu_park_info` [ RunTime:0.0015s ]
+SQL: SELECT * FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0005s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000069s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000111s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 64 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.012692s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.012736s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000459s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000500s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001037s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001101s ]
+
+[ 2015-03-19T12:27:10+08:00 ] ::1 /ddserver/admin.php/home/index/moneyreqdone/rid/1
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000013s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000259s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000330s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000367s ]
+SQL: SHOW COLUMNS FROM `dudu_draw_money` [ RunTime:0.0016s ]
+SQL: UPDATE `dudu_draw_money` SET `state`='1',`updater`='a-1' WHERE `id` = 1 [ RunTime:0.0004s ]
+SQL: SELECT * FROM `dudu_draw_money` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0003s ]
+SQL: SHOW COLUMNS FROM `dudu_park_info` [ RunTime:0.0020s ]
+SQL: SELECT `balance` FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0003s ]
+SQL: UPDATE `dudu_park_info` SET `balance`=balance-0.20 WHERE `id` = 1 [ RunTime:0.0006s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000039s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000092s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.006768s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.006837s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000219s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000266s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001032s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001098s ]
+
+[ 2015-03-19T12:27:11+08:00 ] ::1 /ddserver/admin.php/home/index/moneyreq
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000025s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000346s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000619s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000714s ]
+SQL: SHOW COLUMNS FROM `dudu_draw_money` [ RunTime:0.0013s ]
+SQL: SELECT * FROM `dudu_draw_money` ORDER BY state,createtime desc  [ RunTime:0.0003s ]
+SQL: SHOW COLUMNS FROM `dudu_park_info` [ RunTime:0.0030s ]
+SQL: SELECT * FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0004s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000064s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000098s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 64 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.006726s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.006780s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000222s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000266s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000511s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000550s ]
+
+[ 2015-03-19T12:31:38+08:00 ] ::1 /ddserver/admin.php/home/index/moneyreq
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000028s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000850s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000566s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000640s ]
+SQL: SHOW COLUMNS FROM `dudu_draw_money` [ RunTime:0.0103s ]
+SQL: SELECT * FROM `dudu_draw_money` ORDER BY state,createtime desc  [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `dudu_park_info` [ RunTime:0.0024s ]
+SQL: SELECT * FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0006s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000192s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000260s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 64 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.013951s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.014033s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000288s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000344s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001125s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001231s ]
+
+[ 2015-03-19T12:31:39+08:00 ] ::1 /ddserver/admin.php/home/index/index
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000016s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000372s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000382s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000435s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000263s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000353s ]
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 68 行.
+NOTIC: [8] Use of undefined constant moneyReq - assumed 'moneyReq' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 116 行.
+NOTIC: [8] Use of undefined constant unusual - assumed 'unusual' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 117 行.
+NOTIC: [8] Use of undefined constant emptySpace - assumed 'emptySpace' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 118 行.
+NOTIC: [8] Use of undefined constant giftReq - assumed 'giftReq' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 121 行.
+NOTIC: [8] Use of undefined constant giftList - assumed 'giftList' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 122 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.025873s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.025925s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000155s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000181s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000825s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000909s ]
+
+[ 2015-03-19T12:31:40+08:00 ] ::1 /ddserver/admin.php/home/index/giftlist
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000010s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000247s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000277s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000310s ]
+SQL: SHOW COLUMNS FROM `dudu_gift_list` [ RunTime:0.0018s ]
+SQL: SELECT * FROM `dudu_gift_list` ORDER BY valid desc, weight  [ RunTime:0.0008s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000111s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000151s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/c31d310f5243aadc12b75aaa752dbf38.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/c31d310f5243aadc12b75aaa752dbf38.php 第 64 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.010368s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.010426s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000112s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000137s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000421s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000468s ]
+
+[ 2015-03-19T12:31:42+08:00 ] ::1 /ddserver/admin.php/home/index/giftinfo/gid/1/
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000012s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000253s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000324s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000363s ]
+SQL: SHOW COLUMNS FROM `dudu_gift_list` [ RunTime:0.0016s ]
+SQL: SELECT * FROM `dudu_gift_list` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0003s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000090s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000134s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 115 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 137 行.
+NOTIC: [8] Use of undefined constant id - assumed 'id' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 175 行.
+NOTIC: [8] Use of undefined constant name - assumed 'name' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 179 行.
+NOTIC: [8] Use of undefined constant score - assumed 'score' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 183 行.
+NOTIC: [8] Use of undefined constant valid - assumed 'valid' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 193 行.
+NOTIC: [8] Use of undefined constant valid - assumed 'valid' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 194 行.
+NOTIC: [8] Use of undefined constant weight - assumed 'weight' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 200 行.
+NOTIC: [8] Use of undefined constant image - assumed 'image' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 207 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.011857s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.011905s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000127s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000151s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000415s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000454s ]
+
+[ 2015-03-19T12:32:40+08:00 ] ::1 /ddserver/admin.php/home/index/giftinfo
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000017s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000729s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000774s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000839s ]
+NOTIC: [2] call_user_func() expects parameter 1 to be a valid callback, no array or string given /Applications/XAMPP/xamppfiles/htdocs/ddserver/ThinkPHP/Library/Think/Upload.class.php 第 170 行.
+SQL: SHOW COLUMNS FROM `dudu_gift_list` [ RunTime:0.0015s ]
+SQL: SELECT * FROM `dudu_gift_list` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0003s ]
+SQL: UPDATE `dudu_gift_list` SET `name`='电话卡10元',`score`='10',`valid`='1',`weight`='5',`image`='gift1426739560.jpg',`updater`='1' WHERE `id` = 1 [ RunTime:0.0007s ]
+
+[ 2015-03-19T12:32:41+08:00 ] ::1 /ddserver/admin.php/home/index/giftinfo/gid/1
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000013s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000359s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000364s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000405s ]
+SQL: SHOW COLUMNS FROM `dudu_gift_list` [ RunTime:0.0027s ]
+SQL: SELECT * FROM `dudu_gift_list` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0005s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000121s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000209s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 115 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 137 行.
+NOTIC: [8] Use of undefined constant id - assumed 'id' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 175 行.
+NOTIC: [8] Use of undefined constant name - assumed 'name' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 179 行.
+NOTIC: [8] Use of undefined constant score - assumed 'score' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 183 行.
+NOTIC: [8] Use of undefined constant valid - assumed 'valid' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 193 行.
+NOTIC: [8] Use of undefined constant valid - assumed 'valid' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 194 行.
+NOTIC: [8] Use of undefined constant weight - assumed 'weight' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 200 行.
+NOTIC: [8] Use of undefined constant image - assumed 'image' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 207 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.020273s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.020322s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000518s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000558s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001509s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001651s ]
+
+[ 2015-03-19T12:32:51+08:00 ] ::1 /ddserver/admin.php/home/index/giftinfo/gid/1
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000015s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000331s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000453s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000501s ]
+SQL: SHOW COLUMNS FROM `dudu_gift_list` [ RunTime:0.0015s ]
+SQL: SELECT * FROM `dudu_gift_list` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0003s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000270s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000389s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 115 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 137 行.
+NOTIC: [8] Use of undefined constant id - assumed 'id' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 175 行.
+NOTIC: [8] Use of undefined constant name - assumed 'name' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 179 行.
+NOTIC: [8] Use of undefined constant score - assumed 'score' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 183 行.
+NOTIC: [8] Use of undefined constant valid - assumed 'valid' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 193 行.
+NOTIC: [8] Use of undefined constant valid - assumed 'valid' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 194 行.
+NOTIC: [8] Use of undefined constant weight - assumed 'weight' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 200 行.
+NOTIC: [8] Use of undefined constant image - assumed 'image' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 207 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.011032s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.011081s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000212s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000253s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000672s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000737s ]
+
+[ 2015-03-19T12:33:18+08:00 ] ::1 /ddserver/admin.php/home/index/giftinfo/gid/1
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000015s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000572s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000676s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000727s ]
+SQL: SHOW COLUMNS FROM `dudu_gift_list` [ RunTime:0.0023s ]
+SQL: SELECT * FROM `dudu_gift_list` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0004s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000121s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000172s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 115 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 137 行.
+NOTIC: [8] Use of undefined constant id - assumed 'id' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 175 行.
+NOTIC: [8] Use of undefined constant name - assumed 'name' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 179 行.
+NOTIC: [8] Use of undefined constant score - assumed 'score' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 183 行.
+NOTIC: [8] Use of undefined constant valid - assumed 'valid' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 193 行.
+NOTIC: [8] Use of undefined constant valid - assumed 'valid' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 194 行.
+NOTIC: [8] Use of undefined constant weight - assumed 'weight' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 200 行.
+NOTIC: [8] Use of undefined constant image - assumed 'image' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 207 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.014354s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.014392s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000166s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000189s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000388s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000426s ]
+
+[ 2015-03-19T12:33:23+08:00 ] ::1 /ddserver/admin.php/home/index/giftinfo
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000023s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000437s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000401s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000453s ]
+NOTIC: [2] finfo_file(): Empty filename or path /Applications/XAMPP/xamppfiles/htdocs/ddserver/ThinkPHP/Library/Think/Upload.class.php 第 152 行.
+SQL: SHOW COLUMNS FROM `dudu_gift_list` [ RunTime:0.0015s ]
+SQL: SELECT * FROM `dudu_gift_list` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0007s ]
+SQL: UPDATE `dudu_gift_list` SET `name`='电话卡10元',`score`='10',`valid`='1',`weight`='5',`updater`='1' WHERE `id` = 1 [ RunTime:0.0009s ]
+
+[ 2015-03-19T12:33:23+08:00 ] ::1 /ddserver/admin.php/home/index/giftinfo/gid/1/fileError/%E6%B2%A1%E6%9C%89%E6%96%87%E4%BB%B6%E8%A2%AB%E4%B8%8A%E4%BC%A0%EF%BC%81
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000011s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000275s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000352s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000393s ]
+SQL: SHOW COLUMNS FROM `dudu_gift_list` [ RunTime:0.0014s ]
+SQL: SELECT * FROM `dudu_gift_list` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0004s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000089s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000133s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 115 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 137 行.
+NOTIC: [8] Use of undefined constant id - assumed 'id' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 175 行.
+NOTIC: [8] Use of undefined constant name - assumed 'name' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 179 行.
+NOTIC: [8] Use of undefined constant score - assumed 'score' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 183 行.
+NOTIC: [8] Use of undefined constant valid - assumed 'valid' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 193 行.
+NOTIC: [8] Use of undefined constant valid - assumed 'valid' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 194 行.
+NOTIC: [8] Use of undefined constant weight - assumed 'weight' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 200 行.
+NOTIC: [8] Use of undefined constant image - assumed 'image' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 207 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.013768s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.013807s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000143s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000169s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000476s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000535s ]
+
+[ 2015-03-19T12:33:30+08:00 ] ::1 /ddserver/admin.php/home/index/giftinfo
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000021s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000413s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000683s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000806s ]
+NOTIC: [2] call_user_func() expects parameter 1 to be a valid callback, no array or string given /Applications/XAMPP/xamppfiles/htdocs/ddserver/ThinkPHP/Library/Think/Upload.class.php 第 170 行.
+SQL: SHOW COLUMNS FROM `dudu_gift_list` [ RunTime:0.0028s ]
+SQL: SELECT * FROM `dudu_gift_list` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0007s ]
+SQL: UPDATE `dudu_gift_list` SET `name`='电话卡10元',`score`='10',`valid`='1',`weight`='5',`image`='gift1426739610.jpg',`updater`='1' WHERE `id` = 1 [ RunTime:0.0007s ]
+
+[ 2015-03-19T12:33:30+08:00 ] ::1 /ddserver/admin.php/home/index/giftinfo/gid/1
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000022s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000298s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000289s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000323s ]
+SQL: SHOW COLUMNS FROM `dudu_gift_list` [ RunTime:0.0019s ]
+SQL: SELECT * FROM `dudu_gift_list` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0004s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000097s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000138s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 115 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 137 行.
+NOTIC: [8] Use of undefined constant id - assumed 'id' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 175 行.
+NOTIC: [8] Use of undefined constant name - assumed 'name' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 179 行.
+NOTIC: [8] Use of undefined constant score - assumed 'score' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 183 行.
+NOTIC: [8] Use of undefined constant valid - assumed 'valid' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 193 行.
+NOTIC: [8] Use of undefined constant valid - assumed 'valid' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 194 行.
+NOTIC: [8] Use of undefined constant weight - assumed 'weight' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 200 行.
+NOTIC: [8] Use of undefined constant image - assumed 'image' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 207 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.010823s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.011035s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000469s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000588s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001009s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001172s ]
+
+[ 2015-03-19T12:38:46+08:00 ] ::1 /ddserver/admin.php/home/index/index
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000017s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000600s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000927s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000995s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000079s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000123s ]
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 68 行.
+NOTIC: [8] Use of undefined constant moneyReq - assumed 'moneyReq' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 116 行.
+NOTIC: [8] Use of undefined constant unusual - assumed 'unusual' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 117 行.
+NOTIC: [8] Use of undefined constant emptySpace - assumed 'emptySpace' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 118 行.
+NOTIC: [8] Use of undefined constant giftReq - assumed 'giftReq' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 121 行.
+NOTIC: [8] Use of undefined constant giftList - assumed 'giftList' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 122 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.013738s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.013802s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000544s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000597s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001030s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001110s ]
+
+[ 2015-03-19T12:38:48+08:00 ] ::1 /ddserver/admin.php/home/index/moneyreq
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000019s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000442s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000586s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000680s ]
+SQL: SHOW COLUMNS FROM `dudu_draw_money` [ RunTime:0.0030s ]
+SQL: SELECT * FROM `dudu_draw_money` ORDER BY state,createtime desc  [ RunTime:0.0005s ]
+SQL: SHOW COLUMNS FROM `dudu_park_info` [ RunTime:0.0027s ]
+SQL: SELECT * FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0009s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000062s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000098s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 64 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.007489s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.007525s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000102s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000124s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000376s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000409s ]
+
+[ 2015-03-19T12:39:06+08:00 ] ::1 /ddserver/admin.php/home/index/moneyreqdone/rid/1
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000013s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000317s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000574s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000624s ]
+SQL: SHOW COLUMNS FROM `dudu_draw_money` [ RunTime:0.0100s ]
+SQL: UPDATE `dudu_draw_money` SET `state`='1',`updater`='a-1' WHERE `id` = 1 [ RunTime:0.0005s ]
+SQL: SELECT * FROM `dudu_draw_money` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0005s ]
+SQL: SHOW COLUMNS FROM `dudu_park_info` [ RunTime:0.0021s ]
+SQL: SELECT `balance` FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0004s ]
+SQL: UPDATE `dudu_park_info` SET `balance`=balance-0.20 WHERE `id` = 1 [ RunTime:0.0008s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000041s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000096s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.005227s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.005284s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000123s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000152s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000783s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000834s ]
+
+[ 2015-03-19T12:39:07+08:00 ] ::1 /ddserver/admin.php/home/index/moneyreq
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000010s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000215s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000264s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000295s ]
+SQL: SHOW COLUMNS FROM `dudu_draw_money` [ RunTime:0.0015s ]
+SQL: SELECT * FROM `dudu_draw_money` ORDER BY state,createtime desc  [ RunTime:0.0003s ]
+SQL: SHOW COLUMNS FROM `dudu_park_info` [ RunTime:0.0020s ]
+SQL: SELECT * FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0004s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000101s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000151s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 64 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.009697s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.009736s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000140s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000170s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000445s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000485s ]
+
+[ 2015-03-19T12:46:44+08:00 ] ::1 /ddserver/admin.php/home/index/moneyreq
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000015s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000651s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000810s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000865s ]
+SQL: SHOW COLUMNS FROM `dudu_draw_money` [ RunTime:0.0016s ]
+SQL: SELECT * FROM `dudu_draw_money` ORDER BY state,createtime desc  [ RunTime:0.0003s ]
+SQL: SHOW COLUMNS FROM `dudu_park_info` [ RunTime:0.0014s ]
+SQL: SELECT * FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0008s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000066s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000104s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 64 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.011724s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.011768s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000466s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000499s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000834s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000882s ]
+
+[ 2015-03-19T12:46:45+08:00 ] ::1 /ddserver/admin.php/home/index/moneyreqdone/rid/1
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000028s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000294s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000346s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000382s ]
+SQL: SHOW COLUMNS FROM `dudu_draw_money` [ RunTime:0.0014s ]
+SQL: UPDATE `dudu_draw_money` SET `state`='1',`updater`='a-1' WHERE `id` = 1 [ RunTime:0.0004s ]
+SQL: SELECT * FROM `dudu_draw_money` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0003s ]
+SQL: SHOW COLUMNS FROM `dudu_park_info` [ RunTime:0.0025s ]
+SQL: SELECT `balance` FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0003s ]
+SQL: UPDATE `dudu_park_info` SET `balance`=balance-0.20 WHERE `id` = 1 [ RunTime:0.0005s ]
+NOTIC: [2] mkdir(): Permission denied /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Home/Common/function.php 第 39 行.
+NOTIC: [2] fopen(/ddserverPublic/Logs/admin_20150319.csv): failed to open stream: No such file or directory /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Home/Common/function.php 第 42 行.
+NOTIC: [2] fputcsv() expects parameter 1 to be resource, boolean given /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Home/Common/function.php 第 43 行.
+NOTIC: [2] fclose() expects parameter 1 to be resource, boolean given /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Home/Common/function.php 第 44 行.
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000031s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000072s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.004404s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.004478s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000126s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000154s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000309s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000336s ]
+
+[ 2015-03-19T12:46:46+08:00 ] ::1 /ddserver/admin.php/home/index/moneyreq
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000009s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000213s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000263s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000293s ]
+SQL: SHOW COLUMNS FROM `dudu_draw_money` [ RunTime:0.0104s ]
+SQL: SELECT * FROM `dudu_draw_money` ORDER BY state,createtime desc  [ RunTime:0.0005s ]
+SQL: SHOW COLUMNS FROM `dudu_park_info` [ RunTime:0.0029s ]
+SQL: SELECT * FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0005s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000089s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000138s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 64 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.009234s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.009308s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000146s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000178s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000595s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000669s ]
+
+[ 2015-03-19T12:48:33+08:00 ] ::1 /ddserver/admin.php/home/index/moneyreq
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000020s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000718s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000999s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001083s ]
+SQL: SHOW COLUMNS FROM `dudu_draw_money` [ RunTime:0.0022s ]
+SQL: SELECT * FROM `dudu_draw_money` ORDER BY state,createtime desc  [ RunTime:0.0009s ]
+SQL: SHOW COLUMNS FROM `dudu_park_info` [ RunTime:0.0018s ]
+SQL: SELECT * FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0007s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000079s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000130s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 64 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.013387s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.013440s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000547s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000604s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000895s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000957s ]
+
+[ 2015-03-19T12:48:54+08:00 ] ::1 /ddserver/admin.php/home/index/moneyreq
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000017s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000618s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000874s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000951s ]
+SQL: SHOW COLUMNS FROM `dudu_draw_money` [ RunTime:0.0028s ]
+SQL: SELECT * FROM `dudu_draw_money` ORDER BY state,createtime desc  [ RunTime:0.0003s ]
+SQL: SHOW COLUMNS FROM `dudu_park_info` [ RunTime:0.0015s ]
+SQL: SELECT * FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0008s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000092s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000145s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 64 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.012889s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.012934s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000404s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000438s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000929s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000992s ]
+
+[ 2015-03-19T12:48:54+08:00 ] ::1 /ddserver/admin.php/home/index/moneyreqdone/rid/1
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000014s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000313s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000359s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000411s ]
+SQL: SHOW COLUMNS FROM `dudu_draw_money` [ RunTime:0.0019s ]
+SQL: UPDATE `dudu_draw_money` SET `state`='1',`updater`='a-1' WHERE `id` = 1 [ RunTime:0.0004s ]
+SQL: SELECT * FROM `dudu_draw_money` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0003s ]
+SQL: SHOW COLUMNS FROM `dudu_park_info` [ RunTime:0.0018s ]
+SQL: SELECT `balance` FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0004s ]
+SQL: UPDATE `dudu_park_info` SET `balance`=balance-0.20 WHERE `id` = 1 [ RunTime:0.0006s ]
+NOTIC: [2] mkdir(): Permission denied /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Home/Common/function.php 第 39 行.
+NOTIC: [2] fopen(/ddserverPublic/Logs/admin_20150319.csv): failed to open stream: No such file or directory /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Home/Common/function.php 第 42 行.
+NOTIC: [2] fputcsv() expects parameter 1 to be resource, boolean given /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Home/Common/function.php 第 43 行.
+NOTIC: [2] fclose() expects parameter 1 to be resource, boolean given /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Home/Common/function.php 第 44 行.
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000044s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000102s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.007299s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.007374s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000146s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000178s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000541s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000577s ]
+
+[ 2015-03-19T12:48:56+08:00 ] ::1 /ddserver/admin.php/home/index/moneyreq
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000009s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000315s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000302s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000338s ]
+SQL: SHOW COLUMNS FROM `dudu_draw_money` [ RunTime:0.0100s ]
+SQL: SELECT * FROM `dudu_draw_money` ORDER BY state,createtime desc  [ RunTime:0.0010s ]
+SQL: SHOW COLUMNS FROM `dudu_park_info` [ RunTime:0.0023s ]
+SQL: SELECT * FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0005s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000080s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000120s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 64 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.009336s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.009379s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000106s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000128s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000434s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000514s ]
+
+[ 2015-03-19T12:50:26+08:00 ] ::1 /ddserver/admin.php/home/index/moneyreq
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000021s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000516s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000517s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000586s ]
+SQL: SHOW COLUMNS FROM `dudu_draw_money` [ RunTime:0.0104s ]
+SQL: SELECT * FROM `dudu_draw_money` ORDER BY state,createtime desc  [ RunTime:0.0007s ]
+SQL: SHOW COLUMNS FROM `dudu_park_info` [ RunTime:0.0033s ]
+SQL: SELECT * FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0006s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000068s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000107s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 64 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.009715s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.009754s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000108s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000142s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000515s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000571s ]
+
+[ 2015-03-19T12:50:27+08:00 ] ::1 /ddserver/admin.php/home/index/moneyreqdone/rid/1
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000011s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000239s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000381s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000420s ]
+SQL: SHOW COLUMNS FROM `dudu_draw_money` [ RunTime:0.0106s ]
+SQL: UPDATE `dudu_draw_money` SET `state`='1',`updater`='a-1' WHERE `id` = 1 [ RunTime:0.0005s ]
+SQL: SELECT * FROM `dudu_draw_money` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0004s ]
+SQL: SHOW COLUMNS FROM `dudu_park_info` [ RunTime:0.0020s ]
+SQL: SELECT `balance` FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0003s ]
+SQL: UPDATE `dudu_park_info` SET `balance`=balance-0.20 WHERE `id` = 1 [ RunTime:0.0007s ]
+NOTIC: [2] mkdir(): Permission denied /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Home/Common/function.php 第 39 行.
+NOTIC: [2] fopen(/ddserver/Public/Logs/admin_20150319.csv): failed to open stream: No such file or directory /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Home/Common/function.php 第 42 行.
+NOTIC: [2] fputcsv() expects parameter 1 to be resource, boolean given /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Home/Common/function.php 第 43 行.
+NOTIC: [2] fclose() expects parameter 1 to be resource, boolean given /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Home/Common/function.php 第 44 行.
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000102s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000220s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.007167s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.007241s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000187s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000225s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000456s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000496s ]
+
+[ 2015-03-19T12:50:28+08:00 ] ::1 /ddserver/admin.php/home/index/moneyreq
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000014s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000309s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000268s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000298s ]
+SQL: SHOW COLUMNS FROM `dudu_draw_money` [ RunTime:0.0094s ]
+SQL: SELECT * FROM `dudu_draw_money` ORDER BY state,createtime desc  [ RunTime:0.0003s ]
+SQL: SHOW COLUMNS FROM `dudu_park_info` [ RunTime:0.0022s ]
+SQL: SELECT * FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0005s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000182s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000279s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 64 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.010124s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.010172s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000143s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000169s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000403s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000449s ]
+
+[ 2015-03-19T12:50:52+08:00 ] ::1 /ddserver/admin.php/home/index/index
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000031s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001021s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.001363s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001519s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000106s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000159s ]
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 68 行.
+NOTIC: [8] Use of undefined constant moneyReq - assumed 'moneyReq' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 116 行.
+NOTIC: [8] Use of undefined constant unusual - assumed 'unusual' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 117 行.
+NOTIC: [8] Use of undefined constant emptySpace - assumed 'emptySpace' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 118 行.
+NOTIC: [8] Use of undefined constant giftReq - assumed 'giftReq' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 121 行.
+NOTIC: [8] Use of undefined constant giftList - assumed 'giftList' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 122 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.015633s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.015687s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000529s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000577s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000974s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001109s ]
+
+[ 2015-03-19T12:50:53+08:00 ] ::1 /ddserver/admin.php/home/index/giftlist
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000018s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000344s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000397s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000468s ]
+SQL: SHOW COLUMNS FROM `dudu_gift_list` [ RunTime:0.0021s ]
+SQL: SELECT * FROM `dudu_gift_list` ORDER BY valid desc, weight  [ RunTime:0.0021s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000080s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000118s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/c31d310f5243aadc12b75aaa752dbf38.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/c31d310f5243aadc12b75aaa752dbf38.php 第 64 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.008944s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.008995s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000100s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000123s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000425s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000479s ]
+
+[ 2015-03-19T12:50:54+08:00 ] ::1 /ddserver/admin.php/home/index/giftinfo/gid/1/
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000023s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000380s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000393s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000439s ]
+SQL: SHOW COLUMNS FROM `dudu_gift_list` [ RunTime:0.0017s ]
+SQL: SELECT * FROM `dudu_gift_list` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0003s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000135s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000196s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 115 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 137 行.
+NOTIC: [8] Use of undefined constant id - assumed 'id' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 175 行.
+NOTIC: [8] Use of undefined constant name - assumed 'name' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 179 行.
+NOTIC: [8] Use of undefined constant score - assumed 'score' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 183 行.
+NOTIC: [8] Use of undefined constant valid - assumed 'valid' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 193 行.
+NOTIC: [8] Use of undefined constant valid - assumed 'valid' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 194 行.
+NOTIC: [8] Use of undefined constant weight - assumed 'weight' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 200 行.
+NOTIC: [8] Use of undefined constant image - assumed 'image' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 207 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.013351s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.013384s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000117s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000170s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000682s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000749s ]
+
+[ 2015-03-19T12:50:58+08:00 ] ::1 /ddserver/admin.php/home/index/index
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000011s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000241s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000454s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000494s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000075s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000124s ]
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 68 行.
+NOTIC: [8] Use of undefined constant moneyReq - assumed 'moneyReq' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 116 行.
+NOTIC: [8] Use of undefined constant unusual - assumed 'unusual' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 117 行.
+NOTIC: [8] Use of undefined constant emptySpace - assumed 'emptySpace' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 118 行.
+NOTIC: [8] Use of undefined constant giftReq - assumed 'giftReq' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 121 行.
+NOTIC: [8] Use of undefined constant giftList - assumed 'giftList' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 122 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.007332s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.007378s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000162s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000195s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001448s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001535s ]
+
+[ 2015-03-19T12:50:59+08:00 ] ::1 /ddserver/admin.php/home/index/giftlist
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000011s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000216s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000264s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000294s ]
+SQL: SHOW COLUMNS FROM `dudu_gift_list` [ RunTime:0.0022s ]
+SQL: SELECT * FROM `dudu_gift_list` ORDER BY valid desc, weight  [ RunTime:0.0006s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000064s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000101s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/c31d310f5243aadc12b75aaa752dbf38.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/c31d310f5243aadc12b75aaa752dbf38.php 第 64 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.008347s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.008404s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000146s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000178s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000451s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000492s ]
+
+[ 2015-03-19T12:51:01+08:00 ] ::1 /ddserver/admin.php/home/index/giftinfo/gid/5/
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000011s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000282s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000531s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000580s ]
+SQL: SHOW COLUMNS FROM `dudu_gift_list` [ RunTime:0.0013s ]
+SQL: SELECT * FROM `dudu_gift_list` WHERE `id` = 5 LIMIT 1   [ RunTime:0.0004s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000096s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000143s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 115 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 137 行.
+NOTIC: [8] Use of undefined constant id - assumed 'id' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 175 行.
+NOTIC: [8] Use of undefined constant name - assumed 'name' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 179 行.
+NOTIC: [8] Use of undefined constant score - assumed 'score' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 183 行.
+NOTIC: [8] Use of undefined constant valid - assumed 'valid' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 193 行.
+NOTIC: [8] Use of undefined constant valid - assumed 'valid' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 194 行.
+NOTIC: [8] Use of undefined constant weight - assumed 'weight' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 200 行.
+NOTIC: [8] Use of undefined constant image - assumed 'image' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 207 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.009023s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.009089s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000141s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000171s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000776s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000839s ]
+
+[ 2015-03-19T12:51:09+08:00 ] ::1 /ddserver/admin.php/home/index/giftinfo
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000011s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000261s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000366s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000408s ]
+NOTIC: [2] call_user_func() expects parameter 1 to be a valid callback, no array or string given /Applications/XAMPP/xamppfiles/htdocs/ddserver/ThinkPHP/Library/Think/Upload.class.php 第 170 行.
+SQL: SHOW COLUMNS FROM `dudu_gift_list` [ RunTime:0.0025s ]
+SQL: SELECT * FROM `dudu_gift_list` WHERE `id` = 5 LIMIT 1   [ RunTime:0.0010s ]
+SQL: UPDATE `dudu_gift_list` SET `name`='电话卡1000元',`score`='1000',`valid`='0',`weight`='4',`image`='gift1426740669.jpg',`updater`='1' WHERE `id` = 5 [ RunTime:0.0008s ]
+
+[ 2015-03-19T12:51:09+08:00 ] ::1 /ddserver/admin.php/home/index/giftinfo/gid/5
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000011s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000248s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000274s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000306s ]
+SQL: SHOW COLUMNS FROM `dudu_gift_list` [ RunTime:0.0037s ]
+SQL: SELECT * FROM `dudu_gift_list` WHERE `id` = 5 LIMIT 1   [ RunTime:0.0003s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000140s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000217s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 115 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 137 行.
+NOTIC: [8] Use of undefined constant id - assumed 'id' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 175 行.
+NOTIC: [8] Use of undefined constant name - assumed 'name' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 179 行.
+NOTIC: [8] Use of undefined constant score - assumed 'score' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 183 行.
+NOTIC: [8] Use of undefined constant valid - assumed 'valid' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 193 行.
+NOTIC: [8] Use of undefined constant valid - assumed 'valid' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 194 行.
+NOTIC: [8] Use of undefined constant weight - assumed 'weight' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 200 行.
+NOTIC: [8] Use of undefined constant image - assumed 'image' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/314a2536753dae61415670098a0f5dd4.php 第 207 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.025919s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.025973s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000224s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000272s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001185s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001319s ]
+
+[ 2015-03-19T12:51:11+08:00 ] ::1 /ddserver/admin.php/home/index/index
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000011s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000244s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000277s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000308s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000076s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000131s ]
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 68 行.
+NOTIC: [8] Use of undefined constant moneyReq - assumed 'moneyReq' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 116 行.
+NOTIC: [8] Use of undefined constant unusual - assumed 'unusual' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 117 行.
+NOTIC: [8] Use of undefined constant emptySpace - assumed 'emptySpace' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 118 行.
+NOTIC: [8] Use of undefined constant giftReq - assumed 'giftReq' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 121 行.
+NOTIC: [8] Use of undefined constant giftList - assumed 'giftList' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 122 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.009349s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.009453s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000140s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000166s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000696s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000757s ]
+
+[ 2015-03-19T12:51:12+08:00 ] ::1 /ddserver/admin.php/home/index/giftlist
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000010s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000212s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000261s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000292s ]
+SQL: SHOW COLUMNS FROM `dudu_gift_list` [ RunTime:0.0096s ]
+SQL: SELECT * FROM `dudu_gift_list` ORDER BY valid desc, weight  [ RunTime:0.0004s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000065s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000105s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/c31d310f5243aadc12b75aaa752dbf38.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/c31d310f5243aadc12b75aaa752dbf38.php 第 64 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.008541s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.008580s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000108s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000132s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000416s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000452s ]
+
+[ 2015-03-19T12:51:14+08:00 ] ::1 /ddserver/admin.php/home/index/index
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000010s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000239s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000286s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000319s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000097s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000148s ]
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 68 行.
+NOTIC: [8] Use of undefined constant moneyReq - assumed 'moneyReq' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 116 行.
+NOTIC: [8] Use of undefined constant unusual - assumed 'unusual' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 117 行.
+NOTIC: [8] Use of undefined constant emptySpace - assumed 'emptySpace' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 118 行.
+NOTIC: [8] Use of undefined constant giftReq - assumed 'giftReq' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 121 行.
+NOTIC: [8] Use of undefined constant giftList - assumed 'giftList' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 122 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.015926s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.015978s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000187s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000230s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000414s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000471s ]
+
+[ 2015-03-19T12:51:15+08:00 ] ::1 /ddserver/admin.php/home/index/giftreq
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000014s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000455s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000338s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000381s ]
+SQL: SHOW COLUMNS FROM `dudu_exchange_gift` [ RunTime:0.0013s ]
+SQL: SELECT * FROM `dudu_exchange_gift` ORDER BY state,createtime desc  [ RunTime:0.0008s ]
+SQL: SHOW COLUMNS FROM `dudu_park_info` [ RunTime:0.0037s ]
+SQL: SELECT * FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0008s ]
+SQL: SHOW COLUMNS FROM `dudu_gift_list` [ RunTime:0.0019s ]
+SQL: SELECT * FROM `dudu_gift_list` WHERE `id` = 4 LIMIT 1   [ RunTime:0.0004s ]
+SQL: SHOW COLUMNS FROM `dudu_park_admin` [ RunTime:0.0016s ]
+SQL: SELECT * FROM `dudu_park_admin` WHERE `id` = 8 LIMIT 1   [ RunTime:0.0017s ]
+SQL: SELECT * FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0004s ]
+SQL: SELECT * FROM `dudu_gift_list` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0002s ]
+SQL: SELECT * FROM `dudu_park_admin` WHERE `id` = 8 LIMIT 1   [ RunTime:0.0003s ]
+SQL: SELECT * FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0003s ]
+SQL: SELECT * FROM `dudu_gift_list` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0002s ]
+SQL: SELECT * FROM `dudu_park_admin` WHERE `id` = 8 LIMIT 1   [ RunTime:0.0003s ]
+SQL: SELECT * FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0003s ]
+SQL: SELECT * FROM `dudu_gift_list` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0003s ]
+SQL: SELECT * FROM `dudu_park_admin` WHERE `id` = 8 LIMIT 1   [ RunTime:0.0003s ]
+SQL: SELECT * FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0004s ]
+SQL: SELECT * FROM `dudu_gift_list` WHERE `id` = 2 LIMIT 1   [ RunTime:0.0004s ]
+SQL: SELECT * FROM `dudu_park_admin` WHERE `id` = 8 LIMIT 1   [ RunTime:0.0004s ]
+SQL: SELECT * FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT * FROM `dudu_gift_list` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0005s ]
+SQL: SELECT * FROM `dudu_park_admin` WHERE `id` = 8 LIMIT 1   [ RunTime:0.0003s ]
+SQL: SELECT * FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0003s ]
+SQL: SELECT * FROM `dudu_gift_list` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0002s ]
+SQL: SELECT * FROM `dudu_park_admin` WHERE `id` = 8 LIMIT 1   [ RunTime:0.0003s ]
+SQL: SELECT * FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0003s ]
+SQL: SELECT * FROM `dudu_gift_list` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0003s ]
+SQL: SELECT * FROM `dudu_park_admin` WHERE `id` = 8 LIMIT 1   [ RunTime:0.0002s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000062s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000100s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/33536eb2ca929dde694cfd42af52c7ed.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/33536eb2ca929dde694cfd42af52c7ed.php 第 64 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.007463s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.007497s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000097s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000118s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000374s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000411s ]
+
+[ 2015-03-19T12:51:54+08:00 ] ::1 /ddserver/admin.php/home/index/index
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000022s ]
+INFO: [ app_init ] --END-- [ RunTime:0.001114s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000721s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000778s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000073s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000120s ]
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 68 行.
+NOTIC: [8] Use of undefined constant moneyReq - assumed 'moneyReq' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 116 行.
+NOTIC: [8] Use of undefined constant unusual - assumed 'unusual' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 117 行.
+NOTIC: [8] Use of undefined constant emptySpace - assumed 'emptySpace' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 118 行.
+NOTIC: [8] Use of undefined constant giftReq - assumed 'giftReq' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 121 行.
+NOTIC: [8] Use of undefined constant giftList - assumed 'giftList' /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/7f991c1dfec338bd4f6c37d5d06f6731.php 第 122 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.012685s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.012738s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000372s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000400s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000965s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001036s ]
+
+[ 2015-03-19T12:51:55+08:00 ] ::1 /ddserver/admin.php/home/index/moneyreq
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000011s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000245s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000332s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000370s ]
+SQL: SHOW COLUMNS FROM `dudu_draw_money` [ RunTime:0.0014s ]
+SQL: SELECT * FROM `dudu_draw_money` ORDER BY state,createtime desc  [ RunTime:0.0007s ]
+SQL: SHOW COLUMNS FROM `dudu_park_info` [ RunTime:0.0016s ]
+SQL: SELECT * FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0007s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000063s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000102s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 64 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.008347s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.008389s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000125s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000151s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000396s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000438s ]
+
+[ 2015-03-19T12:51:56+08:00 ] ::1 /ddserver/admin.php/home/index/moneyreqdone/rid/1
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000011s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000245s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000275s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000307s ]
+SQL: SHOW COLUMNS FROM `dudu_draw_money` [ RunTime:0.0020s ]
+SQL: UPDATE `dudu_draw_money` SET `state`='1',`updater`='a-1' WHERE `id` = 1 [ RunTime:0.0003s ]
+SQL: SELECT * FROM `dudu_draw_money` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0003s ]
+SQL: SHOW COLUMNS FROM `dudu_park_info` [ RunTime:0.0025s ]
+SQL: SELECT `balance` FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0003s ]
+SQL: UPDATE `dudu_park_info` SET `balance`=balance-0.20 WHERE `id` = 1 [ RunTime:0.0006s ]
+NOTIC: [2] mkdir(): Permission denied /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Home/Common/function.php 第 39 行.
+NOTIC: [2] fopen(/ddserver/Public/Uploads/images/admin_20150319.csv): failed to open stream: No such file or directory /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Home/Common/function.php 第 42 行.
+NOTIC: [2] fputcsv() expects parameter 1 to be resource, boolean given /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Home/Common/function.php 第 43 行.
+NOTIC: [2] fclose() expects parameter 1 to be resource, boolean given /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Home/Common/function.php 第 44 行.
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000050s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000119s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.006293s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.006358s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000187s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000233s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000565s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000621s ]
+
+[ 2015-03-19T12:51:57+08:00 ] ::1 /ddserver/admin.php/home/index/moneyreq
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000009s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000205s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000284s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000317s ]
+SQL: SHOW COLUMNS FROM `dudu_draw_money` [ RunTime:0.0091s ]
+SQL: SELECT * FROM `dudu_draw_money` ORDER BY state,createtime desc  [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `dudu_park_info` [ RunTime:0.0023s ]
+SQL: SELECT * FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0004s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000078s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000123s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 64 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.008505s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.008544s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000107s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000131s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000495s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000530s ]
+
+[ 2015-03-19T12:52:59+08:00 ] ::1 /ddserver/admin.php/home/index/moneyreq
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000029s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000778s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000976s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.001034s ]
+SQL: SHOW COLUMNS FROM `dudu_draw_money` [ RunTime:0.0026s ]
+SQL: SELECT * FROM `dudu_draw_money` ORDER BY state,createtime desc  [ RunTime:0.0004s ]
+SQL: SHOW COLUMNS FROM `dudu_park_info` [ RunTime:0.0015s ]
+SQL: SELECT * FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0004s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000107s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000158s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 64 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.012272s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.012317s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000568s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000621s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.001301s ]
+INFO: [ app_end ] --END-- [ RunTime:0.001391s ]
+
+[ 2015-03-19T12:53:04+08:00 ] ::1 /ddserver/admin.php/home/index/moneyreq
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000012s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000287s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000339s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000378s ]
+SQL: SHOW COLUMNS FROM `dudu_draw_money` [ RunTime:0.0102s ]
+SQL: SELECT * FROM `dudu_draw_money` ORDER BY state,createtime desc  [ RunTime:0.0005s ]
+SQL: SHOW COLUMNS FROM `dudu_park_info` [ RunTime:0.0039s ]
+SQL: SELECT * FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0007s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000075s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000115s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 64 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.009122s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.009178s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000105s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000127s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000397s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000434s ]
+
+[ 2015-03-19T12:53:05+08:00 ] ::1 /ddserver/admin.php/home/index/moneyreqdone/rid/1
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000015s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000278s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000449s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000503s ]
+SQL: SHOW COLUMNS FROM `dudu_draw_money` [ RunTime:0.0103s ]
+SQL: UPDATE `dudu_draw_money` SET `state`='1',`updater`='a-1' WHERE `id` = 1 [ RunTime:0.0007s ]
+SQL: SELECT * FROM `dudu_draw_money` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0006s ]
+SQL: SHOW COLUMNS FROM `dudu_park_info` [ RunTime:0.0040s ]
+SQL: SELECT `balance` FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0004s ]
+SQL: UPDATE `dudu_park_info` SET `balance`=balance-0.20 WHERE `id` = 1 [ RunTime:0.0008s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000063s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000154s ]
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.007135s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.007206s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000179s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000229s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000603s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000657s ]
+
+[ 2015-03-19T12:53:06+08:00 ] ::1 /ddserver/admin.php/home/index/moneyreq
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000057s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000761s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000428s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000495s ]
+SQL: SHOW COLUMNS FROM `dudu_draw_money` [ RunTime:0.0113s ]
+SQL: SELECT * FROM `dudu_draw_money` ORDER BY state,createtime desc  [ RunTime:0.0004s ]
+SQL: SHOW COLUMNS FROM `dudu_park_info` [ RunTime:0.0019s ]
+SQL: SELECT * FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0004s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000100s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000180s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 64 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.007867s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.007907s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000103s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000125s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000375s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000411s ]
+
+[ 2015-03-19T12:53:53+08:00 ] ::1 /ddserver/admin.php/home/index/moneyreq
+INFO: [ app_init ] --START--
+INFO: Run Behavior\BuildLiteBehavior [ RunTime:0.000048s ]
+INFO: [ app_init ] --END-- [ RunTime:0.000362s ]
+INFO: [ app_begin ] --START--
+INFO: Run Behavior\ReadHtmlCacheBehavior [ RunTime:0.000323s ]
+INFO: [ app_begin ] --END-- [ RunTime:0.000363s ]
+SQL: SHOW COLUMNS FROM `dudu_draw_money` [ RunTime:0.0019s ]
+SQL: SELECT * FROM `dudu_draw_money` ORDER BY state,createtime desc  [ RunTime:0.0008s ]
+SQL: SHOW COLUMNS FROM `dudu_park_info` [ RunTime:0.0017s ]
+SQL: SELECT * FROM `dudu_park_info` WHERE `id` = 1 LIMIT 1   [ RunTime:0.0009s ]
+INFO: [ view_parse ] --START--
+INFO: [ template_filter ] --START--
+INFO: Run Behavior\ContentReplaceBehavior [ RunTime:0.000114s ]
+INFO: [ template_filter ] --END-- [ RunTime:0.000179s ]
+NOTIC: [8] Undefined variable: meta_title /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 5 行.
+NOTIC: [8] Undefined variable: __MENU__ /Applications/XAMPP/xamppfiles/htdocs/ddserver/Admin/Runtime/Cache/Home/dc0cbbd6d4a0c64f3e9f69e330d39820.php 第 64 行.
+INFO: Run Behavior\ParseTemplateBehavior [ RunTime:0.013380s ]
+INFO: [ view_parse ] --END-- [ RunTime:0.013434s ]
+INFO: [ view_filter ] --START--
+INFO: Run Behavior\WriteHtmlCacheBehavior [ RunTime:0.000188s ]
+INFO: [ view_filter ] --END-- [ RunTime:0.000230s ]
+INFO: [ app_end ] --START--
+INFO: Run Behavior\ShowPageTraceBehavior [ RunTime:0.000625s ]
+INFO: [ app_end ] --END-- [ RunTime:0.000682s ]
+

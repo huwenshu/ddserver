@@ -238,6 +238,7 @@ class PublicController extends BaseController {
     $oid = $payment_record->where(array('id'=>$out_trade_no))->getField('oid');
     $park_order_data = $park_order->where(array('id'=>$oid))->find();
     $parkid = $park_order_data['pid'];
+    $uid = $park_order_data['uid'];
     $now = time();
 		if($isIn){
 			$payment_record->where(array('id'=>$out_trade_no))->save(array('state'=>1));
@@ -272,7 +273,7 @@ class PublicController extends BaseController {
         $msgs = array();
         $msgs['ip'] = $_SERVER['REMOTE_ADDR'];//用户ip
         $msgs['parkid'] = $parkid;//停车场编号
-        $msgs['uid'] = $this->uid;//操作者id
+        $msgs['uid'] = $uid;//操作者id
         $msgs['opt'] = 6;//6-用户付费记录
         $msgs['oldValue'] = $balance;//原值
         $msgs['newValue'] = $newMoney;//新值

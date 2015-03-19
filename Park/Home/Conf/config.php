@@ -71,4 +71,7 @@ return array(
 
     'SCORE' => array('state' => 1, 'in' => 1, 'out' =>1),
 
+    //CVS的Log记录地址
+    'CSV_LOG_PATH' => './Public/Logs',
+
 );

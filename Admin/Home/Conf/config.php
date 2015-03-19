@@ -66,6 +66,9 @@ return array(
     'PARK_STATE'  => array( 0 => '车位已满',  1 => '车位较少', 2 => '车位较多'),
 
     //礼品图片保存位置
-    'GIFT_IMG' => __ROOT__ . '/Uploads/images',
+    'GIFT_IMG' => __ROOT__ . '/Public/Uploads/images',
+
+    //CVS的Log记录地址
+    'CSV_LOG_PATH' => './Public/Logs',
 
 );

@@ -54,6 +54,9 @@ return array(
     'THEME_LIST'		=>	'default',
 
 
+    //CVS的Log记录地址
+    'CSV_LOG_PATH' => './Public/Logs',
+
 
     'WX_API_URL'    =>  "https://api.weixin.qq.com/cgi-bin/",
 
