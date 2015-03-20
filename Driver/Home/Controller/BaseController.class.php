@@ -320,7 +320,7 @@ class BaseController extends \Think\Controller {
 	//array		红包信息
 	protected function _checkGiftPack($code,$uid=0){
 		$giftpack = M('driver_giftpack');
-		$con1 = "code='".$code;
+		$con1 = array("code"=>$code);
 		$giftArr = $giftpack->where($con1)->limit(1)->select();
 		if(!$giftArr || count($giftArr) == 0){//没有合适的红包
 			return 0;
@@ -345,7 +345,7 @@ class BaseController extends \Think\Controller {
 				return -4;
 			}
 		}
-		return $giftArr;
+		return $giftArr[0];
 	}
 	
 	//使用红包来获得折扣劵

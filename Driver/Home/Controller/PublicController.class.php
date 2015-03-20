@@ -448,7 +448,7 @@ class PublicController extends BaseController {
 	
 	//测试区
 	public function testCreateGiftPack(){
-		print_r($this->_createGiftPack(1, 0, date("Y-m-d H:i:s"), date("Y-m-d H:i:s",time()+3600), date("Y-m-d H:i:s",time()+60), date("Y-m-d H:i:s",time()+7200), 1, rand(2,5), 1));
+		print_r($this->_createGiftPack(0, 0, date("Y-m-d H:i:s"), date("Y-m-d H:i:s",time()+3600), date("Y-m-d H:i:s",time()), date("Y-m-d H:i:s",time()+7200), 1, rand(2,5), 100));
 	}
 	public function testCreateCoupon(){
 		print_r($this->_createCoupon(1, 0, 1, date("Y-m-d H:i:s"), date("Y-m-d H:i:s",time()+3600), 0));
@@ -457,13 +457,13 @@ class PublicController extends BaseController {
 		print_r($this->_createCoupon1(1, date("Y-m-d H:i:s"), date("Y-m-d H:i:s",time()+3600)));
 	}
 	public function testUseGiftPack($code){
-		print_r($this->_useGiftPack(0, $code));
+		print_r($this->_useGiftPack(1, $code));
 	}
 	public function testListCoupon(){
 		print_r($this->_listCoupon(1));
 	}
 	public function testUseCoupon($id){
-		print_r($this->_useCoupon(0, $id, 10));
+		print_r($this->_useCoupon(1, $id, 10));
 	}
 	//测试区
 }
