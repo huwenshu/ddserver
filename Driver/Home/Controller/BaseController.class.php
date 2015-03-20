@@ -310,12 +310,51 @@ class BaseController extends \Think\Controller {
 		return $this->_createCoupon($uid, -1, 0, $starttime, $endtime, 0);
 	}
 	
+	//检查红包
+	//返回值：
+	//0				没有合适的红包
+	//-1			已领完
+	//-2			活动还没开始
+	//-3			活动已结束
+	//-4			已领取过该红包
+	//array		红包信息
+	protected function _checkGiftPack($code,$uid=0){
+		$giftpack = M('driver_giftpack');
+		$con1 = "code='".$code;
+		$giftArr = $giftpack->where($con1)->limit(1)->select();
+		if(!$giftArr || count($giftArr) == 0){//没有合适的红包
+			return 0;
+		}
+		else if($giftArr[0]['maxnum']<=$giftArr[0]['num']){//已领完
+			return -1;
+		}
+		$starttime = strtotime($giftArr[0]['starttime']);
+		$endtime = strtotime($giftArr[0]['endtime']);
+		$now = time();
+		if($now < $starttime){//还没开始
+			return -2;
+		}
+		else if($now > $endtime){//已结束
+			return -3;
+		}
+		$id = $giftArr[0]['id'];
+		if($uid != 0 && $uid != 1){//已领取过该红包？
+			$coupon = M('driver_coupon');
+			$con1 = array('uid'=>$uid,'source'=>$id);
+			if($coupon->where($con1)->find()){
+				return -4;
+			}
+		}
+		return $giftArr;
+	}
+	
 	//使用红包来获得折扣劵
 	//返回值：
 	//0				没有合适的红包
 	//-1			已领完
 	//-2			活动还没开始
 	//-3			活动已结束
+	//-4			已领取过该红包
 	//array			折扣劵信息
 	protected function _useGiftPack($uid, $code){
 		$giftpack = M('driver_giftpack');
@@ -337,6 +376,13 @@ class BaseController extends \Think\Controller {
 			return -3;
 		}
 		$id = $giftArr[0]['id'];
+		if($uid != 1){//已领取过该红包？
+			$coupon = M('driver_coupon');
+			$con1 = array('uid'=>$uid,'source'=>$id);
+			if($coupon->where($con1)->find()){
+				return -4;
+			}
+		}
 		$giftpack->where(array('id'=>$id))->setInc('num',1);//计数器＋1
 		return $this->_createCoupon($uid, $giftArr[0]['type'], rand($giftArr[0]['minmoney'],$giftArr[0]['maxmoney']), $giftArr[0]['coupon_starttime'], $giftArr[0]['coupon_endtime'], $id);
 	}
@@ -382,7 +428,7 @@ class BaseController extends \Think\Controller {
 		if($couponArr[0]['type'] == -1){//1元折扣劵
 			return $bill>1?$bill-1:$bill-0.01;
 		}
-		return $couponArr[0]['money'];
+		return $couponArr[0]['money']<$bill?$couponArr[0]['money']:$bill-0.01;
 	}
 	
 	//检查折扣劵
@@ -414,7 +460,7 @@ class BaseController extends \Think\Controller {
 		if($couponArr[0]['type'] == -1){//1元折扣劵
 			return $bill>1?$bill-1:$bill-0.01;
 		}
-		return $couponArr[0]['money'];
+		return $couponArr[0]['money']<$bill?$couponArr[0]['money']:$bill-0.01;
 	}
 	
 	//不检查，直接消耗折扣劵

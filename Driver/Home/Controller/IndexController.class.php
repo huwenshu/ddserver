@@ -290,6 +290,8 @@ class IndexController extends BaseController {
 				$this->ajaxMsg("该红包活动尚未开始，敬请期待！");
 			}else if($coupon == -3){
 				$this->ajaxMsg("该红包已过期，谢谢！");
+			}else if($coupon == -4){
+				$this->ajaxMsg("您已领取过该红包，谢谢！");
 			}
 		}
 	}
@@ -297,14 +299,14 @@ class IndexController extends BaseController {
 	/*
 	 * @desc 获得折扣劵列表，用于预定界面
 	*/
-	public  function  listMyCoupons(){
+	public  function  listMyCoupons($all=0){
 		$result = array();
 		$coupons = array();
 		$couponArr = $this->_listCoupon($this->uid);
 		foreach($couponArr as $key => $value){
 			$coupons[$value['id']] = array('t'=>$value['type'],'m'=>$value['money'],'e'=>$value['endtime']);
 		}
-		$result['list'] = $coupons;
+		$result['coupon'] = $coupons;
 
 		$this->ajaxOk($result);
 	}

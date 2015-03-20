@@ -260,11 +260,7 @@ class PublicController extends BaseController {
 			$park_order->where(array('id'=>$oid))->save(array('state'=>2,'endtime'=>date("Y-m-d H:i:s", $endtime)));
 		}
 
-        //账户余额
-        $ParkInfo = M('ParkInfo');
-        $map['id'] = $parkid;
-        $parkData = $ParkInfo->where($map)->find();
-        $balance = $parkData['balance'];
+        
         //-本次付费的钱
         $Payment = M('PaymentRecord');
         $map = array();
@@ -272,11 +268,12 @@ class PublicController extends BaseController {
         $pay = $Payment->where($map)->find();
         $change = $pay['money'];
         $note = $pay['id'];
-
+				//账户余额
+        $ParkInfo = M('ParkInfo');
+        $map['id'] = $parkid;
+        $balance = $ParkInfo->where($map)->getField('balance');
         $ParkInfo->where($map)->setInc('balance',$change); //账户余额更新
-
         $newMoney = $balance + $change;
-
 
         /*记录金钱变化到CSV文件*/
         $msgs = array();
@@ -421,21 +418,49 @@ class PublicController extends BaseController {
 		}
 	}
 	
+	/*
+	 * @desc 检查红包状态
+	*/
+	public  function  checkGiftPack($code,$uid=0){
+		$gpArr = $this->_checkGiftPack($code,$uid);
+		if(is_array($gpArr)){
+			$result = array();
+			$result['gift'] = array('t'=>$gpArr['type'],'e'=>$gpArr['endtime']);
+			$this->ajaxOk($result);
+		}else{
+			//0				没有合适的红包
+			//-1			已领完
+			//-2			活动还没开始
+			//-3			活动已结束
+			if($gpArr == 0){
+				$this->ajaxMsg("红包不存在，或您无法领取该红包");
+			}else if($gpArr == -1){
+				$this->ajaxMsg("该红包已被领完，谢谢！");
+			}else if($gpArr == -2){
+				$this->ajaxMsg("该红包活动尚未开始，敬请期待！");
+			}else if($gpArr == -3){
+				$this->ajaxMsg("该红包已过期，谢谢！");
+			}else if($gpArr == -4){
+				$this->ajaxMsg("您已领取过该红包，谢谢！");
+			}
+		}
+	}
+	
 	//测试区
 	public function testCreateGiftPack(){
-		print_r($this->_createGiftPack(0, 0, date("Y-m-d H:i:s"), date("Y-m-d H:i:s",time()+3600), date("Y-m-d H:i:s",time()+60), date("Y-m-d H:i:s",time()+7200), 1, rand(2,5), 1));
+		print_r($this->_createGiftPack(1, 0, date("Y-m-d H:i:s"), date("Y-m-d H:i:s",time()+3600), date("Y-m-d H:i:s",time()+60), date("Y-m-d H:i:s",time()+7200), 1, rand(2,5), 1));
 	}
 	public function testCreateCoupon(){
-		print_r($this->_createCoupon(0, 0, 1, date("Y-m-d H:i:s"), date("Y-m-d H:i:s",time()+3600), 0));
+		print_r($this->_createCoupon(1, 0, 1, date("Y-m-d H:i:s"), date("Y-m-d H:i:s",time()+3600), 0));
 	}
 	public function testCreateCoupon1(){
-		print_r($this->_createCoupon1(0, date("Y-m-d H:i:s"), date("Y-m-d H:i:s",time()+3600)));
+		print_r($this->_createCoupon1(1, date("Y-m-d H:i:s"), date("Y-m-d H:i:s",time()+3600)));
 	}
 	public function testUseGiftPack($code){
 		print_r($this->_useGiftPack(0, $code));
 	}
 	public function testListCoupon(){
-		print_r($this->_listCoupon(0));
+		print_r($this->_listCoupon(1));
 	}
 	public function testUseCoupon($id){
 		print_r($this->_useCoupon(0, $id, 10));
