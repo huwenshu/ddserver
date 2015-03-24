@@ -421,7 +421,10 @@ class PublicController extends BaseController {
 	/*
 	 * @desc 检查红包状态
 	*/
-	public  function  checkGiftPack($code,$uid=0){
+	public  function  checkGiftPack($code,$uid=0,$fromid=0){
+		//log it
+		$this->_saveGiftLog($code, 0, $uid, $fromid);
+		
 		$gpArr = $this->_checkGiftPack($code,$uid);
 		if(is_array($gpArr)){
 			$result = array();

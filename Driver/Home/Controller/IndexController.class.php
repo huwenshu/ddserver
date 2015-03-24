@@ -271,9 +271,12 @@ class IndexController extends BaseController {
 	/*
 	 * @desc 使用红包来获得折扣劵
 	*/
-	public  function  openGiftPack($code){
+	public  function  openGiftPack($code,$fromid=0){
 		$coupon = $this->_useGiftPack($this->uid, $code);
 		if(is_array($coupon)){
+			//log it
+			$this->_saveGiftLog($code, 1, $uid, $fromid);
+		
 			$result = array();
 			$result['coupon'] = array('id'=>$coupon['id'],'t'=>$coupon['type'],'m'=>$coupon['money'],'e'=>$coupon['endtime']);
 			$this->ajaxOk($result);

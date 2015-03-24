@@ -280,17 +280,29 @@ class BaseController extends \Think\Controller {
 	//返回值：
 	//null		创建失败
 	//string	礼包码
-	protected function _createGiftPack($type, $uid, $starttime, $endtime, $coupon_starttime, $coupon_endtime, $minmoney, $maxmoney, $maxnum){
+	protected function _createGiftPack($type, $uid, $starttime, $endtime, $coupon_starttime, $coupon_endtime, $minmoney, $maxmoney, $maxnum, $info=''){
 		$code = $this->guid();
 		if($type == 0){
 			//随机红包
 			$giftpack = M('driver_giftpack');
-			$data = array('code'=>$code,'type'=>$type,'uid'=>$uid,'starttime'=>$starttime, 'endtime'=>$endtime, 'coupon_starttime'=>$coupon_starttime, 'coupon_endtime'=>$coupon_endtime, 'minmoney'=>$minmoney, 'maxmoney'=>$maxmoney, 'maxnum'=>$maxnum);
+			$data = array('code'=>$code,'type'=>$type,'uid'=>$uid,'starttime'=>$starttime, 'endtime'=>$endtime, 'coupon_starttime'=>$coupon_starttime, 'coupon_endtime'=>$coupon_endtime, 'minmoney'=>$minmoney, 'maxmoney'=>$maxmoney, 'maxnum'=>$maxnum, 'info'=>$info);
 			$giftpack->add($data);
 			
 			return $code;
 		}
 		return null;
+	}
+	
+	//纪录红包使用日志
+	//返回值：
+	//null		创建失败
+	//string	礼包码
+	protected function _saveGiftLog($code, $optype, $uid, $fromid){
+		$fromip = $_SERVER["REMOTE_ADDR"];
+		
+		$giftlog = M('driver_giftlog');
+		$data = array('code'=>$code,'optype'=>$optype,'uid'=>$uid,'fromid'=>$fromid, 'fromip'=>$fromip);
+		$giftlog->add($data);
 	}
 	
 	//生成折扣劵
