@@ -378,7 +378,7 @@ class IndexController extends BaseController {
 		}
 		else{
 			$result['parkstate'] = $parkData['parkstate'];
-            $balance = $parkData['balance'];
+            $balance = $parkData['balance'] > $parkData['upfront']?$parkData['balance'] - $parkData['upfront']:0;
 		}
 
 
@@ -500,7 +500,8 @@ class IndexController extends BaseController {
         $con = array();
         $con[id] = $parkid;
         $parkData =  $Park->where($con)->find();
-        $balance = $parkData['balance'];
+        $balance = $parkData['balance'] > $parkData['upfront']?$parkData['balance'] - $parkData['upfront']:0;
+        $upfront = $parkData['upfront'];
 
 		$DrawMoney = M('DrawMoney');
 		$map = array();
@@ -510,6 +511,7 @@ class IndexController extends BaseController {
 
 		$remainMoney = $balance - $drawSum;//余额-未兑现的提现
 		$result['remainSum'] = $remainMoney;
+        $result['upfront'] = $upfront;
 
 
 		//提现记录
