@@ -66,7 +66,16 @@ return array(
     'PARK_STATE'  => array( 0 => '车位已满',  1 => '车位较少', 2 => '车位较多'),
 
     //礼品图片保存位置
-    'GIFT_IMG' => __ROOT__ . '/Public/Uploads/images',
+    'GIFT_IMG' => 'uploads.duduche.me/images',
+
+    //上传图片的FTP设置
+    'UPLOAD_FTP'     =>    array(
+        'host'     => '115.29.160.95', //服务器
+        'port'     => 21, //端口
+        'timeout'  => 90, //超时时间
+        'username' => 'webupload', //用户名
+        'password' => 'dudu@123'//密码
+    ),
 
     //CVS的Log记录地址
     'CSV_LOG_PATH' => './Public/Logs',

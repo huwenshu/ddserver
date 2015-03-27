@@ -1,0 +1,200 @@
+<extend name="Public/base" xmlns="http://www.w3.org/1999/html"/>
+
+<block name="style">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/datetimepicker/css/bootstrap.css" media="all">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/datetimepicker/css/datetimepicker.css" media="all">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/datetimepicker/css/dropdown.css" media="all">
+
+    <style>
+        body{padding: 0}
+        .myborder{
+        }
+        #panel-2 .myborder input,#panel-2 .myborder select,#panel-1 .myborder input,#panel-1 .myborder select{
+            width: 65%;
+        }
+        #panel-1 .myborder textarea,#panel-2 .myborder textarea{
+            height: 100px;
+        }
+        .ui-tabs-nav{
+            position: relative;
+            display: table;
+            width: 100%;
+            overflow: hidden;
+            font-size: 15px;
+            font-weight: 400;
+            table-layout: fixed;
+            background-color: transparent;
+            border: 1px solid #383838;
+            border-radius: 3px;
+        }
+        .ui-tabs-nav>li{
+            display: table-cell;
+            width: 1%;
+            padding-top: 6px;
+            padding-bottom: 7px;
+            overflow: hidden;
+            line-height: 1;
+            color: #007aff;
+            text-align: center;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            border-color: #383838;
+            border-left: 1px solid #007aff;
+            -webkit-transition: background-color .1s linear;
+            transition: background-color .1s linear;
+        }
+        .ui-tabs-nav>li.ui-tabs-active{
+            color: #fff;
+            background-color: #383838;
+        }
+        .ui-tabs-nav>li>a{
+            color: #007aff;
+        }
+        .ui-tabs-nav>li.ui-tabs-active>a{
+            color:#fff;
+            text-decoration: underline;
+        }
+        form button{
+
+        }
+        #panel-2 input{
+            width: 95%;
+        }
+
+        #promTable td{
+            border:1px solid #ccc;
+        }
+
+
+    </style>
+</block>
+
+<block name="body">
+    <!-- 主体 -->
+    <div id="indexMain" class="index-main" style="padding-top: 35px">
+            <div id="panel-1">
+                <form action="{:U('giftinfo')}" method="post">
+                    <input type="hidden"  name="id" value="{$giftInfo[id]}" />
+                    <table style="display: flex;width: 95%;margin: 0 auto;margin-top: 10px">
+                        <tr>
+                            <td style="width: 38%"><label for="giftInfo">简介：</label></td>
+                            <td style="width: 62%"><input type="text" id="giftInfo" name="info" value="{$giftInfo[info]}" /> </td>
+                        </tr>
+                        <tr>
+                            <td><label for="giftstart">红包开始时间：</label></td>
+                            <td>
+                                <input class="datetimepicker" data-date-format="yyyy-MM-dd hh:ii:ss" type="text" id="giftstart" name="starttime" value= "{$giftInfo[starttime]}" />
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="giftend">红包结束时间：</label></td>
+                            <td><input class="datetimepicker" data-date-format="yyyy-MM-dd hh:ii:ss" type="text" id="giftend" name="endtime" value= "{$giftInfo[endtime]}" /> </td>
+                        </tr>
+                        <tr>
+                            <td><label for="couponstart">抵用券开始时间：</label></td>
+                            <td><input class="datetimepicker" data-date-format="yyyy-MM-dd hh:ii:ss" type="text" id="couponstart" name="coupon_starttime" value= "{$giftInfo[coupon_starttime]}" /> </td>
+                        </tr>
+
+                        <tr>
+                            <td><label for="couponend">抵用券结束时间：</label></td>
+                            <td><input class="datetimepicker" data-date-format="yyyy-MM-dd hh:ii:ss" type="text" id="couponend" name="coupon_endtime" value= "{$giftInfo[coupon_endtime]}" /> </td>
+                        </tr>
+                        <tr>
+                            <td><label for="giftuid">绑定用户的UID：</label></td>
+                            <td><input type="text" id="giftuid" name="uid" value= "{$giftInfo[uid]}" /> </td>
+                        </tr>
+                        <tr>
+                            <td><label for="giftType">红包类型：</label></td>
+                            <td>
+                                <select id="giftType" name="type">
+                                    <option value="0"  <?php if ($giftInfo[type]==0)  echo 'selected="selected"';?>>随机红包</option>
+                                    <option value="1"  <?php if ($giftInfo[type]==1)  echo 'selected="selected"';?>>一元红包</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td><label for="giftMin">最小随机钱数：</label></td>
+                            <td><input type="text" id="giftMin" name="minmoney" value= "{$giftInfo[minmoney]}" /> </td>
+                        </tr>
+                        <tr>
+                            <td><label for="giftMax">最大随机钱数：</label></td>
+                            <td><input type="text" id="giftMax" name="maxmoney" value= "{$giftInfo[maxmoney]}" /> </td>
+                        </tr>
+                        <tr>
+                            <td><label for="giftMaxNum">可领取次数：</label></td>
+                            <td><input type="text" id="giftMaxNum" name="maxnum" value= "{$giftInfo[maxnum]}" /> </td>
+                        </tr>
+                        <tr style="height:57px;">
+                            <td><label for="giftNum">已领取次数：</label></td>
+                            <td><span  id="giftNum">{$giftInfo[num]}</span></td>
+                        </tr>
+                        <tr>
+                            <td colspan=2>
+                                <input type="submit" />
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+                <br>
+                <fieldset id="promContent" style="margin: 0">
+                    <legend>红包推广:</legend>
+                    <div>
+                        <span id="giftCode" style="display:none;">{$giftInfo[code]}</span>
+                        <h5>请先在最后加上推广员ID，再生产二维码</h5>
+                        <textarea id="promURL" rows="4"> </textarea>
+                        <div style="text-align: center">
+                            <!--<button id="promCopyBtn">复制到剪切板</button>-->
+                            <button id="promQRBtn">生成推广二维码</button>
+                            <p id="promQR" style="margin-top:15px;"></p>
+                        </div>
+
+                    </div>
+                </fieldset>
+            </div>
+    </div>
+</block>
+
+<block name="script">
+    <script type="text/javascript" src="__STATIC__/iscroll.js"></script>
+    <script type="text/javascript" src="__STATIC__/jquery.qrcode.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/datetimepicker/js/bootstrap-datetimepicker.js"></script>
+    <script type="text/javascript" src="__STATIC__/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script type="text/javascript">
+        $(function() {
+
+            var code = $("#giftCode").html();
+            if(code == ""){
+                $('#promContent').hide();
+            }
+            else{
+                var url = "http://duduche.me/html/userhtml/index.html?hcode="+code+"&type=10&$fromid=";
+                $('#promURL').val(url);
+            }
+
+
+            $('.datetimepicker').datetimepicker({
+                language: 'zh-CN',
+                pickTime: true,
+                todayBtn: true,
+                autoclose: true,
+                minView: '0',
+                forceParse: false,
+                format:"yyyy-mm-dd hh:ii:ss"
+            });
+
+//            $('#promCopyBtn').click(function(){
+//                var content = $('#promURL').val();
+//                $.copy(content);
+//                alert("成功复制到剪贴板");
+//            });
+
+            $('#promQRBtn').click(function(){
+                var content = $('#promURL').val();
+                $('#promQR').html("");
+                $('#promQR').qrcode(content);
+            });
+        });
+    </script>
+
+</block>
+

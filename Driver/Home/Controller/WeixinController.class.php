@@ -136,11 +136,13 @@ class WeixinController extends BaseController {
 			$tmpStr = '&type=3&uid='.$uid.'&uuid='.$uuid;//已经有这个openid,返回uid和uuid
 		}
 
-		$nearURL = "http://duduche.me/html/userhtml/index.html?m=map&openid=".$openid.$tmpStr;
-		$findURL = "http://duduche.me/html/userhtml/index.html?m=mapsearch&openid=".$openid.$tmpStr;
-		$feeURL  = "http://duduche.me/html/userhtml/index.html?m=myjiesuan&openid=".$openid.$tmpStr;
-        $orderURL  = "http://duduche.me/html/userhtml/index.html?m=myorder&openid=".$openid.$tmpStr;
-        $userinfoURL  = "http://duduche.me/html/userhtml/index.html?m=userinfo&openid=".$openid.$tmpStr;
+        $baseURL = "http://static.duduche.me/redirect/user/indexhtml.php";
+		$nearURL = $baseURL."?m=map&openid=".$openid.$tmpStr;
+		$findURL =  $baseURL."?m=mapsearch&openid=".$openid.$tmpStr;
+		$feeURL  =  $baseURL."?m=myjiesuan&openid=".$openid.$tmpStr;
+        $orderURL  =  $baseURL."?m=myorder&openid=".$openid.$tmpStr;
+        $userinfoURL  =  $baseURL."?m=userinfo&openid=".$openid.$tmpStr;
+        $couponURL  =  $baseURL."?m=coupon&openid=".$openid.$tmpStr;
 
 
 		switch($m){
@@ -149,6 +151,7 @@ class WeixinController extends BaseController {
 			case 'fee' : header("Location:".$feeURL); break;
             case 'order' : header("Location:".$orderURL); break;
             case 'userinfo' : header("Location:".$userinfoURL); break;
+            case 'coupon' : header("Location:".$couponURL); break;
 			default : header("Location:".$nearURL); break;
 		}
 
