@@ -1,0 +1,143 @@
+<extend name="Public/base" xmlns="http://www.w3.org/1999/html"/>
+
+<block name="style">
+    <style>
+        body{padding: 0}
+        .myborder{
+        }
+        #panel-2 .myborder input,#panel-2 .myborder select,#panel-1 .myborder input,#panel-1 .myborder select{
+            width: 65%;
+        }
+        #panel-1 .myborder textarea,#panel-2 .myborder textarea{
+            height: 100px;
+        }
+        .ui-tabs-nav{
+            position: relative;
+            display: table;
+            width: 100%;
+            overflow: hidden;
+            font-size: 15px;
+            font-weight: 400;
+            table-layout: fixed;
+            background-color: transparent;
+            border: 1px solid #383838;
+            border-radius: 3px;
+        }
+        .ui-tabs-nav>li{
+            display: table-cell;
+            width: 1%;
+            padding-top: 6px;
+            padding-bottom: 7px;
+            overflow: hidden;
+            line-height: 1;
+            color: #007aff;
+            text-align: center;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            border-color: #383838;
+            border-left: 1px solid #007aff;
+            -webkit-transition: background-color .1s linear;
+            transition: background-color .1s linear;
+        }
+        .ui-tabs-nav>li.ui-tabs-active{
+            color: #fff;
+            background-color: #383838;
+        }
+        .ui-tabs-nav>li>a{
+            color: #007aff;
+        }
+        .ui-tabs-nav>li.ui-tabs-active>a{
+            color:#fff;
+            text-decoration: underline;
+        }
+        form button{
+
+        }
+        #panel-2 input{
+            width: 95%;
+        }
+
+        #promTable td{
+            border:1px solid #ccc;
+        }
+
+
+    </style>
+</block>
+
+<block name="body">
+    <!-- 主体 -->
+    <div id="indexMain" class="index-main" style="padding-top: 35px">
+            <div id="panel-1">
+                <form action="{:U('prominfo')}" method="post">
+
+                    <table style="display: flex;width: 95%;margin: 0 auto;margin-top: 10px">
+                        <tr>
+                            <td style="width: 33%"><label for="promid">推广员ID：</label></td>
+                            <td style="width: 66%"><input type="text" id="promid" name="id" value="{$prominfo[id]}" readonly/> </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 33%"><label for="promname">推广员姓名：</label></td>
+                            <td style="width: 66%"><input type="text" id="promname" name="name" value="{$prominfo[name]}" /> </td>
+                        </tr>
+                        <tr>
+                            <td><label for="promcontact">联系方式：</label></td>
+                            <td><input type="text" id="promcontact" name="contact" value= "{$prominfo[contact]}" /> </td>
+                        </tr>
+                        <tr>
+                            <td><label for="promwork">工作形式：</label></td>
+                            <td>
+                                <select id="promwork" name="type">
+                                    <option value="0"  <?php if ($prominfo[type]==0)  echo 'selected="selected"';?>>停车场管理员</option>
+                                    <option value="1"  <?php if ($prominfo[type]==1)  echo 'selected="selected"';?>>兼职</option>
+                                    <option value="2"  <?php if ($prominfo[type]==2)  echo 'selected="selected"';?>>全职</option>
+                                </select>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="2"><label for="memo">备注说明：</label></td>
+
+                        </tr>
+                        <tr>
+                            <td colspan="2">
+                                <textarea id="note" name="memo" rows="5">{$prominfo[memo]}</textarea>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan=2>
+                                <input type="submit" />
+                            </td>
+                        </tr>
+
+
+                    </table>
+                </form>
+                <table id="promTable" style="width: 95%;margin: 0 auto;margin-top: 10px;text-align:center;border-collapse:collapse;border:none;">
+                    <tbody>
+                    <tr>
+                        <td style="width: 25%">红包</td>
+                        <td style="width: 24%">查看</td>
+                        <td style="width: 24%">领取</td>
+                        <td style="width: 25%">使用</td>
+                    </tr>
+                    <?php
+                        foreach($promList as $key => $value){
+                        echo "<tr>";
+                        echo "<td>".$value['info']."</td>";
+                        echo "<td>".$value['check']."</td>";
+                        echo "<td>".$value['open']."</td>";
+                        echo "<td>".$value['use']."</td>";
+                        echo "</tr>";
+                    }
+                    ?>
+                    </tbody>
+
+                </table>
+                <br/>
+            </div>
+    </div>
+</block>
+
+<block name="script">
+    <script type="text/javascript" src="__STATIC__/iscroll.js"></script>
+</block>

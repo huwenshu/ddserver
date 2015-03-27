@@ -1,0 +1,54 @@
+<extend name="Public/base"/>
+
+<block name="sidebar"></block>
+
+<block name="style">
+    <style>
+        body{padding: 0}
+
+        .parkitem{list-style:none;width:490px;padding:5px 0 5px 10px;}
+
+        .gray {background:#ddd;}
+    </style>
+</block>
+
+<block name="body">
+    <!-- 主体 -->
+    <div id="indexMain" class="index-main">
+        <ul class="mui-table-view">
+            <li class="mui-table-view-cell">
+               <form action="{:U('index')}" method="get">
+                   <input type="search" name="searchprom" placeholder="搜索推广员" />
+
+                   <table style="width: 100%;table-layout: fixed">
+                       <tr>
+                           <td><a class="mui-btn mui-btn-success" href="{:U('prominfo')}">添加推广员</a></td>
+                           <td style="width: 50%"><input type="submit" style="float: right" value="搜索" /></td>
+                       </tr>
+                   </table>
+                </form>
+            </li>
+
+        <?php 
+            foreach ($promList as $key => $value) {
+                echo "<li name='promitem' class='mui-table-view-cell' alt='".U('prominfo')."/promid/".$value['id']."/' ><a class='mui-navigate-right'><p>".$value['name']."</p><p>电话：".$value['contact']."</p></a></li>";
+            }
+        ?>
+        </ul>
+       
+    </div>
+</block>
+
+<block name="script">
+<script type="text/javascript">
+    $(function(){
+        $('.sidebar').remove();
+        $('[name=promitem]').click(function(){
+            var url= $(this).attr("alt");
+            location.href = url;
+        });
+
+        $(".promitem").hover(function() {$(this).addClass("gray")}, function() {$(this).removeClass("gray")});
+    });
+</script>
+</block>

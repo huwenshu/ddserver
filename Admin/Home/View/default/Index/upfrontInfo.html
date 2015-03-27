@@ -1,0 +1,116 @@
+<extend name="Public/base" xmlns="http://www.w3.org/1999/html"/>
+
+<block name="style">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/datetimepicker/css/bootstrap.css" media="all">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/datetimepicker/css/datetimepicker.css" media="all">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/datetimepicker/css/dropdown.css" media="all">
+
+    <style>
+        body{padding: 0}
+        .myborder{
+        }
+        #panel-2 .myborder input,#panel-2 .myborder select,#panel-1 .myborder input,#panel-1 .myborder select{
+            width: 65%;
+        }
+        #panel-1 .myborder textarea,#panel-2 .myborder textarea{
+            height: 100px;
+        }
+        .ui-tabs-nav{
+            position: relative;
+            display: table;
+            width: 100%;
+            overflow: hidden;
+            font-size: 15px;
+            font-weight: 400;
+            table-layout: fixed;
+            background-color: transparent;
+            border: 1px solid #383838;
+            border-radius: 3px;
+        }
+        .ui-tabs-nav>li{
+            display: table-cell;
+            width: 1%;
+            padding-top: 6px;
+            padding-bottom: 7px;
+            overflow: hidden;
+            line-height: 1;
+            color: #007aff;
+            text-align: center;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            border-color: #383838;
+            border-left: 1px solid #007aff;
+            -webkit-transition: background-color .1s linear;
+            transition: background-color .1s linear;
+        }
+        .ui-tabs-nav>li.ui-tabs-active{
+            color: #fff;
+            background-color: #383838;
+        }
+        .ui-tabs-nav>li>a{
+            color: #007aff;
+        }
+        .ui-tabs-nav>li.ui-tabs-active>a{
+            color:#fff;
+            text-decoration: underline;
+        }
+        form button{
+
+        }
+        #panel-2 input{
+            width: 95%;
+        }
+
+        #promTable td{
+            border:1px solid #ccc;
+        }
+
+
+    </style>
+</block>
+
+<block name="body">
+    <!-- 主体 -->
+    <div id="indexMain" class="index-main" style="padding-top: 35px">
+            <div id="panel-1">
+                <form action="{:U('upfrontInfo')}" method="post">
+                    <input type="hidden"  name="id" value="{$parkInfo[id]}" />
+                    <table style="display: flex;width: 95%;margin: 0 auto;margin-top: 10px">
+                        <tr>
+                            <td style="width: 38%"><label for="parkName">停车场：</label></td>
+                            <td style="width: 62%"><input type="text" id="parkName" name="name" value="{$parkInfo[name]}" readonly/> </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 38%"><label for="parkAddr">地址：</label></td>
+                            <td style="width: 62%"><input type="text" id="parkAddr" name="address" value="{$parkInfo[address]}" readonly/> </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 38%"><label for="parkshort">缩写：</label></td>
+                            <td style="width: 62%"><input type="text" id="parkshort" name="shortname" value="{$parkInfo[shortname]}" readonly/> </td>
+                        </tr>
+                        <tr>
+                            <td style="width: 38%"><label for="parkupfront">预收款：</label></td>
+                            <td style="width: 62%"><input type="text" id="parkupfront" name="upfront" value="{$parkInfo[upfront]}"/> </td>
+                        </tr>
+
+
+                        <tr>
+                            <td>
+                                <input type="submit" />
+                            </td>
+                            <td style="text-align: right">
+                                <a href="{:U('upfrontList')}">返回停车场列表</a>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+                <br>
+
+            </div>
+    </div>
+</block>
+
+<block name="script">
+    <script type="text/javascript" src="__STATIC__/iscroll.js"></script>
+</block>
+

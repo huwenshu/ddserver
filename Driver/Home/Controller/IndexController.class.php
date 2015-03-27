@@ -275,7 +275,7 @@ class IndexController extends BaseController {
 		$coupon = $this->_useGiftPack($this->uid, $code);
 		if(is_array($coupon)){
 			//log it
-			$this->_saveGiftLog($code, 1, $uid, $fromid);
+			$this->_saveGiftLog($code, 1, $this->uid, $fromid);
 		
 			$result = array();
 			$result['coupon'] = array('id'=>$coupon['id'],'t'=>$coupon['type'],'m'=>$coupon['money'],'e'=>$coupon['endtime']);

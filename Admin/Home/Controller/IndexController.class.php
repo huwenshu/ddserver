@@ -212,15 +212,20 @@ class IndexController extends BaseController {
     public function giftInfo($gid = null, $fileError = ''){
         if (IS_POST) {
 
-            // 上传图片
-            $upload = new \Think\Upload();// 实例化上传类
-            $upload->maxSize   = 3145728 ;// 设置附件上传大小
-            $upload->exts      = array('jpg', 'gif', 'png', 'jpeg');// 设置附件上传类型
-            $upload->rootPath  = './Public/Uploads/images/'; // 设置附件上传根目录
-            $upload->savePath  = ''; // 设置附件上传（子）目录
-            $upload->autoSub   = false;
-            $upload->saveName  = 'gift'.time();
-            $upload->replace = true;
+
+
+            //上传图片的配置
+            $config = array(
+                'maxSize'    =>    3145728,
+                'rootPath'   =>   './Public/Uploads/images/',
+                'savePath'   =>    '',
+                'saveName'   =>    'gift'.time(),
+                'exts'       =>    array('jpg', 'gif', 'png', 'jpeg'),
+                'autoSub'    =>    false,
+                'replace'      =>    true,
+            );
+
+            $upload = new \Think\Upload($config,'Ftp', C('UPLOAD_FTP'));// 实例化上传类
 
 
             //保存信息
@@ -275,6 +280,42 @@ class IndexController extends BaseController {
         }
     }
 
+
+    public  function upfrontList(){
+        $searchName = I('get.searchName');
+
+        $ParkList = M('ParkInfo');
+        $map = array();
+        $map['name'] = array('like','%'.$searchName.'%');
+        $parkList = $ParkList->where($map)->order('updatetime desc')->select();
+        $this->parkList = $parkList;
+        $this->meta_title = '首页 | 嘟嘟销售系统';
+        $this->display();
+    }
+
+    public function upfrontInfo($parkid = null){
+        if(IS_POST){
+            $ParkInfo = M('ParkInfo');
+            $data = array();
+            $data['id'] = I('post.id');
+            $data['upfront'] = I('post.upfront');
+            $data['updater'] = 'a-'.UID;
+
+            $ParkInfo->save($data);
+
+            $this->redirect('Home/Index/upfrontInfo/parkid/'.I('post.id'));
+
+        }
+        else{
+            $ParkList = M('ParkInfo');
+            $map = array();
+            $map['id'] = $parkid;
+            $parkInfo = $ParkList->where($map)->getField('id,name,address,shortname,upfront');
+            $this->parkInfo = $parkInfo[$parkid];
+            $this->meta_title = '首页 | 嘟嘟销售系统';
+            $this->display();
+        }
+    }
 
 
 }

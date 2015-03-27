@@ -1,0 +1,60 @@
+<extend name="Public/base"/>
+
+<block name="sidebar"></block>
+
+<block name="style">
+    <style>
+        body{padding: 0}
+
+        .parkitem{list-style:none;width:490px;padding:5px 0 5px 10px;}
+
+        .gray {background:#ddd;}
+    </style>
+</block>
+
+<block name="body">
+    <!-- 主体 -->
+    <div id="indexMain" class="index-main">
+        <ul class="mui-table-view">
+            <li class="mui-table-view-cell">
+               <form action="{:U('index')}" method="get">
+                   <input type="search" name="searchgift" placeholder="搜索红包" />
+
+                   <table style="width: 100%;table-layout: fixed">
+                       <tr>
+                           <td><a class="mui-btn mui-btn-success" href="{:U('giftinfo')}">新建红包</a></td>
+                           <td style="width: 50%"><input type="submit" style="float: right" value="搜索" /></td>
+                       </tr>
+                   </table>
+                </form>
+            </li>
+
+        <?php 
+            foreach ($giftPack as $key => $value) {
+                $type = $value['type'] == 0 ? "随机红包" : "1元红包";
+                echo "<li name='giftitem' class='mui-table-view-cell' alt='".U('giftinfo')."/giftid/".$value['id']."/' ><a class='mui-navigate-right'>";
+                echo "<p>简介：".$value['info']."</p><p>类型：".$type."</p>";
+                echo "<p>红包领取开始时间：".$value['starttime']."</p>";
+                echo "<p>红包领取结束时间：".$value['endtime']."</p>";
+                echo "</a></li>";
+            }
+        ?>
+        </ul>
+       
+    </div>
+</block>
+
+<block name="script">
+
+<script type="text/javascript">
+    $(function(){
+        $('.sidebar').remove();
+        $('[name=giftitem]').click(function(){
+            var url= $(this).attr("alt");
+            location.href = url;
+        });
+
+        $(".giftitem").hover(function() {$(this).addClass("gray")}, function() {$(this).removeClass("gray")});
+    });
+</script>
+</block>

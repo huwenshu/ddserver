@@ -23,4 +23,15 @@ class BaseController extends \Think\Controller {
         C($config); //添加配置
         */  
     }
+
+
+    protected  function  getGiftInfo($code){
+        $DriverGiftPack = M('DriverGiftpack');
+        $map = array();
+        $map['code'] = $code;
+        $giftInfo = $DriverGiftPack->where($map)->getField('info');
+
+        return $giftInfo;
+
+    }
 }

@@ -1,0 +1,49 @@
+<extend name="Public/base"/>
+
+<block name="sidebar"></block>
+
+<block name="style">
+    <style>
+        body{padding: 0}
+
+        .parkitem{list-style:none;width:490px;padding:5px 0 5px 10px;}
+
+        .gray {background:#ddd;}
+    </style>
+</block>
+
+<block name="body">
+    <!-- 主体 -->
+    <div id="indexMain" class="index-main">
+        <ul class="mui-table-view">
+            <li class="mui-table-view-cell">
+               <form action="{:U('upfrontList')}" method="get">
+                   <input type="search" name="searchName" placeholder="搜索停车场" />
+                   <input type="submit" style="float: right" value="搜索" />
+
+                </form>
+            </li>
+
+        <?php 
+            foreach ($parkList as $key => $value) {
+                echo "<li name='parkitem' class='mui-table-view-cell' alt='".U('upfrontInfo')."/parkid/".$value['id']."/' ><a class='mui-navigate-right'><p>".$value['name']."</p><p>地址：".$value['address']."</p></a></li>";
+            }
+        ?>
+        </ul>
+       
+    </div>
+</block>
+
+<block name="script">
+<script type="text/javascript">
+    $(function(){
+        $('.sidebar').remove();
+        $('[name=parkitem]').click(function(){
+            var url= $(this).attr("alt");
+            location.href = url;
+        });
+
+        $(".parkitem").hover(function() {$(this).addClass("gray")}, function() {$(this).removeClass("gray")});
+    });
+</script>
+</block>
