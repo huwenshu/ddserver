@@ -334,13 +334,15 @@ class PublicController extends BaseController {
 	 * @desc 预付成功，微信调用的回调函数
 	*/
 	public function genOrderDone(){
-		return $this->doOrderDone(true);
+        $this->doOrderDone(true);
+        $this->_exit();
 	}
 	/*
 	 * @desc 车费结算付款成功微信的回调接口
 	*/
 	public  function checkOutDone(){
-		return $this->doOrderDone(false);
+        $this->doOrderDone(false);
+        $this->_exit();
 	}
 	public function parkingTimeTest($parkid, $mins){
 		$now = time();

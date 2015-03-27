@@ -5,22 +5,23 @@ class WeixinController extends BaseController {
 		if($this->checkSignature()) {
 			if($_GET["echostr"]) {
 				echo $_GET["echostr"];
-				exit(0);
+				$this->_exit();
 			}
 
 		} else {
-			exit(0);
+			$this->_exit();
 		}
 		$postStr = file_get_contents ( "php://input" );
 		if (!empty ( $postStr )) {
 			$postObj = simplexml_load_string ( $postStr, 'SimpleXMLElement', LIBXML_NOCDATA );
 			if(NULL == $postObj) {
-				exit(0);
+				$this->_exit();
 			}
 			else{
 				$this->process($postObj);
 			}
 		}
+        $this->_exit();
     }
 
 
@@ -37,10 +38,10 @@ class WeixinController extends BaseController {
     	else{
     		echo "MENU create fail";
     	}
-			
+        $this->_exit();
     }
 
-    public function getToken(){
+    protected function getToken(){
     	$para = array(
 					"grant_type" => "client_credential",
 					"appid" => C('APPID'),
@@ -155,7 +156,7 @@ class WeixinController extends BaseController {
 			default : header("Location:".$nearURL); break;
 		}
 
-
+        $this->_exit();
 	}
 
 protected function doCurlPostRequest($url, $requestString, $timeout = 5) {   

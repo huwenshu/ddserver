@@ -1,9 +1,47 @@
 <?php
+    
+define('XHPROF_ENABLE',1);
+    
 /**
  * 后台基础控制器
  * @Bin
  */
 class BaseController extends \Think\Controller {
+    
+    public function _initialize(){
+        $this->_start_prof();
+    }
+    
+    protected function _start_prof(){
+        if(XHPROF_ENABLE){
+            $XHPROF_ROOT = realpath(dirname(__FILE__) .'/../Common');
+            include_once $XHPROF_ROOT . "/xhprof_lib/utils/xhprof_lib.php";
+            include_once $XHPROF_ROOT . "/xhprof_lib/utils/xhprof_runs.php";
+            
+            // start profiling
+            xhprof_enable(XHPROF_FLAGS_CPU+XHPROF_FLAGS_NO_BUILTINS);
+        }
+    }
+    
+    protected function _end_prof(){
+        if(XHPROF_ENABLE){
+            // stop profiler
+            $xhprof_data = xhprof_disable();
+            
+            // save raw data for this profiler run using default
+            // implementation of iXHProfRuns.
+            $xhprof_runs = new XHProfRuns_Default();
+            
+            // save the run under a namespace "xhprof_foo"
+            $run_id = $xhprof_runs->save_run($xhprof_data, "xhprof_driver");
+        }
+    }
+    
+    protected function _exit(){
+        $this->_end_prof();
+        
+        exit;
+    }
 
     protected function createUUID($uid){
         mt_srand((double)microtime()*10000);//optional for php 4.2.0 and up.
@@ -38,6 +76,8 @@ class BaseController extends \Think\Controller {
     }
 
     protected function sendmsg($code, $data){
+        $this->_end_prof();
+        
         $result = array(
                     'code'=>$code,
                     'data'=>$data

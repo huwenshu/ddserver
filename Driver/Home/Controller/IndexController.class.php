@@ -9,6 +9,8 @@ class IndexController extends BaseController {
 	private $lng;
 
 	public function _initialize(){
+        parent::_initialize();
+        
 		$uid = I('get.uid');
 		$uuid = I('get.uuid');
 		$this->uid = $uid;
@@ -32,7 +34,7 @@ class IndexController extends BaseController {
     }
 
 	//返回附近停车场接口
-	public function search($lat,$lng){
+	public function search($lat,$lng){        
 		$this->lat = $lat;
 		$this->lng = $lng;
 		$Park = M('ParkInfo');
