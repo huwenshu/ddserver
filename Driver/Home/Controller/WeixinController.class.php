@@ -41,18 +41,121 @@ class WeixinController extends BaseController {
         $this->_exit();
     }
 
-    protected function getToken(){
-    	$para = array(
-					"grant_type" => "client_credential",
-					"appid" => C('APPID'),
-					"secret" => C('APPSECRET')
-				);
-    	$url = C('WX_API_URL')."token";
-    	$ret = $this->doCurlGetRequest($url, $para);
-    	$retData = json_decode($ret, true);
-    	$token = $retData['access_token'];
-    	return $token;
+
+    public function getJsConfig($url){
+        $noncestr = $this->getRandChar(16);
+        $jsapi_ticket = $this->getJsTicket();
+        $timestamp = time();
+        if($jsapi_ticket){
+            $string1 = "jsapi_ticket=".$jsapi_ticket."&noncestr=".$noncestr."&timestamp=".$timestamp."&url=".$url;
+            $signature = sha1($string1);
+            $map = array();
+            $map['appId'] = C('APPID');
+            $map['timestamp'] = $timestamp;
+            $map['nonceStr'] = $noncestr;
+            $map['signature'] = $signature;
+            $this->ajaxOk($map);
+
+        }
+        else{
+            $this->ajaxOk(null);
+        }
     }
+
+    protected function getJsTicket(){
+        $WeixinToken = M('WeixinToken');
+        $map = array();
+        $map['appid'] = C('APPID');
+        $map['type']  = 1;
+        $WToken = $WeixinToken->where($map)->find();
+        if(is_array($WToken)){
+            $token = $WToken['token'];
+            $expire = $WToken['expire'];
+            $addTimestamp = $WToken['addtimestamp'];
+            $current = time();
+            if($addTimestamp + $expire - 30 > $current) {
+                return $token;//返回缓存的数据
+            }
+        }
+
+
+        //数据失效，重新获取
+        $access_token = $this->getToken();
+
+        $para = array(
+            "access_token" => $access_token,
+            "type" => "jsapi"
+        );
+
+        $url = C('WX_API_URL')."ticket/getticket";
+        $ret = $this->doCurlGetRequest($url, $para);
+        $retData = json_decode($ret, true);
+        if($retData['errcode'] == 0){
+            $token = $retData['ticket'];
+            $expire = $retData['expires_in'];
+            $current = time();
+            $data = array();
+            $data['appid'] = C('APPID');
+            $data['type'] = 1;
+            $data['token'] = $token;
+            $data['expire'] = $expire;
+            $data['addTimestamp'] = $current;
+
+            $WeixinToken->where($map)->delete();
+            $WeixinToken->add($data);
+
+            return $token;
+        }
+        else{
+            return false;
+        }
+
+    }
+
+    protected function getToken(){
+        $WeixinToken = M('WeixinToken');
+        $map = array();
+        $map['appid'] = C('APPID');
+        $map['type']  = 0;
+        $WToken = $WeixinToken->where($map)->find();
+        if(is_array($WToken)){
+            $token = $WToken['token'];
+            $expire = $WToken['expire'];
+            $addTimestamp = $WToken['addtimestamp'];
+            $current = time();
+            if($addTimestamp + $expire - 30 > $current) {
+                return $token;//返回缓存的数据
+            }
+        }
+
+        //数据失效，重新获取
+        $para = array(
+            "grant_type" => "client_credential",
+            "appid" => C('APPID'),
+            "secret" => C('APPSECRET')
+        );
+        $url = C('WX_API_URL')."token";
+        $ret = $this->doCurlGetRequest($url, $para);
+        $retData = json_decode($ret, true);
+        $token = $retData['access_token'];
+        $expire = $retData['expires_in'];
+        $current = time();
+
+        $data = array();
+        $data['appid'] = C('APPID');
+        $data['type'] = 0;
+        $data['token'] = $token;
+        $data['expire'] = $expire;
+        $data['addTimestamp'] = $current;
+
+        $WeixinToken->where($map)->delete();
+        $WeixinToken->add($data);
+
+        return $token;
+
+    }
+
+
 
     protected function checkSignature()
 	{

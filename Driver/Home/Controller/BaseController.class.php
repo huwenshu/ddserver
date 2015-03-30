@@ -1,6 +1,6 @@
 <?php
     
-define('XHPROF_ENABLE',1);
+define('XHPROF_ENABLE',0);
     
 /**
  * 后台基础控制器
@@ -99,6 +99,20 @@ class BaseController extends \Think\Controller {
         $this->sendmsg(100,"");
         exit;
     }
+
+    //获取随机字符串
+    protected function getRandChar($length){
+        $str = null;
+        $strPol = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789abcdefghijklmnopqrstuvwxyz";
+        $max = strlen($strPol)-1;
+
+        for($i=0;$i<$length;$i++){
+            $str.=$strPol[rand(0,$max)];//rand($min,$max)生成介于min和max两个数之间的一个随机整数
+        }
+
+        return $str;
+    }
+
 
     /**
      *  @desc 根据UID获得openid
