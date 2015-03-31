@@ -346,7 +346,7 @@ class PublicController extends BaseController {
 	}
 	public function parkingTimeTest($parkid, $mins){
 		$now = time();
-		$endtime = $this->_parkingEndTime($now, $now + $mins*60, $parkid);
+		$endtime = $this->_parkingEndTime($now, $now + $mins*60, $parkid,false);
 		echo $endtime;
 		echo "<br>";
 		echo date("Y-m-d H:i:s",$endtime);
@@ -418,6 +418,13 @@ class PublicController extends BaseController {
 		else{
 			return false;
 		}
+	}
+	
+	public  function  getOpenArea($city='sh'){
+		include_once(dirname(__FILE__) . '/../Conf/' . 'config_open_area.php');
+		
+		$result=array('area'=>$config_open_area[$city]);
+		$this->ajaxOk($result);
 	}
 	
 	/*

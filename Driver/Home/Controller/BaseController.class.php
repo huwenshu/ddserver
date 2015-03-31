@@ -256,7 +256,7 @@ class BaseController extends \Think\Controller {
     }
     
     //计算当前时间下，用户付费可以停到的时间
-	protected function _parkingEndTime($startTime, $endTime, $parkid){
+	protected function _parkingEndTime($startTime, $endTime, $parkid, $isdebug=false){
 		$myt = $startTime;
 		$rulestime = M('rules_time');
 		$rulesmoney = M('rules_money');
@@ -265,6 +265,10 @@ class BaseController extends \Think\Controller {
 			//找到开始停车那个时间点所适用规则
 			$con1 = "parkid=".$parkid." and startime<='".$timeStr."' and endtime>='".$timeStr."'";
 			$ruleArr = $rulestime->where($con1)->limit(1)->select();
+			if($isdebug){
+				print_r($ruleArr);
+				echo "\n<br>";
+			}
 			if(!$ruleArr || count($ruleArr) == 0){//没有合适的规则
 				break;
 			}
@@ -280,6 +284,9 @@ class BaseController extends \Think\Controller {
 					$stoptime+=24*60*60;
 				}
 				$mins_rule = ceil(($stoptime-$startTime)/60);
+				if($isdebug){
+					echo "ruleid:".$ruleid."mins:".$mins."mins_rule".$mins_rule."\n<br>";
+				}
 				if($mins_rule < $mins){//结算时间大于该段规则截止时间：则根据规则截止时间计算费用
 					$mins = $mins_rule;
 				}
@@ -290,7 +297,7 @@ class BaseController extends \Think\Controller {
 			$t=0;
 			for($i=0;$i < $arrLength;$i++){
 				if($moneyArr[$i]['mins']>=$mins){
-					if($stopatend){
+					if($stopatend && $mins_rule < $moneyArr[$i]['mins']){
 						//该段规则有截止时间，且以规则截止时间来计算
 						$t = $mins_rule*60;
 					}else{

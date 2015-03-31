@@ -201,7 +201,7 @@ class IndexController extends BaseController {
 		}
 
 		$wxPayHelper->setParameter("bank_type", "WX");
-		$wxPayHelper->setParameter("body", "预付停车费:".$fee);
+		$wxPayHelper->setParameter("body", "预付停车费：".$fee);
 		$wxPayHelper->setParameter("partner", "1220503701");
 		$wxPayHelper->setParameter("out_trade_no", $trade_no);
 		$wxPayHelper->setParameter("total_fee", $fee*100);
