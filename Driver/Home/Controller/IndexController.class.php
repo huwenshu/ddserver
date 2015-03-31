@@ -110,7 +110,12 @@ class IndexController extends BaseController {
 //			$tmp['llng'] = $this->lng;
 			array_push($result, $tmp);
 		}
-		$this->ajaxOk($result);
+		if(count($result) == 0){
+			include_once(dirname(__FILE__) . '/../Conf/' . 'config_open_area.php');
+			$this->ajaxOk($result,array('area'=>$config_open_area['sh']));
+		}else{
+			$this->ajaxOk($result);
+		}
 
 	}
 

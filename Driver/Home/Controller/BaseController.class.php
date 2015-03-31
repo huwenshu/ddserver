@@ -75,28 +75,31 @@ class BaseController extends \Think\Controller {
         return $data;
     }
 
-    protected function sendmsg($code, $data){
+    protected function sendmsg($code, $data, $ext = null){
         $this->_end_prof();
         
         $result = array(
                     'code'=>$code,
                     'data'=>$data
                 );
-
-        $this->ajaxReturn($result,'jsonp');
+        if($ext){
+        	$this->ajaxReturn(array_merge($result,$ext),'jsonp');
+        }else{
+					$this->ajaxReturn($result,'jsonp');
+				}
     }
 
     
-    protected function ajaxOk($data){
-        $this->sendmsg(0,$data);
+    protected function ajaxOk($data,$ext=null){
+        $this->sendmsg(0,$data,$ext);
         exit;
     }
-    protected function ajaxMsg($msg){
-        $this->sendmsg(10,$msg);
+    protected function ajaxMsg($msg,$ext=null){
+        $this->sendmsg(10,$msg,$ext);
         exit;
     }
-    protected function ajaxFail(){
-        $this->sendmsg(100,"");
+    protected function ajaxFail($ext=null){
+        $this->sendmsg(100,"",$ext);
         exit;
     }
 
