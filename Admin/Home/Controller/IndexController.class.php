@@ -217,7 +217,7 @@ class IndexController extends BaseController {
             //上传图片的配置
             $config = array(
                 'maxSize'    =>    3145728,
-                'rootPath'   =>   './Public/Uploads/images/',
+                'rootPath'   =>   C('UPLOAD_FTP_PATH'),
                 'savePath'   =>    '',
                 'saveName'   =>    'gift'.time(),
                 'exts'       =>    array('jpg', 'gif', 'png', 'jpeg'),

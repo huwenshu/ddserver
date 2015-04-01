@@ -38,7 +38,7 @@ class IndexController extends BaseController {
 		$this->lat = $lat;
 		$this->lng = $lng;
 		$Park = M('ParkInfo');
-		$gap = 0.01;
+		$gap = 0.02;
 		$con = array();
 		$con['lat'] = array(array('gt',$lat - $gap),array('lt',$lat + $gap));
 		$con['lng'] = array(array('gt',$lng - $gap),array('lt',$lng + $gap));

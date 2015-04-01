@@ -73,9 +73,12 @@ return array(
         'host'     => '115.29.160.95', //服务器
         'port'     => 21, //端口
         'timeout'  => 90, //超时时间
-        'username' => 'webupload', //用户名
-        'password' => 'dudu@123'//密码
+        'username' => 'www', //用户名
+        'password' => '2aed6eb9d'//密码
     ),
+
+    //FTP上传地址
+    'UPLOAD_FTP_PATH' => './defalut/Public/Uploads/images/',
 
     //CVS的Log记录地址
     'CSV_LOG_PATH' => './Public/Logs',

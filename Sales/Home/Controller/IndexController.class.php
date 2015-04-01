@@ -31,6 +31,7 @@ class IndexController extends  BaseController {
 			$parkInfo['lat'] = I('lat');
 			$parkInfo['lng'] = I('lng');
  			$parkInfo['spacesum'] = I('post.spacesum');
+            $parkInfo['prepay'] = I('post.prepay');
  			$styles = I('post.parkstyle');
  			$parkstyle = "|";
  			foreach ($styles as $key => $value) {
