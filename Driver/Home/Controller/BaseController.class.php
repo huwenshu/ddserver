@@ -205,15 +205,24 @@ class BaseController extends \Think\Controller {
         return $this->_parkingFee($startTime, time(), $parkid);
     }
     //实际计算方法，增加$endTime参数便于测试
-    protected function _parkingFee($startTime, $endTime, $parkid){
+    protected function _parkingFee($startTime, $endTime, $parkid, $isdebug=false){
+    	$runcount = 0;
+    	
         $fee = 0;
         $rulestime = M('rules_time');
         $rulesmoney = M('rules_money');
-        while($startTime < $endTime){
+        while($startTime < $endTime && $runcount < 100){
             $timeStr = date("H:i:s",$startTime);
             //找到开始停车那个时间点所适用规则
             $con1 = "parkid=".$parkid." and startime<='".$timeStr."' and endtime>='".$timeStr."'";
+            if($isdebug){
+							echo $con1."\n<br>";
+						}
             $ruleArr = $rulestime->where($con1)->limit(1)->select();
+            if($isdebug){
+							print_r($ruleArr);
+							echo "\n<br>";
+						}
             if(!$ruleArr || count($ruleArr) == 0){//没有合适的规则
                 break;
             }
@@ -229,6 +238,9 @@ class BaseController extends \Think\Controller {
                     $stoptime+=24*60*60;
                 }
                 $mins_rule = ceil(($stoptime-$startTime)/60);
+                if($isdebug){
+									echo "ruleid:".$ruleid."mins:".$mins."mins_rule".$mins_rule."\n<br>";
+								}
                 if($mins_rule < $mins){//结算时间大于该段规则截止时间：则根据规则截止时间计算费用
                     $mins = $mins_rule;
                 }
@@ -240,19 +252,34 @@ class BaseController extends \Think\Controller {
             for($i=0;$i < $arrLength;$i++){
                 if($moneyArr[$i]['mins']>=$mins){
                     $money=$moneyArr[$i]['money'];
+                    if($isdebug){
+                    	echo $i.":";
+                    	print_r($moneyArr[$i]);
+											echo "\n<br>";
+										}
                     break;
                 }
             }
             if($i >= $arrLength){//超过规则所支持的时长，需要用最长所支持的时间
                 $money = $moneyArr[$arrLength-1]['money'];
                 $mins = $moneyArr[$arrLength-1]['mins'];
+                if($isdebug){
+                	$i = $arrLength-1;
+                	echo $i.":";
+                	print_r($moneyArr[$i]);
+									echo "\n<br>";
+								}
             }
             $fee += $money;
-            $startTime += $mins*60;
+            $startTime += $mins*60+1;
+            if($isdebug){
+							echo "money:".$money." fee:".$fee." startTime".$startTime."\n<br>\n<br>";
+						}
             /*if($mins <= 0){
                 dump($moneyArr);
                 break;
             }*/
+            $runcount++;
         }
 
         return $fee;
@@ -260,13 +287,18 @@ class BaseController extends \Think\Controller {
     
     //计算当前时间下，用户付费可以停到的时间
 	protected function _parkingEndTime($startTime, $endTime, $parkid, $isdebug=false){
+		$runcount = 0;
+		
 		$myt = $startTime;
 		$rulestime = M('rules_time');
 		$rulesmoney = M('rules_money');
-		while($startTime < $endTime){
+		while($startTime < $endTime && $runcount < 100){
 			$timeStr = date("H:i:s",$startTime);
 			//找到开始停车那个时间点所适用规则
 			$con1 = "parkid=".$parkid." and startime<='".$timeStr."' and endtime>='".$timeStr."'";
+			if($isdebug){
+				echo $con1."\n<br>";
+			}
 			$ruleArr = $rulestime->where($con1)->limit(1)->select();
 			if($isdebug){
 				print_r($ruleArr);
@@ -314,11 +346,12 @@ class BaseController extends \Think\Controller {
 				$mins = $moneyArr[$arrLength-1]['mins'];
 			}
 			$myt += $t;
-			$startTime += $mins*60;
+			$startTime += $mins*60+1;
 			/*if($mins <= 0){
                 dump($moneyArr);
                 break;
             }*/
+      $runcount++;
 		}
 
 		return $myt;

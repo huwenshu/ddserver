@@ -354,9 +354,11 @@ class PublicController extends BaseController {
 	//test
 	public function parkingFeeTest($parkid, $starttime, $endtime){
 		
-		echo urldecode($starttime).','.urldecode($endtime).'<br>';
+		$start = strtotime(urldecode($starttime));
+		$end = strtotime(urldecode($endtime));
+		echo urldecode($starttime).'('.$start.'),'.urldecode($endtime).'('.$end.')<br>';
 		
-		$fee = $this->_parkingFee(strtotime(urldecode($starttime)), strtotime(urldecode($endtime)), $parkid);
+		$fee = $this->_parkingFee($start, $end, $parkid,true);
 
 		echo $fee;
 	}
