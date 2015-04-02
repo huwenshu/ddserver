@@ -108,7 +108,7 @@
                             <td>
                                 <select id="giftType" name="type">
                                     <option value="0"  <?php if ($giftInfo[type]==0)  echo 'selected="selected"';?>>随机红包</option>
-                                    <option value="1"  <?php if ($giftInfo[type]==1)  echo 'selected="selected"';?>>一元红包</option>
+                                    <option value="-1"  <?php if ($giftInfo[type]==-1)  echo 'selected="selected"';?>>一元红包</option>
                                 </select>
                             </td>
                         </tr>
@@ -167,7 +167,7 @@
                 $('#promContent').hide();
             }
             else{
-                var url = "http://duduche.me/html/userhtml/index.html?hcode="+code+"&type=10&$fromid=";
+                var url = "http://static.duduche.me/redirect/user/indexhtml.php?hcode="+code+"&type=10&fromid=";
                 $('#promURL').val(url);
             }
 

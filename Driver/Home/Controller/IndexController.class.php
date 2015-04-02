@@ -312,12 +312,12 @@ class IndexController extends BaseController {
 	public  function  listMyCoupons($all=0){
 		$result = array();
 		$coupons = array();
-		$couponArr = $this->_listCoupon($this->uid);
+		$couponArr = $this->_listCoupon($this->uid,$all);
 		foreach($couponArr as $key => $value){
-			$coupons[$value['id']] = array('t'=>$value['type'],'m'=>$value['money'],'e'=>$value['endtime']);
+            $temp = array('id'=>$value['id'],'t'=>$value['type'],'m'=>$value['money'],'e'=>$value['endtime']);
+			array_push($coupons,$temp);
 		}
-		$result['coupon'] = $coupons;
-
+        $result['coupon'] = $coupons;
 		$this->ajaxOk($result);
 	}
 

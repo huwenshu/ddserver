@@ -499,11 +499,27 @@ class BaseController extends \Think\Controller {
 	//列出可用折扣劵
 	//返回值：
 	//array			折扣劵列表（二维）
-	protected function _listCoupon($uid){
+	protected function _listCoupon($uid,$all){
 		$nowStr = date("Y-m-d H:i:s");
 		$coupon = M('driver_coupon');
-		$con1 = "uid=".$uid." and starttime<='".$nowStr."' and endtime>='".$nowStr."' and status=0";
-		$couponArr = $coupon->where($con1)->order('type asc,money desc')->select();
+        $couponArr = array();
+        //$oneMonth = date("Y-m-d H:i:s", strtotime("-1 months", time()));
+        if($all){
+            $con1 = "uid=".$uid." and starttime<='".$nowStr."' and endtime>='".$nowStr."' and status=0";
+            $couponArr1 = $coupon->where($con1)->order('type asc,money desc,endtime asc')->select();
+
+            $con2 = "uid=".$uid." and starttime<='".$nowStr."' and endtime<'".$nowStr."' and status=0";
+            $couponArr2 = $coupon->where($con2)->order('endtime desc')->limit(10)->select();
+
+            $couponArr = array_merge($couponArr1, $couponArr2);
+
+
+        }
+        else{
+            $con1 = "uid=".$uid." and starttime<='".$nowStr."' and endtime>='".$nowStr."' and status=0";
+            $couponArr = $coupon->where($con1)->order('type asc,money desc,endtime asc')->select();
+        }
+
 		return $couponArr;
 	}
 	
@@ -534,7 +550,7 @@ class BaseController extends \Think\Controller {
 			return -3;
 		}
 		$coupon->where(array('id'=>$id))->setInc('status',1);//计数器＋1
-		if($couponArr[0]['type'] == -1){//1元折扣劵
+		if($couponArr[0]['type'] ==  -1){//1元折扣劵
 			return $bill>1?$bill-1:$bill-0.01;
 		}
 		return $couponArr[0]['money']<$bill?$couponArr[0]['money']:$bill-0.01;
