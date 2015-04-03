@@ -211,6 +211,17 @@ class WeixinController extends BaseController {
 
 	}
 
+    //处理领取红包，获取openid
+    public  function giftCallBack($code,$type=10,$hcode='',$fromid=0){
+        //访问微信接口，获取openid
+        $URL = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid='.C('APPID').'&secret='.C('APPSECRET').'&code='.$code.'&grant_type=authorization_code';
+        $data = json_decode($this->doCurlGetRequest($URL),true);
+        $openid = $data['openid'];
+        $url = 'http://static.duduche.me/redirect/user/indexhtml.php?type='.$type.'&hcode='.$hcode.'&fromid='.$fromid.'&openid='.$openid;
+        header("Location:".$url);
+
+    }
+
     //处理公共号跳转，获取openid
     public  function menuCallBack($code,$state = 'near'){
         //访问微信接口，获取openid

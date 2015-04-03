@@ -511,8 +511,16 @@ class BaseController extends \Think\Controller {
             $con2 = "uid=".$uid." and starttime<='".$nowStr."' and endtime<'".$nowStr."' and status=0";
             $couponArr2 = $coupon->where($con2)->order('endtime desc')->limit(10)->select();
 
-            $couponArr = array_merge($couponArr1, $couponArr2);
-
+            //array_merge的数组一定不能为空
+            if (is_array($couponArr1) && is_array($couponArr2)) {
+                $couponArr = array_merge($couponArr1, $couponArr2);
+            }
+            elseif(is_array($couponArr1)){
+                $couponArr = $couponArr1;
+            }
+            else{
+                $couponArr = $couponArr2;
+            }
 
         }
         else{
