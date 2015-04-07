@@ -140,8 +140,8 @@
                     <legend>红包推广:</legend>
                     <div>
                         <span id="giftCode" style="display:none;">{$giftInfo[code]}</span>
-                        <h5>请先在最后加上推广员ID，再生产二维码</h5>
-                        <textarea id="promURL" rows="4"> </textarea>
+                        <label for="promURL">推广员ID：(请先填写推广员ID，再生成二维码)</label>
+                        <input type="text" id="promURL"/>
                         <div style="text-align: center">
                             <!--<button id="promCopyBtn">复制到剪切板</button>-->
                             <button id="promQRBtn">生成推广二维码</button>
@@ -162,15 +162,10 @@
     <script type="text/javascript">
         $(function() {
 
-            var code = $("#giftCode").html();
-            if(code == ""){
+            var hcode = $("#giftCode").html();
+            if(hcode == ""){
                 $('#promContent').hide();
             }
-            else{
-                var url = "http://static.duduche.me/redirect/user/indexhtml.php?hcode="+code+"&type=10&fromid=";
-                $('#promURL').val(url);
-            }
-
 
             $('.datetimepicker').datetimepicker({
                 language: 'zh-CN',
@@ -189,9 +184,17 @@
 //            });
 
             $('#promQRBtn').click(function(){
-                var content = $('#promURL').val();
+
+                var fromid = $('#promURL').val() || '0';
+                var lineLink = 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd417c2e70f817f89&redirect_uri={myurl}&response_type=code&scope=snsapi_base#wechat_redirect';
+                var myurl = 'http://driver.duduche.me/driver.php/home/weixin/giftCallBack/type/10/hcode/{hcode}/fromid/{fromid}/';
+                myurl = myurl.replace('{hcode}', hcode).replace('{fromid}', fromid);
+                myurl = encodeURIComponent(myurl);
+                lineLink = lineLink.replace('{myurl}', myurl);
+
+
                 $('#promQR').html("");
-                $('#promQR').qrcode(content);
+                $('#promQR').qrcode(lineLink);
             });
         });
     </script>

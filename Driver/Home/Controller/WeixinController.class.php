@@ -217,6 +217,31 @@ class WeixinController extends BaseController {
         $URL = 'https://api.weixin.qq.com/sns/oauth2/access_token?appid='.C('APPID').'&secret='.C('APPSECRET').'&code='.$code.'&grant_type=authorization_code';
         $data = json_decode($this->doCurlGetRequest($URL),true);
         $openid = $data['openid'];
+
+        //加入dudu_openid_valid表，有限的openid，防止作弊！
+        $OpenidValid = M('OpenidValid');
+        $map = array();
+        $map['openid'] = $openid;
+        $result = $OpenidValid->where($map)->find();
+        if(empty($result)){
+            $data = array();
+            $data['openid'] = $openid;
+            $data['code'] = $hcode;
+            $data['fromid'] = $fromid;
+            $data['valid'] = 0;
+            $data['createtime'] = date("Y-m-d H:i:s",time());
+            $OpenidValid->add($data);
+        }
+        else{
+            if($result['valid'] == 0){
+                $data = array();
+                $data['id'] = $result['id'];
+                $data['code'] = $hcode;
+                $data['fromid'] = $fromid;
+                $OpenidValid->save($data);
+            }
+        }
+
         $url = 'http://static.duduche.me/redirect/user/indexhtml.php?type='.$type.'&hcode='.$hcode.'&fromid='.$fromid.'&openid='.$openid;
         header("Location:".$url);
 

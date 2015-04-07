@@ -279,6 +279,13 @@ class IndexController extends BaseController {
 	 * @desc 使用红包来获得折扣劵
 	*/
 	public  function  openGiftPack($code,$fromid=0){
+        //判断来源是否有效
+        $valid = $this->_validOpenid($this->uid);
+        if(!$valid){
+            $this->ajaxMsg("请使用微信客户端打开红包！");
+        }
+
+
 		$coupon = $this->_useGiftPack($this->uid, $code);
 		if(is_array($coupon)){
 			//log it

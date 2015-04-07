@@ -61,9 +61,9 @@ return array(
     'WX_API_URL'    =>  "https://api.weixin.qq.com/cgi-bin/",
 
     //自己公司微信参数
-    'USERNAME_WEIXIN' => "gh_1b878e784651",
-    'APPID' =>  'wx7402a94935807c76',
-    'APPSECRET' =>  '59023166c76dbbb5d82e81318d514893' ,
+    'USERNAME_WEIXIN' => "gh_6f67ef5e0539",
+    'APPID' =>  'wxd417c2e70f817f89',
+    'APPSECRET' =>  '14f025315fecb3bd1bdfc1624338605c' ,
     'WEIXIN_TOKEN'  => 'DUDUPARK2015',
 
     //微信支付参数，采用别的公司的配置
@@ -91,19 +91,19 @@ return array(
                     array(
                         'type' => 'view',
                         'name' => '附近',
-                        'url' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx7402a94935807c76&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=near#wechat_redirect'
+                        'url' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd417c2e70f817f89&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=near#wechat_redirect'
                     ),
                     array(
                         'type' => 'view',
                         'name' => '搜索',
-                        'url' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx7402a94935807c76&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=find#wechat_redirect'
+                        'url' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd417c2e70f817f89&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=find#wechat_redirect'
                     ),
                 )
             ),
             array(
                 'type' => 'view',
                 'name' => '缴费',
-                'url' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx7402a94935807c76&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=fee#wechat_redirect'
+                'url' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd417c2e70f817f89&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=fee#wechat_redirect'
             ),
             array(
                 'name' => '我',
@@ -111,17 +111,17 @@ return array(
                     array(
                         'type' => 'view',
                         'name' => '我的订单',
-                        'url' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx7402a94935807c76&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=order#wechat_redirect'
+                        'url' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd417c2e70f817f89&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=order#wechat_redirect'
                     ),
                     array(
                         'type' => 'view',
                         'name' => '我的卡券',
-                        'url' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx7402a94935807c76&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=coupon#wechat_redirect'
+                        'url' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd417c2e70f817f89&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=coupon#wechat_redirect'
                     ),
                     array(
                         'type' => 'view',
                         'name' => '我的信息',
-                        'url' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wx7402a94935807c76&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=userinfo#wechat_redirect'
+                        'url' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd417c2e70f817f89&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=userinfo#wechat_redirect'
                     ),
                 )
             ),

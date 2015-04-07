@@ -74,6 +74,7 @@ return array(
         'ZYSF' => '中央收费',
         'ZDZJCR' => '自动闸机进入',
         'USERFX' => '人工放行',
+        'DWJG' => '单位机构',
     ),
 
 );

@@ -601,5 +601,34 @@ class BaseController extends \Think\Controller {
 		$coupon = M('driver_coupon');
 		$coupon->where(array('id'=>$id))->setInc('status',1);//计数器＋1
 	}
+
+
+    //验证openid是否有效
+    //返回值：
+    //0		    无效
+    //1			有效
+    protected function _validOpenid($uid){
+
+        $DriverInfo = M('DriverInfo');
+        $map = array();
+        $map['id'] = $uid;
+        $openid = $DriverInfo->where($map)->getField('openid');
+
+        $OpenidValid = M('OpenidValid');
+        $map = array();
+        $map['openid'] = $openid;
+        $result = $OpenidValid->where($map)->find();
+        if(empty($result)){
+            return 0;
+        }
+        else{
+            $data = array();
+            $data['id'] = $result['id'];
+            $data['valid'] = 1;
+            $OpenidValid->save($data);
+            return 1;
+        }
+
+    }
 	
 }
