@@ -42,7 +42,7 @@ class ParkInfoModel extends Model {
         $VisitRecord = D('VisitRecord');
         $con = array();
         $con['parkid'] = $parkid;
-        $visitData = $VisitRecord->where($con)->select();
+        $visitData = $VisitRecord->where($con)->order('updatetime desc')->select();
         $Park['Visit'] = $visitData;
 
         $ParkAdmin = D('ParkAdmin');

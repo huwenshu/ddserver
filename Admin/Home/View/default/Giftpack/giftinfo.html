@@ -142,6 +142,8 @@
                         <span id="giftCode" style="display:none;">{$giftInfo[code]}</span>
                         <label for="promURL">推广员ID：(请先填写推广员ID，再生成二维码)</label>
                         <input type="text" id="promURL"/>
+                        <label for="lastURL">推广链接</label>
+                        <input type="text" id="lastURL"/>
                         <div style="text-align: center">
                             <!--<button id="promCopyBtn">复制到剪切板</button>-->
                             <button id="promQRBtn">生成推广二维码</button>
@@ -193,8 +195,23 @@
                 lineLink = lineLink.replace('{myurl}', myurl);
 
 
-                $('#promQR').html("");
-                $('#promQR').qrcode(lineLink);
+                $.ajax({
+                    url:"{:U('tinyurl')}",
+                    type:'post',
+                    async : false,
+                    data:{url:lineLink},
+                    error:function(data){
+                        alert('error');
+                    },
+                    success:function(data){
+                        var d = eval('('+data+')');
+                        $('#lastURL').val(d.tinyurl);
+                        $('#promQR').html("");
+                        $('#promQR').qrcode(d.tinyurl);
+                    }
+                });
+
+
             });
         });
     </script>

@@ -21,6 +21,8 @@ return array(
     
     //应用类库不用命名空间
     'APP_USE_NAMESPACE'    =>    false,
+
+
     
     /* 调试配置 */
     'SHOW_PAGE_TRACE' => false,

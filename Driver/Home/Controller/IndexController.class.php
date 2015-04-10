@@ -10,7 +10,7 @@ class IndexController extends BaseController {
 
 	public function _initialize(){
         parent::_initialize();
-        
+
 		$uid = I('get.uid');
 		$uuid = I('get.uuid');
 		$this->uid = $uid;
@@ -122,7 +122,38 @@ class IndexController extends BaseController {
    //生成预付订单借口
 	public function genOrder($pid, $cid = 0){
 
-		$Park = M('ParkInfo');
+        include_once(dirname(__FILE__) . '/../Common/Weixin/WxPay/' . 'WxPayPubHelper.php');
+        $jsApi = new JsApi_pub();
+
+
+        //=========步骤1：网页授权获取用户openid============
+//        //通过code获得openid
+//        $callBackUrl = U('genOrder/pid/'.$pid.'/cid/'.$cid.'/');
+//        if (!isset($_GET['code']))
+//        {
+//            //触发微信返回code码
+//            $url = $jsApi->createOauthUrlForCode($callBackUrl);
+//            Header("Location: $url");
+//        }else
+//        {
+//            //获取code码，以获取openid
+//            $code = $_GET['code'];
+//            $jsApi->setCode($code);
+//            $openid = $jsApi->getOpenId();
+//        }
+//        $openid="oMjtxuH5YZ_6TSkGGLUWvW64aiHQ";
+
+        //根据uid到用户表里面取得openid
+        $DriverInfo = M('DriverInfo');
+        $map = array();
+        $map['id'] = $this->uid;
+        $openid = $DriverInfo->where($map)->getField('openid');
+        if(empty($openid)){
+            $this->ajaxMsg("请在微信中支付！");
+        }
+
+        //生成订单，处理业务逻辑
+        $Park = M('ParkInfo');
 		$map = array('id' => $pid);
 		$parkinfo = $Park->where($map)->find();
 		if(empty($parkinfo)){
@@ -181,22 +212,7 @@ class IndexController extends BaseController {
 			$this->ajaxMsg("创建支付消息失败");
 		}
 
-
-		$commonUtil = new \Home\Common\Weixin\Pay\CommonUtil();
-		$wxPayHelper = new \Home\Common\Weixin\Pay\WxPayHelper();
-
 		$trade_no = date("YmdHis",$currentTime).$prid;
-
-//		//HardCode 用于测试
-//		$openid = $this->getOpenID($this->uid);
-//		$opens = C('OPENID');
-//		if(in_array($openid, $opens)){
-//			$fee = 0.01;
-//		}
-//		else{
-//			$fee = $temp['money'];
-//		}
-
 		//HardCode 测试人员生成订单0.01元
 		if($parkinfo['status'] == 2){
 			$fee = 0.01;
@@ -205,20 +221,33 @@ class IndexController extends BaseController {
 			$fee = $remianFee_r;
 		}
 
-		$wxPayHelper->setParameter("bank_type", "WX");
-		$wxPayHelper->setParameter("body", "预付停车费：".$fee);
-		$wxPayHelper->setParameter("partner", "1220503701");
-		$wxPayHelper->setParameter("out_trade_no", $trade_no);
-		$wxPayHelper->setParameter("total_fee", $fee*100);
-		$wxPayHelper->setParameter("fee_type", "1");
-		$wxPayHelper->setParameter("notify_url", "http://duduche.me/driver.php/home/public/genOrderDone/");
-		$wxPayHelper->setParameter("spbill_create_ip", get_client_ip());
-		$wxPayHelper->setParameter("input_charset", "UTF-8");
+        //=========步骤2：使用统一支付接口，获取prepay_id============
+        //使用统一支付接口
+        $unifiedOrder = new UnifiedOrder_pub();
+
+        //设置统一支付接口参数
+        //设置必填参数
+        //appid已填,商户无需重复填写
+        //mch_id已填,商户无需重复填写
+        //noncestr已填,商户无需重复填写
+        //spbill_create_ip已填,商户无需重复填写
+        //sign已填,商户无需重复填写
+        $unifiedOrder->setParameter("openid","$openid");//商品描述
+        $unifiedOrder->setParameter("body","预付停车费：".$fee);//商品描述
+        $unifiedOrder->setParameter("out_trade_no",$trade_no);//商户订单号
+        $unifiedOrder->setParameter("total_fee",$fee*100);//总金额
+        $unifiedOrder->setParameter("notify_url", "http://driver.duduche.me/driver.php/home/public/genOrderDone/");//通知地址
+        $unifiedOrder->setParameter("trade_type","JSAPI");//交易类型
+        $prepay_id = $unifiedOrder->getPrepayId();
+        //=========步骤3：使用jsapi调起支付============
+        $jsApi->setPrepayId($prepay_id);
+
+        $jsApiParameters = $jsApi->getParameters();
+
 
 		$result = array();
 		$result['oid'] = $oid;
-		$result['paydata'] = $wxPayHelper->create_biz_package();
-		//$this->ajaxReturn($result,'jsonp');
+		$result['paydata'] = json_decode($jsApiParameters);
 		$this->ajaxOk($result);
 
 	}
@@ -397,6 +426,38 @@ class IndexController extends BaseController {
 	*/
 
 	public  function checkOut($oid, $cid = 0){
+
+        include_once(dirname(__FILE__) . '/../Common/Weixin/WxPay/' . 'WxPayPubHelper.php');
+        $jsApi = new JsApi_pub();
+
+
+        //=========步骤1：网页授权获取用户openid============
+//        //通过code获得openid
+//        $callBackUrl = U('genOrder/pid/'.$pid.'/cid/'.$cid.'/');
+//        if (!isset($_GET['code']))
+//        {
+//            //触发微信返回code码
+//            $url = $jsApi->createOauthUrlForCode($callBackUrl);
+//            Header("Location: $url");
+//        }else
+//        {
+//            //获取code码，以获取openid
+//            $code = $_GET['code'];
+//            $jsApi->setCode($code);
+//            $openid = $jsApi->getOpenId();
+//        }
+//        $openid="oMjtxuH5YZ_6TSkGGLUWvW64aiHQ";
+
+        //根据uid到用户表里面取得openid
+        $DriverInfo = M('DriverInfo');
+        $map = array();
+        $map['id'] = $this->uid;
+        $openid = $DriverInfo->where($map)->getField('openid');
+        if(empty($openid)){
+            $this->ajaxMsg("请在微信中支付！");
+        }
+
+        //业务逻辑
 		$Payment = M('PaymentRecord');
 		$map = array('oid' => $oid, 'state'=>1);
 		$payData = $Payment->where($map)->select();
@@ -448,20 +509,7 @@ class IndexController extends BaseController {
 			$this->ajaxMsg("创建支付消息失败");
 		}
 
-		$commonUtil = new \Home\Common\Weixin\Pay\CommonUtil();
-		$wxPayHelper = new \Home\Common\Weixin\Pay\WxPayHelper();
-
 		$trade_no = date("YmdHis",$currentTime).$prid;
-
-		//HardCode 用于测试
-//		$openid = $this->getOpenID($this->uid);
-//		$opens = C('OPENID');
-//		if(in_array($openid, $opens)){
-//			$fee = 0.01;
-//		}
-//		else{
-//			$fee = $remainFee;
-//		}
 
 		//HardCode 测试人员结算订单0.01元
 		$parkid = $orderData['pid'];
@@ -476,19 +524,32 @@ class IndexController extends BaseController {
 			$fee = $remianFee_r;
 		}
 
-		$wxPayHelper->setParameter("bank_type", "WX");
-		$wxPayHelper->setParameter("body", "结算停车费(还需付款)：".$fee);
-		$wxPayHelper->setParameter("partner", "1220503701");
-		$wxPayHelper->setParameter("out_trade_no", $trade_no);
-		$wxPayHelper->setParameter("total_fee", $fee*100);
-		$wxPayHelper->setParameter("fee_type", "1");
-		$wxPayHelper->setParameter("notify_url", "http://duduche.me/driver.php/home/public/checkOutDone/");
-		$wxPayHelper->setParameter("spbill_create_ip", get_client_ip());
-		$wxPayHelper->setParameter("input_charset", "UTF-8");
+        //=========步骤2：使用统一支付接口，获取prepay_id============
+        //使用统一支付接口
+        $unifiedOrder = new UnifiedOrder_pub();
 
-		$result = $wxPayHelper->create_biz_package();
+        //设置统一支付接口参数
+        //设置必填参数
+        //appid已填,商户无需重复填写
+        //mch_id已填,商户无需重复填写
+        //noncestr已填,商户无需重复填写
+        //spbill_create_ip已填,商户无需重复填写
+        //sign已填,商户无需重复填写
+        $unifiedOrder->setParameter("openid","$openid");//商品描述
+        $unifiedOrder->setParameter("body","结算停车费(还需付款)：".$fee);//商品描述
+        $unifiedOrder->setParameter("out_trade_no",$trade_no);//商户订单号
+        $unifiedOrder->setParameter("total_fee",$fee*100);//总金额
+        $unifiedOrder->setParameter("notify_url","http://driver.duduche.me/driver.php/home/public/checkOutDone/");//通知地址
+        $unifiedOrder->setParameter("trade_type","JSAPI");//交易类型
+        $prepay_id = $unifiedOrder->getPrepayId();
+        //=========步骤3：使用jsapi调起支付============
+        $jsApi->setPrepayId($prepay_id);
 
-		$this->ajaxOk($result);
+        $jsApiParameters = $jsApi->getParameters();
+
+        $result = json_decode($jsApiParameters);
+        $this->ajaxOk($result);
+
 	}
 
 	/*

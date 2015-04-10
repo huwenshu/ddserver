@@ -1,6 +1,9 @@
 <extend name="Public/base" xmlns="http://www.w3.org/1999/html"/>
 
 <block name="style">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/datetimepicker/css/bootstrap.css" media="all">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/datetimepicker/css/datetimepicker.css" media="all">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/datetimepicker/css/dropdown.css" media="all">
     <style>
         body{padding: 0}
         .myborder{
@@ -216,12 +219,21 @@
                                         echo "<form action=".U('savevisit')." method=post>";
                                         echo "<input type='hidden'  name='parkid' value=$park_info[id] />";
                                         echo "<input type='hidden'  name='id' value=$value[id] />";
-                                        echo "拜访时间：<input style='width: 50%' type='text'  name='visitime' value='".$value['visitime']."'/><br>";
-                                        echo " 合作意愿：<select style='width: 50%'  name='intention'><option value='0'".intention(0,$value["intention"]).">明确拒绝</option><nobr>";
+                                        echo "拜访时间：<input class='visitTime' style='width: 50%' type='text'  name='visitime' value='".$value['visitime']."'/><br>";
+                                        echo " 合作意愿：<select style='width: 50%'  name='intention'><option value='0'".intention(0,$value["intention"]).">明确拒绝</option>";
                                         echo "<option value='1'".intention(1,$value["intention"]).">很弱</option>";
                                         echo "<option value='2'".intention(2,$value["intention"]).">一般</option>";
                                         echo "<option value='3'".intention(3,$value["intention"]).">强</option>";
                                         echo "</select> <br>";
+
+                                        echo " 空车位状态：<select style='width: 50%'  name='emptyspace'>";
+                                        echo "<option value='-1'".intention(-1,$value["emptyspace"]).">请选择空车位状态</option>";
+                                        echo "<option value='0'".intention(0,$value["emptyspace"]).">满</option>";
+                                        echo "<option value='1'".intention(1,$value["emptyspace"]).">1~5个</option>";
+                                        echo "<option value='2'".intention(2,$value["emptyspace"]).">5~10个</option>";
+                                        echo "<option value='3'".intention(3,$value["emptyspace"]).">大于10个</option>";
+                                        echo "</select> <br>";
+
                                         echo "备注：<br><textarea   name='note' value='' />".$value['note']."</textarea>";
                                         echo "<button style='float: left;margin: 10px;' type='button' class='saveVisit mui-btn mui-btn-danger'>保存</button>";
                                         echo " </form>";
@@ -371,6 +383,8 @@
 <block name="script">
     <!--<script src="http://webapi.amap.com/maps?v=1.3&key=5b768e7a9bc53cf2286ba6122e599bb4" type="text/javascript"></script>-->
     <script type="text/javascript" src="__STATIC__/iscroll.js"></script>
+    <script type="text/javascript" src="__STATIC__/datetimepicker/js/bootstrap-datetimepicker.js"></script>
+    <script type="text/javascript" src="__STATIC__/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
     <script>
     (function($){
             $.fn.Maplocation = (function(){
@@ -662,8 +676,9 @@
         );
         $('#addVisit').click(function(){
                     //var tmp = "<li class='myborder'>拜访时间：<input type='text'  name='visitime[]' /> 合作意愿：<select  name='intention[]'><option value='0'>明确拒绝</option><option value='1'>很弱</option><option value='2'>一般</option><option value='3'>强</option></select> 备注：<input type='text'  name='note[]' value='' /> <button type='button' class='removeVisit'>删除</button></li>";
-                    var tmp = '<li class="myborder"> <form action="{:U('savevisit')}" method=post><input type="hidden"  name="parkid" value="{$park_info[id]}" /> <input type="hidden"  name="id" value="" />拜访时间：<input style="width: 50%" type="text" name="visitime" value=""><br> ' +
+                    var tmp = '<li class="myborder"> <form action="{:U('savevisit')}" method=post><input type="hidden"  name="parkid" value="{$park_info[id]}" /> <input type="hidden"  name="id" value="" />拜访时间：<input class="visitTime" style="width: 50%" type="text" name="visitime" value=""><br> ' +
                     '合作意愿：<select style="width: 50%" name="intention"><option value="0" selected="selected">明确拒绝</option><option value="1">很弱</option><option value="2">一般</option><option value="3">强</option></select> <br>' +
+                    '空车位状态：<select style="width: 50%" name="emptyspace"><option value="-1" selected="selected">请选择空车位状态</option><option value="0">满</option><option value="1">1~5个</option><option value="2">5~10个</option><option value="3">大于10个</option></select> <br>' +
                     '备注：<br><textarea name="note" value=""></textarea>' +
                     '<button style="float: left;margin: 10px;" type="button" class="saveVisit mui-btn mui-btn-danger">保存</button>'+
                     '</form>'+
@@ -678,6 +693,14 @@
                     });
                     row.find('.saveVisit').click(function(){
                         $(this).parent().submit();
+                    });
+                    row.find('.visitTime').datetimepicker({
+                        language: 'zh-CN',
+                        todayBtn: true,
+                        autoclose: true,
+                        minView: '2',
+                        forceParse: false,
+                        format:"yyyy-mm-dd"
                     });
                     $(this).prev().append(row);
                     return false;
@@ -736,6 +759,15 @@
                     $(this).parent().submit();
                 }
         );
+
+        $('.visitTime').datetimepicker({
+            language: 'zh-CN',
+            todayBtn: true,
+            autoclose: true,
+            minView: '2',
+            forceParse: false,
+            format:"yyyy-mm-dd"
+        });
        
     })
 </script>

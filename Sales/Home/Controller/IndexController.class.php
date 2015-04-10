@@ -191,12 +191,14 @@ class IndexController extends  BaseController {
 		$visitime = I('post.visitime');
 		$note = I('post.note');
 		$intention = I('post.intention');
+        $emptyspace = I('post.emptyspace');
 
 		$Visit = D('VisitRecord');
 		$data['parkid'] = $parkid;
 		$data['visitime'] = $visitime;
 		$data['note'] = $note;
 		$data['intention'] = $intention;
+        $data['emptyspace'] = $emptyspace;
 
 		if($id  == ''){//新建
 			$data['creater'] = UID;

@@ -204,20 +204,40 @@ class PublicController extends BaseController {
 	 * @desc 处理微信支付成功
 	*/
 	protected function doOrderDone($isIn){
-		//检查weixin参数
-		$sign = $_GET['sign'];
-		if(!$sign || !$this->checkSign($_GET, $sign)){
-			return;
-		}
+        include_once(dirname(__FILE__) . '/../Common/Weixin/WxPay/' . 'WxPayPubHelper.php');
+        $notify = new Notify_pub();
+
+        //存储微信的回调
+        $xml = $GLOBALS['HTTP_RAW_POST_DATA'];
+        $notify->saveData($xml);
+
+        //验证签名，并回应微信。
+        //对后台通知交互时，如果微信收到商户的应答不是成功或超时，微信认为通知失败，
+        //微信会通过一定的策略（如30分钟共8次）定期重新发起通知，
+        //尽可能提高通知的成功率，但微信不保证通知最终能成功。
+        if($notify->checkSign() == FALSE){
+            $notify->setReturnParameter("return_code","FAIL");//返回状态码
+            $notify->setReturnParameter("return_msg","签名失败");//返回信息
+        }else{
+            $notify->setReturnParameter("return_code","SUCCESS");//设置返回码
+        }
+        $returnXml = $notify->returnXml();
+        echo $returnXml;
+
+//		//检查weixin参数
+//		$sign = $_GET['sign'];
+//		if(!$sign || !$this->checkSign($_GET, $sign)){
+//			return;
+//		}
 		//写log
 		$wxlog = M('payment_wx_log');
-		$trade_no = $_GET['out_trade_no'];
+		$trade_no = $notify->data["out_trade_no"] ;
 		if(!$trade_no){
 			return;
 		}
 		$out_trade_no = substr($trade_no,14); //截取付款号，去除时间戳
 		if($wxlog->where(array('out_trade_no'=>$out_trade_no))->getField('out_trade_no')){//已存在纪录
-			echo 'success';
+			//echo 'success';
 			return;
 		}
 		//获取log数据
@@ -229,7 +249,7 @@ class PublicController extends BaseController {
 				$getdata .= '&'.$key.'='.$value;
 			}
 		}
-		$postdata = $GLOBALS["HTTP_RAW_POST_DATA"];
+		$postdata = $xml;
     $wxlog->add(array('out_trade_no'=>$out_trade_no, 'getdata'=>$getdata, 'postdata'=>$postdata));//日志
     
     //处理订单逻辑
@@ -289,7 +309,7 @@ class PublicController extends BaseController {
         takeCSV($msgs);
 
 		/*推送*/
-		$fee = $_GET['total_fee']/100;
+		$fee = $notify->data['total_fee']/100;
 		$msg = json_encode(array('t'=>$isIn?'in':'out'));
 		$title = $isIn?"嘟嘟停车：收到预付订单".$fee."元！":"嘟嘟停车：收到停车费".$fee."元！";
 		$txt = $isIn?"车主已预付，注意请放行入库":"车主已付款，注意请放行出库";
@@ -327,7 +347,7 @@ class PublicController extends BaseController {
 		$rep = $igt->pushMessageToList($contentId, $targetList);
 		//var_dump($rep);
 		//echo "<br><br>";
-		echo 'success';
+		//echo 'success';
 	}
 
 	/*

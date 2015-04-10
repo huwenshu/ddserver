@@ -74,4 +74,28 @@ class GiftpackController extends BaseController{
         }
     }
 
+    public function tinyurl($url = ""){
+        $ch=curl_init();
+        curl_setopt($ch,CURLOPT_URL,"http://dwz.cn/create.php");
+        curl_setopt($ch,CURLOPT_POST,true);
+        curl_setopt($ch,CURLOPT_RETURNTRANSFER,true);
+        $data=array('url'=> $url);
+        curl_setopt($ch,CURLOPT_POSTFIELDS,$data);
+        $strRes=curl_exec($ch);
+        curl_close($ch);
+        $arrResponse=json_decode($strRes,true);
+        $result = array();
+        if($arrResponse['status']==0)
+        {
+            $result['tinyurl'] = $arrResponse['tinyurl'];
+            echo  json_encode($result);
+        }
+        else{
+
+            $result['error'] = $url;//$arrResponse['err_msg'];
+            echo json_encode($result);
+        }
+
+    }
+
 }

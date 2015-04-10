@@ -6,7 +6,6 @@
  * Time: 上午12:00
  */
 
-
 //记录log文件
 function takeLog($msg, $level, $destination){
 

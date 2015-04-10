@@ -29,11 +29,50 @@
                 </form>
             </li>
 
-        <?php 
+        <?php
+
             foreach ($parks_info as $key => $value) {
-                //echo "<li class='parkitem' alt='".U('parkinfo')."/parkid/".$value['id']."/' ><p>".$value['name']."</p><p>地址：".$value['address']."</p></li>";
-                echo "<li name='parkitem' class='mui-table-view-cell' alt='".U('parkinfo')."/parkid/".$value['id']."/' ><a class='mui-navigate-right'><p>".$value['name']."</p><p>地址：".$value['address']."</p></a></li>";
-                //echo '<div style="border-top:1px dashed #999;width:500px;height:1px;"> </div>';
+                echo "<li name='parkitem' class='mui-table-view-cell' alt='".U('parkinfo')."/parkid/".$value['id']."/' ><a class='mui-navigate-right'>";
+                echo "<p>".$value['name'].tags($value)."</p>";
+                echo "<p>地址：".$value['address']."</p></a></li>";
+
+            }
+
+            //生成Tags
+            function tags($value){
+
+                $temp = " ";
+                if(strpos($value['style'], 'ZDZJCR')){
+                    $temp.="[自动闸机]";
+                }
+
+                switch($value['status'])
+                {
+                case -2:
+                    $temp.=" [在接触]";
+                    break;
+                case -1:
+                    $temp.=" [未接触]";
+                    break;
+                case 0:
+                    $temp.=" [找到决策人]";
+                    break;
+                case 2:
+                    $temp.=" [测试中]";
+                    break;
+                case 1:
+                    $temp.=" [已合作]";
+                    break;
+                default:
+                    $temp.="";
+                }
+
+                if($value['lat'] == 0.0 || $value['lng'] == 0.0){
+                    $temp.=" <font color='red'>[经纬度缺失]</font>";
+                }
+
+                return $temp;
+
             }
         ?>
         </ul>
