@@ -77,4 +77,14 @@ return array(
         'DWJG' => '单位机构',
     ),
 
+    //停车场合作状态
+    'PARK_COR_STATE' => array (
+        'PRETOUCH' => -1,   //未接触
+        'TOUCH' => -2,      //在接触
+        'FIND' => 0,        //找到决策人
+        'TEST' => 2,        //测试中
+        'CORP' => 1,        //已合作
+    ),
+
+
 );

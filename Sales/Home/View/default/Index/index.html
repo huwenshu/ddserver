@@ -33,34 +33,45 @@
 
             foreach ($parks_info as $key => $value) {
                 echo "<li name='parkitem' class='mui-table-view-cell' alt='".U('parkinfo')."/parkid/".$value['id']."/' ><a class='mui-navigate-right'>";
-                echo "<p>".$value['name'].tags($value)."</p>";
-                echo "<p>地址：".$value['address']."</p></a></li>";
+                if(strpos($value['style'], 'ZDZJCR')){
+                    echo "<p style='color:#ddd'>";
+                }
+                else{
+                    echo "<p>";
+                }
+
+                echo $value['name'].tags($value)."<br>";
+                echo "地址：".$value['address'];
+                echo "</p></a></li>";
 
             }
 
-            //生成Tags
+            //生成Tags,并且根据情况标注颜色
             function tags($value){
 
                 $temp = " ";
+                $isAuto = false;
                 if(strpos($value['style'], 'ZDZJCR')){
                     $temp.="[自动闸机]";
+                    $isAuto = true;
                 }
 
+                $corArray = C('PARK_COR_STATE');
                 switch($value['status'])
                 {
-                case -2:
+                case $corArray['TOUCH']:
                     $temp.=" [在接触]";
                     break;
-                case -1:
+                case $corArray['PRETOUCH']:
                     $temp.=" [未接触]";
                     break;
-                case 0:
+                case $corArray['FIND']:
                     $temp.=" [找到决策人]";
                     break;
-                case 2:
+                case $corArray['TEST']:
                     $temp.=" [测试中]";
                     break;
-                case 1:
+                case $corArray['CORP']:
                     $temp.=" [已合作]";
                     break;
                 default:
@@ -68,7 +79,12 @@
                 }
 
                 if($value['lat'] == 0.0 || $value['lng'] == 0.0){
-                    $temp.=" <font color='red'>[经纬度缺失]</font>";
+                    if($isAuto){
+                        $temp.=" <span style='color: #dddddd'>[经纬度缺失]</span>";
+                    }
+                    else{
+                        $temp.=" <span style='color: #ff0000'>[经纬度缺失]</span>";
+                    }
                 }
 
                 return $temp;
