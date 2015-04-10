@@ -479,6 +479,27 @@ class PublicController extends BaseController {
 			}
 		}
 	}
+
+    /*
+	 * @desc 微信告警
+	*/
+    public function alarm(){
+        $postStr = $GLOBALS["HTTP_RAW_POST_DATA"];
+        $postObj = simplexml_load_string($postStr, 'SimpleXMLElement', LIBXML_NOCDATA);
+
+        $AlarmLog = M('AlarmLog');
+        $data = array();
+        $data['appid'] = $postObj->AppId;
+        $data['errortype'] = $postObj->ErrorType;
+        $data['description'] = $postObj->Description;
+        $data['alarmcontent'] = $postObj->AlarmContent;
+        $data['timestamp'] = $postObj->TimeStamp;
+        $AlarmLog->add($data);
+
+        echo 'success';
+
+
+    }
 	
 	//测试区
 	public function testCreateGiftPack(){
