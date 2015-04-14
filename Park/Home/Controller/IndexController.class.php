@@ -207,11 +207,30 @@ class IndexController extends BaseController {
         $parkadmin = $ParkAdmin->where($map)->find();
         $oldScore = $parkadmin['score'];
 
+        //是否在活动中,来确定增加积分策略
+        $ParkInfo = M('ParkInfo');
+        $map = array();
+        $map['id'] = $parkid;
+        $parkInfo = $ParkInfo->where($map)->find();
+        $acType = $parkInfo['actype'];
+        $acScore = $parkInfo['acscore'];
+        $acEndtime = new DateTime($parkInfo['acendtime']);
+        $now = new DateTime();
 
-        $state = C('SCORE');
-		$this->addScore($this->uid, $state['out']);
 
-        $newScore = $oldScore + $state['out'];
+
+        if($acType == 1 && $acEndtime>= $now){//有补助活动，且没有过期
+            $this->addScore($this->uid, $acScore);
+            $newScore = $oldScore + $acScore;
+            $change = $acScore;
+        }
+        else{//没有补助或者补助已经过期，采用传统的加分模式
+            $state = C('SCORE');
+            $this->addScore($this->uid, $state['out']);
+            $newScore = $oldScore + $state['out'];
+            $change = $state['out'];
+        }
+
 
 
         //记录日志到csv
@@ -222,7 +241,7 @@ class IndexController extends BaseController {
         $msgs['opt'] = 3;//3-代表车辆离场的操作类型
         $msgs['oldValue'] = $oldScore;//原值
         $msgs['newValue'] = $newScore;//新值
-        $msgs['change'] = $state['out'];//获得积分
+        $msgs['change'] = $change;//获得积分
         $msgs['note'] = '';//补充信息
 
         takeCSV($msgs);
@@ -629,6 +648,17 @@ class IndexController extends BaseController {
 		$this->ajaxOk($result);
 	}
 
+    /*
+     *  @desc 获取兑换记录列表
+    */
+    public function getExList(){
+        $ExchangeGift = M('ExchangeGift');
+        $map = array();
+        $map['creater'] = $this->uid;
+        $result = $ExchangeGift->where($map)->order('state, createtime desc')->select();
+
+        $this->ajax($result);
+    }
 
 	/*
      *  @desc 积分兑换礼品的请求处理
@@ -638,11 +668,15 @@ class IndexController extends BaseController {
 		$name = I('get.name');
 		$address = I('get.address');
 		$telephone = I('get.telephone');
+        $bankname = I('get.bankname');
+        $account = I('get.account');
+        $visitype = I('get.visitype');
 		$gid = I('get.gid');
 
 		$GifgList = M('GiftList');
 		$map = array();
 		$map['id'] = $gid;
+        $map['valid'] = 1;
 		$giftData = $GifgList->where($map)->find();
 		if(empty($giftData)){
 			$this->ajaxMsg('该礼物已兑换完！');
@@ -667,16 +701,26 @@ class IndexController extends BaseController {
 		}
 
 		$ExchangeGift = M('ExchangeGift');
-		$data =array('name' => $name, 'address' => $address, 'telephone' => $telephone, 'score' => $score,
+		$data =array('name' => $name, 'address' => $address, 'telephone' => $telephone, 'bankname' => $bankname, 'account' => $account,
+            'visitype' => $visitype, 'score' => $score,
 			'pid' => $parkid, 'gid' => $gid, 'state' => 0, 'creater' => $this->uid, 'createtime' =>  date('Y-m-d H:i:s'), 'updater' =>$this->uid);
 
 		$exid = $ExchangeGift->add($data);
 
+        //Email数据准备
 		$title = '[兑换礼品请求]';
 		$parkName = $this->getParkName($parkid);
 		$giftName = $this->getGiftName($gid);
 		$adminName = $this->getAdmin($this->uid);
+        if($visitype == C('VISIT_TYPE')['Online']){
+            $visitypeStr = "线上兑换";
+        }
+        else{
+            $visitypeStr = "线下送上门";
+        }
+
 		$content = '停车场：'.$parkName.'<br>姓名：'.$name.'<br>地址：'.$address.'<br>电话：'.$telephone.
+            '<br>开户行：'.$bankname.'<br>银行账号：'.$account.'<br>送货方式：'.$visitypeStr.
 			'<br>礼品名称：'.$giftName.'<br>兑换管理员：'.$adminName.'<br>兑换积分：'.$score.'<br>兑换表ID：'.$exid;
 
 		//更新积分

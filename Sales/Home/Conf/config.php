@@ -87,4 +87,10 @@ return array(
     ),
 
 
+    //停车场活动类型
+    'PARK_AC_TYPE' => array (
+        0 => null,
+        1 => '5元推广补助',
+    ),
+
 );

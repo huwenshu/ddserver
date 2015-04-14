@@ -175,6 +175,36 @@
                     </tr>
 
                     <tr>
+                        <td><label for="actype">停车场活动：</label></td>
+                        <td>
+                            <select id="actype" name="actype" style="width: auto">
+                                <?php
+                                    $acType = C('PARK_AC_TYPE');
+                                    foreach($acType as $key => $value){
+                                        if($key == $park_info[actype]){
+                                            echo "<option value=$key  selected=selected>$value</option>";
+                                        }
+                                        else{
+                                            echo  "<option value=$key >$value</option>";
+                                        }
+                                    }
+                                ?>
+
+                            </select>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td><label for="acscore">活动积分：</label></td>
+                        <td><input type="text" id="acscore" name="acscore" value="{$park_info[acscore]}" /> </td>
+                    </tr>
+
+                    <tr>
+                        <td><label for="acendtime">活动截止时间：</label></td>
+                        <td><input type="text" id="acendtime" name="acendtime" value="{$park_info[acendtime]}" /> </td>
+                    </tr>
+
+                    <tr>
                         <td colspan=2>
                             <input type="submit" />
                         </td>
@@ -761,6 +791,15 @@
         );
 
         $('.visitTime').datetimepicker({
+            language: 'zh-CN',
+            todayBtn: true,
+            autoclose: true,
+            minView: '2',
+            forceParse: false,
+            format:"yyyy-mm-dd"
+        });
+
+        $('#acendtime').datetimepicker({
             language: 'zh-CN',
             todayBtn: true,
             autoclose: true,

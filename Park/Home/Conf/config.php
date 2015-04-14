@@ -69,9 +69,12 @@ return array(
     'MAIL_CHARSET' =>'utf-8',
     'MAIL_ISHTML' =>TRUE, // 是否HTML格式邮件
 
-    'SCORE' => array('state' => 1, 'in' => 1, 'out' =>1),
+    'SCORE' => array('state' => 0, 'in' => 0, 'out' =>0),
 
     //CVS的Log记录地址
     'CSV_LOG_PATH' => './Public/Logs',
+
+    //礼品送货方式
+    'VISIT_TYPE' => array('Online' => 0, 'Offline' => 1),
 
 );

@@ -57,6 +57,14 @@ class IndexController extends  BaseController {
  			$parkInfo['note'] = I('note');
  			$parkInfo['shortname'] = I('shortname');
 
+            //停车场活动参数
+            $actype = I('post.actype');
+            $acendtime = I('post.acendtime');
+            $acscore = I('post.acscore');
+            $parkInfo['actype'] = empty($actype) ?  null : $actype;
+            $parkInfo['acendtime'] = empty($acendtime) ?  null : $acendtime;
+            $parkInfo['acscore'] = empty($acscore) ? null : $acscore;
+
     		$Park = D('ParkInfo');
     		$saveParkId = $Park->SaveParkInfo($parkInfo);
     		if ($saveParkId) {
