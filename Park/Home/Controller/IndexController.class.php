@@ -397,6 +397,10 @@ class IndexController extends BaseController {
 		}
 		else{
 			$result['parkstate'] = $parkData['parkstate'];
+            //停车场推广活动
+            $result['actype'] = $parkData['actype'];
+            $result['acscore'] = $parkData['acscore'];
+            $result['acendtime'] = $parkData['acendtime'];
             $balance = $parkData['balance'] > $parkData['upfront']?$parkData['balance'] - $parkData['upfront']:0;
 		}
 
@@ -462,7 +466,6 @@ class IndexController extends BaseController {
 		$drawSum = $DrawMoney->where($map)->sum('money');
 		$remainMoney = $balance - $drawSum;//余额-未兑现的提现
 		$result['remainsum'] = $remainMoney;
-
 
 
 		$this->ajaxOk($result);
@@ -638,6 +641,7 @@ class IndexController extends BaseController {
 			$tmp['gid'] = $value['id'];
 			$tmp['name'] = $value['name'];
 			$tmp['score'] = $value['score'];
+            $tmp['type'] = $value['type'];
 			$tmp['image'] = $value['image'];
 
 			array_push($giftList, $tmp);
