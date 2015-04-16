@@ -119,7 +119,7 @@ class IndexController extends BaseController {
 
 	}
 
-   //生成预付订单借口
+   //生成预付订单借口-JSAPI
 	public function genOrder($pid, $cid = 0){
 
         include_once(dirname(__FILE__) . '/../Common/Weixin/WxPay/' . 'WxPayPubHelper.php');
@@ -251,6 +251,98 @@ class IndexController extends BaseController {
 		$this->ajaxOk($result);
 
 	}
+
+    //生成预付订单借口-APP
+    public function genOrderAPP($pid, $cid = 0){
+
+        //生成订单，处理业务逻辑
+        $Park = M('ParkInfo');
+        $map = array('id' => $pid);
+        $parkinfo = $Park->where($map)->find();
+        if(empty($parkinfo)){
+            $this->ajaxMsg("停车场信息错误");
+        }
+
+        $Order = M('ParkOrder');
+        $arr['uid'] = I('get.uid');
+        $arr['pid'] = $pid;
+        $arr['state'] = -1;
+        $arr['startime'] = date("Y-m-d H:i:s",0);
+        $arr['endtime'] = date("Y-m-d H:i:s",0);
+        $arr['creater'] = $this->uid;
+        $arr['createtime'] = date("Y-m-d H:i:s");
+        $arr['updater'] = $this->uid;
+        $oid = $Order->add($arr);
+
+        if(empty($oid)){
+            $this->ajaxMsg("创建订单失败");
+        }
+
+        //计算折扣劵
+        $remainFee = $parkinfo['prepay'];
+        $remianFee_r = $remainFee;
+        if($cid > 0){
+            $cpamount = $this->_checkCoupon($this->uid, $cid, $remainFee);
+            //0				抵用劵不存在
+            //-1			已领完
+            //-2			活动还没开始
+            //-3			活动已结束
+            //int			抵扣金额
+            if($cpamount == 0){
+                $this->ajaxMsg("该抵用劵信息不正确，请重新选择");
+            }else if($cpamount == -1){
+                $this->ajaxMsg("该抵用劵已被使用过，请重新选择");
+            }else if($cpamount == -2){
+                $this->ajaxMsg("该抵用劵活动尚未开始，请重新选择");
+            }else if($cpamount == -3){
+                $this->ajaxMsg("该抵用劵已过期，请重新选择");
+            }
+            $remianFee_r-=$cpamount;
+        }
+        $currentTime = time();
+        $Payment = M('PaymentRecord');
+        $temp['oid'] = $oid;
+        $temp['money'] = $remainFee;
+        $temp['money_r'] = $remianFee_r;
+        $temp['cid'] = $cid;
+        $temp['state'] = 0;
+        $temp['creater'] = $this->uid;
+        $temp['createtime'] = date("Y-m-d H:i:s",$currentTime);
+        $temp['updater'] = $this->uid;
+        $prid = $Payment->add($temp);
+
+        if(empty($prid)){
+            $this->ajaxMsg("创建支付消息失败");
+        }
+
+        $trade_no = date("YmdHis",$currentTime).$prid;
+        //HardCode 测试人员生成订单0.01元
+        if($parkinfo['status'] == 2){
+            $fee = 0.01;
+        }
+        else{
+            $fee = $remianFee_r;
+        }
+
+        //调用微信支付
+        include_once(dirname(__FILE__) . '/../Common/Weixin/WxPay/' . 'WxPayPubHelper.php');
+        $appApi = new AppApi_pub();
+        $appApi->setParameter("body","预付停车费：".$fee);//商品描述
+        $appApi->setParameter("out_trade_no",$trade_no);//商户订单号
+        $appApi->setParameter("total_fee",$fee*100);//总金额
+        $appApi->setParameter("notify_url", "http://driver.duduche.me/driver.php/home/public/genOrderDone/");//通知地址
+        $appApi->setParameter("trade_type","APP");//交易类型
+        $prepay_id = $appApi->getPrepayId();
+        if(empty($prepay_id)){
+            $this->ajaxMsg('生成预付订单失败！');
+        }
+        else{
+            $result = array();
+            $result['oid'] = $oid;
+            $result['paydata'] = $appApi->getParameters();
+            $this->ajaxOk($result);
+        }
+    }
 
 
 	/*
@@ -551,6 +643,97 @@ class IndexController extends BaseController {
         $this->ajaxOk($result);
 
 	}
+
+    /*
+	 * @desc App支付结算接口
+	 * @oid	订单id,cid 折扣券id
+	*/
+
+    public  function checkOutApp($oid, $cid = 0){
+        //业务逻辑部分
+        $Payment = M('PaymentRecord');
+        $map = array('oid' => $oid, 'state'=>1);
+        $payData = $Payment->where($map)->select();
+
+        $preSum = 0;
+        foreach($payData as $key => $value){
+            $preSum = $preSum + $value['money'];
+        }
+
+        $Order = M('ParkOrder');
+        $map = array();
+        $map['id'] = $oid;
+        $orderData = $Order->where($map)->find();
+        $totalFee = $this->parkingFee(strtotime($orderData['startime']), $orderData['pid']);
+        $remainFee = $totalFee - $preSum;
+        //计算折扣劵
+        $remianFee_r = $remainFee;
+        if($cid > 0){
+            $cpamount = $this->_checkCoupon($this->uid, $cid, $remainFee);
+            //0				抵用劵不存在
+            //-1			已领完
+            //-2			活动还没开始
+            //-3			活动已结束
+            //int			抵扣金额
+            if($cpamount == 0){
+                $this->ajaxMsg("该抵用劵信息不正确，请重新选择");
+            }else if($cpamount == -1){
+                $this->ajaxMsg("该抵用劵已被使用过，请重新选择");
+            }else if($cpamount == -2){
+                $this->ajaxMsg("该抵用劵活动尚未开始，请重新选择");
+            }else if($cpamount == -3){
+                $this->ajaxMsg("该抵用劵已过期，请重新选择");
+            }
+            $remianFee_r-=$cpamount;
+        }
+
+        $currentTime = time();
+        $temp['oid'] = $oid;
+        $temp['money'] = $remainFee;
+        $temp['money_r'] = $remianFee_r;
+        $temp['cid'] = $cid;
+        $temp['state'] = 0;
+        $temp['creater'] = $this->uid;
+        $temp['createtime'] = date("Y-m-d H:i:s",$currentTime);
+        $temp['updater'] = $this->uid;
+        $prid = $Payment->add($temp);
+
+        if(empty($prid)){
+            $this->ajaxMsg("创建支付消息失败");
+        }
+
+        $trade_no = date("YmdHis",$currentTime).$prid;
+
+        //HardCode 测试人员结算订单0.01元
+        $parkid = $orderData['pid'];
+        $Park = M('ParkInfo');
+        $map = array();
+        $map['id'] = $parkid;
+        $parkinfo = $Park->where($map)->find();
+        if($parkinfo['status'] == 2){
+            $fee = 0.01;
+        }
+        else{
+            $fee = $remianFee_r;
+        }
+
+        //微信支付返回参数
+        include_once(dirname(__FILE__) . '/../Common/Weixin/WxPay/' . 'WxPayPubHelper.php');
+        $appApi = new AppApi_pub();
+        $appApi->setParameter("body","结算停车费(还需付款)：".$fee);//商品描述
+        $appApi->setParameter("out_trade_no",$trade_no);//商户订单号
+        $appApi->setParameter("total_fee",$fee*100);//总金额
+        $appApi->setParameter("notify_url", "http://driver.duduche.me/driver.php/home/public/checkOutDone/");//通知地址
+        $appApi->setParameter("trade_type","APP");//交易类型
+        $prepay_id = $appApi->getPrepayId();
+        if(empty($prepay_id)){
+            $this->ajaxMsg('生成预付订单失败！');
+        }
+        else{
+            $this->ajaxOk($appApi->getParameters());
+        }
+    }
+
 
 	/*
      *  @desc 车辆离场

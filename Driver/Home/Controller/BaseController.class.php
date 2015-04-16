@@ -630,5 +630,4 @@ class BaseController extends \Think\Controller {
         }
 
     }
-	
 }

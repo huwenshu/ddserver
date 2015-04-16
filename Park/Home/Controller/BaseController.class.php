@@ -146,7 +146,7 @@ class BaseController extends \Think\Controller {
     protected function getDefualtCarid($uid){
         $DriverCar = M('DriverCar');
         $map = array();
-        $map['id'] = $uid;
+        $map['driverid'] = $uid;
         $map['status'] = 1;
         $car = $DriverCar->where($map)->find();
         if(empty($car)){

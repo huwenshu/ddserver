@@ -14,6 +14,12 @@ class WxPayConf_pub
 	const KEY = 'b91c8f3aab404cd391695c7bfcc86ae8';
 	//JSAPI接口中获取openid，审核后在公众平台开启开发模式后可查看
 	const APPSECRET = '14f025315fecb3bd1bdfc1624338605c';
+
+    //=======【APP支付的基本信息设置】=====================================
+    //用于APP支付的APPID
+    const M_APPID = 'wx5b97cae9159c187b';
+    //用于APP支付的商户号
+    const M_MCHID = '1237798202';
 	
 	//=======【JSAPI路径设置】===================================
 	//获取access_token过程中的跳转uri，通过跳转将code传入jsapi支付页面
@@ -31,6 +37,8 @@ class WxPayConf_pub
 	//=======【curl超时设置】===================================
 	//本例程通过curl使用HTTP POST方法，此处可修改其超时时间，默认为30秒
 	const CURL_TIMEOUT = 30;
+
+
 }
 	
 ?>
