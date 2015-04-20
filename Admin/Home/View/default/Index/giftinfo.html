@@ -76,6 +76,15 @@
                 <td><input type="text" id="giftscore" name="score" value= "{$giftInfo[score]}" /> </td>
             </tr>
             <tr>
+                <td><label for="gifttype">类型：</label></td>
+                <td>
+                    <select id="gifttype" name="type">
+                        <option value="0"  <?php if ($giftInfo[type]==0)  echo 'selected="selected"';?>>礼品</option>
+                        <option value="1"  <?php if ($giftInfo[type]==1)  echo 'selected="selected"';?>>现金</option>
+                    </select>
+                </td>
+            </tr>
+            <tr>
                 <td><label for="giftpic">礼品图片：</label></td>
                 <td><input type="file" id="giftpic" name="pic" value= "" /><span style="color:red">{$fileError}</span> </td>
             </tr>

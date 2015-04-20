@@ -661,7 +661,7 @@ class IndexController extends BaseController {
         $map['creater'] = $this->uid;
         $result = $ExchangeGift->where($map)->order('state, createtime desc')->select();
 
-        $this->ajax($result);
+        $this->ajaxOk($result);
     }
 
 	/*

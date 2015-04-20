@@ -235,6 +235,7 @@ class IndexController extends BaseController {
             $giftInfo['score'] = I('post.score');
             $giftInfo['valid'] = I('post.valid');
             $giftInfo['weight'] = I('post.weight');
+            $giftInfo['type'] = I('post.type');
 
 
             $info   =   $upload->upload();
