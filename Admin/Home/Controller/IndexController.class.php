@@ -319,4 +319,12 @@ class IndexController extends BaseController {
     }
 
 
+    public  function orderList(){
+        $Model = new \Think\Model(); // 实例化一个model对象 没有对应任何数据表
+        $sql = "SELECT o.uid,c.carid,o.startime,r.money, d.telephone,p.name,o.state FROM dudu_park_order o, dudu_driver_car c, dudu_payment_record r, dudu_park_info p, dudu_driver_info d WHERE o.pid <> 1 and o.state > -1 and o.uid = d.id AND d.id = c.driverid and o.id = r.oid and r.state=1 and o.pid = p.id ORDER BY o.updatetime DESC LIMIT 100";
+        $result = $Model->query($sql);
+        $this->orders = $result;
+        $this->display();
+    }
+
 }

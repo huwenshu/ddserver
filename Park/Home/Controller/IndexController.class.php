@@ -176,6 +176,14 @@ class IndexController extends BaseController {
 			$tmp['startime'] = $value['startime'];
 			$tmp['endtime'] = $value['endtime'];
 			$tmp['remaintime'] = strtotime($value['endtime']) - time();
+            $tmp['stoptime'] = time() - $tmp['startime'];
+
+            $Record = M('PaymentRecord');
+            $map = array();
+            $map['oid'] = $value['id'];
+            $map['state'] = 1;
+            $pay = $Record->where($map)->sum('money');
+            $tmp['money'] = $pay;
 
 			array_push($result, $tmp);
 		}
