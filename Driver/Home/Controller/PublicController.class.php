@@ -372,15 +372,21 @@ class PublicController extends BaseController {
 		echo date("Y-m-d H:i:s",$endtime);
 	}
 	//test
-	public function parkingFeeTest($parkid, $starttime, $endtime){
+	public function parkingFeeTest($parkid, $starttime, $endtime, $isdebug=1){
 		
 		$start = strtotime(urldecode($starttime));
 		$end = strtotime(urldecode($endtime));
-		echo urldecode($starttime).'('.$start.'),'.urldecode($endtime).'('.$end.')<br>';
-		
-		$fee = $this->_parkingFee($start, $end, $parkid,true);
+		if($isdebug){
+			echo urldecode($starttime).'('.$start.'),'.urldecode($endtime).'('.$end.')<br>';
+		}
+		$fee = $this->_parkingFee($start, $end, $parkid,$isdebug);
 
-		echo $fee;
+		if($isdebug){
+			echo $fee;
+		}else{
+			$result=array('fee'=>$fee);
+			$this->ajaxOk($result);
+		}
 	}
 
 	/**

@@ -59,8 +59,12 @@
 	    }
     ?>
   	</div>
-		<button type="button" class="addrule">添加计费规则</button>
-      
+		<button type="button" class="addrule">添加计费规则</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="testrule">测试计费规则</button>
+    <div class="testdiv" style="display:none;">
+    停车开始(yyyy-mm-dd hh:mm:ss)：<input type="text" class="teststarttime" name="teststarttime" style="width:200px"/><br>
+    停车结束(yyyy-mm-dd hh:mm:ss)：<input type="text" class="testendtime" name="testendtime" style="width:200px"/>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type="button" class="dotestrule">测试</button>
+    <div class="testout"></div>
+    </div>
     </div>
 </block>
 
@@ -120,6 +124,32 @@
     
     $(this).prev().append(row);
 	}
+	function testrule(){
+		$('.testdiv').toggle();
+	}
+	function dotestrule(){
+		if(newrule == 1){
+			alert("请先保存之前创建的新规则！");
+			return;
+		}
+		var testblock = $('.testdiv');
+		var starttime = testblock.find(".teststarttime").val();
+		var endtime = testblock.find(".testendtime").val();
+		var myurl = 'http://driver.duduche.me/driver.php/home/public/parkingFeeTest/parkid/'+"{$parkid}"+'/starttime/'+starttime+'/endtime/'+endtime+'/isdebug/0/';
+		$.ajax({
+                    url:myurl,
+                    type:'get',
+                    dataType: 'JSONP',
+                    async : false,
+                    error:function(data){
+                        alert('ajax error:'+myurl);
+                    },
+                    success:function(data){
+                        console.log(data);
+                        $('.testout').html('RMB'+data.data.fee);
+                    }
+                });
+	}
 	
     $(function(){
         $('.sidebar').remove();
@@ -129,6 +159,8 @@
         $('.delrule').click(delrule);
        	$('.saverule').click(saverule);
         $('.addrule').click(addrule);
+        $('.testrule').click(testrule);
+        $('.dotestrule').click(dotestrule);
     })
 </script>
 </block>
