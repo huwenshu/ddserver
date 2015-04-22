@@ -949,6 +949,7 @@ class AppApi_pub extends Wxpay_client_pub
         $appPay['partnerid'] = WxPayConf_pub::M_MCHID;//APP支付的商户号
         $appPay['prepayid'] = $this->prepay_id;
         $appPay['timestamp'] =  time();
+        $appPay['package'] = "Sign=WXPay";
         $appPay['sign'] =  $this->getSign($appPay);
         $this->parameters = $appPay;
 
