@@ -206,7 +206,7 @@
 
                     <tr>
                         <td colspan=2>
-                            <input type="submit" />
+                            <input type="submit" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' class='simulateEnter mui-btn-danger'>模拟入库</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' class='simulateLeave mui-btn-danger'>模拟出库</button>
                         </td>
                     </tr>
                 </table>
@@ -806,6 +806,43 @@
             minView: '2',
             forceParse: false,
             format:"yyyy-mm-dd"
+        });
+        
+        var oid = 0;
+        $('.simulateEnter').click(function(){
+          var myurl = 'http://driver.duduche.me/driver.php/home/public/testEnter/pid/'+"{$park_info[id]}";
+          $.ajax({
+                    url:myurl,
+                    type:'get',
+                    dataType: 'JSONP',
+                    async : false,
+                    error:function(data){
+                        alert('ajax error:'+myurl);
+                    },
+                    success:function(data){
+                        console.log(data);
+                        oid = data.data.oid;
+                       alert('订单编号：'+data.data.oid+'（模拟出库时使用）');
+                    }
+                });
+        });
+        
+        $('.simulateLeave').click(function(){
+          var myoid = parseInt(prompt("输入订单编号：", oid));     
+          var myurl = 'http://driver.duduche.me/driver.php/home/public/testLeave/oid/'+myoid;
+          $.ajax({
+                    url:myurl,
+                    type:'get',
+                    dataType: 'JSONP',
+                    async : false,
+                    error:function(data){
+                        alert('ajax error:'+myurl);
+                    },
+                    success:function(data){
+                        console.log(data);
+                       alert('模拟出库完成！');
+                    }
+                });     
         });
        
     })
