@@ -45,6 +45,8 @@ class IndexController extends BaseController {
      *  @desc 获取预付，但未进场的列单
     */
 	public function getEntries(){
+        include_once(dirname(__FILE__) . '/../Conf/' . 'config_simulation.php');
+        
 		$cache = $this->getUsercache($this->uid);
 		$data = $cache['data'];
 		$parkid = $data['parkid'];
@@ -58,7 +60,15 @@ class IndexController extends BaseController {
 			$tmp = array();
 			$tmp['oid'] = $value['id'];
 			$driverId = $value['uid'];
-			$tmp['carid'] = $this->getDefualtCarid($driverId);
+            if(array_key_exists($driverId,$conf_simulation_uids)){
+                if($conf_simulation_uids[$driverId]["type"] == 0){
+                    $tmp['carid'] = $conf_simulation_uids[$driverId]["id"];
+                }else{
+                    $tmp['carid'] = $conf_simulation_uids[$driverId]["id_in"];
+                }
+            }else{
+                $tmp['carid'] = $this->getDefualtCarid($driverId);
+            }
 			$tmp['orderTime'] = $value['startime'];
 
 			array_push($result, $tmp);
@@ -74,6 +84,8 @@ class IndexController extends BaseController {
 	 *  @param oid	订单id
     */
 	public function setEntry($oid){
+        include_once(dirname(__FILE__) . '/../Conf/' . 'config_simulation.php');
+        
 		$cache = $this->getUsercache($this->uid);
 		$data = $cache['data'];
 		$parkid = $data['parkid'];
@@ -84,30 +96,41 @@ class IndexController extends BaseController {
 		$updateData['entrytime'] = date('Y-m-d H:i:s');
 		$updateData['updater'] = $this->uid;
 		$orderData = $Order->where($con)->save($updateData);
-
-        $ParkAdmin = M('ParkAdmin');
-        $map = array();
-        $map['id'] = $this->uid;
-        $parkadmin = $ParkAdmin->where($map)->find();
-        $oldScore = $parkadmin['score'];
-
-		$state = C('SCORE');
-		$this->addScore($this->uid, $state['in']);
-
-        $newScore = $oldScore + $state['in'];
-
-        //记录日志到csv
-        $msgs = array();
-        $msgs['ip'] = $_SERVER['REMOTE_ADDR'];//用户ip
-        $msgs['parkid'] = $parkid;//停车场编号
-        $msgs['uid'] = $this->uid;//操作者id
-        $msgs['opt'] = 2;//2-代表车辆进场的操作类型
-        $msgs['oldValue'] = $oldScore;//原值
-        $msgs['newValue'] = $newScore;//新值
-        $msgs['change'] = $state['in'];//获得积分
-        $msgs['note'] = '';//补充信息
-
-        takeCSV($msgs);
+        $driverId = $Order->where($con)->getField('uid');
+        $change = 0;
+        
+        if(!array_key_exists($driverId,$conf_simulation_uids) || $conf_simulation_uids[$driverId]["type"] == 1){
+            
+            if(!array_key_exists($driverId,$conf_simulation_uids)){//非测试模式
+                $state = C('SCORE');
+                $change = $state['in'];
+            }else{
+                $change = $conf_simulation_uids[$driverId]["score_in"];
+            }
+            
+        }
+        
+        if($change > 0){
+            $ParkAdmin = M('ParkAdmin');
+            $map = array();
+            $map['id'] = $this->uid;
+            $parkadmin = $ParkAdmin->where($map)->find();
+            $oldScore = $parkadmin['score'];
+            $this->addScore($this->uid, $change);
+            $newScore = $oldScore + $change;
+            //记录日志到csv
+            $msgs = array();
+            $msgs['ip'] = $_SERVER['REMOTE_ADDR'];//用户ip
+            $msgs['parkid'] = $parkid;//停车场编号
+            $msgs['uid'] = $this->uid;//操作者id
+            $msgs['opt'] = 2;//2-代表车辆进场的操作类型
+            $msgs['oldValue'] = $oldScore;//原值
+            $msgs['newValue'] = $newScore;//新值
+            $msgs['change'] = $state['in'];//获得积分
+            $msgs['note'] = '';//补充信息
+            
+            takeCSV($msgs);
+        }
 
 		if($orderData){
 			$this->ajaxOk("");
@@ -116,13 +139,14 @@ class IndexController extends BaseController {
 			$this->ajaxMsg("进场失败！");
 		}
 
-
 	}
 
 	/*
      *  @desc 获取在场车辆列表
     */
 	public function getStops(){
+        include_once(dirname(__FILE__) . '/../Conf/' . 'config_simulation.php');
+        
 		$cache = $this->getUsercache($this->uid);
 		$data = $cache['data'];
 		$parkid = $data['parkid'];
@@ -138,11 +162,21 @@ class IndexController extends BaseController {
 			$tmp = array();
 			$tmp['oid'] = $value['id'];
 			$driverId = $value['uid'];
-			$Driver = M('DriverInfo');
-			$con1 = array('id' => $driverId);
-			$driverData = $Driver->where($con1)->find();
-			$tmp['carid'] = $this->getDefualtCarid($driverId);
-			$tmp['telephone'] = $driverData['telephone'];
+            if(array_key_exists($driverId,$conf_simulation_uids)){
+                if($conf_simulation_uids[$driverId]["type"] == 0){
+                    $tmp['carid'] = $conf_simulation_uids[$driverId]["id"];
+                }else{//财神活动不计入在库车辆
+                    continue;
+                }
+                $tmp['telephone'] = $conf_simulation_uids[$driverId]["phone"];
+            }else{
+                $Driver = M('DriverInfo');
+                $con1 = array('id' => $driverId);
+                $driverData = $Driver->where($con1)->find();
+                $tmp['carid'] = $this->getDefualtCarid($driverId);
+                $tmp['telephone'] = $driverData['telephone'];
+            }
+            
 			$tmp['startTime'] = $value['startime'];
 
 			array_push($result, $tmp);
@@ -156,7 +190,9 @@ class IndexController extends BaseController {
 	/*
      *  @desc 获取准备离场车辆列表
     */
-	public function getLeavings(){
+	public function getLeavings(){    
+		include_once(dirname(__FILE__) . '/../Conf/' . 'config_simulation.php');   
+		
 		$cache = $this->getUsercache($this->uid);
 		$data = $cache['data'];
 		$parkid = $data['parkid'];
@@ -172,18 +208,27 @@ class IndexController extends BaseController {
 			$tmp = array();
 			$tmp['oid'] = $value['id'];
 			$driverId = $value['uid'];
-			$tmp['carid'] = $this->getDefualtCarid($driverId);
-			$tmp['startime'] = $value['startime'];
-			$tmp['endtime'] = $value['endtime'];
-			$tmp['remaintime'] = strtotime($value['endtime']) - time();
-            $tmp['stoptime'] = time() - $tmp['startime'];
-
-            $Record = M('PaymentRecord');
-            $map = array();
-            $map['oid'] = $value['id'];
-            $map['state'] = 1;
-            $pay = $Record->where($map)->sum('money');
-            $tmp['money'] = $pay;
+			if(array_key_exists($driverId,$conf_simulation_uids)){   
+				if($conf_simulation_uids[$driverId]["type"] == 0){
+					$tmp['carid'] = $conf_simulation_uids[$driverId]["id"];
+				}else{          
+					$tmp['carid'] = $conf_simulation_uids[$driverId]["id_out"];
+				}
+				$tmp['money'] = 0;
+			}else{
+			 $tmp['carid'] = $this->getDefualtCarid($driverId);
+ 
+             $Record = M('PaymentRecord');
+             $map = array();
+             $map['oid'] = $value['id'];
+             $map['state'] = 1;
+             $pay = $Record->where($map)->sum('money');
+             $tmp['money'] = $pay;
+            }
+            $tmp['startime'] = $value['startime'];
+            $tmp['endtime'] = $value['endtime'];
+            $tmp['remaintime'] = strtotime($value['endtime']) - time();
+            $tmp['stoptime'] = time() - strtotime($value['startime']);
 
 			array_push($result, $tmp);
 		}
@@ -198,6 +243,8 @@ class IndexController extends BaseController {
 	 *  @param oid	订单id
     */
 	public function setLeave($oid){
+        include_once(dirname(__FILE__) . '/../Conf/' . 'config_simulation.php');
+        
 		$cache = $this->getUsercache($this->uid);
 		$data = $cache['data'];
 		$parkid = $data['parkid'];
@@ -208,51 +255,56 @@ class IndexController extends BaseController {
 		$updateData['leavetime'] = date('Y-m-d H:i:s');
 		$updateData['updater'] = $this->uid;
 		$orderData = $Order->where($con)->save($updateData);
-
-        $ParkAdmin = M('ParkAdmin');
-        $map = array();
-        $map['id'] = $this->uid;
-        $parkadmin = $ParkAdmin->where($map)->find();
-        $oldScore = $parkadmin['score'];
-
-        //是否在活动中,来确定增加积分策略
-        $ParkInfo = M('ParkInfo');
-        $map = array();
-        $map['id'] = $parkid;
-        $parkInfo = $ParkInfo->where($map)->find();
-        $acType = $parkInfo['actype'];
-        $acScore = $parkInfo['acscore'];
-        $acEndtime = new DateTime($parkInfo['acendtime']);
-        $now = new DateTime();
-
-
-
-        if($acType == 1 && $acEndtime>= $now){//有补助活动，且没有过期
-            $this->addScore($this->uid, $acScore);
-            $newScore = $oldScore + $acScore;
-            $change = $acScore;
+        $driverId = $Order->where($con)->getField('uid');
+        $change = 0;
+        
+        if(!array_key_exists($driverId,$conf_simulation_uids) || $conf_simulation_uids[$driverId]["type"] == 1){
+            
+            if(!array_key_exists($driverId,$conf_simulation_uids)){//非测试模式
+                //是否在活动中,来确定增加积分策略
+                $ParkInfo = M('ParkInfo');
+                $map = array();
+                $map['id'] = $parkid;
+                $parkInfo = $ParkInfo->where($map)->find();
+                $acType = $parkInfo['actype'];
+                $acScore = $parkInfo['acscore'];
+                $acEndtime = new DateTime($parkInfo['acendtime']);
+                $now = new DateTime();
+                
+                if($acType == 1 && $acEndtime>= $now){//有补助活动，且没有过期
+                    $change = $acScore;
+                }
+                else{//没有补助或者补助已经过期，采用传统的加分模式
+                    $state = C('SCORE');
+                    $change = $state['out'];
+                }
+            }else{
+                $change = $conf_simulation_uids[$driverId]["score_out"];
+            }
+            
         }
-        else{//没有补助或者补助已经过期，采用传统的加分模式
-            $state = C('SCORE');
-            $this->addScore($this->uid, $state['out']);
-            $newScore = $oldScore + $state['out'];
-            $change = $state['out'];
+        
+        if($change > 0){
+            $ParkAdmin = M('ParkAdmin');
+            $map = array();
+            $map['id'] = $this->uid;
+            $parkadmin = $ParkAdmin->where($map)->find();
+            $oldScore = $parkadmin['score'];
+            $this->addScore($this->uid, $change);
+            $newScore = $oldScore + $change;
+            //记录日志到csv
+            $msgs = array();
+            $msgs['ip'] = $_SERVER['REMOTE_ADDR'];//用户ip
+            $msgs['parkid'] = $parkid;//停车场编号
+            $msgs['uid'] = $this->uid;//操作者id
+            $msgs['opt'] = 3;//3-代表车辆离场的操作类型
+            $msgs['oldValue'] = $oldScore;//原值
+            $msgs['newValue'] = $newScore;//新值
+            $msgs['change'] = $change;//获得积分
+            $msgs['note'] = '';//补充信息
+            
+            takeCSV($msgs);
         }
-
-
-
-        //记录日志到csv
-        $msgs = array();
-        $msgs['ip'] = $_SERVER['REMOTE_ADDR'];//用户ip
-        $msgs['parkid'] = $parkid;//停车场编号
-        $msgs['uid'] = $this->uid;//操作者id
-        $msgs['opt'] = 3;//3-代表车辆离场的操作类型
-        $msgs['oldValue'] = $oldScore;//原值
-        $msgs['newValue'] = $newScore;//新值
-        $msgs['change'] = $change;//获得积分
-        $msgs['note'] = '';//补充信息
-
-        takeCSV($msgs);
 
 
         if($orderData !== false){
@@ -420,8 +472,17 @@ class IndexController extends BaseController {
 		$orderData = $Order->where($map)->select();
 		$result['in'] = count($orderData);
 
-
+        include_once(dirname(__FILE__) . '/../Conf/' . 'config_simulation.php');
 		$map = array();
+        $uid_excludes = array();
+		foreach ($conf_simulation_uids as $key => $value) {//财神不计入在库
+            if($value['type']==1){
+                $uid_excludes[] = $key;
+            }
+        }
+        if(count($uid_excludes) > 0){
+            $map['uid'] = array('not in',$uid_excludes);
+        }
 		$map['pid'] = $parkid;
 		$map['state'] = array(1,2, 'OR');
 		$orderData = $Order->where($map)->select();

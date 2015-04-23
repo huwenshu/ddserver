@@ -1,7 +1,13 @@
 <?php
     
 define('XHPROF_ENABLE',0);
-    
+
+//推送
+define('GT_APPKEY','SmksDDicdNA2GtpF4l7Sc5');
+define('GT_APPID','dpEB6vgxrFABEctm95ZsB3');
+define('GT_MASTERSECRET','wTd4AqonHlArztm0xiaYJ4');
+define('GT_HOST','http://sdk.open.api.igexin.com/apiex.htm');
+
 /**
  * 后台基础控制器
  * @Bin
@@ -601,6 +607,127 @@ class BaseController extends \Think\Controller {
 		$coupon = M('driver_coupon');
 		$coupon->where(array('id'=>$id))->setInc('status',1);//计数器＋1
 	}
+	
+	protected function getuiPush($parkid,$isIn,$title,$txt){
+		include_once(dirname(__FILE__) . '/../Common/getui/' . 'IGt.Push.php');
+		
+    	/*推送*/
+			$msg = json_encode(array('t'=>$isIn?'in':'out'));
+			$igt = new IGeTui(GT_HOST,GT_APPKEY,GT_MASTERSECRET);
+			//接收方
+			//$cids = array('cbb4eaa0824d4b4b28cb5ba267dba9ed','7f1cbe039539576448ee0e7b0a78b7ad','7e15f5387abc091893d62420ae56ab52');
+			$cids = $this->getPushIds($parkid, $isIn);
+			$targetList = array();
+			foreach($cids as $cid){
+				$target1 = new IGtTarget();
+				$target1->set_appId(GT_APPID);
+				$target1->set_clientId($cid);
+			
+				$targetList[] = $target1;
+			}
+			//个推popup消息
+			$template = $this->IGtNotificationTemplateDemo($title, $txt, $msg);
+			$message = new IGtListMessage();
+			$message->set_isOffline(true);//是否离线
+			$message->set_offlineExpireTime(3600*12*1000);//离线时间
+			$message->set_data($template);//设置推送消息类型
+			//$message->set_PushNetWorkType(0);	//设置是否根据WIFI推送消息，1为wifi推送，0为不限制推送
+			$contentId = $igt->getContentId($message);
+			$rep = $igt->pushMessageToList($contentId, $targetList);
+			//var_dump($rep);
+			//echo "<br><br>";
+			//个推透传消息
+			$template2 = $this->IGtTransmissionTemplateDemo($msg);
+			$message2 = new IGtListMessage();
+			$message2->set_isOffline(true);//是否离线
+			$message2->set_offlineExpireTime(3600*12*1000);//离线时间
+			$message2->set_data($template2);//设置推送消息类型
+			//$message->set_PushNetWorkType(0);	//设置是否根据WIFI推送消息，1为wifi推送，0为不限制推送
+			$contentId = $igt->getContentId($message2);
+			$rep = $igt->pushMessageToList($contentId, $targetList);
+    }
+    
+    /**
+	 *  @desc 获取通知的Pushid接口
+	 *  @param int $pid 停车场id
+	 *  @param boolean $type 通知阶段 true-预付完成 false-结算完成
+	 */
+	protected function getPushIds($pid, $type)
+	{
+		$Park = M('ParkInfo');
+		$map = array();
+		$map['id'] = $pid;
+		$parkData = $Park->where($map)->find();
+
+		if(empty($parkData)){
+			return null;
+		}
+		else{
+			$shortname = $parkData['shortname'];
+		}
+
+		$ParkAdmin = M('ParkAdmin');
+		$map = array();
+		$map['parkname'] = $shortname;
+		$adminData = $ParkAdmin->where($map)->select();
+
+		$result = array();
+		if(empty($adminData)){
+			return null;
+		}
+		else{
+			foreach($adminData as $key => $value){
+				if($type){
+					if($this->perCompare($value['jobfunction'], 1)){
+						$result[] = $value['pushid'];
+					}
+				}
+				else{
+					if($this->perCompare($value['jobfunction'], 2)){
+						$result[] = $value['pushid'];
+					}
+				}
+			}
+		}
+		return $result;
+	}
+	
+    protected function simulateEnter($uid, $pid, $endtime, $isalert)
+    {
+    	$Order = M('ParkOrder');
+    	$arr = array();
+      $arr['uid'] = $uid;
+      $arr['pid'] = $pid;
+      $arr['state'] = 0;
+      $arr['startime'] = date("Y-m-d H:i:s");
+      $arr['endtime'] = date("Y-m-d H:i:s",$endtime);
+      $arr['creater'] = 0;
+      $arr['createtime'] = date("Y-m-d H:i:s");
+      $arr['updater'] = 0;
+      $oid = $Order->add($arr);
+      
+      if($isalert){
+      	include_once(dirname(__FILE__) . '/../Conf/' . 'config_simulation.php');
+      	
+      	$this->getuiPush($pid, true, $config_simulation_in[$uid]['title'], $config_simulation_in[$uid]['txt']);
+      }
+    	
+    	return $oid;
+    }
+    
+    protected function simulateLeave($oid, $endtime, $isalert)
+    {
+    	$Order = M('ParkOrder');
+    	$Order->where(array('id'=>$oid,'uid'=>array('elt',0)))->save(array('state'=>2,'endtime'=>date("Y-m-d H:i:s", $endtime)));
+      
+      if($isalert){
+      	include_once(dirname(__FILE__) . '/../Conf/' . 'config_simulation.php');
+      	$orderData = $Order->where(array('id'=>$oid,'uid'=>array('elt',0)))->find();
+      	$pid = $orderData['pid'];
+      	$uid = $orderData['uid'];
+      	$this->getuiPush($pid, false, $config_simulation_out[$uid]['title'], $config_simulation_out[$uid]['txt']);
+      }
+    }
 
 
     //验证openid是否有效

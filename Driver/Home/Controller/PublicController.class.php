@@ -1,13 +1,6 @@
 <?php
-
-require_once(dirname(__FILE__) . '/../Common/getui/' . 'IGt.Push.php');
 require_once(dirname(__FILE__) . '/../Common/Weixin/Pay/' . 'WxPay.config.php');
 
-//推送
-define('GT_APPKEY','SmksDDicdNA2GtpF4l7Sc5');
-define('GT_APPID','dpEB6vgxrFABEctm95ZsB3');
-define('GT_MASTERSECRET','wTd4AqonHlArztm0xiaYJ4');
-define('GT_HOST','http://sdk.open.api.igexin.com/apiex.htm');
 
 /**
  * Driver公关页面控制器
@@ -309,45 +302,7 @@ class PublicController extends BaseController {
         takeCSV($msgs);
 
 		/*推送*/
-		$fee = $notify->data['total_fee']/100;
-		$msg = json_encode(array('t'=>$isIn?'in':'out'));
-		$title = $isIn?"嘟嘟停车：收到预付订单".$fee."元！":"嘟嘟停车：收到停车费".$fee."元！";
-		$txt = $isIn?"车主已预付，注意请放行入库":"车主已付款，注意请放行出库";
-		$igt = new IGeTui(GT_HOST,GT_APPKEY,GT_MASTERSECRET);
-		//接收方
-		//$cids = array('cbb4eaa0824d4b4b28cb5ba267dba9ed','7f1cbe039539576448ee0e7b0a78b7ad','7e15f5387abc091893d62420ae56ab52');
-		$cids = $this->getPushIds($parkid, $isIn);
-		$targetList = array();
-		foreach($cids as $cid){
-			$target1 = new IGtTarget();
-			$target1->set_appId(GT_APPID);
-			$target1->set_clientId($cid);
-		
-			$targetList[] = $target1;
-		}
-		//个推popup消息
-		$template = $this->IGtNotificationTemplateDemo($title, $txt, $msg);
-		$message = new IGtListMessage();
-		$message->set_isOffline(true);//是否离线
-		$message->set_offlineExpireTime(3600*12*1000);//离线时间
-		$message->set_data($template);//设置推送消息类型
-		//$message->set_PushNetWorkType(0);	//设置是否根据WIFI推送消息，1为wifi推送，0为不限制推送
-		$contentId = $igt->getContentId($message);
-		$rep = $igt->pushMessageToList($contentId, $targetList);
-		//var_dump($rep);
-		//echo "<br><br>";
-		//个推透传消息
-		$template2 = $this->IGtTransmissionTemplateDemo($msg);
-		$message2 = new IGtListMessage();
-		$message2->set_isOffline(true);//是否离线
-		$message2->set_offlineExpireTime(3600*12*1000);//离线时间
-		$message2->set_data($template2);//设置推送消息类型
-		//$message->set_PushNetWorkType(0);	//设置是否根据WIFI推送消息，1为wifi推送，0为不限制推送
-		$contentId = $igt->getContentId($message2);
-		$rep = $igt->pushMessageToList($contentId, $targetList);
-		//var_dump($rep);
-		//echo "<br><br>";
-		//echo 'success';
+		$this->getuiPush($parkid, $isIn, $isIn?"嘟嘟停车：您收到新的订单！":"嘟嘟停车：您收到新的付款！", $isIn?"车主已预付，注意请放行入库":"车主已付款，注意请放行出库");
 	}
 
 	/*
@@ -387,51 +342,6 @@ class PublicController extends BaseController {
 			$result=array('fee'=>$fee);
 			$this->ajaxOk($result);
 		}
-	}
-
-	/**
-	 *  @desc 获取通知的Pushid接口
-	 *  @param int $pid 停车场id
-	 *  @param boolean $type 通知阶段 true-预付完成 false-结算完成
-	 */
-	protected function getPushIds($pid, $type)
-	{
-		$Park = M('ParkInfo');
-		$map = array();
-		$map['id'] = $pid;
-		$parkData = $Park->where($map)->find();
-
-		if(empty($parkData)){
-			return null;
-		}
-		else{
-			$shortname = $parkData['shortname'];
-		}
-
-		$ParkAdmin = M('ParkAdmin');
-		$map = array();
-		$map['parkname'] = $shortname;
-		$adminData = $ParkAdmin->where($map)->select();
-
-		$result = array();
-		if(empty($adminData)){
-			return null;
-		}
-		else{
-			foreach($adminData as $key => $value){
-				if($type){
-					if($this->perCompare($value['jobfunction'], 1)){
-						$result[] = $value['pushid'];
-					}
-				}
-				else{
-					if($this->perCompare($value['jobfunction'], 2)){
-						$result[] = $value['pushid'];
-					}
-				}
-			}
-		}
-		return $result;
 	}
 
 	/**
@@ -525,6 +435,21 @@ class PublicController extends BaseController {
 	}
 	public function testUseCoupon($id){
 		print_r($this->_useCoupon(1, $id, 10));
+	}
+	
+	public function testEnter($pid){
+		$oid = $this->simulateEnter(0, $pid, 0, true);
+		$result=array('oid'=>$oid);
+		$this->ajaxOk($result);
+	}
+	public function testLeave($oid){
+		$this->simulateLeave($oid, time()+3600, true);
+		$result=array();
+		$this->ajaxOk($result);
+	}
+	public function testGame($pid){
+		echo $this->simulateEnter(-1, $pid, 0, true);
+		echo "<br>done!";
 	}
 	//测试区
 }
