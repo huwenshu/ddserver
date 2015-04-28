@@ -51,21 +51,12 @@ return array(
 
 
     // 配置邮件发送服务器
-//    'MAIL_HOST' =>'smtp.exmail.qq.com',
-//    'MAIL_SMTPAUTH' =>TRUE, //启用smtp认证
-//    'MAIL_USERNAME' =>'bin@toway.in',
-//    'MAIL_FROM' =>'bin@toway.in',
-//    'MAIL_FROMNAME' =>'Bin',
-//    'MAIL_PASSWORD' =>'Toway2015GO',
-//    'MAIL_CHARSET' =>'utf-8',
-//    'MAIL_ISHTML' =>TRUE, // 是否HTML格式邮件
-
-    'MAIL_HOST' =>'smtp.163.com',
+    'MAIL_HOST' =>'smtp.exmail.qq.com',
     'MAIL_SMTPAUTH' =>TRUE, //启用smtp认证
-    'MAIL_USERNAME' =>'njurice@163.com',
-    'MAIL_FROM' =>'njurice@163.com',
+    'MAIL_USERNAME' =>'dubin@duduche.me',
+    'MAIL_FROM' =>'dubin@duduche.me',
     'MAIL_FROMNAME' =>'Bin',
-    'MAIL_PASSWORD' =>'njudb07',
+    'MAIL_PASSWORD' =>'Njudb07',
     'MAIL_CHARSET' =>'utf-8',
     'MAIL_ISHTML' =>TRUE, // 是否HTML格式邮件
 

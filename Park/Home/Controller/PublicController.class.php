@@ -71,4 +71,35 @@ class PublicController extends BaseController {
             echo "False";
        }
     }
+
+
+//    public function updatecarid(){
+//        $ParkOrder = M('ParkOrder');
+//        $data = $ParkOrder->select();
+//
+//        foreach($data as $key => $value){
+//            $m = array();
+//            $m['id'] = $value['id'];
+//            $temp = array();
+//
+//
+//            $DriverCar = M('DriverCar');
+//            $map = array();
+//            $map['driverid'] = $value['uid'];;
+//            $map['status'] = 1;
+//            $car = $DriverCar->where($map)->find();
+//            if(empty($car)){
+//                $temp['carid'] = "";
+//            }
+//            else{
+//                $temp['carid'] = $car['carid'];
+//            }
+//
+//            $ParkOrder->where($m)->save($temp);
+//            dump($temp);
+//
+//        }
+//
+//    }
+
 }

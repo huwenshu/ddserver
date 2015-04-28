@@ -343,6 +343,7 @@
                                     echo "用户名：<input type='text'  name='username' value='".$value['username']."'/><br>";
                                     echo "密码：<input type='password'  name='password' value='' /><br>";
                                     echo "姓名：<input type='text'  name='name' value='".$value['name']."' /><br>";
+                                    echo "昵称：<input type='text'  name='nickname' value='".$value['nickname']."' /><br>";
                                     echo "电话：<input type='text'  name='phone' value='".$value['phone']."' /><br>";
                                     echo "职能:<br>".getJobs($value['jobfunction']);
                                     echo "<br>";
@@ -755,6 +756,8 @@
                     '密码：<input type="password"  name="password" value=""/>' +
                     '<h6>*默认密码以前两位小写缩写字母+0102</h6>'   +
                     '姓名：<input type="text"  name="name" value=""/><br>' +
+                    '昵称：<input type="text"  name="nickname" value=""/>' +
+                    '<h6>*如金师傅，李师傅等</h6>'   +
                     '职能：<br>' +
                     '<input style="width: 10%" type="checkbox" name="jobfunction[]" value="1" /><span>入口管理</span>'+
                     '<input style="width: 10%" type="checkbox" name="jobfunction[]" value="2" /><span>出口管理</span>'+

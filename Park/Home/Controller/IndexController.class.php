@@ -155,7 +155,7 @@ class IndexController extends BaseController {
 		$con = array();
 		$con['pid'] = $parkid;
 		$con['state'] = array(1,2, 'OR');
-		$orderData = $Order->where($con)->select();
+		$orderData = $Order->where($con)->order('startime desc')->select();
 
 		$result = array();
 		foreach($orderData as $key => $value){
@@ -728,7 +728,38 @@ class IndexController extends BaseController {
         $ExchangeGift = M('ExchangeGift');
         $map = array();
         $map['creater'] = $this->uid;
-        $result = $ExchangeGift->where($map)->order('state, createtime desc')->select();
+        $data = $ExchangeGift->where($map)->order('state, createtime desc')->select();
+
+        $result = array();
+
+        foreach($data as $key => $value){
+            $temp = array();
+            if($value['visitype'] == 1){
+                $temp['visitype'] = 1;
+            }
+            else{
+                if($this->getGift($value['gid'])['type']==0){
+                    $temp['visitype'] = 2;
+                    $temp['name'] = $value['name'];
+                    $temp['address'] = $value['address'];
+                    $temp['telephone'] = $value['telephone'];
+                }
+                else{
+                    $temp['visitype'] = 3;
+                    $temp['name'] = $value['name'];
+                    $temp['account'] = $value['account'];
+                    $temp['bankname'] = $value['bankname'];
+                }
+            }
+
+            $temp['createtime'] = $value['createtime'];
+            $temp['score'] = $value['score'];
+            $temp['state'] = $value['state'];
+            $temp['giftname'] = $this->getGiftName($value['gid']);
+
+            array_push($result, $temp);
+
+        }
 
         $this->ajaxOk($result);
     }
@@ -807,7 +838,7 @@ class IndexController extends BaseController {
 			$this->ajaxMsg('兑换请求失败！');
 		}
 		else{
-			$send = $this->sendEmail('295142831@qq.com', $title, $content);
+			$send = $this->sendEmail('dubin@duduche.me', $title, $content);
 
             //记录日志到csv
             $newScore = $scoreSum;
