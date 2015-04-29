@@ -117,7 +117,7 @@ return array(
                     ),
                     array(
                         'type' => 'view',
-                        'name' => '我的卡券',
+                        'name' => '我的抵用券',
                         'url' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd417c2e70f817f89&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=coupon#wechat_redirect'
                     ),
                     array(
@@ -131,5 +131,16 @@ return array(
         )
     ),
 
+    //特殊的测试openid;
     'OPENID' => array('oTlYLj275XRH9M_n7d3KrpItav6g','oTlYLj6hKfcPIc5N-zmCmWvVsxVU','oTlYLj7oAHMG2WaO4Bthla0Um8U8'),
+
+    // 配置邮件发送服务器
+    'MAIL_HOST' =>'smtp.exmail.qq.com',
+    'MAIL_SMTPAUTH' =>TRUE, //启用smtp认证
+    'MAIL_USERNAME' =>'dubin@duduche.me',
+    'MAIL_FROM' =>'dubin@duduche.me',
+    'MAIL_FROMNAME' =>'Bin',
+    'MAIL_PASSWORD' =>'Njudb07',
+    'MAIL_CHARSET' =>'utf-8',
+    'MAIL_ISHTML' =>TRUE, // 是否HTML格式邮件
 );

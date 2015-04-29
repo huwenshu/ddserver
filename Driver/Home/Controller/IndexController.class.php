@@ -498,7 +498,7 @@ class IndexController extends BaseController {
 		
 		$ParkAdmin = M('ParkAdmin');
 		$con = "parkid=".$pid." && jobfunction&1<>0";
-		$adminData = $ParkAdmin->where($con)->order('lastop desc')->field("name,phone")->select();
+		$adminData = $ParkAdmin->where($con)->order('lastop desc')->field("nickname,phone")->select();
 		$result['admin'] = $adminData;
 		//折扣卷
 		$result['coupon'] = array();
