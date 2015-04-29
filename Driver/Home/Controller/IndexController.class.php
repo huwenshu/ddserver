@@ -905,6 +905,22 @@ class IndexController extends BaseController {
 
     		$this->ajaxReturn($result,'jsonp');
     }
+    
+    
+	public function open_wx_sign($url=null){
+		//$url2 = "http://t.duduche.me/html/userhtml/index.html?m=myjiesuan";
+		//$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+    //$url = "$protocol$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+		$signPackage = $this->GetSignPackage($url);
+		//$signPackage['v'] = strcmp($url,$url2);
+		/**/
+		$result=array("appId" => $signPackage["appId"]
+			, "timestamp" => $signPackage["timestamp"]
+			, "nonceStr" => $signPackage["nonceStr"]
+			, "signature" => $signPackage["signature"]	
+		);
+		$this->ajaxOk($result);
+	}
 
 
 	//距离比较函数
