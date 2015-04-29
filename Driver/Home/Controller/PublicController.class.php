@@ -451,5 +451,47 @@ class PublicController extends BaseController {
 		echo $this->simulateEnter(-1, $pid, 0, true);
 		echo "<br>done!";
 	}
+	
+	public function open_wx_map_html($lat, $lng, $name, $addr, $infourl = ''){
+		$protocol = (!empty($_SERVER['HTTPS']) && $_SERVER['HTTPS'] !== 'off' || $_SERVER['SERVER_PORT'] == 443) ? "https://" : "http://";
+    $url = "$protocol$_SERVER[HTTP_HOST]$_SERVER[REQUEST_URI]";
+		$signPackage = $this->GetSignPackage($url);
+?>
+<!DOCTYPE html>
+<html>
+<head>
+  <meta charset="UTF-8">
+  <title></title>
+</head>
+<body>
+</body>
+<script src="http://res.wx.qq.com/open/js/jweixin-1.0.0.js"></script>
+<script>
+  wx.config({
+    debug: true,
+    appId: '<?php echo $signPackage["appId"];?>',
+    timestamp: <?php echo $signPackage["timestamp"];?>,
+    nonceStr: '<?php echo $signPackage["nonceStr"];?>',
+    signature: '<?php echo $signPackage["signature"];?>',
+    jsApiList: [
+      'checkJsApi',
+      'openLocation'
+    ]
+  });
+  wx.ready(function () {
+    wx.openLocation({
+		    latitude: <?php echo $lat;?>,
+		    longitude: <?php echo $lng;?>,
+		    name: '<?php echo $name;?>',
+		    address: '<?php echo $addr;?>',
+		    scale: 16,
+		    infoUrl: '<?php echo $infourl;?>'
+		});
+  });
+</script>
+</html>
+<?php
+		print_r($signPackage);
+	}
 	//测试区
 }
