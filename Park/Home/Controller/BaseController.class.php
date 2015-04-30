@@ -198,6 +198,41 @@ class BaseController extends \Think\Controller {
     }
 
     /**
+     *  @desc 检查奖励积分，未超过，则缓存
+     *  @param int $uid 管理员id
+     *  @param int $add 增加的积分
+     */
+    protected function cacheScore($uid,$add){
+
+        $timeStr = date('Ymd');
+        $key = 'score_'.$uid.'_'.$timeStr;
+        $score = S($key);
+        dump($score);
+        $limit = C('SCORE_LIMIT');
+        if(!$score){//不存在cache
+            if($add > $limit){
+                return false;
+            }
+            else{
+                $score = $add;
+                S($key, $score, 24*60*60);
+            }
+        }
+        else{
+            $score = $score + $add;
+            if($score > $limit){
+                return false;
+            }
+            else{
+                S($key, $score, 24*60*60);
+            }
+        }
+
+        return true;
+
+    }
+
+    /**
      *  @desc  发送邮件
      *  @param $adid
      */

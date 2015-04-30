@@ -102,8 +102,27 @@ class IndexController extends BaseController {
         if(!array_key_exists($driverId,$conf_simulation_uids) || $conf_simulation_uids[$driverId]["type"] == 1){
             
             if(!array_key_exists($driverId,$conf_simulation_uids)){//非测试模式
-                $state = C('SCORE');
-                $change = $state['in'];
+
+                //是否在活动中,来确定增加积分策略
+                $ParkInfo = M('ParkInfo');
+                $map = array();
+                $map['id'] = $parkid;
+                $parkInfo = $ParkInfo->where($map)->find();
+                $acType = $parkInfo['actype'];
+                $acScore = $parkInfo['acscore'];
+                $acEndtime = new DateTime($parkInfo['acendtime']);
+                $now = new DateTime();
+
+                if($acType == 2 && $acEndtime>= $now){//有补助活动，且没有过期
+                    if($this->cacheScore($this->uid, $acScore)){//未达到奖励上限
+                        $change = $acScore;
+                    }
+                }
+                else{//没有补助或者补助已经过期，采用传统的加分模式
+                    $state = C('SCORE');
+                    $change = $state['in'];
+                }
+
             }else{
                 $change = $conf_simulation_uids[$driverId]["score_in"];
             }
@@ -126,7 +145,7 @@ class IndexController extends BaseController {
             $msgs['opt'] = 2;//2-代表车辆进场的操作类型
             $msgs['oldValue'] = $oldScore;//原值
             $msgs['newValue'] = $newScore;//新值
-            $msgs['change'] = $state['in'];//获得积分
+            $msgs['change'] = $change;//获得积分
             $msgs['note'] = '';//补充信息
             
             takeCSV($msgs);
@@ -272,7 +291,9 @@ class IndexController extends BaseController {
                 $now = new DateTime();
                 
                 if($acType == 1 && $acEndtime>= $now){//有补助活动，且没有过期
-                    $change = $acScore;
+                    if($this->cacheScore($this->uid, $acScore)){//未达到奖励上限
+                        $change = $acScore;
+                    }
                 }
                 else{//没有补助或者补助已经过期，采用传统的加分模式
                     $state = C('SCORE');
@@ -787,6 +808,7 @@ class IndexController extends BaseController {
 		}
 		else{
 			$score = $giftData['score'];
+            $type = $giftData['type'];
 		}
 
 		$cache = $this->getUsercache($this->uid);
@@ -817,15 +839,28 @@ class IndexController extends BaseController {
 		$giftName = $this->getGiftName($gid);
 		$adminName = $this->getAdmin($this->uid);
         if($visitype == C('VISIT_TYPE')['Online']){
-            $visitypeStr = "线上兑换";
+            if($type == 0 ){
+                $visitypeStr = "快递寄送礼品";
+                $content = '停车场：'.$parkName.'<br>姓名：'.$name.'<br>地址：'.$address.'<br>电话：'.$telephone.
+                    '<br>送货方式：'.$visitypeStr.
+                    '<br>礼品名称：'.$giftName.'<br>兑换管理员：'.$adminName.'<br>兑换积分：'.$score.'<br>兑换表ID：'.$exid;
+            }
+            else{
+                $visitypeStr = "银行卡转账";
+                $content = '停车场：'.$parkName.'<br>姓名：'.$name.
+                    '<br>开户行：'.$bankname.'<br>银行账号：'.$account.'<br>送货方式：'.$visitypeStr.
+                    '<br>礼品名称：'.$giftName.'<br>兑换管理员：'.$adminName.'<br>兑换积分：'.$score.'<br>兑换表ID：'.$exid;
+            }
+
         }
         else{
-            $visitypeStr = "线下送上门";
+            $visitypeStr = "销售线下送上门";
+            $content = '停车场：'.$parkName.'<br>送货方式：'.$visitypeStr.
+                '<br>礼品名称：'.$giftName.'<br>兑换管理员：'.$adminName.'<br>兑换积分：'.$score.'<br>兑换表ID：'.$exid;
+
         }
 
-		$content = '停车场：'.$parkName.'<br>姓名：'.$name.'<br>地址：'.$address.'<br>电话：'.$telephone.
-            '<br>开户行：'.$bankname.'<br>银行账号：'.$account.'<br>送货方式：'.$visitypeStr.
-			'<br>礼品名称：'.$giftName.'<br>兑换管理员：'.$adminName.'<br>兑换积分：'.$score.'<br>兑换表ID：'.$exid;
+
 
 		//更新积分
 		$scoreSum = $scoreSum - $score;
