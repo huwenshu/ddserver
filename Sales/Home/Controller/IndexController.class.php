@@ -20,7 +20,7 @@ class IndexController extends  BaseController {
         }
     }
 
-    public function parkinfo($parkid = null){
+    public function parkinfo($parkid = null, $fileError = ''){
     	if (IS_POST) {
     		$parkInfo = array();
     		//处理POST过来的信息
@@ -57,6 +57,33 @@ class IndexController extends  BaseController {
  			$parkInfo['note'] = I('note');
  			$parkInfo['shortname'] = I('shortname');
 
+            //采用FTP方式，上传图片
+            //上传图片的配置
+            $config = array(
+                'maxSize'    =>    3145728,
+                'rootPath'   =>   C('PARK_UPLOAD_PATH'),
+                'savePath'   =>    '',
+                'saveName'   =>     'Park_'.I('post.id')."_".time(),
+                'exts'       =>    array('jpg', 'gif', 'png', 'jpeg'),
+                'autoSub'    =>    false,
+                'replace'      =>    true,
+            );
+            $upload = new \Think\Upload($config,'Ftp', C('UPLOAD_FTP'));// 实例化上传类
+            $info   =   $upload->upload();
+            if(!$info) {// 上传错误提示错误信息
+                $fileError = $upload->getError();
+            }
+            else {
+                //图片缩写的先去除
+                //$image = new \Think\Image();
+                //$imgURL = C('PARK_IMG_PATH').$info['parkimage']['savename'];
+                //$image->open($imgURL);
+                // 按照原图的比例生成一个最大为150*150的缩略图并保存为thumb.jpg
+                //$image->thumb(640, 300)->save($imgURL);
+                $parkInfo['image'] = $info['parkimage']['savename'];
+            }
+
+            //dump($info);
             //停车场活动参数
             $actype = I('post.actype');
             $acendtime = I('post.acendtime');
@@ -68,7 +95,7 @@ class IndexController extends  BaseController {
     		$Park = D('ParkInfo');
     		$saveParkId = $Park->SaveParkInfo($parkInfo);
     		if ($saveParkId) {
-    			$this->redirect('/Home/Index/parkinfo/parkid/'.$saveParkId.'/#panel-1');
+    			$this->redirect('Index/parkinfo', array('parkid' => $saveParkId,'fileError' => $fileError), 0, '保存成功...');
     		}
     		else{
     			$this->error();
@@ -80,6 +107,7 @@ class IndexController extends  BaseController {
     		$onePark = $Park->onePark($parkid);
     		$this->park_info = $onePark;
     		$this->meta_title = '停车场 | 嘟嘟销售系统';
+            $this->fileError = $fileError;
     		$this->feeurl = U('Home/Index/parkfee',array('parkid'=>$parkid));
 			$rulestime = M('rules_time');
 			$cond = array();

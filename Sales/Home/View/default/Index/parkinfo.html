@@ -73,7 +73,7 @@
             <li><a href="#panel-2">拜访记录</a></li>
         </ul>
         <div id="panel-1">
-            <form action="{:U('parkinfo')}" method="post">
+            <form action="{:U('parkinfo')}" method="post" enctype="multipart/form-data">
                 <input type="hidden"  name="id" value="{$park_info[id]}" />
                 <table style="display: flex;width: 95%;margin: 0 auto;margin-top: 10px">
                     <tr>
@@ -171,6 +171,19 @@
                             <textarea id="note" name="note" rows="5">{$park_info[note]}</textarea>
                         </td>
                     </tr>
+                    <tr>
+                        <td><label for="parkimage">停车场入口图片：</label></td>
+                        <td><input type="file" id="parkimage" name="parkimage" value= "" style="margin: 10px;"/><span style="color:red;">{$fileError}</span> </td>
+                    </tr>
+
+                    <tr>
+                        <td></td>
+                        <td>
+                            <img src="<?php echo C('PARK_IMG_QINIU');?>/Park/{$park_info[image]}">
+                        </td>
+                    </tr>
+
+
                     <tr>
                         <td><label for="shortname">停车场缩写：</label></td>
                         <td><input type="text" id="shortname" name="shortname" value="{$park_info[shortname]}" /> </td>

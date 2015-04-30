@@ -93,4 +93,23 @@ return array(
         1 => '5元推广补助',
     ),
 
+    //上传图片的FTP设置
+    'UPLOAD_FTP'     =>    array(
+        'host'     => '115.29.160.95', //服务器
+        'port'     => 21, //端口
+        'timeout'  => 90, //超时时间
+        'username' => 'www', //用户名
+        'password' => '2aed6eb9d'//密码
+    ),
+
+    //FTP上传地址
+    'PARK_UPLOAD_PATH' => './default/Public/Uploads/Park/',
+
+    //图片相对访问路径
+    'PARK_IMG_PATH' =>  './Public/Uploads/Park/',
+
+    //图片七牛访问路径
+    'PARK_IMG_QINIU' =>'http://7xispd.com1.z0.glb.clouddn.com',
+
+
 );
