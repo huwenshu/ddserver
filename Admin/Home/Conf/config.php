@@ -78,7 +78,7 @@ return array(
     ),
 
     //FTP上传地址
-    'UPLOAD_FTP_PATH' => 'default',
+    'UPLOAD_FTP_PATH' => './default/Public/Uploads/images/',
 
     //CVS的Log记录地址
     'CSV_LOG_PATH' => './Public/Logs',

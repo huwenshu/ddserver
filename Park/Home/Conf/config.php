@@ -69,7 +69,7 @@ return array(
     'VISIT_TYPE' => array('Online' => 0, 'Offline' => 1),
 
     //积分活动上限
-    'SCORE_LIMIT' => 5000,积分奖励上限
+    'SCORE_LIMIT' => 5000,//积分奖励上限
 
 
 );

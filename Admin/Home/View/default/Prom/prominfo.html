@@ -1,6 +1,9 @@
 <extend name="Public/base" xmlns="http://www.w3.org/1999/html"/>
 
 <block name="style">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/datetimepicker/css/bootstrap.css" media="all">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/datetimepicker/css/datetimepicker.css" media="all">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/datetimepicker/css/dropdown.css" media="all">
     <style>
         body{padding: 0}
         .myborder{
@@ -117,6 +120,17 @@
                     </table>
                 </form>
 
+                <form action="{:U('prominfo')}" method="get" style="width: 95%;margin: 0 auto;margin-top: 10px"">
+                    <input type="text" name="promid" value="{$prominfo[id]}" hidden="true"/>
+                    <label for="startime">起始时间：</label>
+                    <input type="text" id="startime" class="datetimepicker" name="startime" value="{$startime}" style="width: 150px"/>
+                    &nbsp;
+                    <label for="endtime">结束时间：</label>
+                    <input type="text" id="endtime" class="datetimepicker" name="endtime" value="{$endtime}" style="width: 150px"/>
+                    &nbsp;
+                    <input type="submit" value="查询"/>
+                </form>
+
                 <table id="promTable" style="width: 95%;margin: 0 auto;margin-top: 10px;text-align:center;border-collapse:collapse;border:none;">
                     <tbody>
                     <tr>
@@ -145,4 +159,19 @@
 
 <block name="script">
     <script type="text/javascript" src="__STATIC__/iscroll.js"></script>
+    <script type="text/javascript" src="__STATIC__/datetimepicker/js/bootstrap-datetimepicker.js"></script>
+    <script type="text/javascript" src="__STATIC__/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script type="text/javascript">
+        $(function() {
+            $('.datetimepicker').datetimepicker({
+                language: 'zh-CN',
+                todayBtn: true,
+                autoclose: true,
+                minView: '2',
+                forceParse: false,
+                format:"yyyy-mm-dd"
+            });
+
+        });
+    </script>
 </block>

@@ -98,6 +98,8 @@ class IndexController extends BaseController {
 			$tmp['name'] = $value['name'];
 			$tmp['rules'] = $value['chargingrules'];
 			$tmp['address'] = $value['address'];
+            $tmp['address2'] = $value['address2'];
+            $tmp['image'] = C('PARK_IMG_QINIU').'/Park/'.$value['image'];
 			$tmp['prepay'] = $value['prepay'];
 			$tmp['lat'] = $value['lat'];
 			$tmp['lng'] = $value['lng'];
@@ -442,7 +444,7 @@ class IndexController extends BaseController {
 		$coupons = array();
 		$couponArr = $this->_listCoupon($this->uid,$all);
 		foreach($couponArr as $key => $value){
-            $temp = array('id'=>$value['id'],'t'=>$value['type'],'m'=>$value['money'],'e'=>$value['endtime']);
+            $temp = array('id'=>$value['id'],'t'=>$value['type'],'m'=>$value['money'],'e'=>$value['endtime'], 'u' => $value['status']);
 			array_push($coupons,$temp);
 		}
         $result['coupon'] = $coupons;
@@ -484,6 +486,8 @@ class IndexController extends BaseController {
 		$con = array('id' => $pid);
 		$parkData = $ParkInfo->where($con)->find();
 		$result['address'] = $parkData['address'];
+        $result['address2'] = $parkData['address2'];
+        $result['image'] = C('PARK_IMG_QINIU').'/Park/'.$parkData['image'];
 		$result['lat'] = $parkData['lat'];
 		$result['lng'] = $parkData['lng'];
 		$result['name'] = $parkData['name'];

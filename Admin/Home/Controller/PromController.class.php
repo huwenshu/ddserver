@@ -62,9 +62,12 @@ class PromController extends BaseController{
 
         }
         else{
+            $startime = I('get.startime');
+            $endtime = I('get.endtime');
+
             $PromList = M('PromList');
             $map = array();
-            $map['id'] = $promid;
+            $map['id'] = I('get.promid');
             $prom = $PromList->where($map)->find();
             $this->prominfo= $prom;
 
@@ -85,22 +88,34 @@ class PromController extends BaseController{
                 $temp['code'] = $value['code'];
                 $temp['info'] = $this->getGiftInfo($value['code']);
 
-                $con = array();
-                $con['code'] = $value['code'];
-                $con['optype'] = 0;
-                $con['fromid'] = $promid;
-                $check = $DriverGiftlog->where($con)->count();
-                $temp['check'] = $check;
-
-                $con = array();
-                $con['code'] = $value['code'];
-                $con['optype'] = 1;
-                $con['fromid'] = $promid;
-                $open = $DriverGiftlog->where($con)->count();
-                $temp['open'] = $open;
+                $timeCon = "";
+                if(!empty($startime)){
+                    $timeCon = $timeCon." and DATEDIFF(optime , '$startime') >= 0";
+                }
+                if(!empty($endtime)){
+                    $timeCon = $timeCon." and DATEDIFF('$endtime' , optime) >= 0";
+                }
 
                 $Model = new \Think\Model(); // 实例化一个model对象 没有对应任何数据表
-                $queryStr = "SELECT COUNT(*) AS 'use' FROM `dudu_driver_coupon` a,`dudu_driver_giftpack` b, `dudu_driver_giftlog` c WHERE a.source = b.id and b.code=c.code and a.uid = c.uid and c.fromid =".$promid." AND a.status = 1 and c.optype = 1 and c.code ='".$value['code']."'";
+
+                $checkSql = "SELECT COUNT(*) AS 'check' FROM dudu_driver_giftlog WHERE code = '".$value['code']."' AND optype=0 AND fromid=$promid".$timeCon;
+                $check = $Model->query($checkSql)[0]['check'];
+                $temp['check'] = $check;
+
+
+                $openSql = "SELECT COUNT(*) AS 'open' FROM dudu_driver_giftlog WHERE code = '".$value['code']."'  AND optype=1 AND fromid=$promid".$timeCon;
+                $open = $Model->query($openSql)[0]['open'];
+                $temp['open'] = $open;
+
+
+                $timeStr = "";
+                if(!empty($startime)){
+                    $timeStr = $timeStr." and DATEDIFF(d.updatetime , '$startime') >= 0";
+                }
+                if(!empty($endtime)){
+                    $timeStr = $timeStr." and DATEDIFF('$endtime' , d.updatetime) >= 0";
+                }
+                $queryStr = "SELECT COUNT(*) AS 'use' FROM `dudu_driver_coupon` a,`dudu_driver_giftpack` b, `dudu_driver_giftlog` c, `dudu_payment_record` d WHERE a.source = b.id and b.code=c.code and a.uid = c.uid and a.id = d.cid and c.fromid =".$promid." AND a.status = 1 and c.optype = 1 and c.code ='".$value['code']."' and d.state = 1".$timeStr;
                 $temp['use'] = $Model->query($queryStr)[0]['use'];
 
                 array_push($promSum,$temp);
@@ -109,6 +124,8 @@ class PromController extends BaseController{
             }
             $this->promList = $promSum;
             $this->meta_title = '停车场 | 嘟嘟销售系统';
+            $this->startime = $startime;
+            $this->endtime = $endtime;
             $this->display();
         }
 

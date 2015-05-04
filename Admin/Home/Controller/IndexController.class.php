@@ -128,13 +128,13 @@ class IndexController extends BaseController {
         $ctime = time();
         $timeout1 = date("Y-m-d H:i:s",$ctime - 30*60);
         $timeout2 = date("Y-m-d H:i:s",$ctime - 24*60*60);
-        $condition1 = '(state = 2 AND updatetime < "'.$timeout1.'") OR (state in(0,1) AND updatetime < "'.$timeout2.'")';
+        $condition1 = '(pid <>1 AND uid > 0 AND state = 2 AND updatetime < "'.$timeout1.'") OR (pid <>1 AND uid > 0 AND state in(0,1) AND updatetime < "'.$timeout2.'")';
         $outs = $ParkOrder->where($condition1)->order('updatetime')->select();
 
         //进场确认异常
         $ctime = time();
         $timeout3 = date("Y-m-d H:i:s",$ctime - 60*60);
-        $condition2 = 'state = 0 AND updatetime < "'.$timeout3.'"';
+        $condition2 = 'pid <>1 AND uid > 0 AND state = 0 AND updatetime < "'.$timeout3.'"';
         $ins = $ParkOrder->where($condition2)->order('updatetime')->select();
 
 

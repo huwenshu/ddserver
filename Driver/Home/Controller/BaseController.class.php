@@ -511,10 +511,10 @@ class BaseController extends \Think\Controller {
         $couponArr = array();
         //$oneMonth = date("Y-m-d H:i:s", strtotime("-1 months", time()));
         if($all){
-            $con1 = "uid=".$uid." and starttime<='".$nowStr."' and endtime>='".$nowStr."' and status=0";
-            $couponArr1 = $coupon->where($con1)->order('type asc,money desc,endtime asc')->select();
+            $con1 = "uid=".$uid." and starttime<='".$nowStr."' and endtime>='".$nowStr."' ";
+            $couponArr1 = $coupon->where($con1)->order('status asc, endtime asc')->select();
 
-            $con2 = "uid=".$uid." and starttime<='".$nowStr."' and endtime<'".$nowStr."' and status=0";
+            $con2 = "uid=".$uid." and starttime<='".$nowStr."' and endtime<'".$nowStr."' ";
             $couponArr2 = $coupon->where($con2)->order('endtime desc')->limit(10)->select();
 
             //array_merge的数组一定不能为空

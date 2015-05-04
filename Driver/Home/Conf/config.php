@@ -143,4 +143,9 @@ return array(
     'MAIL_PASSWORD' =>'Njudb07',
     'MAIL_CHARSET' =>'utf-8',
     'MAIL_ISHTML' =>TRUE, // 是否HTML格式邮件
+
+
+    //图片七牛访问路径
+    'PARK_IMG_QINIU' =>'http://7xispd.com1.z0.glb.clouddn.com',
+
 );
