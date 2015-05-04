@@ -201,7 +201,14 @@ class IndexController extends BaseController {
 			array_push($result, $tmp);
 		}
 
-		$this->ajaxOk($result);
+        //对在场列表按照车牌去重
+        $list = $this->assoc_unique($result, 'carid');
+        $last = array();
+        foreach($list as $key => $value){
+            array_push($last, $value);
+        }
+
+		$this->ajaxOk($last);
 
 
 	}
@@ -507,7 +514,20 @@ class IndexController extends BaseController {
 		$map['pid'] = $parkid;
 		$map['state'] = array(1,2, 'OR');
 		$orderData = $Order->where($map)->select();
-		$result['at'] = count($orderData);
+        $carids = array();
+        foreach($orderData as $key => $value){//去除在场重复的车辆
+            $driverId = $value['uid'];
+            $carid = $this->getDefualtCarid($driverId);
+            if(in_array($carid, $carids))
+            {
+                continue;
+            }
+            else {
+                $carids[] = $carid;
+            }
+        }
+		$result['at'] = count($carids);
+
 
 
 		$map = array();

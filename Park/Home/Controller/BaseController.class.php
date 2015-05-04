@@ -241,5 +241,25 @@ class BaseController extends \Think\Controller {
         return SendMail($mail, $title, $content);
     }
 
+    /**
+     *  @desc  二位数组去重
+     *  @param $arr 去重的数组
+     *  @param $key   去除的子列
+     */
+    protected function  assoc_unique($arr, $key){
+        $tmp_arr = array();
+        foreach($arr as $k => $v)
+        {
+            if(in_array($v[$key], $tmp_arr))//搜索$v[$key]是否在$tmp_arr数组中存在，若存在返回true
+            {
+                unset($arr[$k]);
+            }
+            else {
+                $tmp_arr[] = $v[$key];
+            }
+        }
+
+        return $arr;
+    }
 
 }
