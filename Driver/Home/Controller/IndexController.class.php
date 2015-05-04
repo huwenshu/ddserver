@@ -165,6 +165,7 @@ class IndexController extends BaseController {
 		$Order = M('ParkOrder');
 		$arr['uid'] = I('get.uid');
 		$arr['pid'] = $pid;
+        $arr['carid'] = $this->getDefualtCarid(I('get.uid'));
 		$arr['state'] = -1;
 		$arr['startime'] = date("Y-m-d H:i:s",0);
 		$arr['endtime'] = date("Y-m-d H:i:s",0);
@@ -268,6 +269,7 @@ class IndexController extends BaseController {
         $Order = M('ParkOrder');
         $arr['uid'] = I('get.uid');
         $arr['pid'] = $pid;
+        $arr['carid'] = $this->getDefualtCarid(I('get.uid'));
         $arr['state'] = -1;
         $arr['startime'] = date("Y-m-d H:i:s",0);
         $arr['endtime'] = date("Y-m-d H:i:s",0);
