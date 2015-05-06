@@ -20,21 +20,40 @@
             <?php
             foreach ($orders as $key => $value) {
             $temp = "<li name='orderitem' class='mui-table-view-cell'>
-            <p>车牌：".$value['carid']."</p>
-            <p>下单时间：".$value['startime']."</p>";
+            <p>车牌：".$value['carid']."</p>";
             $temp .= "<p>订单状态：".C('ORDER_STATE')[$value['state']]."</p>";
-            if($value['state']>1){
-                $temp .= "<p>结算款：";
+            if($value['state']>-1){
+                $temp .=  "<p>下单时间：".$value['startime']."</p>";
+                $temp .=  "<p>截止时间：".$value['endtime']."</p>";
             }
-            else{
-                $temp .= "<p>预付款：";
+            if($value['state']>0){
+                $temp .=  "<p>进场时间：".$value['entrytime']."</p>";
             }
-            $temp .= $value['money']."</p>
-            <p>停车场：".$value['name']."</p>
-            <p>电话号码：".$value['telephone']."</p>
-            </li>";
+            if($value['state']>2){
+                $temp .=  "<p>离场时间：".$value['leavetime']."</p>";
+            }
 
+            $temp .="<p>付费：";
+            foreach($value['pay'] as $k => $v){
+                if($k == (count($value['pay'])-1)){
+                    $temp.=$v;
+                }
+                else{
+                    $temp.=$v." + ";
+                }
+            }
+
+            $temp .= "</p>
+            <p>停车场：".$value['name']."</p>
+            <p>电话号码：".$value['telephone']."</p>";
             echo $temp;
+
+            if($value['state'] < 3){
+                $url = U("Home/Index/makeLeave/oid/".$value["id"]);
+                echo '<a class="mui-btn mui-btn-danger" href="'.$url.'" style="float:right;">离场</a>';
+            }
+
+            echo "</li>";
             }
             ?>
         </ul>

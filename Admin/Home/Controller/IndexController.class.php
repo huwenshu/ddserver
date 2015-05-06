@@ -321,10 +321,37 @@ class IndexController extends BaseController {
 
     public  function orderList(){
         $Model = new \Think\Model(); // 实例化一个model对象 没有对应任何数据表
-        $sql = "SELECT o.uid,c.carid,o.startime,r.money, d.telephone,p.name,o.state FROM dudu_park_order o, dudu_driver_car c, dudu_payment_record r, dudu_park_info p, dudu_driver_info d WHERE o.pid <> 1 and o.state > -1 and o.uid = d.id AND d.id = c.driverid and c.status =1 and o.id = r.oid and r.state=1 and o.pid = p.id ORDER BY o.updatetime DESC LIMIT 100";
-        $result = $Model->query($sql);
-        $this->orders = $result;
+        $sql = " SELECT o.id, o.uid, o.carid, o.startime, o.endtime, o.entrytime, o.leavetime, d.telephone, p.name, o.state FROM dudu_park_order o,  dudu_park_info p, dudu_driver_info d WHERE o.pid <> 1 and o.state > -1 and o.uid = d.id and o.pid = p.id ORDER BY o.updatetime DESC LIMIT 100";
+        $orderList = $Model->query($sql);
+
+        $PaymentRecord = M('PaymentRecord');
+        foreach($orderList as $key => $value){
+            $map = array();
+            $map['oid'] = $value['id'];
+            $map['state'] = 1;
+            $records = $PaymentRecord->where($map)->order('createtime asc')->select();
+            $pay = array();
+            foreach($records as $k => $v){
+                array_push($pay, $v['money']);
+            }
+            $orderList[$key]['pay'] = $pay;
+        }
+        $this->orders = $orderList;
         $this->display();
+    }
+
+    public  function makeLeave($oid){
+        $ParkOrder = M('ParkOrder');
+        $map = array();
+        $map['id'] = $oid;
+        $data = array();
+        $data['state'] = 3;
+        $data['leavetime'] = date('Y-m-d H:i:s');
+        $data['driverleave'] = 2;//2表示是管理员后台处理离场
+        $data['updater'] = 'a-'.UID;
+        $ParkOrder->where($map)->save($data);
+
+        $this->redirect('Home/Index/orderList/');
     }
 
 }
