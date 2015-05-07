@@ -83,4 +83,7 @@ return array(
     //CVS的Log记录地址
     'CSV_LOG_PATH' => './Public/Logs',
 
+    //礼品送货方式
+    'VISIT_TYPE' => array('Online' => 0, 'Offline' => 1),
+
 );

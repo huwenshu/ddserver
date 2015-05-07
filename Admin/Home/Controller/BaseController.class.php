@@ -72,6 +72,25 @@ class BaseController extends \Think\Controller {
 
     }
 
+/**
+*  @desc $gid 获取礼品类型
+*  @param $gid
+*/
+    protected function getGiftType($gid)
+    {
+        $ParkInfo = M('GiftList');
+        $map = array();
+        $map['id'] = $gid;
+        $giftData = $ParkInfo->where($map)->find();
+        if(!empty($giftData)) {
+            return  $giftData['type'];
+        }
+        else{
+            return null;
+        }
+
+    }
+
     /**
      *  @desc 根据adid 获取管理员名字
      *  @param $adid

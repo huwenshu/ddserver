@@ -18,7 +18,9 @@ class IndexController extends BaseController {
     //提现请求列表
     public function moneyreq(){
         $Money = M('DrawMoney');
-        $result = $Money->order('state,createtime desc')->select();
+        $map = array();
+        $map['pid'] =  array('NEQ',1);
+        $result = $Money->where($map)->order('state,createtime desc')->select();
         $reqList = array();
         foreach($result as $key => $value){
             $temp['id'] = $value['id'];
@@ -30,6 +32,7 @@ class IndexController extends BaseController {
             $temp['telephone'] = $value['telephone'];
             $temp['money'] = $value['money'];
             $temp['state'] = $value['state'];
+            $temp['visitype'] = $value['visitype'];
             $temp['createtime'] = $value['createtime'];
             array_push($reqList, $temp);
         }
@@ -71,7 +74,7 @@ class IndexController extends BaseController {
             $msgs['change'] = $change;//提取金额
             $msgs['note'] = $rid ;//补充信息，draw_money纪录id
             takeCSV($msgs);
-            $this->success('完成提现成功！'.$newMoney, U('Index/moneyReq'));
+            $this->redirect('Home/Index/moneyReq');
 
         }
         else{
@@ -83,7 +86,9 @@ class IndexController extends BaseController {
     //礼品兑换请求
     public function giftreq(){
         $Gift = M('ExchangeGift');
-        $result = $Gift->order('state,createtime desc')->select();
+        $map = array();
+        $map['pid'] =  array('NEQ',1);
+        $result = $Gift->where($map)->order('state,createtime desc')->select();
         $reqList = array();
         foreach($result as $key => $value){
             $temp['id'] = $value['id'];
@@ -91,7 +96,11 @@ class IndexController extends BaseController {
             $temp['name'] = $value['name'];
             $temp['address'] = $value['address'];
             $temp['telephone'] = $value['telephone'];
+            $temp['bankname'] = $value['bankname'];
+            $temp['account'] = $value['account'];
+            $temp['visitype'] = $value['visitype'];
             $temp['giftName'] = $this->getGiftName($value['gid']);
+            $temp['giftType'] = $this->getGiftType($value['gid']);
             $temp['adminName'] = $this->getAdmin($value['creater']);
             $temp['score'] = $value['score'];
             $temp['createtime'] = $value['createtime'];
@@ -112,7 +121,7 @@ class IndexController extends BaseController {
         $result = $Gift->where($map)->save($data);
 
         if($result){
-            $this->success('完成兑换礼品成功！', U('Index/giftReq'));
+            $this->redirect('Home/Index/giftReq');
         }
         else{
             $this->error('完成提现兑换礼品失败，请联系开发人员！');

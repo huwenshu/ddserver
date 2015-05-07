@@ -19,16 +19,35 @@
         <ul class="mui-table-view">
             <?php
             foreach ($reqList as $key => $value) {
-            $temp = "<li name='giftitem' class='mui-table-view-cell'><p>停车场：".$value['park']." 申请人：".$value['adminName']."</p>
-            <p>礼品：".$value['giftName']." 花费积分：".$value['score']."</p>
-            <p>收件人：".$value['name']." 地址：".$value['address']."</p>
-            <p>电话：".$value['telephone']." 申请时间：".$value['createtime']."</p>";
-            if($value['state'] == 0){
-            $url = U('giftreqDone')."/gid/".$value['id'];
-            $temp = $temp."<a href='".$url."'>完成兑换</a></li>";
+            $temp = "<li name='giftitem' class='mui-table-view-cell'><p>停车场：".$value['park']." 申请人：".$value['adminName']."</p>";
+            if($value['visitype'] == C('VISIT_TYPE')['Online']){
+                if($value['giftType'] == 0){
+                    $temp .= "<p>兑换方式：快递寄送礼品</p>
+                    <p>礼品：".$value['giftName']." 花费积分：".$value['score']."</p>
+                    <p>收件人：".$value['name']." 地址：".$value['address']."</p>
+                    <p>电话：".$value['telephone']." 申请时间：".$value['createtime']."</p>";
+                }
+                else{
+                    $temp .= "<p>兑换方式：线上银行转账</p>
+                    <p>礼品：".$value['giftName']." 花费积分：".$value['score']."</p>
+                    <p>开户银行：".$value['bankname']." 账户名：".$value['name']."</p>
+                    <p>账号：".$value['account']." 申请时间：".$value['createtime']."</p>";
+                }
             }
             else{
-            $temp = $temp."<span>已兑换</span></li>";
+                $temp .= "<p>兑换方式：业务送上门</p>
+                            <p>礼品：".$value['giftName']." 花费积分：".$value['score']."</p>
+                            <p>申请时间：".$value['createtime']."</p>";
+            }
+
+
+
+            if($value['state'] == 0){
+            $url = U('giftreqDone')."/gid/".$value['id'];
+            $temp = $temp."<a class='mui-btn mui-btn-danger confirm' href='".$url."'>完成兑换</a></li>";
+            }
+            else{
+            $temp = $temp."<span class='mui-btn mui-btn-success' >已兑换</span></li>";
             }
             echo $temp;
             }
@@ -42,6 +61,14 @@
     <script type="text/javascript">
         $(function(){
             $('.sidebar').remove();
+
+            $('.confirm').click(function(){
+                if(confirm("确定要完成提现吗？")){
+                    return true;
+                }else{
+                    return false;//阻止链接跳转
+                }
+            });
 
             $(".giftitem").hover(function() {$(this).addClass("gray")}, function() {$(this).removeClass("gray")});
         });

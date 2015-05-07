@@ -19,16 +19,24 @@
         <ul class="mui-table-view">
             <?php
             foreach ($reqList as $key => $value) {
-                $temp = "<li name='moneyitem' class='mui-table-view-cell'><p>停车场：".$value['park']." 申请人：".$value['name']."</p>
-                            <p>开户行：".$value['bankname']." 账户名：".$value['accountname']."</p>
-                            <p>账号：".$value['account']." 金额：".$value['money']."元</p>
-                            <p>电话：".$value['telephone']." 申请时间：".$value['createtime']."</p>";
-                if($value['state'] == 0){
-                    $url = U('moneyreqDone')."/rid/".$value['id'];
-                    $temp = $temp."<a href='".$url."'>完成提现</a>";
+                $temp = "<li name='moneyitem' class='mui-table-view-cell'><p>停车场：".$value['park']." 申请人：".$value['name']."</p>";
+                if($value['visitype'] == C('VISIT_TYPE')['Online']){
+                    $temp .= "<p>提现方式：线上银行转账</p>
+                              <p>开户行：".$value['bankname']." 账户名：".$value['accountname']."</p>
+                              <p>账号：".$value['account']." 金额：".$value['money']."元</p>
+                              <p>电话：".$value['telephone']." 申请时间：".$value['createtime']."</p>";
                 }
                 else{
-                    $temp = $temp."<span>已提现</span>";
+                    $temp .= "<p>提现方式：业务送上门</p>
+                                <p>金额：".$value['money']."元</p>
+                                <p>电话：".$value['telephone']." 申请时间：".$value['createtime']."</p>";
+                }
+                if($value['state'] == 0){
+                    $url = U('moneyreqDone')."/rid/".$value['id'];
+                    $temp = $temp."<a class='mui-btn mui-btn-danger confirm' href='".$url."'>完成提现</a>";
+                }
+                else{
+                    $temp = $temp."<span class='mui-btn mui-btn-success' >已提现</span>";
                 }
                 echo $temp;
             }
@@ -42,6 +50,15 @@
     <script type="text/javascript">
         $(function(){
             $('.sidebar').remove();
+
+            $('.confirm').click(function(){
+                if(confirm("确定要完成提现吗？")){
+                    return true;
+                }else{
+                    return false;//阻止链接跳转
+                }
+            });
+
 
             $(".moneyitem").hover(function() {$(this).addClass("gray")}, function() {$(this).removeClass("gray")});
         });
