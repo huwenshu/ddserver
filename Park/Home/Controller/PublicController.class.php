@@ -102,4 +102,43 @@ class PublicController extends BaseController {
 //
 //    }
 
+//    public function updatebalance(){
+//        $ParkInfo = M('ParkInfo');
+//        $map = array();
+//        $map['id'] = array('NEQ',1);
+//        $parkList = $ParkInfo->where($map)->select();
+//
+//        $Order = M('ParkOrder');
+//        $Payment = M('PaymentRecord');
+//
+//        foreach($parkList as $key => $value){
+//            $map1 = array();
+//            $map1['pid'] = $value['id'];
+//            $orderList = $Order->where($map1)->select();
+//
+//            $sum = 0;
+//            foreach ($orderList as $k => $v) {
+//                $map2 = array();
+//                $map2['oid'] = $v['id'];
+//                $map2['state'] = 1;
+//                $sum += $Payment->where($map2)->sum('money');
+//            }
+//
+//            if($sum != $value['balance']){
+//                echo "<br>PID:".$value['id']." Money:".$sum." Balance".$value['balance'];
+//                $data['id'] = $value['id'];
+//                $data['balance'] = $sum;
+//                $ParkInfo->save($data);
+//            }
+//
+//            if($sum > -1){
+//                echo "<br>PID:".$value['id']." Money:".$sum." Balance".$value['balance'];
+//            }
+//
+//
+//        }
+//
+//
+//    }
+
 }

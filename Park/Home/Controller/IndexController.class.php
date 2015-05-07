@@ -659,6 +659,9 @@ class IndexController extends BaseController {
 			$tmp['bankname'] = $value['bankname'];
 			$tmp['account'] = $value['account'];
 			$tmp['money'] = $value['money'];
+            $tmp['visitype'] = $value['visitype'];
+            $tmp['name'] = $value['name'];
+            $tmp['telephone'] = $value['telephone'];
  			$tmp['opttime'] = $value['createtime'];
 			$tmp['optname'] = $this->getAdmin($value['creater']);
 			$tmp['state'] = $value['state'];
@@ -682,6 +685,7 @@ class IndexController extends BaseController {
 		$money = I('get.money');
 		$name = I('get.name');
 		$telephone = I('get.telephone');
+        $visitype = I('get.visitype');
 
 		$cache = $this->getUsercache($this->uid);
 		$data = $cache['data'];
@@ -708,21 +712,39 @@ class IndexController extends BaseController {
 
 
 		$data =array('bankname' => $bankname, 'accountname' => $accountname, 'account' => $account, 'money' => $money,
-			'name' => $name, 'telephone' => $telephone, 'pid' => $parkid, 'state' => 0, 'creater' => $this->uid,
+			'name' => $name, 'telephone' => $telephone, 'pid' => $parkid, 'visitype' =>$visitype, 'state' => 0, 'creater' => $this->uid,
 			'createtime' =>  date('Y-m-d H:i:s'), 'updater' =>$this->uid);
 
 		$drawId = $DrawMoney->add($data);
 
 		$title = '[提现请求]';
 		$parkName = $this->getParkName($parkid);
-		$content = '停车场：'.$parkName.'<br>账户名：'.$accountname.'<br>开户银行：'.$bankname.'<br>账号：'.$account.
-			'<br>姓名：'.$name.'<br>提现金额：'.$money.'<br>提现表ID：'.$drawId;
+
+        if($visitype == C('VISIT_TYPE')['Online']){
+            $visitypeStr = "线上银行卡转账";
+            $content = '停车场：'.$parkName.'<br>提现方式：'.$visitypeStr.'<br>账户名：'.$accountname.'<br>开户银行：'.$bankname.'<br>账号：'.$account.
+                '<br>姓名：'.$name.'<br>联系电话：'.$telephone.'<br>提现金额：'.$money.'<br>提现表ID：'.$drawId;
+        }
+        else{
+            $visitypeStr = "业务人员线下送上门";
+            $content = '停车场：'.$parkName.'<br>提现方式：'.$visitypeStr. '<br>姓名：'.$name.'<br>联系电话：'.$telephone.'<br>提现金额：'.$money
+                .'<br>提现表ID：'.$drawId;
+        }
+
+
+
 
 		if(empty($drawId)){
 			$this->ajaxMsg('提现请求失败！');
 		}
 		else{
-			$send = $this->sendEmail('295142831@qq.com', $title, $content);
+            $map = array();
+            $map['id'] = $parkid;
+            $ParkInfo = M('ParkInfo');
+            $status = $ParkInfo->where($map)->getField('status');
+            if($status == 1 ){//已经合作的才会发送提现邮件
+                $send = $this->sendEmail('all@duduche.me', $title, $content);
+            }
 			$this->ajaxOk('');
 		}
 
@@ -893,7 +915,13 @@ class IndexController extends BaseController {
 			$this->ajaxMsg('兑换请求失败！');
 		}
 		else{
-			$send = $this->sendEmail('dubin@duduche.me', $title, $content);
+            $map = array();
+            $map['id'] = $parkid;
+            $ParkInfo = M('ParkInfo');
+            $status = $ParkInfo->where($map)->getField('status');
+            if($status == 1 ){//已经合作的才会发送提现邮件
+                $send = $this->sendEmail('all@duduche.me', $title, $content);
+            }
 
             //记录日志到csv
             $newScore = $scoreSum;

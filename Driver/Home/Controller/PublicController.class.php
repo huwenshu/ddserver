@@ -273,7 +273,6 @@ class PublicController extends BaseController {
 			$park_order->where(array('id'=>$oid))->save(array('state'=>2,'endtime'=>date("Y-m-d H:i:s", $endtime)));
 		}
 
-        
         //-本次付费的钱
         $Payment = M('PaymentRecord');
         $map = array();
@@ -303,6 +302,36 @@ class PublicController extends BaseController {
 
 		/*推送*/
 		$this->getuiPush($parkid, $isIn, $isIn?"嘟嘟停车：您收到新的订单！":"嘟嘟停车：您收到新的付款！", $isIn?"车主已预付，注意请放行入库":"车主已付款，注意请放行出库");
+
+        //发送Email
+        $parkName = $this->getParkName($parkid);
+        $carid = $park_order_data['carid'];
+        $telephone = $this->getDriver($uid)['telephone'];
+        $money = $change;
+        $parkorder = $park_order->where(array('id'=>$oid))->find();
+        if($isIn){
+            $stateStr = "预付";
+            $starttimeStr = "<br/>下单时间：".$parkorder['startime'];
+            $endtimeStr = "<br/>截止时间：".$parkorder['endtime'];
+            $entrytimeStr = "";
+        }
+        else{
+            $stateStr = "结算";
+            $starttimeStr = "<br/>下单时间：".$parkorder['startime'];
+            $endtimeStr = "<br/>截止时间：".$parkorder['endtime'];
+            $entrytimeStr = "<br/>进场时间：".$parkorder['entrytime'];
+        }
+
+        $title = '[用户订单-'.$stateStr.']';
+        $content = '停车场：'.$parkName.'<br>车牌：'.$carid.
+            '<br>车主电话：'.$telephone.'<br>订单状态：'.$stateStr.'<br>付费金额：'.$money.$starttimeStr.$endtimeStr.$entrytimeStr.'<br>订单号：'.$oid;
+
+        $map = array();
+        $map['id'] = $parkid;
+        $status = $ParkInfo->where($map)->getField('status');
+        if($status == 1 ){
+            $send = $this->sendEmail('all@duduche.me', $title, $content);
+        }
 	}
 
 	/*
@@ -416,7 +445,6 @@ class PublicController extends BaseController {
 
 
     }
-	
 	//测试区
 	public function testCreateGiftPack(){
 		print_r($this->_createGiftPack(0, 0, date("Y-m-d H:i:s"), date("Y-m-d H:i:s",time()+3600), date("Y-m-d H:i:s",time()), date("Y-m-d H:i:s",time()+7200), 1, rand(2,5), 100));

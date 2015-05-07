@@ -159,7 +159,53 @@ class BaseController extends \Think\Controller {
         }
     }
 
+    /**
+     *  @desc 根据uid 去车主的车牌
+     *  @param $uid
+     */
+    protected function getDriver($uid)
+    {
+        $Driver = M('DriverInfo');
+        $map = array();
+        $map['id'] = $uid;
+        $driverData = $Driver->where($map)->find();
+        if(!empty($driverData)){
+            return $driverData;
+        }
+        else{
+            return null;
+        }
 
+    }
+
+    /**
+     *  @desc $pid 获取停车场名字
+     *  @param $pid
+     */
+    protected function getParkName($pid)
+    {
+        $ParkInfo = M('ParkInfo');
+        $map = array();
+        $map['id'] = $pid;
+        $parkData = $ParkInfo->where($map)->find();
+        if(!empty($parkData)) {
+            return  $parkData['name'];
+        }
+        else{
+            return null;
+        }
+
+    }
+
+
+    /**
+     *  @desc  发送邮件
+     *  @param $adid
+     */
+    protected function sendEmail($mail, $title, $content)
+    {
+        return SendMail($mail, $title, $content);
+    }
 
     /**
      *  @desc 根据两点间的经纬度计算距离
