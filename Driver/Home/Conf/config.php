@@ -148,4 +148,7 @@ return array(
     //图片七牛访问路径
     'PARK_IMG_QINIU' =>'http://7xispd.com1.z0.glb.clouddn.com',
 
+    //默认的销售负责人ID
+    'DEFAULT_SALES' => 6,
+
 );

@@ -92,6 +92,9 @@ class IndexController extends  BaseController {
             $parkInfo['acendtime'] = empty($acendtime) ?  null : $acendtime;
             $parkInfo['acscore'] = empty($acscore) ? null : $acscore;
 
+            $responsible = I('post.responsible');
+            $parkInfo['responsible'] = empty($responsible) ? null : $responsible;
+
     		$Park = D('ParkInfo');
     		$saveParkId = $Park->SaveParkInfo($parkInfo);
     		if ($saveParkId) {

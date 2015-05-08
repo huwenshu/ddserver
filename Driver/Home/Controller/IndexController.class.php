@@ -505,7 +505,16 @@ class IndexController extends BaseController {
 		$ParkAdmin = M('ParkAdmin');
 		$con = "parkid=".$pid." && jobfunction&1<>0";
 		$adminData = $ParkAdmin->where($con)->order('lastop desc')->field("nickname,phone")->select();
-		$result['admin'] = $adminData;
+        //加入停车场销售负责人电话
+        $responsible = $parkData['responsible'];
+        $responsible = empty($responsible) ? C('DEFAULT_SALES') : $responsible;
+        $Sales = M('SalesAuth');
+        $responsTel= $Sales->where(array('id' => $responsible))->getField("telephone");
+        $t = array('nickname' => "嘟嘟客服", 'phone' => $responsTel);
+        array_push($adminData, $t);
+        $result['admin'] = $adminData;
+
+
 		//折扣卷
 		$result['coupon'] = array();
 		$couponArr = $this->_listCoupon($uid);

@@ -97,8 +97,23 @@ class IndexController extends BaseController {
 		$updateData['updater'] = $this->uid;
 		$orderData = $Order->where($con)->save($updateData);
         $driverId = $Order->where($con)->getField('uid');
+        $carid = $Order->where($con)->getField('carid');
         $change = 0;
-        
+
+        //自动离场逻辑，同一车牌，在同一停车场，进场后自动把上次未完结的离场
+        $map = array();
+        $map['carid'] = $carid;
+        $map['pid'] = $parkid;
+        $map['id'] = array('NEQ',$oid);
+        $map['state'] = array('IN','0,1,2');
+        $data = array();
+        $data['state'] = 3;
+        $data['leavetime'] = date('Y-m-d H:i:s');
+        $data['driverleave'] = 3;//3表示是后台自动处理的离场
+        $data['updater'] = 'Auto';
+        $Order->where($map)->save($data);
+
+        //添加推广活动积分
         if(!array_key_exists($driverId,$conf_simulation_uids) || $conf_simulation_uids[$driverId]["type"] == 1){
             
             if(!array_key_exists($driverId,$conf_simulation_uids)){//非测试模式
