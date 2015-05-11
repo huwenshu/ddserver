@@ -419,6 +419,57 @@ class IndexController extends  BaseController {
 		$this->redirect('/Home/Index/parkinfo/parkid/'.$parkid.'/#panel-2');
 	}
 
+    //修改个人基本信息
+    public  function modifyInfo(){
+        if (IS_POST) {
+            $email = I('post.email');
+            $telephone = I('post.telephone');
+            $pwd1 = I('post.pwd1');
+            $pwd2 = I('post.pwd2');
+
+            $SalesAuth = M('SalesAuth');
+
+            if($pwd1 === $pwd2){
+                $map = array();
+                $map['id'] = UID;
+                $data = array();
+                $data['email'] = $email;
+                $data['telephone'] = $telephone;
+                $data['updater'] = UID;
+                $data['updatetime'] = date('Y-m-d H:i:s');
+
+                if(!empty($pwd1)){
+                    $data['password'] = strtoupper(md5($pwd1));
+                }
+                $SalesAuth->where($map)->save($data);
+            }
+            else{
+                $this->msg = " * 两次输入的密码不一致，请重新输入！";
+            }
+
+
+            $map = array();
+            $map['id'] = UID;
+            $saleInfo = $SalesAuth->where($map)->find();
+            $this->saleInfo = $saleInfo;
+            $this->meta_title = '修改信息 | 嘟嘟销售管理系统';
+            $this->display();
+
+
+        }
+        else{
+            $SalesAuth = M('SalesAuth');
+            $map = array();
+            $map['id'] = UID;
+            $saleInfo = $SalesAuth->where($map)->find();
+
+            $this->saleInfo = $saleInfo;
+            $this->meta_title = '修改信息 | 嘟嘟销售管理系统';
+            $this->display();
+        }
+
+    }
+
 //	//保存所以拜访记录，早期的，不能记录每条记录的改变。
 //	public function savevisit1(){
 //		$parkid = I('post.id');

@@ -62,8 +62,9 @@
         <div class="user-bar">
             <a href="javascript:;" class="user-entrance"><i class="icon-user"></i></a>
             <ul class="nav-list user-menu hidden">
-                <li class="manager">你好，<em title="{:session('user_auth.username')}">{:session('user_auth.username')}</em></li>
-                <li><a href="{:U('Public/logout')}">退出</a></li>
+                <li class="manager"><center>{:session('user_auth.username')}</center></li>
+                <li class="manager"><a href="{:U('Index/modifyInfo')}">修改资料</a></li>
+                <li class="manager"><a href="{:U('Public/logout')}">退出</a></li>
             </ul>
         </div>
     </div>

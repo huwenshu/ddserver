@@ -363,4 +363,56 @@ class IndexController extends BaseController {
         $this->redirect('Home/Index/orderList/');
     }
 
+    public  function modifyInfo(){
+        if (IS_POST) {
+            $email = I('post.email');
+            $telephone = I('post.telephone');
+            $pwd1 = I('post.pwd1');
+            $pwd2 = I('post.pwd2');
+
+            $AdminAuth = M('AdminAuth');
+
+            if($pwd1 === $pwd2){
+                $map = array();
+                $map['id'] = UID;
+                $data = array();
+                $data['email'] = $email;
+                $data['telephone'] = $telephone;
+                $data['updater'] = UID;
+                $data['updatetime'] = date('Y-m-d H:i:s');
+
+                if(!empty($pwd1)){
+                    $data['password'] = strtoupper(md5($pwd1));
+                }
+                $AdminAuth->where($map)->save($data);
+            }
+            else{
+                $this->msg = " * 两次输入的密码不一致，请重新输入！";
+            }
+
+
+            $map = array();
+            $map['id'] = UID;
+            $adminInfo = $AdminAuth->where($map)->find();
+            $this->adminInfo = $adminInfo;
+            $this->meta_title = '修改信息 | 嘟嘟后台管理系统';
+            $this->display();
+
+
+        }
+        else{
+            $AdminAuth = M('AdminAuth');
+            $map = array();
+            $map['id'] = UID;
+            $adminInfo = $AdminAuth->where($map)->find();
+
+            $this->adminInfo = $adminInfo;
+            $this->meta_title = '修改信息 | 嘟嘟后台管理系统';
+            $this->display();
+        }
+
+    }
+
+
+
 }
