@@ -94,7 +94,7 @@ class BaseController extends \Think\Controller {
             return  $adminData['name'];
         }
         else{
-            return null;
+            return "系统";
         }
 
     }

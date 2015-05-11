@@ -55,6 +55,8 @@ class IndexController extends BaseController {
 		$con = array('pid' => $parkid, 'state' => 0);
 		$orderData = $Order->where($con)->order('startime desc')->select();
 
+        $Driver = M('DriverInfo');
+
 		$result = array();
 		foreach($orderData as $key => $value){
 			$tmp = array();
@@ -67,9 +69,13 @@ class IndexController extends BaseController {
                     $tmp['carid'] = $conf_simulation_uids[$driverId]["id_in"];
                 }
             }else{
-                $tmp['carid'] = $this->getDefualtCarid($driverId);
+                $tmp['carid'] = $value['carid'];
             }
 			$tmp['orderTime'] = $value['startime'];
+
+
+            $driverData = $Driver->where(array('id' => $driverId))->find();
+            $tmp['telephone'] = $driverData['telephone'];
 
 			array_push($result, $tmp);
 		}
@@ -207,7 +213,7 @@ class IndexController extends BaseController {
                 $Driver = M('DriverInfo');
                 $con1 = array('id' => $driverId);
                 $driverData = $Driver->where($con1)->find();
-                $tmp['carid'] = $this->getDefualtCarid($driverId);
+                $tmp['carid'] = $value['carid'];
                 $tmp['telephone'] = $driverData['telephone'];
             }
             
@@ -257,7 +263,7 @@ class IndexController extends BaseController {
 				}
 				$tmp['money'] = 0;
 			}else{
-			 $tmp['carid'] = $this->getDefualtCarid($driverId);
+			 $tmp['carid'] = $value['carid'];
  
              $Record = M('PaymentRecord');
              $map = array();
@@ -395,7 +401,7 @@ class IndexController extends BaseController {
 				$sum = $sum + $value1['money'];
 			}
 			$tmp['money'] = $sum;
-			$tmp['carid'] = $this->getDefualtCarid($value['uid']);
+			$tmp['carid'] = $value['carid'];
 			$tmp['admin'] = $this->getAdmin($value['updater']);
 			array_push($result, $tmp);
 
@@ -532,7 +538,7 @@ class IndexController extends BaseController {
         $carids = array();
         foreach($orderData as $key => $value){//去除在场重复的车辆
             $driverId = $value['uid'];
-            $carid = $this->getDefualtCarid($driverId);
+            $carid = $value['carid'];
             if(in_array($carid, $carids))
             {
                 continue;
@@ -684,6 +690,34 @@ class IndexController extends BaseController {
 			array_push($drawLists, $tmp);
 		}
 
+
+        //提现信息缓存
+        $map = array();
+        $map['creater'] = $this->uid;
+        $map['visitype'] = 0;
+        $draw0 = $DrawMoney->where($map)->order('createtime desc')->find();
+        if(!empty($draw0)){
+            $t0 = array('bankname' => $draw0['bankname'], 'accountname' => $draw0['accountname'], 'account' => $draw0['account'],
+                        'name' => $draw0['name'], 'telephone' => $draw0['telephone']);
+        }
+        else{
+            $t0 = array('bankname' => '', 'accountname' => '', 'account' => '',
+                'name' => '', 'telephone' => '');
+        }
+
+        $map = array();
+        $map['creater'] = $this->uid;
+        $map['visitype'] = 1;
+        $draw1 = $DrawMoney->where($map)->order('createtime desc')->find();
+        if(!empty($draw1)){
+            $t1 = array('name' => $draw1['name'], 'telephone' => $draw1['telephone']);
+        }
+        else{
+            $t1 = array('name' => '', 'telephone' => '');
+        }
+
+        $result['drawCache'] = array( 0 => $t0, 1 => $t1);
+
 		$result['drawLists'] = $drawLists;
 		$this->ajaxOk($result);
 
@@ -795,6 +829,30 @@ class IndexController extends BaseController {
 		}
 
 		$result['giftList'] = $giftList;
+
+
+        //兑换信息缓存
+        $Model = new \Think\Model(); // 实例化一个model对象 没有对应任何数据表
+        $sql0 = 'select e.name, e.address, e.telephone from dudu_exchange_gift e, dudu_gift_list g where e.gid = g.id and g.type = 0 and e.visitype = 0 and e.creater='.$this->uid.' Order By e.createtime desc';
+        $list0 = $Model->query($sql0);
+        if(!empty($list0)){
+            $t0 = array('name'=> $list0[0]['name'], 'address'=> $list0[0]['address'], 'telephone' => $list0[0]['telephone']);
+        }
+        else{
+            $t0 = array('name'=> '', 'address'=> '', 'telephone' => '');
+        }
+
+        $sql1 = 'select e.name, e.bankname, e.account from dudu_exchange_gift e, dudu_gift_list g where e.gid = g.id and g.type = 1 and e.visitype = 0 and e.creater='.$this->uid.' Order By e.createtime desc';
+        $list1 = $Model->query($sql1);
+        if(!empty($list1)){
+            $t1 = array('name'=> $list1[0]['name'], 'bankname'=> $list1[0]['bankname'], 'account' => $list1[0]['account']);
+        }
+        else{
+            $t1 = array('name'=> '', 'bankname'=> '', 'account' => '');
+        }
+
+        $result['exCache'] = array(0 => $t0, 1 => $t1);
+
 
 		$this->ajaxOk($result);
 	}
