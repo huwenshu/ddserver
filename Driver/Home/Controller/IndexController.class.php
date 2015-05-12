@@ -224,6 +224,8 @@ class IndexController extends BaseController {
 			$fee = $remianFee_r;
 		}
 
+        $fee = round($fee ,2);//防止float精度丢失问题
+
         //=========步骤2：使用统一支付接口，获取prepay_id============
         //使用统一支付接口
         $unifiedOrder = new UnifiedOrder_pub();
@@ -327,6 +329,8 @@ class IndexController extends BaseController {
         else{
             $fee = $remianFee_r;
         }
+
+        $fee = round($fee ,2);
 
         //调用微信支付
         include_once(dirname(__FILE__) . '/../Common/Weixin/WxPay/' . 'WxPayPubHelper.php');
@@ -631,6 +635,8 @@ class IndexController extends BaseController {
 			$fee = $remianFee_r;
 		}
 
+        $fee = round($fee ,2);//防止0.01浮点数精度丢失
+
         //=========步骤2：使用统一支付接口，获取prepay_id============
         //使用统一支付接口
         $unifiedOrder = new UnifiedOrder_pub();
@@ -731,6 +737,8 @@ class IndexController extends BaseController {
         else{
             $fee = $remianFee_r;
         }
+
+        $fee = round($fee ,2);//防止0.01浮点数精度丢失
 
         //微信支付返回参数
         include_once(dirname(__FILE__) . '/../Common/Weixin/WxPay/' . 'WxPayPubHelper.php');
