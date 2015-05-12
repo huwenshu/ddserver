@@ -53,7 +53,7 @@ class IndexController extends  BaseController {
  			$parkInfo['endfri'] = I('post.endfri');
  			$parkInfo['endsat'] = I('post.endsat');
  			$parkInfo['endsun'] = I('post.endsun');
- 			$parkInfo['chargingrules'] = I('chargingrules');
+ 			$parkInfo['chargingrules'] = htmlspecialchars_decode(I('chargingrules'));
  			$parkInfo['note'] = I('note');
  			$parkInfo['shortname'] = I('shortname');
 

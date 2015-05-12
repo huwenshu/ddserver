@@ -104,7 +104,7 @@ return array(
             ),
             array(
                 'type' => 'view',
-                'name' => '缴费',
+                'name' => '订单',
                 'url' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd417c2e70f817f89&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=fee#wechat_redirect'
             ),
             array(
@@ -112,7 +112,7 @@ return array(
                 'sub_button' => array(
                     array(
                         'type' => 'view',
-                        'name' => '我的订单',
+                        'name' => '以往订单',
                         'url' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd417c2e70f817f89&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=order#wechat_redirect'
                     ),
                     array(
