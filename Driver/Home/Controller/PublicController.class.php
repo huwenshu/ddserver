@@ -404,7 +404,7 @@ class PublicController extends BaseController {
 		$gpArr = $this->_checkGiftPack($code,$uid);
 		if(is_array($gpArr)){
 			$result = array();
-			$result['gift'] = array('t'=>$gpArr['type'],'e'=>$gpArr['endtime']);
+			$result['gift'] = array('t'=>$gpArr['type'],'e'=>$gpArr['endtime'],'m'=>array(intval($gpArr['minmoney']),intval($gpArr['maxmoney'])));
 			$this->ajaxOk($result);
 		}else{
 			//0				没有合适的红包
