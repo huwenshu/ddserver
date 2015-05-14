@@ -414,5 +414,43 @@ class IndexController extends BaseController {
     }
 
 
+    //统计微信领取券的用户，哪些之前已经使用过了
+    public function fetchWeixin(){
+        $Model = new \Think\Model(); // 实例化一个model对象 没有对应任何数据表
+
+        $weixinSQL = "SELECT uid FROM dudu_driver_giftlog WHERE code = 'F01C494F-4268-BA99-8BA0-A427465382FE' AND optype=1 AND fromid=11";
+        $weixinT = $Model->query($weixinSQL);
+
+        $usedSQL = "SELECT DISTINCT a.uid FROM `dudu_driver_coupon` a,`dudu_driver_giftpack` b, `dudu_driver_giftlog` c, `dudu_payment_record` d WHERE a.source = b.id and b.code=c.code and a.uid = c.uid and a.id = d.cid  AND a.status = 1 and c.optype = 1 and d.state = 1";
+        $usedT =  $Model->query($usedSQL);
+
+        $weixin = array();
+        foreach($weixinT as $value){
+            array_push($weixin, $value['uid']);
+        }
+
+        $used = array();
+        foreach($usedT as $value){
+            array_push($used, $value['uid']);
+        }
+
+        $sameArr = array_intersect($weixin, $used);
+        $difA = array_diff($weixin, $used);
+        $difB = array_diff($used, $weixin);
+
+        echo "微信领取红包，且以前使用过红包的用户列表：<br/>";
+        foreach($sameArr as $value){
+            echo $this->getDriver($value)['telephone']."<br/>";
+        }
+
+
+        echo "<br/>微信领取红包，但是以前没有使用过红包的用户列表：<br/>";
+        foreach($difA as $value){
+            echo $this->getDriver($value)['telephone']."<br/>";
+        }
+
+
+    }
+
 
 }
