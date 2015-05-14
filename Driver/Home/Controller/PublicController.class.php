@@ -257,20 +257,23 @@ class PublicController extends BaseController {
 			$this->_consumeCoupon($prdata[0]['cid']);
 		}
 		//修改订单状态
-    $oid = $prdata[0]['oid'];
-    $park_order_data = $park_order->where(array('id'=>$oid))->find();
-    $parkid = $park_order_data['pid'];
-    $uid = $park_order_data['uid'];
-    $now = time();
+        $oid = $prdata[0]['oid'];
+        $park_order_data = $park_order->where(array('id'=>$oid))->find();
+        $parkid = $park_order_data['pid'];
+        $uid = $park_order_data['uid'];
+        $cost = $park_order_data['cost'];
+        $cost = $cost + $prdata[0]['money'];
+
+        $now = time();
 		if($isIn){
 			$payment_record->where(array('id'=>$out_trade_no))->save(array('state'=>1));
 			$endtime = $this->_parkingEndTime($now, $now+100, $parkid);
-			$park_order->where(array('id'=>$oid,'state'=>-1))->save(array('state'=>0,'startime'=>date("Y-m-d H:i:s", $now),'endtime'=>date("Y-m-d H:i:s", $endtime)));
+			$park_order->where(array('id'=>$oid,'state'=>-1))->save(array('state'=>0, 'cost'=>$cost, 'startime'=>date("Y-m-d H:i:s", $now),'endtime'=>date("Y-m-d H:i:s", $endtime)));
 		}else{
 			$payment_record->where(array('id'=>$out_trade_no))->save(array('state'=>1));
 			$starttime = strtotime($park_order_data['startime']);
 			$endtime = $this->_parkingEndTime($starttime, $now, $parkid);
-			$park_order->where(array('id'=>$oid))->save(array('state'=>2,'endtime'=>date("Y-m-d H:i:s", $endtime)));
+			$park_order->where(array('id'=>$oid))->save(array('state'=>2, 'cost'=>$cost, 'endtime'=>date("Y-m-d H:i:s", $endtime)));
 		}
 
         //-本次付费的钱

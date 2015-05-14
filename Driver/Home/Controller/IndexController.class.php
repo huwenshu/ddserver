@@ -395,6 +395,7 @@ class IndexController extends BaseController {
 				$tmp['state'] = $value['state'];
 				$tmp['remaintime'] = strtotime($value['endtime'])  - $now;
 				$tmp['leaveTimeStamp'] = strtotime($value['leavetime']);
+                $tmp['cost'] = $value['cost'];
 
 				$Park = M('ParkInfo');
 				$parkInfo = $Park->where('id = '.$value['pid'])->find();
@@ -476,8 +477,10 @@ class IndexController extends BaseController {
 		$payData = $Payment->where($map)->select();
 
 		$preSum = 0;
+        $preSum_r = 0;
 		foreach($payData as $key => $value){
 			$preSum = $preSum + $value['money'];
+            $preSum_r = $preSum_r + $value['money_r'];
 		}
 
 		$Order = M('ParkOrder');
@@ -505,14 +508,16 @@ class IndexController extends BaseController {
 		$result['lat'] = $parkData['lat'];
 		$result['lng'] = $parkData['lng'];
 		$result['name'] = $parkData['name'];
+        $result['rule'] = $parkData['chargingrules'];
 
 		$Driver = M('DriverInfo');
 		$con = array('id' => $uid);
 		$driverData = $Driver->where($con)->find();
 		$result['carid'] = $driverData['carid'];
 
-		$result['totalFee'] = $totalFee;
-		$result['remainFee'] = $remainFee;
+		$result['totalFee'] = round($totalFee,2);
+		$result['remainFee'] = round($remainFee,2);
+        $result['cost_r'] = round($preSum_r,2);
 		
 		$ParkAdmin = M('ParkAdmin');
 		$con = "parkid=".$pid." && jobfunction&1<>0";
