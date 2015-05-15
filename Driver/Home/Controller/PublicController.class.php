@@ -1,6 +1,4 @@
 <?php
-require_once(dirname(__FILE__) . '/../Common/Weixin/Pay/' . 'WxPay.config.php');
-
 
 /**
  * Driver公关页面控制器
@@ -266,6 +264,8 @@ class PublicController extends BaseController {
 
         $now = time();
 		if($isIn){
+			include_once(dirname(__FILE__) . '/../Conf/' . 'config_biz.php');
+			$now = $now+$config_order_wait_sesc;
 			$payment_record->where(array('id'=>$out_trade_no))->save(array('state'=>1));
 			$endtime = $this->_parkingEndTime($now, $now+100, $parkid);
 			$park_order->where(array('id'=>$oid,'state'=>-1))->save(array('state'=>0, 'cost'=>$cost, 'startime'=>date("Y-m-d H:i:s", $now),'endtime'=>date("Y-m-d H:i:s", $endtime)));
@@ -311,18 +311,17 @@ class PublicController extends BaseController {
         $carid = $park_order_data['carid'];
         $telephone = $this->getDriver($uid)['telephone'];
         $money = $change;
-        $parkorder = $park_order->where(array('id'=>$oid))->find();
         if($isIn){
             $stateStr = "预付";
-            $starttimeStr = "<br/>下单时间：".$parkorder['startime'];
-            $endtimeStr = "<br/>截止时间：".$parkorder['endtime'];
+            $starttimeStr = "<br/>下单时间：".date("Y-m-d H:i:s", $now-$config_order_wait_sesc);
+            $endtimeStr = "<br/>截止时间：".date("Y-m-d H:i:s", $endtime);
             $entrytimeStr = "";
         }
         else{
             $stateStr = "结算";
-            $starttimeStr = "<br/>下单时间：".$parkorder['startime'];
-            $endtimeStr = "<br/>截止时间：".$parkorder['endtime'];
-            $entrytimeStr = "<br/>进场时间：".$parkorder['entrytime'];
+            $starttimeStr = "<br/>开始时间：".$park_order_data['startime'];
+            $endtimeStr = "<br/>截止时间：".date("Y-m-d H:i:s", $endtime);
+            $entrytimeStr = "<br/>进场时间：".$park_order_data['entrytime'];
         }
 
         $title = '[用户订单-'.$stateStr.']';
@@ -332,7 +331,7 @@ class PublicController extends BaseController {
         $map = array();
         $map['id'] = $parkid;
         $status = $ParkInfo->where($map)->getField('status');
-        if($status == 1 ){
+        if($status == 1){
             $send = $this->sendEmail('all@duduche.me', $title, $content);
         }
 	}

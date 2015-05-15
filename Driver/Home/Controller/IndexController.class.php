@@ -249,7 +249,8 @@ class IndexController extends BaseController {
         $unifiedOrder->setParameter("body","预付停车费：".$fee);//商品描述
         $unifiedOrder->setParameter("out_trade_no",$trade_no);//商户订单号
         $unifiedOrder->setParameter("total_fee",$fee*100);//总金额
-        $unifiedOrder->setParameter("notify_url", "http://driver.duduche.me/driver.php/home/public/genOrderDone/");//通知地址
+        include_once(dirname(__FILE__) . '/../Conf/' . 'config_biz.php');
+        $unifiedOrder->setParameter("notify_url", $wx_notify_url);//通知地址
         $unifiedOrder->setParameter("trade_type","JSAPI");//交易类型
         $prepay_id = $unifiedOrder->getPrepayId();
         //=========步骤3：使用jsapi调起支付============
@@ -346,7 +347,8 @@ class IndexController extends BaseController {
         $appApi->setParameter("body","预付停车费：".$fee);//商品描述
         $appApi->setParameter("out_trade_no",$trade_no);//商户订单号
         $appApi->setParameter("total_fee",$fee*100);//总金额
-        $appApi->setParameter("notify_url", "http://driver.duduche.me/driver.php/home/public/genOrderDone/");//通知地址
+        include_once(dirname(__FILE__) . '/../Conf/' . 'config_biz.php');
+        $appApi->setParameter("notify_url", $wx_notify_url);//通知地址
         $appApi->setParameter("trade_type","APP");//交易类型
         $prepay_id = $appApi->getPrepayId();
         if(empty($prepay_id)){
@@ -665,7 +667,8 @@ class IndexController extends BaseController {
         $unifiedOrder->setParameter("body","结算停车费(还需付款)：".$fee);//商品描述
         $unifiedOrder->setParameter("out_trade_no",$trade_no);//商户订单号
         $unifiedOrder->setParameter("total_fee",$fee*100);//总金额
-        $unifiedOrder->setParameter("notify_url","http://driver.duduche.me/driver.php/home/public/checkOutDone/");//通知地址
+        include_once(dirname(__FILE__) . '/../Conf/' . 'config_biz.php');
+        $unifiedOrder->setParameter("notify_url",$wx_checkout_notify_url);//通知地址
         $unifiedOrder->setParameter("trade_type","JSAPI");//交易类型
         $prepay_id = $unifiedOrder->getPrepayId();
         //=========步骤3：使用jsapi调起支付============
@@ -759,7 +762,8 @@ class IndexController extends BaseController {
         $appApi->setParameter("body","结算停车费(还需付款)：".$fee);//商品描述
         $appApi->setParameter("out_trade_no",$trade_no);//商户订单号
         $appApi->setParameter("total_fee",$fee*100);//总金额
-        $appApi->setParameter("notify_url", "http://driver.duduche.me/driver.php/home/public/checkOutDone/");//通知地址
+        include_once(dirname(__FILE__) . '/../Conf/' . 'config_biz.php');
+        $appApi->setParameter("notify_url", $wx_checkout_notify_url);//通知地址
         $appApi->setParameter("trade_type","APP");//交易类型
         $prepay_id = $appApi->getPrepayId();
         if(empty($prepay_id)){

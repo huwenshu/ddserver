@@ -98,35 +98,37 @@ class IndexController extends BaseController {
 
 		$Order = M('ParkOrder');
 		$con = array('id' => $oid, 'pid' => $parkid);
+		$parkorder = $Order->where($con)->find();
 		$updateData['state'] = 1;
-		$updateData['entrytime'] = date('Y-m-d H:i:s');
+		$updateData['entrytime'] = date('Y-m-d H:i:s');                                 
 		$updateData['updater'] = $this->uid;
 		$orderData = $Order->where($con)->save($updateData);
-        $driverId = $Order->where($con)->getField('uid');
-        $carid = $Order->where($con)->getField('carid');
-        $change = 0;
-
+//先不实现“进场修改停车起始和结束时间”的设置，确保驾驶员体验
+        $driverId = $parkorder['uid'];
+        $carid = $parkorder['carid'];
+        $change = 0;                 
+                                     
         //自动离场逻辑，同一车牌，在同一停车场，进场后自动把上次未完结的离场
-        $map = array();
-        $map['carid'] = $carid;
-        $map['pid'] = $parkid;
+        $map = array();              
+        $map['carid'] = $carid;      
+        $map['pid'] = $parkid;       
         $map['id'] = array('NEQ',$oid);
         $map['state'] = array('IN','0,1,2');
-        $data = array();
-        $data['state'] = 3;
+        $data = array();             
+        $data['state'] = 3;          
         $data['leavetime'] = date('Y-m-d H:i:s');
         $data['driverleave'] = 3;//3表示是后台自动处理的离场
-        $data['updater'] = 'Auto';
+        $data['updater'] = 'Auto';   
         $Order->where($map)->save($data);
-
-        //添加推广活动积分
+                                     
+        //添加推广活动积分                   
         if(!array_key_exists($driverId,$conf_simulation_uids) || $conf_simulation_uids[$driverId]["type"] == 1){
-            
+                                     
             if(!array_key_exists($driverId,$conf_simulation_uids)){//非测试模式
-
-                //是否在活动中,来确定增加积分策略
+                                     
+                //是否在活动中,来确定增加积分策略   
                 $ParkInfo = M('ParkInfo');
-                $map = array();
+                $map = array();      
                 $map['id'] = $parkid;
                 $parkInfo = $ParkInfo->where($map)->find();
                 $acType = $parkInfo['actype'];
@@ -372,7 +374,7 @@ class IndexController extends BaseController {
 	 *  @param $all 	0-已经离场的交易，1-所有下单成功了的订单
     */
 	public function getDeals($lastweek, $all=0){
-
+        include_once(dirname(__FILE__) . '/../Conf/' . 'config_biz.php');
 		$cache = $this->getUsercache($this->uid);
 		$data = $cache['data'];
 		$parkid = $data['parkid'];
@@ -401,8 +403,12 @@ class IndexController extends BaseController {
 			$tmp = array();
             $tmp['oid'] = $value['id'];
             $tmp['s'] = $value['state'];
-			$tmp['startime'] = $value['startime'];
-			$tmp['endtime'] = $value['endtime'];
+            if($tmp['s'] < 1){//未入库
+                $tmp['startime'] = date('Y-m-d H:i:s', strtotime($value['startime'])-$config_order_wait_sesc);
+            }else{
+                $tmp['startime'] = $value['startime'];
+            }
+            $tmp['endtime'] = $value['endtime'];
 
 			$Payment = M('PaymentRecord');
 			$map = array('oid' => $value['id'], 'state'=>1);
