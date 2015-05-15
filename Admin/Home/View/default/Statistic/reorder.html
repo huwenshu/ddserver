@@ -1,0 +1,46 @@
+<extend name="Public/base"/>
+
+
+<block name="style">
+    <style>
+        body{padding: 0}
+
+        table{border-collapse:collapse;border:none;}
+
+        td{border:solid#000 1px;padding: 5px;text-align: center;}
+
+    </style>
+</block>
+
+<block name="body">
+    <h2 style="margin-top: 40px;">二次下单用户统计(<?php echo count($List)?>):</h2>
+    <!-- 主体 -->
+    <div id="indexMain" class="index-main">
+
+        <?php
+            foreach($List as $value){
+                echo "用户UID:".$value['uid']." 电话号码:".$value['telephone']."<br>";
+                echo "<table><tbody>";
+                echo "<tr><td>订单号</td><td>停车场</td><td>车牌</td><td>订单状态</td><td>下单时间</td><td>进场时间</td><td>离场时间</td><td>离场方式</td><td>付费记录</td></tr>";
+                $olist = $value['olist'];
+                foreach($olist as $v){
+                    echo "<tr><td>$v[id]</td><td>$v[parkName]</td><td>$v[carid]</td><td>$v[state]</td><td>$v[startime]</td><td>$v[entrytime]</td><td>$v[leavetime]</td><td>$v[leaveStyle]</td><td>$v[payRecord]</td></tr>";
+
+                }
+                echo "</table></tbody><br>";
+
+            }
+
+        ?>
+
+
+    </div>
+</block>
+
+<block name="script">
+    <script type="text/javascript">
+        $(function(){
+
+        });
+    </script>
+</block>

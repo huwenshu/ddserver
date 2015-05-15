@@ -369,8 +369,9 @@ class IndexController extends BaseController {
 	/*
      *  @desc 获取交易信息
 	 *  @param $lastWeek	0-全部，1-最近一周交易
+	 *  @param $all 	0-已经离场的交易，1-所有下单成功了的订单
     */
-	public function getDeals($lastweek){
+	public function getDeals($lastweek, $all=0){
 
 		$cache = $this->getUsercache($this->uid);
 		$data = $cache['data'];
@@ -379,17 +380,27 @@ class IndexController extends BaseController {
 		$Order = M('ParkOrder');
 		$beroreWeek = date("Y-m-d",strtotime("-1 week"));
 		$map = array();
-
 		$map['pid'] = $parkid;
-		$map['state'] = 3;
-		if($lastweek == 1){
-			$map['leavetime'] = array('EGT', $beroreWeek);
-		}
-		$orderData = $Order->where($map)->order('leavetime desc')->select();
+        if($all == 1){
+            $map['state'] = array('EGT', 0);
+            if($lastweek == 1){
+                $map['startime'] = array('EGT', $beroreWeek);
+            }
+        }
+		else{
+            $map['state'] = 3;
+            if($lastweek == 1){
+                $map['leavetime'] = array('EGT', $beroreWeek);
+            }
+        }
+
+		$orderData = $Order->where($map)->order('startime desc')->select();
 
 		$result = array();
 		foreach($orderData as $key => $value){
 			$tmp = array();
+            $tmp['oid'] = $value['id'];
+            $tmp['s'] = $value['state'];
 			$tmp['startime'] = $value['startime'];
 			$tmp['endtime'] = $value['endtime'];
 
@@ -402,6 +413,7 @@ class IndexController extends BaseController {
 			}
 			$tmp['money'] = $sum;
 			$tmp['carid'] = $value['carid'];
+            $tmp['tel'] = $this->getDriver($value['uid'])['telephone'];
 			$tmp['admin'] = $this->getAdmin($value['updater']);
 			array_push($result, $tmp);
 
@@ -597,6 +609,21 @@ class IndexController extends BaseController {
 		$drawSum = $DrawMoney->where($map)->sum('money');
 		$remainMoney = $balance - $drawSum;//余额-未兑现的提现
 		$result['remainsum'] = $remainMoney;
+
+
+        //总订单量
+        $map = array();
+        $map['pid'] = $parkid;
+        $map['state'] = array('EGT', 0);
+        $tn = $Order->where($map)->count();
+        $result['tn'] = $tn;
+
+        //今日订单量
+        $map = "";
+        $map = "pid = $parkid and state > -1 and TO_DAYS(updatetime) = TO_DAYS(NOW())";
+        $n = $Order->where($map)->count();
+        $result['n'] = $n;
+
 
 
 		$this->ajaxOk($result);
@@ -1018,4 +1045,23 @@ class IndexController extends BaseController {
 
 
 	}
+
+
+    /*
+    *  @desc 计算停车场费用
+     * $oid 订单号
+   */
+    public function calDeal($oid){
+
+        $ParkOrder = M('ParkOrder');
+        $map = array();
+        $map['id'] = $oid;
+        $orderData = $ParkOrder->where($map)->find();
+
+        $p = $this->parkingFee(strtotime($orderData['startime']), $orderData['pid']);
+        $result['p'] = $p;
+
+        $this->ajaxOk($result);
+
+    }
 }

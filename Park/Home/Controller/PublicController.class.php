@@ -141,29 +141,29 @@ class PublicController extends BaseController {
 //
 //    }
 
-     public function updatecost(){
-         $ParkOrder = M('ParkOrder');
-         $orders = $ParkOrder->select();
-
-         $PayMent = M('PaymentRecord');
-
-         foreach($orders as $value){
-             $oid = $value['id'];
-             $map = array();
-             $map['oid'] = $oid;
-             $map['state'] = 1;
-             $sum = $PayMent->where($map)->sum('money');
-
-             $map = array();
-             $map['id'] = $oid;
-             $data = array();
-             $data['cost'] = $sum;
-             $ParkOrder->where($map)->save($data);
-
-             echo '<br>oid:'.$oid.'  cost:'.$sum;
-
-         }
-
-     }
+//     public function updatecost(){
+//         $ParkOrder = M('ParkOrder');
+//         $orders = $ParkOrder->select();
+//
+//         $PayMent = M('PaymentRecord');
+//
+//         foreach($orders as $value){
+//             $oid = $value['id'];
+//             $map = array();
+//             $map['oid'] = $oid;
+//             $map['state'] = 1;
+//             $sum = $PayMent->where($map)->sum('money');
+//
+//             $map = array();
+//             $map['id'] = $oid;
+//             $data = array();
+//             $data['cost'] = $sum;
+//             $ParkOrder->where($map)->save($data);
+//
+//             echo '<br>oid:'.$oid.'  cost:'.$sum;
+//
+//         }
+//
+//     }
 
 }
