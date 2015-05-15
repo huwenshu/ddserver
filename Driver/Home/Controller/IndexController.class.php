@@ -372,7 +372,7 @@ class IndexController extends BaseController {
 			$map = array();
 			$map['uid'] = $this->uid;
 			$map['state'] = array(0,1,2,'OR');
-			$orderData = $Order->where($map)->order('updatetime desc')->find();
+			$orderData = $Order->where($map)->order('startime desc')->find();
 			if(empty($orderData)){
 				$this->ajaxOk(null);
 			}
@@ -384,7 +384,7 @@ class IndexController extends BaseController {
 			$con = array();
 			$con['uid'] = $this->uid;
 			$con['state'] = array(0,1,2,3,'OR');
-			$orderData = $Order->where($con)->order('updatetime desc')->limit(15)->select();
+			$orderData = $Order->where($con)->order('startime desc')->limit(15)->select();
 
 			$result = array();
 			$now = time();
