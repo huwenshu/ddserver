@@ -551,7 +551,7 @@ class IndexController extends BaseController {
 	 * @oid	订单id
 	*/
 
-	public  function checkOut($oid, $cid = 0){
+	public  function checkOut($oid, $cid = 0, $fee = 0){
 
         include_once(dirname(__FILE__) . '/../Common/Weixin/WxPay/' . 'WxPayPubHelper.php');
         $jsApi = new JsApi_pub();
@@ -584,21 +584,19 @@ class IndexController extends BaseController {
         }
 
         //业务逻辑
+        $Order = M('ParkOrder');
+        $map = array();
+        $map['id'] = $oid;
+        $orderData = $Order->where($map)->find();
+        $remainFee = $fee;
 		$Payment = M('PaymentRecord');
-		$map = array('oid' => $oid, 'state'=>1);
-		$payData = $Payment->where($map)->select();
-
-		$preSum = 0;
-		foreach($payData as $key => $value){
-			$preSum = $preSum + $value['money'];
-		}
-
-		$Order = M('ParkOrder');
-		$map = array();
-		$map['id'] = $oid;
-		$orderData = $Order->where($map)->find();
-		$totalFee = $this->parkingFee(strtotime($orderData['startime']), $orderData['pid']);
-		$remainFee = $totalFee - $preSum;
+        if($remainFee == 0){
+            $map = array('oid' => $oid, 'state'=>1);
+            $preSum = $Payment->where($map)->sum('money');
+            $totalFee = $this->parkingFee(strtotime($orderData['startime']), $orderData['pid']);
+            $remainFee = $totalFee - $preSum;
+        }
+		
 		//计算折扣劵
 		$remianFee_r = $remainFee;
 		if($cid > 0){
@@ -686,23 +684,20 @@ class IndexController extends BaseController {
 	 * @oid	订单id,cid 折扣券id
 	*/
 
-    public  function checkOutApp($oid, $cid = 0){
+    public  function checkOutApp($oid, $cid = 0, $fee = 0){
         //业务逻辑部分
-        $Payment = M('PaymentRecord');
-        $map = array('oid' => $oid, 'state'=>1);
-        $payData = $Payment->where($map)->select();
-
-        $preSum = 0;
-        foreach($payData as $key => $value){
-            $preSum = $preSum + $value['money'];
-        }
-
         $Order = M('ParkOrder');
         $map = array();
         $map['id'] = $oid;
         $orderData = $Order->where($map)->find();
-        $totalFee = $this->parkingFee(strtotime($orderData['startime']), $orderData['pid']);
-        $remainFee = $totalFee - $preSum;
+        $remainFee = $fee;
+        $Payment = M('PaymentRecord');
+        if($remainFee == 0){
+            $map = array('oid' => $oid, 'state'=>1);
+            $preSum = $Payment->where($map)->sum('money');
+            $totalFee = $this->parkingFee(strtotime($orderData['startime']), $orderData['pid']);
+            $remainFee = $totalFee - $preSum;
+        }
         //计算折扣劵
         $remianFee_r = $remainFee;
         if($cid > 0){

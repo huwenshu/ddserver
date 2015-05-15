@@ -272,7 +272,9 @@ class PublicController extends BaseController {
 		}else{
 			$payment_record->where(array('id'=>$out_trade_no))->save(array('state'=>1));
 			$starttime = strtotime($park_order_data['startime']);
-			$endtime = $this->_parkingEndTime($starttime, $now, $parkid);
+            $map = array('oid' => $oid, 'state'=>1);
+            $fee = $payment_record->where($map)->sum('money');
+			$endtime = $this->_parkingEndTime2($starttime, $fee, $parkid);
 			$park_order->where(array('id'=>$oid))->save(array('state'=>2, 'cost'=>$cost, 'endtime'=>date("Y-m-d H:i:s", $endtime)));
 		}
 
@@ -357,6 +359,13 @@ class PublicController extends BaseController {
 		echo "<br>";
 		echo date("Y-m-d H:i:s",$endtime);
 	}
+    public function parkingTimeTest2($parkid, $starttime, $fee, $isdebug=1){
+        $start = strtotime(urldecode($starttime));
+        $endtime = $this->_parkingEndTime2($start, $fee, $parkid,$isdebug);
+        echo $endtime;
+        echo "<br>";
+        echo date("Y-m-d H:i:s",$endtime);
+    }
 	//test
 	public function parkingFeeTest($parkid, $starttime, $endtime, $isdebug=1){
 		
