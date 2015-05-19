@@ -174,7 +174,7 @@
                     </tr>
                     <tr>
                         <td><label for="parkimage">停车场入口图片：</label></td>
-                        <td><input type="file" id="parkimage" name="parkimage" value= "" style="margin: 10px;"/><span style="color:red;">{$fileError}</span> </td>
+                        <td><input type="file" id="parkimage" name="parkimage" value= "" style="margin: 10px;"/><span style="color:red;"><?php echo urldecode($fileError);?></urlencode></span> </td>
                     </tr>
 
                     <tr>

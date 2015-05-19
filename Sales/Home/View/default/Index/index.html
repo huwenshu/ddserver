@@ -33,7 +33,7 @@
 
             foreach ($parks_info as $key => $value) {
                 echo "<li name='parkitem' class='mui-table-view-cell' alt='".U('parkinfo')."/parkid/".$value['id']."/' ><a class='mui-navigate-right'>";
-                if(strpos($value['style'], 'ZDZJCR')){
+                if(strpos($value['style'], 'ZDZJCR') || strpos($value['style'], 'BDWKF')){
                     echo "<p style='color:#ddd'>";
                 }
                 else{
@@ -53,6 +53,11 @@
                 $isAuto = false;
                 if(strpos($value['style'], 'ZDZJCR')){
                     $temp.="[自动闸机]";
+                    $isAuto = true;
+                }
+
+                if(strpos($value['style'], 'BDWKF')){
+                    $temp.="[不对外开放]";
                     $isAuto = true;
                 }
 
