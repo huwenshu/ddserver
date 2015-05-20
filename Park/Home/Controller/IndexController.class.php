@@ -532,10 +532,13 @@ class IndexController extends BaseController {
 		}
 
 
+        //预付完，还未进场的
 		$Order = M('ParkOrder');
 		$map = array();
 		$map['pid'] = $parkid;
 		$map['state'] = 0;
+        $beroreWeek = date("Y-m-d",strtotime("-1 week"));
+        $map['startime'] = array('EGT', $beroreWeek);//一个星期以内的
 		$orderData = $Order->where($map)->select();
 		$result['in'] = count($orderData);
 
@@ -625,8 +628,7 @@ class IndexController extends BaseController {
         $result['tn'] = $tn;
 
         //今日订单量
-        $map = "";
-        $map = "pid = $parkid and state > -1 and TO_DAYS(updatetime) = TO_DAYS(NOW())";
+        $map = "pid = $parkid and state > -1 and TO_DAYS(createtime) = TO_DAYS(NOW())";
         $n = $Order->where($map)->count();
         $result['n'] = $n;
 
