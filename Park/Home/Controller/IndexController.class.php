@@ -95,15 +95,23 @@ class IndexController extends BaseController {
 		$cache = $this->getUsercache($this->uid);
 		$data = $cache['data'];
 		$parkid = $data['parkid'];
-
+        
+        $now = time();
 		$Order = M('ParkOrder');
 		$con = array('id' => $oid, 'pid' => $parkid);
 		$parkorder = $Order->where($con)->find();
 		$updateData['state'] = 1;
-		$updateData['entrytime'] = date('Y-m-d H:i:s');                                 
+		$updateData['entrytime'] = date('Y-m-d H:i:s',$now);
 		$updateData['updater'] = $this->uid;
+        $starttime = strtotime($parkorder['startime']);
+        if($now < $starttime){
+            //修改停车起始和结束（计费）时间
+            $updateData['startime'] = $updateData['entrytime'];
+            $endtime = $this->_parkingEndTime($now, $now+100, $parkid);
+            $updateData['endtime'] = date('Y-m-d H:i:s',$endtime);
+        }
 		$orderData = $Order->where($con)->save($updateData);
-//先不实现“进场修改停车起始和结束时间”的设置，确保驾驶员体验
+        
         $driverId = $parkorder['uid'];
         $carid = $parkorder['carid'];
         $change = 0;                 
@@ -133,8 +141,7 @@ class IndexController extends BaseController {
                 $parkInfo = $ParkInfo->where($map)->find();
                 $acType = $parkInfo['actype'];
                 $acScore = $parkInfo['acscore'];
-                $acEndtime = new DateTime($parkInfo['acendtime']);
-                $now = new DateTime();
+                $acEndtime = strtotime($parkInfo['acendtime']);
 
                 if($acType == 2 && $acEndtime>= $now){//有补助活动，且没有过期
                     if($this->cacheScore($this->uid, $acScore)){//未达到奖励上限
@@ -297,7 +304,8 @@ class IndexController extends BaseController {
 		$cache = $this->getUsercache($this->uid);
 		$data = $cache['data'];
 		$parkid = $data['parkid'];
-
+        
+        $now = time();
 		$Order = M('ParkOrder');
 		$con = array('id' => $oid, 'pid' => $parkid);
 		$updateData['state'] = 3;
@@ -317,8 +325,7 @@ class IndexController extends BaseController {
                 $parkInfo = $ParkInfo->where($map)->find();
                 $acType = $parkInfo['actype'];
                 $acScore = $parkInfo['acscore'];
-                $acEndtime = new DateTime($parkInfo['acendtime']);
-                $now = new DateTime();
+                $acEndtime = strtotime($parkInfo['acendtime']);
                 
                 if($acType == 1 && $acEndtime>= $now){//有补助活动，且没有过期
                     if($this->cacheScore($this->uid, $acScore)){//未达到奖励上限
