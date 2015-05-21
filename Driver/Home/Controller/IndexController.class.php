@@ -109,6 +109,9 @@ class IndexController extends BaseController {
             $tmp['address2'] = $value['address2'];
             $tmp['image'] = C('PARK_IMG_QINIU').'/Park/'.$value['image'];
 			$tmp['prepay'] = $value['prepay'];
+            if($value['pretype'] && $value['pretype'] != ''){
+                $tmp['pretype'] = str_replace("／","/",$value['pretype']);
+            }
 			$tmp['lat'] = $value['lat'];
 			$tmp['lng'] = $value['lng'];
 			$tmp['spacesum'] = $value['spacesum'];
