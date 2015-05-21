@@ -97,7 +97,7 @@ return array(
                     ),
                     array(
                         'type' => 'view',
-                        'name' => '搜索',
+                        'name' => '目的地',
                         'url' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd417c2e70f817f89&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=find#wechat_redirect'
                     ),
                 )
@@ -105,16 +105,11 @@ return array(
             array(
                 'type' => 'view',
                 'name' => '订单',
-                'url' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd417c2e70f817f89&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=fee#wechat_redirect'
+                'url' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd417c2e70f817f89&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=order#wechat_redirect'
             ),
             array(
                 'name' => '我',
                 'sub_button' => array(
-                    array(
-                        'type' => 'view',
-                        'name' => '以往订单',
-                        'url' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd417c2e70f817f89&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=order#wechat_redirect'
-                    ),
                     array(
                         'type' => 'view',
                         'name' => '我的抵用券',
@@ -150,5 +145,47 @@ return array(
 
     //默认的销售负责人ID
     'DEFAULT_SALES' => 6,
+
+    //微信推送消息客服请求URL
+    'WX_CUSTOM_URL' => 'https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=',
+
+    //微信推送模板消息请求URL
+    'WX_TEMPLATE_URL' => 'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=',
+
+    //模板的ID
+    'TEMPLATE_ID_PRE' => 'X6Wb3pKX-0sA_kGdD-kQ98jJvwB5pLsnqGDYOnERL6M',
+
+    //模板跳转URL
+    'TEMPLATE_REDIRECT_URL_PRE' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd417c2e70f817f89&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=fee#wechat_redirect',
+
+    //发送给用户的消息模板
+    'NOTICE_TPL_PRE' => ' {
+           "touser":"%s",
+           "template_id":"%s",
+           "url":"%s",
+           "topcolor":"#000000",
+           "data":{
+                   "first": {
+                       "value":"%s",
+                       "color":"#000000"
+                   },
+                   "keyword1":{
+                       "value":"%s",
+                       "color":"#000000"
+                   },
+                   "keyword2": {
+                       "value":"%s",
+                       "color":"#000000"
+                   },
+                   "keyword3": {
+                       "value":"%s",
+                       "color":"#000000"
+                   },
+                   "remark":{
+                       "value":"%s",
+                       "color":"#000000"
+                   }
+           }
+       }',
 
 );

@@ -275,7 +275,12 @@ class PublicController extends BaseController {
             $map = array('oid' => $oid, 'state'=>1);
             $fee = $payment_record->where($map)->sum('money');
 			$endtime = $this->_parkingEndTime2($starttime, $fee, $parkid);
-			$park_order->where(array('id'=>$oid))->save(array('state'=>2, 'cost'=>$cost, 'endtime'=>date("Y-m-d H:i:s", $endtime)));
+			if($park_order_data['state'] == 1){//状态为1的时候，切换到2，其他情况下状态值不变
+				$park_order->where(array('id'=>$oid))->save(array('state'=>2, 'cost'=>$cost, 'endtime'=>date("Y-m-d H:i:s", $endtime)));
+			}
+			else{
+				$park_order->where(array('id'=>$oid))->save(array('cost'=>$cost, 'endtime'=>date("Y-m-d H:i:s", $endtime)));
+			}
 		}
 
         //-本次付费的钱
@@ -307,6 +312,26 @@ class PublicController extends BaseController {
 
 		/*推送*/
 		$this->getuiPush($parkid, $isIn, $isIn?"嘟嘟停车：您收到新的订单！":"嘟嘟停车：您收到新的付款！", $isIn?"车主已预付，注意请放行入库":"车主已付款，注意请放行出库");
+
+		/*发送消息模板给用户的公共号*/
+		if($isIn) {
+			$openid = $this->getOpenID($uid);
+			$parkname = $this->getParkName($parkid);
+			$money_r = $pay['money_r'];
+			if ($money_r < $change) {
+				$payStr = round($change, 2) . "元，其中优惠券抵用" . round($change - $money_r, 2) . "元";
+			} else {
+				$payStr = round($change, 2) . "元";
+			}
+			$orderTime = date("Y-m-d H:i:s", $now - $config_order_wait_sesc);
+
+			$msg_json = sprintf(C('NOTICE_TPL_PRE'), $openid, C('TEMPLATE_ID_PRE'), C('TEMPLATE_REDIRECT_URL_PRE'), '恭喜你已预订车位成功！\n', $parkname, $payStr, $orderTime, '\n系统将最晚在15分钟后开始计费，请尽快驶达。\n如对停车场不熟，请点击详情查看停车场的“入口指示”和导航，或联系停车场管理员。');
+			$result = $this->noticeMsg($msg_json);
+			$result_array = json_decode($result,TRUE);
+			if($result_array['errcode'] !=0){
+				$this->sendEmail('dubin@duduche.me', "预定模板消息发送失败", "订单号OID：$oid");
+			}
+		}
 
         //发送Email
         $parkName = $this->getParkName($parkid);
@@ -533,4 +558,16 @@ class PublicController extends BaseController {
 		print_r($signPackage);
 	}
 	//测试区
+
+	public function testMsg(){
+		/*发送消息模板给用户的公共号*/
+		$msg_json =  sprintf ( C('NOTICE_TPL_PRE'), 'oMjtxuH5YZ_6TSkGGLUWvW64aiHQ', C('TEMPLATE_ID_PRE'), "http://www.baidu.com", '恭喜你已预订车位成功！', '金沙江停车场','20.0元','2014年9月16日','系统将最晚在15分钟后开始计费，请尽快驶达。\n如对停车场不熟，请点击详情查看停车场的“入口指示”和导航，或联系停车场管理员。');
+
+		$result = $this->noticeMsg($msg_json);
+
+
+		echo $msg_json;
+
+		echo $result;
+	}
 }

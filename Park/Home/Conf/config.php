@@ -71,5 +71,52 @@ return array(
     //积分活动上限
     'SCORE_LIMIT' => 5000,//积分奖励上限
 
+    //自己公司微信参数
+    'USERNAME_WEIXIN' => "gh_6f67ef5e0539",
+    'APPID' =>  'wxd417c2e70f817f89',
+    'APPSECRET' =>  '14f025315fecb3bd1bdfc1624338605c' ,
+    'WEIXIN_TOKEN'  => 'DUDUPARK2015',
+
+    'WX_API_URL'    =>  "https://api.weixin.qq.com/cgi-bin/",
+
+    //微信推送模板消息请求URL
+    'WX_TEMPLATE_URL' => 'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=',
+
+    //模板的ID
+    'TEMPLATE_ID_IN' => 'CjJwgvm6Jk7ePRNR_exkLqlzCXB-1rprUnGmD_qJZ5g',
+
+    //模板跳转URL
+    'TEMPLATE_REDIRECT_URL_IN' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd417c2e70f817f89&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=fee#wechat_redirect',
+
+    //发送给用户的消息模板
+    'NOTICE_TPL_IN' => ' {
+           "touser":"%s",
+           "template_id":"%s",
+           "url":"%s",
+           "topcolor":"#000000",
+           "data":{
+                   "first": {
+                       "value":"%s",
+                       "color":"#000000"
+                   },
+                   "keyword1":{
+                       "value":"%s",
+                       "color":"#000000"
+                   },
+                   "keyword2": {
+                       "value":"%s",
+                       "color":"#000000"
+                   },
+                    "keyword3": {
+                       "value":"%s",
+                       "color":"#000000"
+                   },
+                   "remark":{
+                       "value":"%s",
+                       "color":"#000000"
+                   }
+           }
+       }',
+
 
 );

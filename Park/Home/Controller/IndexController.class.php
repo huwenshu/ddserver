@@ -109,6 +109,18 @@ class IndexController extends BaseController {
             $updateData['startime'] = $updateData['entrytime'];
             $endtime = $this->_parkingEndTime($now, $now+100, $parkid);
             $updateData['endtime'] = date('Y-m-d H:i:s',$endtime);
+
+            //推送微信模板信息给用户
+            $openid = $this->getOpenID($parkorder['uid']);
+            $parkname = $this->getParkName($parkid);
+            $adminNick = $this->getAdminNick($this->uid);
+
+            $msg_json =  sprintf ( C('NOTICE_TPL_IN'), $openid, C('TEMPLATE_ID_IN'), C('TEMPLATE_REDIRECT_URL_IN'), '恭喜你的订单已被停车场管理员确认！\n', $parkorder['carid'],$parkname, $updateData['entrytime'],'\n管理员【'.$adminNick.'】已确认你的订单，系统将从现在开始计费!\n如果你尚未到达现场，请在结算时跟管理员说明。');
+            $result = $this->noticeMsg($msg_json);
+            $result_array = json_decode($result,TRUE);
+            if($result_array['errcode'] !=0){
+                $this->sendEmail('dubin@duduche.me', "预定模板消息发送失败", "订单号OID：$oid, 错误码：".$result_array['errmsg']);
+            }
         }
 		$orderData = $Order->where($con)->save($updateData);
         
@@ -120,7 +132,7 @@ class IndexController extends BaseController {
         $map = array();              
         $map['carid'] = $carid;      
         $map['pid'] = $parkid;       
-        $map['id'] = array('NEQ',$oid);
+        $map['id'] = array('LT',$oid);
         $map['state'] = array('IN','0,1,2');
         $data = array();             
         $data['state'] = 3;          
@@ -412,8 +424,10 @@ class IndexController extends BaseController {
             $tmp['s'] = $value['state'];
             if($tmp['s'] < 1){//未入库
                 $tmp['startime'] = date('Y-m-d H:i:s', strtotime($value['startime'])-$config_order_wait_sesc);
+                $tmp['admin'] = null;
             }else{
                 $tmp['startime'] = $value['startime'];
+                $tmp['admin'] = $this->getAdmin($value['updater']);
             }
             $tmp['endtime'] = $value['endtime'];
 
@@ -427,7 +441,7 @@ class IndexController extends BaseController {
 			$tmp['money'] = $sum;
 			$tmp['carid'] = $value['carid'];
             $tmp['tel'] = $this->getDriver($value['uid'])['telephone'];
-			$tmp['admin'] = $this->getAdmin($value['updater']);
+
 			array_push($result, $tmp);
 
 		}
