@@ -148,13 +148,25 @@
                         <td><label for="opentime">开放时间段：</label></td>
                         <td>
                         	<input type="text" id="opentime" name="opentime" value= "{$park_info[opentime]}" /> <br>
-                        	周一：<input type="text" id="startmon" name="startmon" value= "{$park_info[startmon]}" style="width: 110px;"/> - <input type="text" id="endmon" name="endmon" value= "{$park_info[endmon]}" style="width: 110px;"/><br>
-                        	周二：<input type="text" id="starttue" name="starttue" value= "{$park_info[starttue]}" style="width: 110px;"/> - <input type="text" id="endtue" name="endtue" value= "{$park_info[endtue]}" style="width: 110px;"/><br>
-                        	周三：<input type="text" id="startwed" name="startwed" value= "{$park_info[startwed]}" style="width: 110px;"/> - <input type="text" id="endwed" name="endwed" value= "{$park_info[endwed]}" style="width: 110px;"/><br>
-                        	周四：<input type="text" id="startthu" name="startthu" value= "{$park_info[startthu]}" style="width: 110px;"/> - <input type="text" id="endthu" name="endthu" value= "{$park_info[endthu]}" style="width: 110px;"/><br>
-                        	周五：<input type="text" id="startfri" name="startfri" value= "{$park_info[startfri]}" style="width: 110px;"/> - <input type="text" id="endfri" name="endfri" value= "{$park_info[endfri]}" style="width: 110px;"/><br>
-                        	周六：<input type="text" id="startsat" name="startsat" value= "{$park_info[startsat]}" style="width: 110px;"/> - <input type="text" id="endsat" name="endsat" value= "{$park_info[endsat]}" style="width: 110px;"/><br>
-                        	周日：<input type="text" id="startsun" name="startsun" value= "{$park_info[startsun]}" style="width: 110px;"/> - <input type="text" id="endsun" name="endsun" value= "{$park_info[endsun]}" style="width: 110px;"/>
+                        	周一：<input type="text" id="startmon" class="timepicker" name="startmon" value= "{$park_info[startmon]}" style="width: 110px;"/> - <input type="text" id="endmon" class="timepicker" name="endmon" value= "{$park_info[endmon]}" style="width: 110px;"/><br>
+                        	周二：<input type="text" id="starttue" class="timepicker" name="starttue" value= "{$park_info[starttue]}" style="width: 110px;"/> - <input type="text" id="endtue" class="timepicker" name="endtue" value= "{$park_info[endtue]}" style="width: 110px;"/><br>
+                        	周三：<input type="text" id="startwed" class="timepicker" name="startwed" value= "{$park_info[startwed]}" style="width: 110px;"/> - <input type="text" id="endwed" class="timepicker" name="endwed" value= "{$park_info[endwed]}" style="width: 110px;"/><br>
+                        	周四：<input type="text" id="startthu" class="timepicker" name="startthu" value= "{$park_info[startthu]}" style="width: 110px;"/> - <input type="text" id="endthu" class="timepicker" name="endthu" value= "{$park_info[endthu]}" style="width: 110px;"/><br>
+                        	周五：<input type="text" id="startfri" class="timepicker" name="startfri" value= "{$park_info[startfri]}" style="width: 110px;"/> - <input type="text" id="endfri" class="timepicker" name="endfri" value= "{$park_info[endfri]}" style="width: 110px;"/><br>
+                        	周六：<input type="text" id="startsat" class="timepicker" name="startsat" value= "{$park_info[startsat]}" style="width: 110px;"/> - <input type="text" id="endsat" class="timepicker" name="endsat" value= "{$park_info[endsat]}" style="width: 110px;"/><br>
+                        	周日：<input type="text" id="startsun" class="timepicker" name="startsun" value= "{$park_info[startsun]}" style="width: 110px;"/> - <input type="text" id="endsun" class="timepicker" name="endsun" value= "{$park_info[endsun]}" style="width: 110px;"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="freestart">空闲时间段：</label></td>
+                        <td>
+                            <input type="text" id="freestart" class="timepicker" name="freestart" value= "{$park_info[freestart]}" style="width: 110px;"/> - <input type="text" id="freeend" class="timepicker" name="freeend" value= "{$park_info[freeend]}" style="width: 110px;"/>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="fullstart">满时间段：</label></td>
+                        <td>
+                            <input type="text" id="fullstart" class="timepicker" name="fullstart" value= "{$park_info[fullstart]}" style="width: 110px;"/> - <input type="text" id="fullend" class="timepicker" name="fullend" value= "{$park_info[fullend]}" style="width: 110px;"/>
                         </td>
                     </tr>
                     <tr>
@@ -843,6 +855,18 @@
             forceParse: false,
             format:"yyyy-mm-dd"
         });
+
+        var now  = new Date();
+        $('.timepicker').datetimepicker({
+            language: 'zh-CN',
+            autoclose: true,
+            startView:1,
+            hourStep: 1,
+            minuteStep: 5,
+            secondStep: 0,
+            format:"hh:ii:ss",
+            startDate:now.getFullYear()+"-"+now.getMonth()+"-"+now.getDate()
+    });
         
         var oid = 0;
         $('.simulateEnter').click(function(){

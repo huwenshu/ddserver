@@ -4030,7 +4030,7 @@ var fillCharReg = new RegExp(domUtils.fillChar, 'g');///import editor.js
             autoClearEmptyNode: true,
             fullscreen: false,
             readonly: false,
-            zIndex: 999,
+            zIndex: 9,
             imagePopup: true,
             enterTag: 'p',
             customDomain: false,
