@@ -98,7 +98,7 @@ class IndexController extends  BaseController {
             $parkInfo['acscore'] = empty($acscore) ? null : $acscore;
 
             $responsible = I('post.responsible');
-            $parkInfo['responsible'] = empty($responsible) ? null : $responsible;
+            $parkInfo['responsible'] = empty($responsible) ? UID : $responsible;
 
     		$Park = D('ParkInfo');
     		$saveParkId = $Park->SaveParkInfo($parkInfo);
@@ -471,6 +471,21 @@ class IndexController extends  BaseController {
             $this->saleInfo = $saleInfo;
             $this->meta_title = '修改信息 | 嘟嘟销售管理系统';
             $this->display();
+        }
+
+    }
+
+    //修改个人基本信息
+    public function checkShortName($shortName){
+        $ParkInfo = M('ParkInfo');
+        $map = array();
+        $map['shortname'] = $shortName;
+        $result = $ParkInfo->where($map)->find();
+        if(empty($result)){
+            echo  json_encode(array('check' => true));
+        }
+        else{
+            echo  json_encode(array('check' => false));
         }
 
     }

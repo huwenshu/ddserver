@@ -13,8 +13,22 @@ class ParkInfoModel extends Model {
      * @param  string  $parkid 停车场名字
      */
     public function searchPark($parkname){
+        $SalesAuth= M('SalesAuth');
+        $map = array();
+        $map['leader'] = UID;//销售主管能看到所有
+        $sales = $SalesAuth->where($map)->getField('id',true);
+        if(empty($sales)){
+            $sales = array();
+            array_push($sales, UID);
+        }
+        else{
+            array_push($sales, UID);
+        }
+
+
         $map = array(); 
-        $map['name'] = array('like','%'.$parkname.'%');     
+        $map['name'] = array('like','%'.$parkname.'%');
+        $map['responsible'] = array('in',$sales);
         /* 获取数据 */
         $Park = $this->where($map)->order('updatetime desc')->select();
 
