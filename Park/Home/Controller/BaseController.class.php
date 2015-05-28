@@ -451,7 +451,6 @@ class BaseController extends \Think\Controller {
     protected function noticeMsg($msg){
         $token = $this->getToken();
         $post_url = C('WX_TEMPLATE_URL').$token;
-        dump($post_url);
 
         return $this->doCurlPostRequest($post_url,$msg);
 

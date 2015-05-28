@@ -149,6 +149,16 @@ return array(
     //微信推送消息客服请求URL
     'WX_CUSTOM_URL' => 'https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=',
 
+    //发送给用户的客服信息-文本模板
+    'CUSTOM_TEXT_TPL' =>'{
+        "touser":"%s",
+        "msgtype":"text",
+         "text":
+        {
+             "content":"%s"
+        }
+    }',
+
     //微信推送模板消息请求URL
     'WX_TEMPLATE_URL' => 'https://api.weixin.qq.com/cgi-bin/message/template/send?access_token=',
 
