@@ -452,5 +452,50 @@ class IndexController extends BaseController {
 
     }
 
+    //自动针对昨天已使用过红包的用户发送红包
+    public function autoSend(){
+        $today =  date('Y-m-d 00:00:00');
+        $yestoday =  date("Y-m-d 00:00:00",strtotime("-1 day"));
+        $Payment = M('PaymentRecord');
+        $map = array();
+        $map['cid'] = array('NEQ', 0);
+        $map['state'] = 1;
+        $map['createtime'] = array(array('EGT', $yestoday),array('LT', $today));
+        $clist = $Payment->where($map)->select();
+        $clist = $this->assoc_unique($clist, 'creater');//用户去重
+
+        //缓存发送的情况，防止当天多次发送数据
+        $list = $this->cacheAutoGift();
+
+        if(!$list){//今天还没有发送过，可以发送红包
+            $GiftPack = M('DriverGiftpack');
+            foreach($clist as $key => $value){
+                //$this->autoSendGift("873");
+                $hcode = $this->autoSendGift($value['cid']);
+                if($hcode){
+                    $map = array();
+                    $map['code'] = $hcode;
+                    $info = $GiftPack->where($map)->getField('info');
+
+                    $clist[$key]['hcode'] = $hcode;
+                    $clist[$key]['info'] = $info;
+                }
+                else{//返回null，说明发送失败
+                    unset($clist[$key]);
+                }
+            }
+            $list = $this->cacheAutoGift($clist);
+            $this->msg = "恭喜你，共发出 ".count($list)." 个红包!";
+        }
+        else{
+             $this->msg = "抱歉！你今天已经发送过红包，共发出 ".count($list)." 个红包!";
+        }
+
+
+        $this->list = $list;
+        $this->meta_title = '自动红包 | 嘟嘟后台管理系统';
+        $this->display();
+    }
+
 
 }
