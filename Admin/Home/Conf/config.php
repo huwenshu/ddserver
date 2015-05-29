@@ -86,4 +86,57 @@ return array(
     //礼品送货方式
     'VISIT_TYPE' => array('Online' => 0, 'Offline' => 1),
 
+    //自己公司微信参数
+    'USERNAME_WEIXIN' => "gh_6f67ef5e0539",
+    'APPID' =>  'wxd417c2e70f817f89',
+    'APPSECRET' =>  '14f025315fecb3bd1bdfc1624338605c' ,
+    'WEIXIN_TOKEN'  => 'DUDUPARK2015',
+
+    'WX_API_URL'    =>  "https://api.weixin.qq.com/cgi-bin/",
+
+    // 配置邮件发送服务器
+    'MAIL_HOST' =>'smtp.exmail.qq.com',
+    'MAIL_SMTPAUTH' =>TRUE, //启用smtp认证
+    'MAIL_USERNAME' =>'dubin@duduche.me',
+    'MAIL_FROM' =>'dubin@duduche.me',
+    'MAIL_FROMNAME' =>'Bin',
+    'MAIL_PASSWORD' =>'Njudb07',
+    'MAIL_CHARSET' =>'utf-8',
+    'MAIL_ISHTML' =>TRUE, // 是否HTML格式邮件
+
+    //微信推送消息客服请求URL
+    'WX_CUSTOM_URL' => 'https://api.weixin.qq.com/cgi-bin/message/custom/send?access_token=',
+
+    //发送给用户的客服信息-文本模板
+    'CUSTOM_TEXT_TPL' =>'{
+        "touser":"%s",
+        "msgtype":"text",
+         "text":
+        {
+             "content":"%s"
+        }
+    }',
+
+    //自动红包id数组
+    'AUTO_GIFT' => array(
+        233, 234, 235, 236, 237, 238, 239, 240, 241, 242
+    ),
+
+    //用于统计用的推广员id
+    'AUTO_FROM_ID' => 12,
+
+    //红包推送语言
+    'AUTO_GIFT_MSG' => array(
+        '两个黄鹂鸣翠柳，嘟嘟停车发券多；一行白鹭上青天，停车哪能不用券。赶紧来抢啊：',
+        '身无彩凤双飞翼，心有灵犀一点通。客官，我知道你需要停车优惠券咯：',
+        '这是你的益达！哦，不，这是你的停车券：',
+        '爱对了是爱情，爱错了是青春；停对了是发票，停错了是罚单。领停车优惠券，快速找车位，告别罚单：',
+        '主人，嘟嘟又给你送券来咯：',
+        '世界那么大，停车那么难，给点券行不行？',
+        '停车坐爱枫林晚，优惠拿券到手软：',
+        '黑夜给了我黑色的眼睛，而我就喜欢用它来找停车优惠券：',
+        '你停或者不停，券都在这里，不领白不领：',
+        '据说土豪的三大特征是：喝酸奶不舔盖、去医院不看钱、去停车不用券。好吧，检验你是不是土豪的时刻来了，嘟嘟发停车优惠券了：'
+    ),
+
 );

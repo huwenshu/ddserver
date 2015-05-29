@@ -1,0 +1,45 @@
+<extend name="Public/base"/>
+
+
+<block name="style">
+    <style>
+        body{padding: 0}
+
+        table{border-collapse:collapse;border:none;}
+
+        td{border:solid#000 1px;padding: 5px;text-align: center;}
+
+    </style>
+</block>
+
+<block name="body">
+    <h2 style="margin-top: 40px;"><?php echo $msg?></h2>
+    <!-- 主体 -->
+    <div id="indexMain" class="index-main">
+        <ul class="mui-table-view">
+            <?php
+            foreach ($list as $key => $value) {
+            $temp = "<li name='orderitem' class='mui-table-view-cell'>
+            <p>红包简介：".$value['info']."</p>";
+            $temp .= "<p>红包code：".$value['hcode']."</p>";
+            $temp .= "<p>用户ID：".$value['creater']."</p>";
+
+            echo $temp;
+
+
+            echo "</li>";
+            }
+            ?>
+        </ul>
+
+
+    </div>
+</block>
+
+<block name="script">
+    <script type="text/javascript">
+        $(function(){
+
+        });
+    </script>
+</block>
