@@ -15,22 +15,30 @@ class ParkInfoModel extends Model {
     public function searchPark($parkname){
         $SalesAuth= M('SalesAuth');
         $map = array();
-        $map['leader'] = UID;//销售主管能看到所有
-        $sales = $SalesAuth->where($map)->getField('id',true);
-        if(empty($sales)){
-            $sales = array();
-            array_push($sales, UID);
+        $map['id'] = UID;
+        $leader =  $SalesAuth->where($map)->getField('leader');
+        $con = array();
+        if($leader == 0){//没有上级的可以看到所有停车场
+            $con['name'] = array('like','%'.$parkname.'%');
         }
         else{
-            array_push($sales, UID);
+            $map = array();
+            $map['leader'] = UID;//销售主管能看到所有
+            $sales = $SalesAuth->where($map)->getField('id',true);
+            if(empty($sales)){
+                $sales = array();
+                array_push($sales, UID);
+            }
+            else{
+                array_push($sales, UID);
+            }
+
+            $con['name'] = array('like','%'.$parkname.'%');
+            $con['responsible'] = array('in',$sales);
         }
 
-
-        $map = array(); 
-        $map['name'] = array('like','%'.$parkname.'%');
-        $map['responsible'] = array('in',$sales);
         /* 获取数据 */
-        $Park = $this->where($map)->order('updatetime desc')->select();
+        $Park = $this->where($con)->order('updatetime desc')->select();
 
         if(is_array($Park)){
             return $Park;
