@@ -54,9 +54,14 @@ class IndexController extends  BaseController {
  			$parkInfo['endfri'] = I('post.endfri');
  			$parkInfo['endsat'] = I('post.endsat');
  			$parkInfo['endsun'] = I('post.endsun');
-            $parkInfo['freestart'] = I('post.freestart');
-            $parkInfo['freeend'] = I('post.freeend');
-            $parkInfo['fullstart'] = I('post.fullstart');
+            $parkInfo['freestartweek'] = I('post.freestartweek');
+            $parkInfo['freeendweek'] = I('post.freeendweek');
+            $parkInfo['fullstartweek'] = I('post.fullstartweek');
+            $parkInfo['fullendweek'] = I('post.fullendweek');
+            $parkInfo['freestartwork'] = I('post.freestartwork');
+            $parkInfo['freeendwork'] = I('post.freeendwork');
+            $parkInfo['fullstartwork'] = I('post.fullstartwork');
+            $parkInfo['fullendwork'] = I('post.fullendwork');
             $parkInfo['fullend'] = I('post.fullend');
  			$parkInfo['chargingrules'] = htmlspecialchars_decode(I('chargingrules'));
  			$parkInfo['note'] = I('note');

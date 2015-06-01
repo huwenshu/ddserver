@@ -253,29 +253,63 @@
                     <tr>
                         <td><label for="freestart">空闲时间段：</label></td>
                         <td>
-                            <div class="input-group  date timepicker " data-date-format="hh:ii:00" style="float: left;padding: 5px;">
-                                <input class="form-control"  id="freestart" type="text" name="freestart" value= "{$park_info[freestart]}">
-                                <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
-                            </div>
-                            <p style="float: left;padding: 10px;"> - </p>
-                            <div class="input-group  date timepicker " data-date-format="hh:ii:00" style="float: left;padding: 5px;">
-                                <input class="form-control" id="freeend" type="text" name="freeend" value= "{$park_info[freeend]}">
-                                <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
-                            </div>
+                            <ul class="pickTime">
+                            <li>
+                                <p class="pickerText"> 周一至周五： </p>
+                                <div class="input-group  date timepicker " data-date-format="hh:ii:00">
+                                    <input class="form-control"  id="freestartwork" type="text" name="freestartwork" value= "{$park_info[freestartwork]}">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
+                                </div>
+                                <p class="pickerText"> - </p>
+                                <div class="input-group  date timepicker " data-date-format="hh:ii:00" style="float: left;padding: 5px;">
+                                    <input class="form-control" id="freeendwork" type="text" name="freeendwork" value= "{$park_info[freeendwork]}">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
+                                </div>
+                            </li>
+                            <li>
+                                <p class="pickerText"> 周六周日： </p>
+                                <div class="input-group  date timepicker " data-date-format="hh:ii:00">
+                                    <input class="form-control"  id="freestartweek" type="text" name="freestartweek" value= "{$park_info[freestartweek]}">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
+                                </div>
+                                <p class="pickerText"> - </p>
+                                <div class="input-group  date timepicker " data-date-format="hh:ii:00" style="float: left;padding: 5px;">
+                                    <input class="form-control" id="freeendweek" type="text" name="freeendweek" value= "{$park_info[freeendweek]}">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
+                                </div>
+                            </li>
+                            </ul>
                         </td>
                     </tr>
                     <tr>
                         <td><label for="fullstart">满时间段：</label></td>
                         <td>
-                            <div class="input-group  date timepicker " data-date-format="hh:ii:00" style="float: left;padding: 5px;">
-                                <input class="form-control"  id="fullstart" type="text" name="fullstart" value= "{$park_info[fullstart]}">
-                                <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
-                            </div>
-                            <p style="float: left;padding: 10px;"> - </p>
-                            <div class="input-group  date timepicker " data-date-format="hh:ii:00" style="float: left;padding: 5px;">
-                                <input class="form-control" id="fullend" type="text" name="fullend" value= "{$park_info[fullend]}">
-                                <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
-                            </div>
+                            <ul class="pickTime">
+                                <li>
+                                    <p class="pickerText"> 周一至周五： </p>
+                                    <div class="input-group  date timepicker " data-date-format="hh:ii:00">
+                                        <input class="form-control"  id="fullstartwork" type="text" name="fullstartwork" value= "{$park_info[fullstartwork]}">
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
+                                    </div>
+                                    <p class="pickerText"> - </p>
+                                    <div class="input-group  date timepicker " data-date-format="hh:ii:00" style="float: left;padding: 5px;">
+                                        <input class="form-control" id="fullendwork" type="text" name="fullendwork" value= "{$park_info[fullendwork]}">
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
+                                    </div>
+                                </li>
+                                <li>
+                                    <p class="pickerText"> 周六周日： </p>
+                                    <div class="input-group  date timepicker " data-date-format="hh:ii:00">
+                                        <input class="form-control"  id="fullstartweek" type="text" name="fullstartweek" value= "{$park_info[fullstartweek]}">
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
+                                    </div>
+                                    <p class="pickerText"> - </p>
+                                    <div class="input-group  date timepicker " data-date-format="hh:ii:00" style="float: left;padding: 5px;">
+                                        <input class="form-control" id="fullendweek" type="text" name="fullendweek" value= "{$park_info[fullendweek]}">
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
+                                    </div>
+                                </li>
+                            </ul>
                         </td>
                     </tr>
                     <tr>
@@ -370,11 +404,16 @@
                                 <form action="{:U('savecorp')}" method="post">
                                     <input type="hidden"  name="id" value="{$park_info[id]}" />
                                     <select id="status" name="status">
-                                        <option value="1"  <?php if ($park_info[status]==1)  echo 'selected="selected"';?>>已合作</option>
-                                        <option value="2"  <?php if ($park_info[status]==2)  echo 'selected="selected"';?>>测试中</option>
-                                        <option value="0"  <?php if ($park_info[status]==0)  echo 'selected="selected"';?>>找到决策人</option>
-                                        <option value="-2" <?php if ($park_info[status]==-2) echo 'selected="selected"';?>>在接触</option>
-                                        <option value="-1" <?php if ($park_info[status]==-1) echo 'selected="selected"';?>>未接触</option>
+                                        <?php
+                                            $parkCorp = C('PARK_COR');
+                                            foreach($parkCorp as $key => $value){
+                                               $selected = '';
+                                               if($park_info[status]==$key){
+                                                    $selected = 'selected="selected"';
+                                               }
+                                                echo '<option value='.$key.' '.$selected.'>'.$value.'</option>';
+                                            }
+                                        ?>
                                     </select>
                                     <input type="submit" class="mui-btn mui-btn-success mui-btn-blue" style="margin-top: 1px" value="保存合作状态"/>
                                 </form>
@@ -979,7 +1018,7 @@
             hourStep: 1,
             minuteStep: 5,
             secondStep: 0,
-            format:"hh:ii:ss",
+            format:"hh:ii:00",
             startDate:now.getFullYear()+"-"+now.getMonth()+"-"+now.getDate()
         });
 
