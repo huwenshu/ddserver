@@ -91,6 +91,14 @@
                         <td style="width: 66%"><input type="text" id="parkname" name="name" value="{$park_info[name]}" /> </td>
                     </tr>
                     <tr>
+                        <td><label for="enterplace">城市：</label></td>
+                        <td>
+                            <select id="entercity">
+                                <option value ="021">上海</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
                         <td><label for="enterplace">入口地址：</label></td>
                         <td><input type="text" id="enterplace" name="address" value= "{$park_info[address]}" /> </td>
                     </tr>
@@ -113,8 +121,9 @@
                                     <td><input style="width: 100%" type="text" readonly  name="lng" value= "{$park_info[lng]}" /></td>
                                 </tr>
                                 <tr>
-                                    <td colspan="2">
+                                    <td colspan="2" style="text-align:center">
                                         <div id="btgetloc" class="mui-btn mui-btn-warning mui-btn-block">获取坐标</div>
+                                        <a href="http://t.cn/R2xAPOy" target="_blank">独立工具页面</a>
                                     </td>
                                 </tr>
                             </table>
@@ -768,7 +777,7 @@
                         var mapObj = this.mapobj = new AMap.Map(mapid,{
                           view: new AMap.View2D({
                               //center:position,//创建中心点坐标
-                            zoom:19, //设置地图缩放级别      //1 -  19
+                            zoom:17, //设置地图缩放级别      //1 -  19
                            rotation:0 //设置地图旋转角度
                          }),
                          lang:"zh_cn"//设置地图语言类型，默认：中文简体
@@ -797,13 +806,52 @@
                                 },500);
                             });
                         }
+                                
                         AMap.event.addListener(mapObj,'complete',function(){
-                             centermaker = new AMap.Marker({
-                                map:mapObj
-                                ,content:"<div style='width: 50px;height: 50px;border-radius: 25px;background-color: rgba(0,0,0,.2)'><div style='position: absolute;left: 50%;top:50%;width: 6px;height: 6px;border-radius: 3px;margin-left: -3px;margin-top: -3px;background-color:red'></div></div>"
-                                ,position:mapObj.getCenter()
-                                 ,offset:new AMap.Pixel(-25,-25)
-                            });
+                                               centermaker = new AMap.Marker({
+                                                                             map:mapObj
+                                                                             ,content:"<div style='width: 50px;height: 50px;border-radius: 25px;background-color: rgba(0,0,0,.2)'><div style='position: absolute;left: 50%;top:50%;width: 6px;height: 6px;border-radius: 3px;margin-left: -3px;margin-top: -3px;background-color:red'></div></div>"
+                                                                             ,position:mapObj.getCenter()
+                                                                             ,offset:new AMap.Pixel(-25,-25)
+                                                                             });
+                                               
+                                            var lng =$('[name=lng]').val();
+                                            var lat =$('[name=lat]').val();
+                                            if(lng != null && lat != null && lng!='' && lat!='' && parseInt(lng)!=0 && parseInt(lat)!=0){
+                                               var position=new AMap.LngLat(lng,lat);
+                                               mapObj.panTo(position);
+                                               setTimeout(function(){setposition();},500);
+                                            }else{
+                                               mapObj.plugin('AMap.Geolocation', function () {
+                                                             var geolocation = new AMap.Geolocation({
+                                                                                                    enableHighAccuracy: true,//是否使用高精度定位，默认:true
+                                                                                                    timeout: 5000,          //超过10秒后停止定位，默认：无穷大
+                                                                                                    maximumAge: 0,           //定位结果缓存0毫秒，默认：0
+                                                                                                    convert: true,           //自动偏移坐标，偏移后的坐标为高德坐标，默认：true
+                                                                                                    showButton: false,        //显示定位按钮，默认：true
+                                                                                                    buttonPosition: 'LB',    //定位按钮停靠位置，默认：'LB'，左下角
+                                                                                                    buttonOffset: new AMap.Pixel(10, 20),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+                                                                                                    showMarker: false,        //定位成功后在定位到的位置显示点标记，默认：true
+                                                                                                    showCircle: false,        //定位成功后用圆圈表示定位精度范围，默认：true
+                                                                                                    panToLocation: true,     //定位成功后将定位到的位置作为地图中心点，默认：true
+                                                                                                    zoomToAccuracy:false      //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+                                                                                                    });
+                                                             mapObj.addControl(geolocation);
+                                                             AMap.event.addListener(geolocation, 'complete', function(arg){
+                                                                                    if(!callbacking){
+                                                                                    callbacking = true;
+                                                                                    mapObj.panTo(arg.position);
+                                                                                    setTimeout(function(){setposition();},500);
+                                                                                    
+                                                                                    }
+                                                                                    });//返回定位信息
+                                                             AMap.event.addListener(geolocation, 'error', function(){
+                                                                                    alert('当前环境不支持获取定位,请在设置中允许使用[位置定位服务]');
+                                                                                    });//返回定位出错信息
+                                                             geolocation.getCurrentPosition();
+                                                             });
+                                               }
+                             
                         });
 
 
@@ -833,7 +881,7 @@
                             //加载地理编码插件
                             AMap.service(["AMap.Geocoder"], function() {
                                 MGeocoder = new AMap.Geocoder({
-                                    //city:"010", //城市，默认：“全国”
+                                    city:$('#entercity').val(), //城市，默认：“全国”
                                     radius:1000 //范围，默认：500
                                 });
                                 //返回地理编码结果
@@ -841,7 +889,9 @@
                                 MGeocoder.getLocation(address, function(status, result){
                                     if(status === 'complete' && result.info === 'OK'){
                                         cb && cb(result);
-                                    }
+                                                      }else{
+                                                        cb && cb(null);
+                                                      }
                                 });
                             });
                         }else{
