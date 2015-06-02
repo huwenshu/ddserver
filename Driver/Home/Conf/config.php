@@ -127,7 +127,7 @@ return array(
     ),
 
     //特殊的测试openid;
-    'OPENID' => array('oTlYLj275XRH9M_n7d3KrpItav6g','oTlYLj6hKfcPIc5N-zmCmWvVsxVU','oTlYLj7oAHMG2WaO4Bthla0Um8U8'),
+    'OPENID' => array('oMjtxuH5YZ_6TSkGGLUWvW64aiHQ','oMjtxuLs_dp8C_rTF1RHKt2QjUKg','oMjtxuEBNoFf9FdJ0X7XD1oHmr4s', 'oMjtxuBMky9zVTaoRRlqqJZBb0co','oMjtxuAXEFgHuGOZM5bQhqfuEhqA','oMjtxuGib3cwMCHBCwQpd7U9OtDU'),
 
     // 配置邮件发送服务器
     'MAIL_HOST' =>'smtp.exmail.qq.com',
@@ -198,4 +198,26 @@ return array(
            }
        }',
 
+    //停车场类型
+    'PARK_STYLE' => array (
+        'DM' => '地面',
+        'DXK' => '地下库',
+        'LTCK' => '立体车库',
+        'LUB' => '路侧边',
+        'XQ' => '普通小区',
+        'GDXQ' => '高档小区',
+        'GWZX' => '购物中心',
+        'DXCS' => '大型超市',
+        'FWMD' => '消费门店',//原来是服务门店
+        'SYXZL' => '商业写字楼',
+        'JD' => '酒店',
+        'YY' => '医院',
+        'DWJG' => '单位机构',
+        'SYTCC' => '商业停车场',
+        'ZDZJCR' => '自动闸机进入',
+        'USERFX' => '人工放行',
+        'ZYSF' => '中央收费',
+        'BDWKF' => '不对外开放',
+        'LDCD' => '流动车多',
+    ),
 );

@@ -46,7 +46,7 @@ class IndexController extends BaseController {
 		$this->lat = $lat;
 		$this->lng = $lng;
 		$Park = M('ParkInfo');
-		$gap = 0.02;
+		$gap = 0.004545;
 		$con = array();
 		$con['lat'] = array(array('gt',$lat - $gap),array('lt',$lat + $gap));
 		$con['lng'] = array(array('gt',$lng - $gap),array('lt',$lng + $gap));
@@ -131,6 +131,277 @@ class IndexController extends BaseController {
 		}
 
 	}
+
+    //返回附近停车场接口2
+    public function search2($lat,$lng){
+        //CVS记录查询的位置信息
+        $msgs = array();
+        $msgs['ip'] = $_SERVER['REMOTE_ADDR'];//用户ip
+        $msgs['uid'] = $this->uid;//操作者id
+        $msgs['lat'] = $lat;
+        $msgs['lng'] = $lng;//新值
+        locCSV($msgs);
+
+        $this->lat = $lat;
+        $this->lng = $lng;
+        $Park = M('ParkInfo');
+        $gap = 0.004545;
+        $con = array();
+        $con['lat'] = array(array('gt',$lat - $gap),array('lt',$lat + $gap));
+        $con['lng'] = array(array('gt',$lng - $gap),array('lt',$lng + $gap));
+        $now = getdate();
+        $startstr='startsun';
+        $endstr='endsun';
+        switch($now['wday']){
+            case 1:
+                $startstr='startmon';
+                $endstr='endmon';
+                break;
+            case 2:
+                $startstr='starttue';
+                $endstr='endtue';
+                break;
+            case 3:
+                $startstr='startwed';
+                $endstr='endwed';
+                break;
+            case 4:
+                $startstr='startthu';
+                $endstr='endthu';
+                break;
+            case 5:
+                $startstr='startfri';
+                $endstr='endfri';
+                break;
+            case 6:
+                $startstr='startsat';
+                $endstr='endsat';
+                break;
+        }
+        $nowstr = date("H:i:s");
+        $con[$startstr] = array('elt',$nowstr);
+        $con[$endstr] = array('gt',$nowstr);
+
+
+        //HardCode 用于测试
+        $openid = $this->getOpenID($this->uid);
+        $opens = C('OPENID');
+        if(in_array($openid, $opens)){
+            $con['status'] = array('in', '1,2,3');
+        }
+        else{
+            $con['status'] = array('in', '1,3');
+        }
+
+        $listdata = $Park->where($con)->order('status')->select();
+        usort($listdata, array($this, "distance_sort"));	//按距离远近排序
+
+        $list = $listdata;
+        //$list = array_slice($listdata,0,10,true);//截取前10个停车场
+
+        //封装返回值
+        $result = array();
+
+        $p = array();
+        foreach($list as $key => $value){
+            $tmp = array();
+
+            //通用信息
+            $tmp['id'] = $value['id'];
+            $tmp['n'] = $value['name'];
+            $tmp['r'] = $value['chargingrules'];
+            $tmp['a'] = $value['address'];
+            $tmp['b'] = $value['address2'];
+            $tmp['i'] = $value['image'];
+            if($value['pretype'] && $value['pretype'] != ''){
+                $tmp['y'] = str_replace("／","/",$value['pretype']);
+            }
+            $tmp['lat'] = $value['lat'];
+            $tmp['lng'] = $value['lng'];
+            $tmp['m'] = $value['spacesum'];
+
+            $style = $value['style'];
+            $styleArr = explode('|', $style);
+            $styleR = array();
+            for($i = 1;$i<count($styleArr)-1; $i++){
+                array_push($styleR, C('PARK_STYLE')[$styleArr[$i]]);
+            }
+            $tmp['t'] = $styleR;//停车场标签
+
+            if($value['status'] == 3){//信息化产品
+                $tmp['p'] = -1; //信息化的停车场预付费设为-1
+
+                //信息化停车场的空车位状态根据时段来判断
+                $nowTime = date("H:i:s");
+                if($now['wday'] < 6){
+                    $freestart = $value['freestartwork'];
+                    $freeend = $value['freeendwork'];
+                    $fullstart = $value['fullstartwork'];
+                    $fullend = $value['fullendwork'];
+                }
+                else{
+                    $freestart = $value['freestartweek'];
+                    $freeend = $value['freeendweek'];
+                    $fullstart = $value['fullstartweek'];
+                    $fullend = $value['fullendweek'];
+                }
+                if($nowTime >= $freestart && $nowTime < $freeend){
+                    $tmp['s'] = 2;
+                }
+                elseif($nowTime >= $fullstart && $nowTime < $fullend){
+                    $tmp['s'] = 0;
+                }
+                else{
+                    $tmp['s'] = 1;
+                }
+
+                //下一个车位信息
+                /*
+                 * 时间段列表 00:00:00 ~ t1 ~ t2 ~ s1 ~ s2 ~ 23:59:59, 00:00:00 ~ n1 ~ n2
+                 * */
+                $timeArr1 = array(
+                    'freestart' => $freestart,
+                    'freeend' => $freeend,
+                    'fullstart' => $fullstart,
+                    'fullend' => $fullend
+                );
+                asort($timeArr1);
+
+                if($now['wday'] == 5 && $now['wday'] == 6){
+                    $nextfreestart = $value['freestartweek'];
+                    $nextfreeend = $value['freeendweek'];
+                    $nextfullstart = $value['fullstartweek'];
+                    $nextfullend = $value['fullendweek'];
+                }
+                else{
+                    $nextfreestart = $value['freestartwork'];
+                    $nextfreeend = $value['freeendwork'];
+                    $nextfullstart = $value['fullstartwork'];
+                    $nextfullend = $value['fullendwork'];
+                }
+                $timeArr2 = array(
+                    'nextfreestart' => $nextfreestart,
+                    'nextfreeend' => $nextfreeend,
+                    'nextfullstart' => $nextfullstart,
+                    'nextfullend' => $nextfullend
+                );
+                asort($timeArr2);
+
+                $timeArr = array();
+                if(current($timeArr1)>'00:00:00'){
+                    $timeArr['dayon'] = '00:00:00';
+                    $timeArr[key($timeArr1)] = current($timeArr1);
+                }
+                else{
+                    $timeArr[key($timeArr1)] = current($timeArr1);
+                }
+
+                next($timeArr1);
+                $t2key = key($timeArr1);
+                $t2value = current($timeArr1);
+
+                next($timeArr1);
+                $s1key = key($timeArr1);
+                $s1value = current($timeArr1);
+
+                if($t2value == $s1value){
+                    if(strstr($s1key,"start")){
+                        $timeArr[$s1key] = $s1value;
+                    }
+                    else{
+                        $timeArr[$t2key] = $t2value;
+                    }
+                }
+                else{
+                    $timeArr[$t2key] = $t2value;
+                    $timeArr[$s1key] = $s1value;
+                }
+
+                next($timeArr1);
+                $s2key = key($timeArr1);
+                $s2value = current($timeArr1);
+
+                if($s2value > '23:55:00'){//因为销售端输入问题，我们认为大于'23:55:00'，就是截止到今天结束
+                    $timeArr['dayoff'] = '23:59:59';
+                }
+                else{
+                    $timeArr[$s2key] = $s2value;
+                    $timeArr['dayoff'] = '23:59:59';
+                }
+
+                //第二天的时间段
+                if(current($timeArr2)>'00:00:00'){
+                    $timeArr['nextdayon'] = '00:00:00';
+                    $timeArr[key($timeArr2)] = current($timeArr2);
+                }
+                else{
+                    $timeArr[key($timeArr2)] = current($timeArr2);
+                }
+
+                next($timeArr2);
+                $n2key = key($timeArr2);
+                $n2value = current($timeArr2);
+                $timeArr[$n2key] = $n2value;
+
+                //遗漏23：59：59
+                foreach($timeArr as $k => $v){
+                    if($v > $nowTime){
+                        if($k == 'dayend'){
+                            continue;
+                        }
+                        else{
+                            $stop = $k;
+                        }
+                        break;
+                    }
+                }
+
+
+                reset($timeArr);
+                while(key($timeArr) != $stop){
+                    next($timeArr);
+                }
+
+                $e = array();
+                $e[1] = current($timeArr);
+                $e[2] = next($timeArr);
+
+                if(strstr($key, 'fullstart')){
+                    $e[0] = 0;
+                }
+                elseif(strstr($key, 'freestart')){
+                    $e[0] = 2;
+                }
+                else{
+                    $e[0] = 1;
+                }
+
+                $tmp['e'] = $e;
+
+            }
+            else{//合作停车场
+                $tmp['p'] = $value['prepay'];
+                $tmp['s'] = $value['parkstate'];
+            }
+
+            array_push($p, $tmp);
+        }
+        $result['p'] = $p;
+
+        $e = array();
+        $e['c'] =  $this->getDefualtCarid($this->uid);
+        $e['u'] = C('PARK_IMG_QINIU').'/Park/';
+        $result['e'] = $e;
+
+
+        if(count($result['p']) == 0){
+            include_once(dirname(__FILE__) . '/../Conf/' . 'config_open_area.php');
+            $this->ajaxOk($result,array('area'=>$config_open_area['sh']));
+        }else{
+            $this->ajaxOk($result);
+        }
+
+    }
 
    //生成预付订单借口-JSAPI
 	public function genOrder($pid, $cid = 0){

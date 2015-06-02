@@ -573,7 +573,7 @@ class PublicController extends BaseController {
 
     public function pushM(){
         /*发送消息模板给用户的公共号*/
-        $msg_json =  sprintf ( C('CUSTOM_TEXT_TPL'), 'oMjtxuH5YZ_6TSkGGLUWvW64aiHQ', "欢迎使用嘟嘟停车场抵用券！<a href='http://www.baidu.com'>点击领取</a>");
+        $msg_json =  sprintf ( C('CUSTOM_TEXT_TPL'), 'oMjtxuH5YZ_6TSkGGLUWvW64aiHQ', "主人，上次使用的抵用券很划算吧！新的抵用券又来了，快来 <a href='http://www.baidu.com'>点击领取>></a>");
 
         $result = $this->pushMsg($msg_json);
 
