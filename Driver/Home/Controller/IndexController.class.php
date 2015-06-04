@@ -219,6 +219,7 @@ class IndexController extends BaseController {
             $tmp['lat'] = $value['lat'];
             $tmp['lng'] = $value['lng'];
             $tmp['m'] = $value['spacesum'];
+            $tmp['p'] = $value['prepay'];
 
             $style = $value['style'];
             $styleArr = explode('|', $style);
@@ -228,159 +229,18 @@ class IndexController extends BaseController {
             }
             $tmp['t'] = $styleR;//停车场标签
 
+            //获取停车场当前空位信息 + 下一个车位时间段
+            $parkstate = $this->_getParkState($value);
+
+            $tmp['e'] = $parkstate['e'];
+
+
             if($value['status'] == 3){//信息化产品
-                $tmp['p'] = -1; //信息化的停车场预付费设为-1
-
-                //信息化停车场的空车位状态根据时段来判断
-                $nowTime = date("H:i:s");
-                if($now['wday'] < 6){
-                    $freestart = $value['freestartwork'];
-                    $freeend = $value['freeendwork'];
-                    $fullstart = $value['fullstartwork'];
-                    $fullend = $value['fullendwork'];
-                }
-                else{
-                    $freestart = $value['freestartweek'];
-                    $freeend = $value['freeendweek'];
-                    $fullstart = $value['fullstartweek'];
-                    $fullend = $value['fullendweek'];
-                }
-                if($nowTime >= $freestart && $nowTime < $freeend){
-                    $tmp['s'] = 2;
-                }
-                elseif($nowTime >= $fullstart && $nowTime < $fullend){
-                    $tmp['s'] = 0;
-                }
-                else{
-                    $tmp['s'] = 1;
-                }
-
-                //下一个车位信息
-                /*
-                 * 时间段列表 00:00:00 ~ t1 ~ t2 ~ s1 ~ s2 ~ 23:59:59, 00:00:00 ~ n1 ~ n2
-                 * */
-                $timeArr1 = array(
-                    'freestart' => $freestart,
-                    'freeend' => $freeend,
-                    'fullstart' => $fullstart,
-                    'fullend' => $fullend
-                );
-                asort($timeArr1);
-
-                if($now['wday'] == 5 && $now['wday'] == 6){
-                    $nextfreestart = $value['freestartweek'];
-                    $nextfreeend = $value['freeendweek'];
-                    $nextfullstart = $value['fullstartweek'];
-                    $nextfullend = $value['fullendweek'];
-                }
-                else{
-                    $nextfreestart = $value['freestartwork'];
-                    $nextfreeend = $value['freeendwork'];
-                    $nextfullstart = $value['fullstartwork'];
-                    $nextfullend = $value['fullendwork'];
-                }
-                $timeArr2 = array(
-                    'nextfreestart' => $nextfreestart,
-                    'nextfreeend' => $nextfreeend,
-                    'nextfullstart' => $nextfullstart,
-                    'nextfullend' => $nextfullend
-                );
-                asort($timeArr2);
-
-                $timeArr = array();
-                if(current($timeArr1)>'00:00:00'){
-                    $timeArr['dayon'] = '00:00:00';
-                    $timeArr[key($timeArr1)] = current($timeArr1);
-                }
-                else{
-                    $timeArr[key($timeArr1)] = current($timeArr1);
-                }
-
-                next($timeArr1);
-                $t2key = key($timeArr1);
-                $t2value = current($timeArr1);
-
-                next($timeArr1);
-                $s1key = key($timeArr1);
-                $s1value = current($timeArr1);
-
-                if($t2value == $s1value){
-                    if(strstr($s1key,"start")){
-                        $timeArr[$s1key] = $s1value;
-                    }
-                    else{
-                        $timeArr[$t2key] = $t2value;
-                    }
-                }
-                else{
-                    $timeArr[$t2key] = $t2value;
-                    $timeArr[$s1key] = $s1value;
-                }
-
-                next($timeArr1);
-                $s2key = key($timeArr1);
-                $s2value = current($timeArr1);
-
-                if($s2value > '23:55:00'){//因为销售端输入问题，我们认为大于'23:55:00'，就是截止到今天结束
-                    $timeArr['dayoff'] = '23:59:59';
-                }
-                else{
-                    $timeArr[$s2key] = $s2value;
-                    $timeArr['dayoff'] = '23:59:59';
-                }
-
-                //第二天的时间段
-                if(current($timeArr2)>'00:00:00'){
-                    $timeArr['nextdayon'] = '00:00:00';
-                    $timeArr[key($timeArr2)] = current($timeArr2);
-                }
-                else{
-                    $timeArr[key($timeArr2)] = current($timeArr2);
-                }
-
-                next($timeArr2);
-                $n2key = key($timeArr2);
-                $n2value = current($timeArr2);
-                $timeArr[$n2key] = $n2value;
-
-                //遗漏23：59：59
-                foreach($timeArr as $k => $v){
-                    if($v > $nowTime){
-                        if($k == 'dayend'){
-                            continue;
-                        }
-                        else{
-                            $stop = $k;
-                        }
-                        break;
-                    }
-                }
-
-
-                reset($timeArr);
-                while(key($timeArr) != $stop){
-                    next($timeArr);
-                }
-
-                $e = array();
-                $e[1] = current($timeArr);
-                $e[2] = next($timeArr);
-
-                if(strstr($key, 'fullstart')){
-                    $e[0] = 0;
-                }
-                elseif(strstr($key, 'freestart')){
-                    $e[0] = 2;
-                }
-                else{
-                    $e[0] = 1;
-                }
-
-                $tmp['e'] = $e;
-
+                $tmp['c'] = 0; //信息化设为0
+                $tmp['s'] = $parkstate['s'];//信息化停车场的空车位状态根据时段来判断
             }
             else{//合作停车场
-                $tmp['p'] = $value['prepay'];
+                $tmp['c'] = 1; //合作停车场设为1
                 $tmp['s'] = $value['parkstate'];
             }
 
@@ -401,6 +261,161 @@ class IndexController extends BaseController {
             $this->ajaxOk($result);
         }
 
+    }
+
+    //获取停车场当前空位信息 + 下一个车位时间段
+    /*
+    * 时间段列表 00:00:00 ~ t1 ~ t2 ~ s1 ~ s2 ~ 23:59:59, 00:00:00 ~ n1 ~ n2
+    * */
+    private function _getParkState($value){
+        $tmp = array();
+        $nowTime = date("H:i:s");
+        $now = getdate();
+
+        //获取下一个车位时间段
+        if($now['wday'] < 6){
+            $freestart = $value['freestartwork'];
+            $freeend = $value['freeendwork'];
+            $fullstart = $value['fullstartwork'];
+            $fullend = $value['fullendwork'];
+        }
+        else{
+            $freestart = $value['freestartweek'];
+            $freeend = $value['freeendweek'];
+            $fullstart = $value['fullstartweek'];
+            $fullend = $value['fullendweek'];
+        }
+
+        $timeArr1 = array();
+        if(isset($freestart) && isset($freeend)){
+            $timeArr1['freestart'] = date('').$freestart;
+            $timeArr1['freeend'] = $freeend;
+        }
+        if(isset($fullstart) && isset($freeend)){
+            $timeArr1['fullstart'] = $fullstart;
+            $timeArr1['fullend'] = $fullend;
+        }
+        asort($timeArr1);//今天的空位时间阀值排序
+
+        if($now['wday'] == 5 || $now['wday'] == 6){
+            $nextfreestart = $value['freestartweek'];
+            $nextfreeend = $value['freeendweek'];
+            $nextfullstart = $value['fullstartweek'];
+            $nextfullend = $value['fullendweek'];
+        }
+        else{
+            $nextfreestart = $value['freestartwork'];
+            $nextfreeend = $value['freeendwork'];
+            $nextfullstart = $value['fullstartwork'];
+            $nextfullend = $value['fullendwork'];
+        }
+        $timeArr2 = array();
+        if(isset($nextfreestart) && isset($nextfreeend)){
+            $timeArr2['nextfreestart'] = $nextfreestart;
+            $timeArr2['nextfreeend'] = $nextfreeend;
+        }
+        if(isset($nextfullstart) && isset($nextfullend)){
+            $timeArr2['nextfullstart'] = $nextfullstart;
+            $timeArr2['nextfullend'] = $nextfullend;
+        }
+        asort($timeArr2);//明天的空位时间阀值排序
+
+        $timeArr = array();
+        if(current($timeArr1)>'00:00:00'){
+            $timeArr['dayon'] = '00:00:00';
+            $timeArr[key($timeArr1)] = current($timeArr1);
+        }
+        else{
+            $timeArr[key($timeArr1)] = current($timeArr1);
+        }
+
+        next($timeArr1);
+        $t2key = key($timeArr1);
+        $t2value = current($timeArr1);
+
+        next($timeArr1);
+        $s1key = key($timeArr1);
+        $s1value = current($timeArr1);
+
+        if($t2value == $s1value){
+            if(strstr($s1key,"start")){
+                $timeArr[$s1key] = $s1value;
+            }
+            else{
+                $timeArr[$t2key] = $t2value;
+            }
+        }
+        else{
+            $timeArr[$t2key] = $t2value;
+            $timeArr[$s1key] = $s1value;
+        }
+
+        next($timeArr1);
+        $s2key = key($timeArr1);
+        $s2value = current($timeArr1);
+
+        if($s2value > '23:55:00'){//因为销售端输入问题，我们认为大于'23:55:00'，就是截止到今天结束
+            $timeArr['dayoff'] = '23:59:59';
+        }
+        else{
+            $timeArr[$s2key] = $s2value;
+            $timeArr['dayoff'] = '23:59:59';
+        }
+
+        //第二天的时间段
+        if(current($timeArr2)>'00:00:00'){
+            $timeArr['nextdayon'] = '00:00:00';
+            $timeArr[key($timeArr2)] = current($timeArr2);
+        }
+        else{
+            $timeArr[key($timeArr2)] = current($timeArr2);
+        }
+
+        next($timeArr2);
+        $n2key = key($timeArr2);
+        $n2value = current($timeArr2);
+        $timeArr[$n2key] = $n2value;
+
+
+        //遗漏23：59：59
+        reset($timeArr);
+        while(current($timeArr) <= $nowTime){
+            next($timeArr);
+        }
+
+        if(key($timeArr) == 'dayoff'){//跳过今天结束时间点
+            next($timeArr);
+        }
+
+        $e = array();
+        $stop = key($timeArr);
+        $e[1] = current($timeArr);
+        $e[2] = next($timeArr);
+
+        if(strstr($stop, 'fullstart')){
+            $e[0] = 0;
+        }
+        elseif(strstr($stop, 'freestart')){
+            $e[0] = 2;
+        }
+        else{
+            $e[0] = 1;
+        }
+        $tmp['e'] = $e;
+        //-End of 下一个时段空位信息
+
+        //当前时间段状态：
+        if($nowTime >= $freestart && $nowTime < $freeend){
+            $tmp['s'] = 2;
+        }
+        elseif($nowTime >= $fullstart && $nowTime < $fullend){
+            $tmp['s'] = 0;
+        }
+        else{
+            $tmp['s'] = 1;
+        }
+
+        return $tmp;
     }
 
    //生成预付订单借口-JSAPI
