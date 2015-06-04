@@ -59,7 +59,7 @@ return array(
     'THEME_LIST'		=>	'default',
     //'TMPL_DETECT_THEME' => 	true, // 自动侦测模板主题
 
-    //停车场类型
+    //停车场tag
     'PARK_STYLE' => array (
         'DM' => '地面',
         'DXK' => '地下库',
@@ -80,6 +80,14 @@ return array(
         'ZYSF' => '中央收费',
         'BDWKF' => '不对外开放',
         'LDCD' => '流动车多',
+    ),
+
+    //停车场tag类型
+    'PARK_STYLE_CAT' => array (
+        'DM' => '停车场空间',
+        'XQ' => '停车场类型',
+        'ZDZJCR' => '收费方式',
+        'LDCD' => '停放车辆',
     ),
 
     //停车场合作状态
@@ -128,5 +136,7 @@ return array(
     //图片七牛访问路径
     'PARK_IMG_QINIU' =>'http://7xispd.com1.z0.glb.clouddn.com',
 
+    //附近停车场距离，单位米
+    'NEAR_DIS' => 500,
 
 );

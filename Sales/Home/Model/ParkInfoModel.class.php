@@ -13,15 +13,15 @@ class ParkInfoModel extends Model {
      * @param  string  $parkid 停车场名字
      */
     public function searchPark($parkname){
+
+        $con = array();
+
         $SalesAuth= M('SalesAuth');
         $map = array();
         $map['id'] = UID;
         $leader =  $SalesAuth->where($map)->getField('leader');
-        $con = array();
-        if($leader == 0){//没有上级的可以看到所有停车场
-            $con['name'] = array('like','%'.$parkname.'%');
-        }
-        else{
+
+        if($leader != 0){//没有上级的可以看到所有停车场,否则只能看到自己
             $map = array();
             $map['leader'] = UID;//销售主管能看到所有
             $sales = $SalesAuth->where($map)->getField('id',true);
@@ -33,9 +33,14 @@ class ParkInfoModel extends Model {
                 array_push($sales, UID);
             }
 
-            $con['name'] = array('like','%'.$parkname.'%');
             $con['responsible'] = array('in',$sales);
         }
+
+        $where = array();
+        $where['name']  = array('like','%'.$parkname.'%');
+        $where['address']  = array('like','%'.$parkname.'%');
+        $where['_logic'] = 'or';
+        $con['_complex'] = $where;
 
         /* 获取数据 */
         $Park = $this->where($con)->order('updatetime desc')->select();

@@ -70,7 +70,38 @@
 </block>
 
 <block name="script">
+    <script type="text/javascript" src="__STATIC__/datetimepicker/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/datetimepicker/js/bootstrap-datetimepicker.js"></script>
+    <script type="text/javascript" src="__STATIC__/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
 <script type="text/javascript">
+
+    var now  = new Date();
+    var timeConf = {
+        language: 'zh-CN',
+        autoclose: true,
+        startView:1,
+        hourStep: 1,
+        minuteStep: 5,
+        secondStep: 0,
+        forceParse: false,
+        format:"hh:ii:ss",
+        startDate:now.getFullYear()+"-"+now.getMonth()+"-"+now.getDate(),
+        bootcssVer:3
+    };
+
+    var datetimeConf ={
+        language: 'zh-CN',
+        todayBtn: true,
+        autoclose: true,
+        startView:2,
+        hourStep: 1,
+        minuteStep: 5,
+        secondStep: 5,
+        forceParse: false,
+        format:"yyyy-mm-dd hh:ii:ss",
+        bootcssVer:3
+    };
+
 	var newrule = 0;
 	function delruletime(){
 		$(this).parent().remove();
@@ -122,7 +153,10 @@
     row.find('.delruletime').click(delruletime);
     row.find('.delrule').click(delrule);
     row.find('.saverule').click(saverule);
-    
+        row.find('.starttime').datetimepicker(timeConf);
+        row.find('.endtime').datetimepicker(timeConf);
+        row.find('.stoptime').datetimepicker(timeConf);
+
     $(this).prev().append(row);
 	}
 	function testrule(){
@@ -147,7 +181,7 @@
                     },
                     success:function(data){
                         console.log(data);
-                        $('.testout').html('RMB'+data.data.fee);
+                        $('.testout').html('RMB:'+data.data.fee);
                     }
                 });
 	}
@@ -162,6 +196,11 @@
         $('.addrule').click(addrule);
         $('.testrule').click(testrule);
         $('.dotestrule').click(dotestrule);
+        $('.starttime').datetimepicker(timeConf);
+        $('.endtime').datetimepicker(timeConf);
+        $('.stoptime').datetimepicker(timeConf);
+        $('.teststarttime').datetimepicker(datetimeConf);
+        $('.testendtime').datetimepicker(datetimeConf);
     })
 </script>
 </block>

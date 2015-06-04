@@ -10,8 +10,33 @@ class IndexController extends  BaseController {
     	if (IS_GET) {
         	$Park = D('ParkInfo');
         	$searchName = I('get.searchpark');
-        	$parks = $Park->searchPark($searchName);
-        	$this->parks_info = $parks;
+            $lat = I('get.lat');
+            $lng = I('get.lng');
+            $my = I('get.my');
+
+            //查询停车场
+
+            //只显示我自己的停车场，否则显示所有的停车场
+            if(!empty($my)){
+                $con['responsible'] = UID;
+            }
+            //附近停车场
+            if(!empty($lat) && !empty($lng)){
+                $near = C('NEAR_DIS');
+                $gap = round($near/110000,6);
+                $con['lat'] = array(array('gt',$lat - $gap),array('lt',$lat + $gap));
+                $con['lng'] = array(array('gt',$lng - $gap),array('lt',$lng + $gap));
+            }
+            //根据名称和地址搜索
+            if(!empty($searchName)){
+                $where = array();
+                $where['name']  = array('like','%'.$searchName.'%');
+                $where['address']  = array('like','%'.$searchName.'%');
+                $where['_logic'] = 'or';
+                $con['_complex'] = $where;
+            }
+            $parks = $Park->where($con)->order('updatetime desc')->select();
+            $this->parks_info = $parks;
         	$this->meta_title = '首页 | 嘟嘟销售系统';
         	$this->display();
         }
@@ -20,7 +45,7 @@ class IndexController extends  BaseController {
         }
     }
 
-    public function parkinfo($parkid = null, $fileError = ''){
+    public function parkinfo($parkid = null, $fileError = null){
     	if (IS_POST) {
     		$parkInfo = array();
     		//处理POST过来的信息
@@ -40,60 +65,70 @@ class IndexController extends  BaseController {
  			}
  			$parkInfo['style'] = $parkstyle;
  			$parkInfo['opentime'] = I('post.opentime');
- 			$parkInfo['startmon'] = I('post.startmon');
- 			$parkInfo['starttue'] = I('post.starttue');
- 			$parkInfo['startwed'] = I('post.startwed');
- 			$parkInfo['startthu'] = I('post.startthu');
- 			$parkInfo['startfri'] = I('post.startfri');
- 			$parkInfo['startsat'] = I('post.startsat');
- 			$parkInfo['startsun'] = I('post.startsun');
- 			$parkInfo['endmon'] = I('post.endmon');
- 			$parkInfo['endtue'] = I('post.endtue');
- 			$parkInfo['endwed'] = I('post.endwed');
- 			$parkInfo['endthu'] = I('post.endthu');
- 			$parkInfo['endfri'] = I('post.endfri');
- 			$parkInfo['endsat'] = I('post.endsat');
- 			$parkInfo['endsun'] = I('post.endsun');
-            $parkInfo['freestartweek'] = I('post.freestartweek');
-            $parkInfo['freeendweek'] = I('post.freeendweek');
-            $parkInfo['fullstartweek'] = I('post.fullstartweek');
-            $parkInfo['fullendweek'] = I('post.fullendweek');
-            $parkInfo['freestartwork'] = I('post.freestartwork');
-            $parkInfo['freeendwork'] = I('post.freeendwork');
-            $parkInfo['fullstartwork'] = I('post.fullstartwork');
-            $parkInfo['fullendwork'] = I('post.fullendwork');
-            $parkInfo['fullend'] = I('post.fullend');
+ 			$parkInfo['startmon'] = I('post.startwork');
+ 			$parkInfo['starttue'] = I('post.startwork');
+ 			$parkInfo['startwed'] = I('post.startwork');
+ 			$parkInfo['startthu'] = I('post.startwork');
+ 			$parkInfo['startfri'] = I('post.startwork');
+ 			$parkInfo['startsat'] = I('post.startweek');
+ 			$parkInfo['startsun'] = I('post.startweek');
+ 			$parkInfo['endmon'] = I('post.endwork');
+ 			$parkInfo['endtue'] = I('post.endwork');
+ 			$parkInfo['endwed'] = I('post.endwork');
+ 			$parkInfo['endthu'] = I('post.endwork');
+ 			$parkInfo['endfri'] = I('post.endwork');
+ 			$parkInfo['endsat'] = I('post.endweek');
+ 			$parkInfo['endsun'] = I('post.endweek');
+
+            $freestartweek = I('post.freestartweek');
+            $freeendweek = I('post.freeendweek');
+            $fullstartweek = I('post.fullstartweek');
+            $fullendweek = I('post.fullendweek');
+            $freestartwork = I('post.freestartwork');
+            $freeendwork = I('post.freeendwork');
+            $fullstartwork = I('post.fullstartwork');
+            $fullendwork = I('post.fullendwork');
+            $parkInfo['freestartweek'] = empty($freestartweek) ? null : $freestartweek;
+            $parkInfo['freeendweek'] = empty($freeendweek) ? null : $freeendweek;
+            $parkInfo['fullstartweek'] = empty($fullstartweek) ? null : $fullstartweek;
+            $parkInfo['fullendweek'] = empty($fullendweek) ? null : $fullendweek;
+            $parkInfo['freestartwork'] = empty($freestartwork) ? null : $freestartwork;
+            $parkInfo['freeendwork'] = empty($freeendwork) ? null : $freeendwork;
+            $parkInfo['fullstartwork'] = empty($fullstartwork) ? null : $fullstartwork;
+            $parkInfo['fullendwork'] = empty($fullendwork) ? null : $fullendwork;
+
  			$parkInfo['chargingrules'] = htmlspecialchars_decode(I('chargingrules'));
  			$parkInfo['note'] = I('note');
  			$parkInfo['shortname'] = I('shortname');
 
             //采用FTP方式，上传图片
-            //上传图片的配置
-            $config = array(
-                'maxSize'    =>    3145728,
-                'rootPath'   =>   C('PARK_UPLOAD_PATH'),
-                'savePath'   =>    '',
-                'saveName'   =>     'Park_'.I('post.id')."_".time(),
-                'exts'       =>    array('jpg', 'gif', 'png', 'jpeg'),
-                'autoSub'    =>    false,
-                'replace'      =>    true,
-            );
-            $upload = new \Think\Upload($config,'Ftp', C('UPLOAD_FTP'));// 实例化上传类
-            $info   =   $upload->upload();
-            if(!$info) {// 上传错误提示错误信息
-                $fileError = $upload->getError();
-            }
-            else {
-                //图片缩写的先去除
-                //$image = new \Think\Image();
-                //$imgURL = C('PARK_IMG_PATH').$info['parkimage']['savename'];
-                //$image->open($imgURL);
-                // 按照原图的比例生成一个最大为150*150的缩略图并保存为thumb.jpg
-                //$image->thumb(640, 300)->save($imgURL);
-                $parkInfo['image'] = $info['parkimage']['savename'];
+            if($_FILES["parkimage"]["error"] == 0){//存在上传文件
+                //上传图片的配置
+                $config = array(
+                    'maxSize'    =>    3145728,
+                    'rootPath'   =>   C('PARK_UPLOAD_PATH'),
+                    'savePath'   =>    '',
+                    'saveName'   =>     'Park_'.I('post.id')."_".time(),
+                    'exts'       =>    array('jpg', 'gif', 'png', 'jpeg'),
+                    'autoSub'    =>    false,
+                    'replace'      =>    true,
+                );
+                $upload = new \Think\Upload($config,'Ftp', C('UPLOAD_FTP'));// 实例化上传类
+                $info   =   $upload->upload();
+                if(!$info) {//上传错误
+                    $fileError = $upload->getError();
+                }
+                else {//上传成功
+                    //图片缩写的先去除
+                    //$image = new \Think\Image();
+                    //$imgURL = C('PARK_IMG_PATH').$info['parkimage']['savename'];
+                    //$image->open($imgURL);
+                    // 按照原图的比例生成一个最大为150*150的缩略图并保存为thumb.jpg
+                    //$image->thumb(640, 300)->save($imgURL);
+                    $parkInfo['image'] = $info['parkimage']['savename'];
+                }
             }
 
-            //dump($info);
             //停车场活动参数
             $actype = I('post.actype');
             $acendtime = I('post.acendtime');
@@ -108,7 +143,11 @@ class IndexController extends  BaseController {
     		$Park = D('ParkInfo');
     		$saveParkId = $Park->SaveParkInfo($parkInfo);
     		if ($saveParkId) {
-    			$this->redirect('Index/parkinfo', array('parkid' => $saveParkId,'fileError' => $fileError), 0, '保存成功...');
+                $param = array('parkid' => $saveParkId);
+                if(isset($fileError)){
+                    $param['fileError'] = $fileError;
+                }
+    			$this->redirect('Index/parkinfo', $param, 0, '保存成功...');
     		}
     		else{
     			$this->error();

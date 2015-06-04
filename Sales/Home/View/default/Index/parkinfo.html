@@ -70,6 +70,11 @@
         .pickTime>li{
             clear: both;
         }
+        .required{
+            color:red;
+            width: 10px;
+        }
+
 
     </style>
 </block>
@@ -85,10 +90,49 @@
         <div id="panel-1">
             <form action="{:U('parkinfo')}" method="post" enctype="multipart/form-data">
                 <input type="hidden"  name="id" value="{$park_info[id]}" />
-                <table style="width: 95%;margin: 0 auto;margin-top: 10px">
+                <table style="width: 95%;margin: 0 auto;margin-top: 10px;overflow: hidden">
                     <tr>
                         <td style="width: 33%"><label for="parkname">停车场名称：</label></td>
-                        <td style="width: 66%"><input type="text" id="parkname" name="name" value="{$park_info[name]}" /> </td>
+                        <td style="width: 66%">
+                            <span class="required">*</span>
+                            <input type="text" id="parkname" name="name" value="{$park_info[name]}" />
+                            <a class="mui-btn  mui-btn-primary" style="margin-left:20px;" href="{:U('index').'?lat='.$park_info[lat].'&lng='.$park_info[lng]}">附近停车场</a>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="shortname">停车场缩写：</label></td>
+                        <td><span class="required">*</span>
+                            <input type="text" id="shortname" name="shortname" value="{$park_info[shortname]}" />
+                            <button type='button' id="checkBtn" class='mui-btn-primary' style="margin-left:20px;">检查缩写</button>
+                            <span id="checkF" style="color:red"></span>
+                            <span id="checkS" style="color:green"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="chargingrules">计费规则：</label><br><a href="{$feeurl}" target="newwindow">规则库中共{$rulecount}条纪录</a></td>
+                        <td>
+                            <div style="clear: both;">
+                                <div style="float:left;" class="required">
+                                    *
+                                </div>
+                                <div style="float:left;max-width: 95%">
+                                    <textarea id="chargingrules" name="chargingrules" rows="5">{$park_info[chargingrules]}</textarea>
+                                </div>
+                            </div>
+                        </td>
+                     </tr>
+                    <tr>
+                        <td><label for="enterplace">入口地址：</label></td>
+                        <td>
+                            <span class="required">*</span>
+                            <input type="text" id="enterplace" style="margin-top:10px;" name="address" value= "{$park_info[address]}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="otherplace">入口补充说明：</label></td>
+                        <td>
+                        	<textarea id="otherplace" name="address2" rows="3">{$park_info[address2]}</textarea>
+                        </td>
                     </tr>
                     <tr>
                         <td><label for="enterplace">城市：</label></td>
@@ -96,16 +140,6 @@
                             <select id="entercity">
                                 <option value ="021">上海</option>
                             </select>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><label for="enterplace">入口地址：</label></td>
-                        <td><input type="text" id="enterplace" name="address" value= "{$park_info[address]}" /> </td>
-                    </tr>
-                    <tr>
-                        <td><label for="otherplace">入口补充说明：</label></td>
-                        <td>
-                        	<textarea id="otherplace" name="address2" rows="3">{$park_info[address2]}</textarea>
                         </td>
                     </tr>
                     <tr>
@@ -136,20 +170,25 @@
                     <tr>
                         <td colspan="2">
                             <?php
-                $parkstyles = C('PARK_STYLE');
-                $mystyle = $park_info[style];
-                $key = 1;
-                foreach($parkstyles as $parkstyle => $value){
-                            $token = '|'.$parkstyle.'|';
-                            $checked = "";
-                            if (preg_match($token,$mystyle)) {
-                            $checked = "checked";
-                            }
-                            echo '<input type="checkbox" name="parkstyle[]" value="'.$parkstyle.'" '.$checked.' /><span style="display: inline-block;min-width: 40%">'.$value.'</span>';
-                            if($key%2 == 0){
-                                echo '<br/>';
-                            }
-                            $key++;
+                            $parkstyles = C('PARK_STYLE');
+                            $mystyle = $park_info[style];
+                            $key = 1;
+                            foreach($parkstyles as $parkstyle => $value){
+
+                                if(array_key_exists($parkstyle, C('PARK_STYLE_CAT'))){
+                                    echo "<br/><p style='margin: 0px'>".C('PARK_STYLE_CAT')[$parkstyle].":</p>";
+                                }
+
+                                $token = '|'.$parkstyle.'|';
+                                $checked = "";
+                                if (preg_match($token,$mystyle)) {
+                                $checked = "checked";
+                                }
+                                echo '<input type="checkbox" name="parkstyle[]" value="'.$parkstyle.'" '.$checked.' /><span style="display: inline-block;min-width: 40%">'.$value.'</span>';
+                                if($key%2 == 0){
+                                    echo '<br/>';
+                                }
+                                $key++;
                             }
                             ?>
                         </td>
@@ -159,7 +198,7 @@
                     </tr>
                     <tr>
                         <td><label for="spacesum">总车位数：</label></td>
-                        <td><input type="text" id="spacesum" name="spacesum" value= "{$park_info[spacesum]}" /> </td>
+                        <td><input type="text" id="spacesum" name="spacesum" value= "{$park_info[spacesum]}" />个 </td>
                     </tr>
                     <tr>
                         <td><label for="prepay">预付车费：</label></td>
@@ -170,89 +209,29 @@
                     <tr>
                         <td><label for="opentime">开放时间段：</label></td>
                         <td>
-                        	<input type="text" id="opentime" name="opentime" value= "{$park_info[opentime]}" /> <br>
+                        	<input type="text" id="opentime" name="opentime" value= "{$park_info[opentime]}" placeholder="如：周一至周日 8点至24点开发..."/> <br>
                             <ul class="pickTime">
                                 <li>
-                                    <p class="pickerText"> 周一： </p>
+                                    <p class="pickerText"> 周一至周五:</p>
                                     <div class="input-group  date timepicker " data-date-format="hh:ii:00">
-                                        <input class="form-control"  id="startmon" type="text" name="startmon" value= "{$park_info[startmon]}">
+                                        <input class="form-control"  id="startwork" type="text" name="startwork" value= "{$park_info[startmon]}">
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
                                     </div>
                                     <p class="pickerText"> - </p>
                                     <div class="input-group  date timepicker " data-date-format="hh:ii:00" style="float: left;padding: 5px;">
-                                        <input class="form-control" id="endmon" type="text" name="endmon" value= "{$park_info[endmon]}">
+                                        <input class="form-control" id="endwork" type="text" name="endwork" value= "{$park_info[endmon]}">
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
                                     </div>
                                 </li>
                                 <li>
-                                    <p class="pickerText"> 周二： </p>
+                                    <p class="pickerText"> 周六周日:</p>
                                     <div class="input-group  date timepicker " data-date-format="hh:ii:00">
-                                        <input class="form-control"  id="starttue" type="text" name="starttue" value= "{$park_info[starttue]}">
+                                        <input class="form-control"  id="startweek" type="text" name="startweek" value= "{$park_info[startsat]}">
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
                                     </div>
                                     <p class="pickerText"> - </p>
                                     <div class="input-group  date timepicker " data-date-format="hh:ii:00" style="float: left;padding: 5px;">
-                                        <input class="form-control" id="endtue" type="text" name="endtue" value= "{$park_info[endtue]}">
-                                        <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
-                                    </div>
-                                </li>
-                                <li>
-                                    <p class="pickerText"> 周三： </p>
-                                    <div class="input-group  date timepicker " data-date-format="hh:ii:00">
-                                        <input class="form-control"  id="startwed" type="text" name="startwed" value= "{$park_info[startwed]}">
-                                        <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
-                                    </div>
-                                    <p class="pickerText"> - </p>
-                                    <div class="input-group  date timepicker " data-date-format="hh:ii:00" style="float: left;padding: 5px;">
-                                        <input class="form-control" id="endwed" type="text" name="endwed" value= "{$park_info[endwed]}">
-                                        <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
-                                    </div>
-                                </li>
-                                <li>
-                                    <p class="pickerText"> 周四： </p>
-                                    <div class="input-group  date timepicker " data-date-format="hh:ii:00">
-                                        <input class="form-control"  id="startthu" type="text" name="startthu" value= "{$park_info[startthu]}">
-                                        <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
-                                    </div>
-                                    <p class="pickerText"> - </p>
-                                    <div class="input-group  date timepicker " data-date-format="hh:ii:00" style="float: left;padding: 5px;">
-                                        <input class="form-control" id="endthu" type="text" name="endthu" value= "{$park_info[endthu]}">
-                                        <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
-                                    </div>
-                                </li>
-                                <li>
-                                    <p class="pickerText"> 周五： </p>
-                                    <div class="input-group  date timepicker " data-date-format="hh:ii:00">
-                                        <input class="form-control"  id="startfri" type="text" name="startfri" value= "{$park_info[startfri]}">
-                                        <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
-                                    </div>
-                                    <p class="pickerText"> - </p>
-                                    <div class="input-group  date timepicker " data-date-format="hh:ii:00" style="float: left;padding: 5px;">
-                                        <input class="form-control" id="endfri" type="text" name="endfri" value= "{$park_info[endfri]}">
-                                        <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
-                                    </div>
-                                </li>
-                                <li>
-                                    <p class="pickerText"> 周六： </p>
-                                    <div class="input-group  date timepicker " data-date-format="hh:ii:00">
-                                        <input class="form-control"  id="startsat" type="text" name="startsat" value= "{$park_info[startsat]}">
-                                        <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
-                                    </div>
-                                    <p class="pickerText"> - </p>
-                                    <div class="input-group  date timepicker " data-date-format="hh:ii:00" style="float: left;padding: 5px;">
-                                        <input class="form-control" id="endsat" type="text" name="endsat" value= "{$park_info[endsat]}">
-                                        <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
-                                    </div>
-                                </li>
-                                <li>
-                                    <p class="pickerText"> 周日： </p>
-                                    <div class="input-group  date timepicker " data-date-format="hh:ii:00">
-                                        <input class="form-control"  id="startsun" type="text" name="startsun" value= "{$park_info[startsun]}">
-                                        <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
-                                    </div>
-                                    <p class="pickerText"> - </p>
-                                    <div class="input-group  date timepicker " data-date-format="hh:ii:00" style="float: left;padding: 5px;">
-                                        <input class="form-control" id="endsun" type="text" name="endsun" value= "{$park_info[endsun]}">
+                                        <input class="form-control" id="endweek" type="text" name="endweek" value= "{$park_info[endsat]}">
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
                                     </div>
                                 </li>
@@ -322,21 +301,8 @@
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="2"><label for="chargingrules">计费规则：</label><a href="{$feeurl}" target="newwindow">规则库中共{$rulecount}条纪录</a></td>
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <textarea id="chargingrules" name="chargingrules" rows="5">{$park_info[chargingrules]}</textarea>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td colspan="2"><label for="note">备注说明：</label></td>
-                        <!--<td><input type="text" id="note" name="note" value= "{$park_info[note]}" /> </td>-->
-                    </tr>
-                    <tr>
-                        <td colspan="2">
-                            <textarea id="note" name="note" rows="5">{$park_info[note]}</textarea>
-                        </td>
+                        <td><label for="note">备注说明：</label></td>
+                        <td> <textarea id="note" name="note" rows="5">{$park_info[note]}</textarea> </td>
                     </tr>
                     <tr>
                         <td><label for="parkimage">停车场入口图片：</label></td>
@@ -346,17 +312,12 @@
                     <tr>
                         <td></td>
                         <td>
-                            <img src="<?php echo C('PARK_IMG_QINIU');?>/Park/{$park_info[image]}">
-                        </td>
-                    </tr>
+                            <?php
+                                if(!empty($park_info[image])){
+                                    echo "<img src=".C('PARK_IMG_QINIU')."/Park/".$park_info[image].">";
+                                }
+                            ?>
 
-
-                    <tr>
-                        <td><label for="shortname">停车场缩写：</label></td>
-                        <td><input type="text" id="shortname" name="shortname" value="{$park_info[shortname]}" />
-                            <button type='button' id="checkBtn" class='mui-btn-danger'>检查缩写</button>
-                            <span id="checkF" style="color:red"></span>
-                            <span id="checkS" style="color:green"></span>
                         </td>
                     </tr>
 
@@ -387,7 +348,9 @@
 
                     <tr>
                         <td><label for="acendtime">活动截止时间：</label></td>
-                        <td><input type="text" id="acendtime" name="acendtime" value="{$park_info[acendtime]}" /> </td>
+                        <td>
+                            <input type="text" id="acendtime" name="acendtime" value="{$park_info[acendtime]}" data-date-format="yyyy-mm-dd" />
+                        </td>
                     </tr>
 
                     <tr>
@@ -466,7 +429,7 @@
                                         echo "<form action=".U('delvisit')." method=post>";
                                         echo "<input type='hidden'  name='parkid' value=$park_info[id] />";
                                         echo "<input type='hidden'  name='id' value=$value[id] />";
-                                        echo "<button style='float: right;margin: 10px;' type='button' class='removeVisit mui-btn mui-btn-danger'>删除</button><hr style='clear: both;margin: 5px'></li>";
+                                        echo "<button style='float: right;margin: 10px;' type='button' class='removeVisit mui-btn mui-btn-danger confirm'>删除</button><hr style='clear: both;margin: 5px'></li>";
                                         echo " </form>";
                                 }
 
@@ -506,7 +469,7 @@
                                 echo "<form action=".U('delcontact')." method=post>";
                                 echo "<input type='hidden'  name='parkid' value=$park_info[id] />";
                                 echo "<input type='hidden'  name='id' value=$value[id] />";
-                                echo "<button style='float: right;margin: 10px' type='button' class='removeContact mui-btn mui-btn-danger'>删除</button><hr style='clear: both;margin: 5px'></li>";
+                                echo "<button style='float: right;margin: 10px' type='button' class='removeContact mui-btn mui-btn-danger confirm'>删除</button><hr style='clear: both;margin: 5px'></li>";
                                 echo " </form>";
                             }
 
@@ -548,7 +511,7 @@
                                     echo "<form action=".U('deladmin')." method=post>";
                                     echo "<input type='hidden'  name='parkid' value=$park_info[id] />";
                                     echo "<input type='hidden'  name='id' value=$value[id] />";
-                                    echo "<button style='float: right;margin: 10px' type='button' class='removeAdmin mui-btn mui-btn-danger'>删除</button><hr style='clear: both;margin: 5px'></li>";
+                                    echo "<button style='float: right;margin: 10px' type='button' class='removeAdmin mui-btn mui-btn-danger confirm'>删除</button><hr style='clear: both;margin: 5px'></li>";
                                     echo " </form>";
                                 }
 
@@ -619,8 +582,10 @@
     <script>
         var um = UE.getEditor('chargingrules',{
             toolbars: [
-                ['fullscreen', 'source', 'undo', 'redo', 'bold',"forecolor","backcolor"]
+                ['source', 'undo', 'redo', "forecolor"]
             ],
+            initialFrameWidth: null,
+            minFrameWidth:500,
             wordCount: false
         });
 
@@ -932,11 +897,14 @@
                     +  '<button style="float: left;margin: 10px;" type="button" class="saveContact mui-btn mui-btn-danger">保存</button>'+
                     '</form>'+  '<form action="{:U('delcontact')}" method=post>'+
                     '<input type="hidden"  name="parkid" value="{$park_info[id]}" /> <input type="hidden"  name="id" value="" />'+
-                    '<button style="float: right;margin: 10px" type="button" class="removeContact mui-btn mui-btn-danger">删除</button><hr style="clear: both;margin: 5px"></li>'+'</form>';
+                    '<button style="float: right;margin: 10px" type="button" class="removeContact mui-btn mui-btn-danger confirm">删除</button><hr style="clear: both;margin: 5px"></li>'+'</form>';
                     var row = $(temp);
                 row.find('.removeContact').click(function(){
-                    //$(this).parent().remove();
-                    $(this).parent().submit();
+                    if(confirm("确定要删除这个联系人吗？")){
+                        $(this).parent().submit();
+                    }else{
+                        return false;//阻止提交
+                    }
                 });row.find('.saveContact').click(function(){
                         $(this).parent().submit();
                     });
@@ -945,8 +913,12 @@
         );
         
         $('.removeContact').click(function(){
-                    //$(this).parent().remove();
-                    $(this).parent().submit();
+                    if(confirm("确定要删除这个联系人吗？")){
+                        $(this).parent().submit();
+                    }else{
+                        return false;//阻止提交
+                    }
+
             }
         );
         $('.saveContact').click(function(){
@@ -963,13 +935,17 @@
                     '</form>'+
                     '<form action="{:U('delvisit')}" method=post>'+
                     '<input type="hidden"  name="parkid" value="{$park_info[id]}" /> <input type="hidden"  name="id" value="" />'+
-                    '<button style="float: right;margin: 10px;" type="button" class="removeVisit mui-btn mui-btn-danger">删除</button>' +
+                    '<button style="float: right;margin: 10px;" type="button" class="removeVisit mui-btn mui-btn-danger confirm">删除</button>' +
                     '<hr style="clear: both;margin: 5px"></li>'+'</form>';
                     var row = $(tmp);
                     row.find('.removeVisit').click(function(){
-                        //$(this).parent().remove();
-                        $(this).parent().submit();
+                        if(confirm("确定要删除这条拜访记录吗？")){
+                            $(this).parent().submit();
+                        }else{
+                            return false;//阻止提交
+                        }
                     });
+
                     row.find('.saveVisit').click(function(){
                         $(this).parent().submit();
                     });
@@ -979,7 +955,8 @@
                         autoclose: true,
                         minView: '2',
                         forceParse: false,
-                        format:"yyyy-mm-dd"
+                        format:"yyyy-mm-dd",
+                        bootcssVer:3
                     });
                     $(this).prev().append(row);
                     return false;
@@ -987,8 +964,11 @@
         );
 
         $('.removeVisit').click(function(){
-                    //$(this).parent().remove();
-                    $(this).parent().submit();
+                    if(confirm("确定要删除这条拜访记录吗？")){
+                        $(this).parent().submit();
+                    }else{
+                        return false;//阻止提交
+                    }
                 }
         );
         $('.saveVisit').click(function(){
@@ -1016,12 +996,15 @@
                     '</form>'+
                     '<form action="{:U('delAdmin')}" method=post>'+
                     '<input type="hidden"  name="parkid" value="{$park_info[id]}" /> <input type="hidden"  name="id" value="" />'+
-                    '<button style="float: right;margin: 10px;" type="button" class="removeAdmin mui-btn mui-btn-danger">删除</button>' +
+                    '<button style="float: right;margin: 10px;" type="button" class="removeAdmin mui-btn mui-btn-danger confirm">删除</button>' +
                     '<hr style="clear: both;margin: 5px"></li>'+'</form>';
                     var row = $(tmp);
                     row.find('.removeAdmin').click(function(){
-                        //$(this).parent().remove();
-                        $(this).parent().submit();
+                        if(confirm("确定要删除该管理员吗？")){
+                            $(this).parent().submit();
+                        }else{
+                            return false;//阻止提交
+                        }
                     });
                     row.find('.saveAdmin').click(function(){
                         $(this).parent().submit();
@@ -1032,8 +1015,11 @@
         );
 
         $('.removeAdmin').click(function(){
-                    //$(this).parent().remove();
-                    $(this).parent().submit();
+                    if(confirm("确定要删除该管理员吗？")){
+                        $(this).parent().submit();
+                    }else{
+                        return false;//阻止提交
+                    }
                 }
         );
         $('.saveAdmin').click(function(){
@@ -1047,7 +1033,8 @@
             autoclose: true,
             minView: '2',
             forceParse: false,
-            format:"yyyy-mm-dd"
+            format:"yyyy-mm-dd",
+            bootcssVer:3
         });
 
         $('#acendtime').datetimepicker({
@@ -1056,7 +1043,8 @@
             autoclose: true,
             minView: '2',
             forceParse: false,
-            format:"yyyy-mm-dd"
+            format:"yyyy-mm-dd",
+            bootcssVer:3
         });
 
         var now  = new Date();
@@ -1069,6 +1057,7 @@
             minuteStep: 5,
             secondStep: 0,
             format:"hh:ii:00",
+            forceParse: false,
             startDate:now.getFullYear()+"-"+now.getMonth()+"-"+now.getDate()
         });
 

@@ -18,12 +18,13 @@
         <ul class="mui-table-view">
             <li class="mui-table-view-cell">
                <form action="{:U('index')}" method="get">
-                   <input type="search" name="searchpark" placeholder="搜索你的停车场" />
+                   <input type="search" name="searchpark" placeholder="搜索停车场" />
 
                    <table style="width: 100%;table-layout: fixed">
                        <tr>
                            <td><a class="mui-btn mui-btn-success" href="{:U('parkinfo')}">添加停车场</a></td>
-                           <td style="width: 50%"><input type="submit" style="float: right" value="搜索" /></td>
+                           <td  style="text-align: center" ><a class="mui-btn  mui-btn-primary" href="{:U('index',array('my'=>1))}">我的停车场</a></a></td>
+                           <td><input type="submit" style="float: right" value="搜索" /></td>
                        </tr>
                    </table>
                 </form>
