@@ -1,5 +1,4 @@
 <?php
-
 use Think\Controller;
 
 class IndexController extends BaseController {
@@ -193,8 +192,8 @@ class IndexController extends BaseController {
             $con['status'] = array('in', '1,3');
         }
 
-        $listdata = $Park->where($con)->order('status')->select();
-        usort($listdata, array($this, "distance_sort"));	//按距离远近排序
+        $listdata = $Park->where($con)->select();
+        usort($listdata, array($this, "status_distance_sort"));	//按距离远近排序
 
         $list = $listdata;
         //$list = array_slice($listdata,0,10,true);//截取前10个停车场
@@ -232,12 +231,12 @@ class IndexController extends BaseController {
             //获取停车场当前空位信息 + 下一个车位时间段
             $parkstate = $this->_getParkState($value);
 
-            $tmp['e'] = $parkstate['e'];
+            $tmp['e'] = $parkstate['next'];
 
 
             if($value['status'] == 3){//信息化产品
                 $tmp['c'] = 0; //信息化设为0
-                $tmp['s'] = $parkstate['s'];//信息化停车场的空车位状态根据时段来判断
+                $tmp['s'] = $parkstate['current'];//信息化停车场的空车位状态根据时段来判断
             }
             else{//合作停车场
                 $tmp['c'] = 1; //合作停车场设为1
@@ -268,11 +267,8 @@ class IndexController extends BaseController {
     * 时间段列表 00:00:00 ~ t1 ~ t2 ~ s1 ~ s2 ~ 23:59:59, 00:00:00 ~ n1 ~ n2
     * */
     private function _getParkState($value){
-        $tmp = array();
-        $nowTime = date("H:i:s");
-        $now = getdate();
 
-        //获取下一个车位时间段
+        $now = getdate();
         if($now['wday'] < 6){
             $freestart = $value['freestartwork'];
             $freeend = $value['freeendwork'];
@@ -286,135 +282,80 @@ class IndexController extends BaseController {
             $fullend = $value['fullendweek'];
         }
 
-        $timeArr1 = array();
-        if(isset($freestart) && isset($freeend)){
-            $timeArr1['freestart'] = date('').$freestart;
-            $timeArr1['freeend'] = $freeend;
-        }
-        if(isset($fullstart) && isset($freeend)){
-            $timeArr1['fullstart'] = $fullstart;
-            $timeArr1['fullend'] = $fullend;
-        }
-        asort($timeArr1);//今天的空位时间阀值排序
-
-        if($now['wday'] == 5 || $now['wday'] == 6){
-            $nextfreestart = $value['freestartweek'];
-            $nextfreeend = $value['freeendweek'];
-            $nextfullstart = $value['fullstartweek'];
-            $nextfullend = $value['fullendweek'];
-        }
-        else{
-            $nextfreestart = $value['freestartwork'];
-            $nextfreeend = $value['freeendwork'];
-            $nextfullstart = $value['fullstartwork'];
-            $nextfullend = $value['fullendwork'];
-        }
-        $timeArr2 = array();
-        if(isset($nextfreestart) && isset($nextfreeend)){
-            $timeArr2['nextfreestart'] = $nextfreestart;
-            $timeArr2['nextfreeend'] = $nextfreeend;
-        }
-        if(isset($nextfullstart) && isset($nextfullend)){
-            $timeArr2['nextfullstart'] = $nextfullstart;
-            $timeArr2['nextfullend'] = $nextfullend;
-        }
-        asort($timeArr2);//明天的空位时间阀值排序
-
-        $timeArr = array();
-        if(current($timeArr1)>'00:00:00'){
-            $timeArr['dayon'] = '00:00:00';
-            $timeArr[key($timeArr1)] = current($timeArr1);
-        }
-        else{
-            $timeArr[key($timeArr1)] = current($timeArr1);
+        //对于选择了全天满或空状态的特殊处理
+        if($freestart == '00:00:00' && $freeend == '24:00:00'){
+            $tmp['current'] = 2;
+            $tmp['next'] = array(-1, null, null);
+            return $tmp;
         }
 
-        next($timeArr1);
-        $t2key = key($timeArr1);
-        $t2value = current($timeArr1);
+        if($fullstart == '00:00:00' && $fullend == '24:00:00'){
+            $tmp['current'] = 0;
+            $tmp['next'] = array(-1, null, null);
+            return $tmp;
+        }
 
-        next($timeArr1);
-        $s1key = key($timeArr1);
-        $s1value = current($timeArr1);
+        $head = null;
+        $freeSet = isset($freestart) && isset($freeend) && $freeend!=$freestart;//开始和结束时间都设置了，并且不能为空，才有效
+        $fullSet = isset($fullstart) && isset($fullend) && $fullstart!=$fullend;//开始和结束时间都设置了，并且不能为空，才有效
 
-        if($t2value == $s1value){
-            if(strstr($s1key,"start")){
-                $timeArr[$s1key] = $s1value;
+        //采用循环列表来处理时间段问题
+        include_once(dirname(__FILE__) . '/../Common/StateCell.php');
+
+        if($freeSet && $fullSet){//两个时间段都设置
+            $freeCell = new StateCell($freestart, $freeend, 2);
+            $head = $freeCell;
+
+            if($freeend == $fullstart){
+                $fullCell = new StateCell($fullstart, $fullend, 0);
+                $freeCell->next = $fullCell;
             }
             else{
-                $timeArr[$t2key] = $t2value;
+                $normalCell1  = new StateCell($freeend, $fullstart, 1);
+                $freeCell->next = $normalCell1;
+                $fullCell = new StateCell($fullstart, $fullend, 0);
+                $normalCell1->next = $fullCell;
             }
+
+            if($fullend == $freestart){
+                $fullCell->next = $freeCell;
+            }
+            else{
+                $normalCell2  = new StateCell($fullend, $freestart, 1);
+                $fullCell->next = $normalCell2;
+                $normalCell2->next = $freeCell;
+            }
+            $currentCell = StateCell::currentCell($head);
+            $nextCell = $currentCell->next;
         }
-        else{
-            $timeArr[$t2key] = $t2value;
-            $timeArr[$s1key] = $s1value;
+        elseif($freeSet){//只设置空时间段
+            $freeCell = new StateCell($freestart, $freeend, 2);
+            $head = $freeCell;
+            $normalCell = new StateCell($freeend, $freestart, 1);
+            $freeCell->next = $normalCell;
+            $normalCell->next = $freeCell;
+            $currentCell = StateCell::currentCell($head);
+            $nextCell = $currentCell->next;
+        }
+        elseif($fullSet){//只设置满时间段
+            $fullCell = new StateCell($fullstart, $fullend, 0);
+            $head = $fullCell;
+            $normalCell = new StateCell($fullend, $fullstart, 1);
+            $fullCell->next = $normalCell;
+            $normalCell->next = $fullCell;
+            $currentCell = StateCell::currentCell($head);
+            $nextCell = $currentCell->next;
+        }
+        else{//都没有设置
+            $currentCell = null;
+            $nextCell = null;
         }
 
-        next($timeArr1);
-        $s2key = key($timeArr1);
-        $s2value = current($timeArr1);
+        $current = $currentCell ? $currentCell->state : -1;
+        $next = $nextCell ? array($nextCell->state,$nextCell->starttime,$nextCell->endtime) : array(-1, null, null);
 
-        if($s2value > '23:55:00'){//因为销售端输入问题，我们认为大于'23:55:00'，就是截止到今天结束
-            $timeArr['dayoff'] = '23:59:59';
-        }
-        else{
-            $timeArr[$s2key] = $s2value;
-            $timeArr['dayoff'] = '23:59:59';
-        }
-
-        //第二天的时间段
-        if(current($timeArr2)>'00:00:00'){
-            $timeArr['nextdayon'] = '00:00:00';
-            $timeArr[key($timeArr2)] = current($timeArr2);
-        }
-        else{
-            $timeArr[key($timeArr2)] = current($timeArr2);
-        }
-
-        next($timeArr2);
-        $n2key = key($timeArr2);
-        $n2value = current($timeArr2);
-        $timeArr[$n2key] = $n2value;
-
-
-        //遗漏23：59：59
-        reset($timeArr);
-        while(current($timeArr) <= $nowTime){
-            next($timeArr);
-        }
-
-        if(key($timeArr) == 'dayoff'){//跳过今天结束时间点
-            next($timeArr);
-        }
-
-        $e = array();
-        $stop = key($timeArr);
-        $e[1] = current($timeArr);
-        $e[2] = next($timeArr);
-
-        if(strstr($stop, 'fullstart')){
-            $e[0] = 0;
-        }
-        elseif(strstr($stop, 'freestart')){
-            $e[0] = 2;
-        }
-        else{
-            $e[0] = 1;
-        }
-        $tmp['e'] = $e;
-        //-End of 下一个时段空位信息
-
-        //当前时间段状态：
-        if($nowTime >= $freestart && $nowTime < $freeend){
-            $tmp['s'] = 2;
-        }
-        elseif($nowTime >= $fullstart && $nowTime < $fullend){
-            $tmp['s'] = 0;
-        }
-        else{
-            $tmp['s'] = 1;
-        }
-
+        $tmp['current'] = $current;
+        $tmp['next'] = $next;
         return $tmp;
     }
 
@@ -1247,17 +1188,42 @@ class IndexController extends BaseController {
 	}
 
 
-	//距离比较函数
-	protected function distance_sort($v1,$v2){
+    //距离比较函数
+    protected function distance_sort($v1,$v2){
+        $dis1 = $this->getDistance($v1['lat'],$v1['lng'],$this->lat,$this->lng);
+        $dis2 = $this->getDistance($v2['lat'],$v2['lng'],$this->lat,$this->lng);
+
+        if($dis1 < $dis2) {
+            return -1;
+        } elseif ($dis1 > $dis2)  {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+	//按合作状态 + 距离 排序比较函数
+    protected function status_distance_sort($v1,$v2){
 		$dis1 = $this->getDistance($v1['lat'],$v1['lng'],$this->lat,$this->lng);
 		$dis2 = $this->getDistance($v2['lat'],$v2['lng'],$this->lat,$this->lng);
 
-        if($dis1 < $dis2) {
-			return -1;
-		} elseif ($dis1 > $dis2)  {
-			return 1;
-		} else {
-			return 0;
-		}
+        //先按合作状态排序
+        if($v1['status'] < $v2['status']){
+            return -1;
+        }
+        elseif($v1['status'] > $v2['status']){
+            return 1;
+        }
+        else{
+            //合作状态相同情况下再按照距离排序
+            if($dis1 < $dis2) {
+                return -1;
+            } elseif ($dis1 > $dis2)  {
+                return 1;
+            } else {
+                return 0;
+            }
+        }
+
     }
 }
