@@ -1100,6 +1100,41 @@ class IndexController extends BaseController {
         $result = array();
         $result['telephone'] = $dirver['telephone'];
         $result['carids'] = $cars;
+        
+        $nowStr = date("Y-m-d H:i:s");
+        //优惠券数量
+        $CouponInfo = M('DriverCoupon');
+        $map = array();
+        $map['uid'] = $this->uid;
+        $map['status'] = 0;
+        $map['endtime'] = array('gt',$nowStr);
+        $count = $CouponInfo->where($map)->count();
+        $result['c_count'] = $count;
+        
+        //最近一条订单信息
+        $Order = M('ParkOrder');
+        $map = array();
+        $map['uid'] = $this->uid;
+        $map['state'] = array(0,1,2,'OR');
+        $orderData = $Order->where($map)->order('startime desc')->find();
+        if($orderData){
+            $tmp = array();
+            $tmp['oid'] = $orderData['id'];
+            $tmp['startTime'] = $orderData['startime'];
+            //$tmp['startTimeStamp'] = strtotime($orderData['startime']);
+            //$tmp['state'] = $orderData['state'];
+            //$tmp['remaintime'] = strtotime($orderData['endtime'])  - $now;
+            //$tmp['leaveTimeStamp'] = strtotime($orderData['leavetime']);
+            $tmp['cost'] = $orderData['cost'];
+            
+            $Park = M('ParkInfo');
+            $parkInfo = $Park->where('id = '.$orderData['pid'])->find();
+            $tmp['parkname'] = $parkInfo['name'];
+            $tmp['address'] = $parkInfo['address'];
+            //$tmp['lat'] = $parkInfo['lat'];
+            //$tmp['lng'] = $parkInfo['lng'];
+            $result['l_order'] = $tmp;
+        }
 
         $this->ajaxOk($result);
 
