@@ -144,7 +144,7 @@ class IndexController extends BaseController {
         $this->lat = $lat;
         $this->lng = $lng;
         $Park = M('ParkInfo');
-        $gap = 0.004545;
+        $gap = 0.002727;//0.004545;
         $con = array();
         $con['lat'] = array(array('gt',$lat - $gap),array('lt',$lat + $gap));
         $con['lng'] = array(array('gt',$lng - $gap),array('lt',$lng + $gap));
@@ -200,8 +200,9 @@ class IndexController extends BaseController {
 
         //封装返回值
         $result = array();
-
         $p = array();
+        $porder = null;
+        $nowstr = date("Y-m-d H:i:s");
         foreach($list as $key => $value){
             $tmp = array();
 
@@ -241,6 +242,30 @@ class IndexController extends BaseController {
             else{//合作停车场
                 $tmp['c'] = 1; //合作停车场设为1
                 $tmp['s'] = $value['parkstate'];
+            }
+            
+            $showevent = false;
+            //echo $value['id'].'/'.$nowstr.'/'.$value['e_start'].'/'.$value['e_end'].'<br>';
+            if($nowstr > $value['e_start'] && $nowstr < $value['e_end']){//活动期间
+                if($value['e_t']&1){//只限第一单用户
+                    if($porder === null){//需要获取用户下单数量信息
+                        $payment = M('ParkOrder');
+                        $con2 = array('uid'=>$this->uid,'state'=>array('neq',－1));
+                        if($payment->where($con2)->find()){
+                            $porder = 1;
+                        }else{
+                            $porder = 0;
+                        }
+                    }
+                    if($porder === 0){
+                        $showevent = true;
+                    }
+                }else{//全部用户
+                    $showevent = true;
+                }
+            }
+            if($showevent){
+                $tmp['d'] = array(($value['e_t']&2)?1:0,$value['e_p']);
             }
 
             array_push($p, $tmp);
@@ -400,7 +425,9 @@ class IndexController extends BaseController {
 			$this->ajaxMsg("停车场信息错误");
 		}
 
-		$Order = M('ParkOrder');
+        $createtime = date("Y-m-d H:i:s");
+        $Order = M('ParkOrder');
+        //设置订单
 		$arr['uid'] = I('get.uid');
 		$arr['pid'] = $pid;
         $arr['carid'] = $this->getDefualtCarid(I('get.uid'));
@@ -408,17 +435,40 @@ class IndexController extends BaseController {
 		$arr['startime'] = date("Y-m-d H:i:s",0);
 		$arr['endtime'] = date("Y-m-d H:i:s",0);
 		$arr['creater'] = $this->uid;
-		$arr['createtime'] = date("Y-m-d H:i:s");
+		$arr['createtime'] = $createtime;
 		$arr['updater'] = $this->uid;
 		$oid = $Order->add($arr);
 
 		if(empty($oid)){
 			$this->ajaxMsg("创建订单失败");
 		}
+        
+        //计算价格是否受驻场活动影响
+        $remainFee = $parkinfo['prepay'];
+        $remainFee_e = $remainFee;
+        if($createtime > $parkinfo['e_start'] && $createtime < $parkinfo['e_end']){//活动期间
+            if($parkinfo['e_t']&1){//只限第一单用户
+                $con2 = array('uid'=>$this->uid,'state'=>array('neq',－1));
+                if(!$Order->where($con2)->find()){
+                    $showevent = true;
+                }
+            }else{//全部用户
+                $showevent = true;
+            }
+        }
+        if($showevent){
+            if($value['e_t']&2){//固定价格
+                $remainFee_e = $value['e_p'];
+            }else{
+                $remainFee_e -= $value['e_p'];
+                if($remainFee_e <= 0){
+                    $remainFee_e = 0.01;
+                }
+            }
+        }
 
 		//计算折扣劵
-		$remainFee = $parkinfo['prepay'];
-		$remianFee_r = $remainFee;
+		$remianFee_r = $remainFee_e;
 		if($cid > 0){
 			$cpamount = $this->_checkCoupon($this->uid, $cid, $remainFee);
 			//0				抵用劵不存在
@@ -507,6 +557,7 @@ class IndexController extends BaseController {
             $this->ajaxMsg("停车场信息错误");
         }
 
+        $createtime = date("Y-m-d H:i:s");
         $Order = M('ParkOrder');
         $arr['uid'] = I('get.uid');
         $arr['pid'] = $pid;
@@ -515,7 +566,7 @@ class IndexController extends BaseController {
         $arr['startime'] = date("Y-m-d H:i:s",0);
         $arr['endtime'] = date("Y-m-d H:i:s",0);
         $arr['creater'] = $this->uid;
-        $arr['createtime'] = date("Y-m-d H:i:s");
+        $arr['createtime'] = $createtime;
         $arr['updater'] = $this->uid;
         $oid = $Order->add($arr);
 
@@ -523,9 +574,32 @@ class IndexController extends BaseController {
             $this->ajaxMsg("创建订单失败");
         }
 
-        //计算折扣劵
+        //计算价格是否受驻场活动影响
         $remainFee = $parkinfo['prepay'];
-        $remianFee_r = $remainFee;
+        $remainFee_e = $remainFee;
+        if($createtime > $parkinfo['e_start'] && $createtime < $parkinfo['e_end']){//活动期间
+            if($parkinfo['e_t']&1){//只限第一单用户
+                $con2 = array('uid'=>$this->uid,'state'=>array('neq',－1));
+                if(!$Order->where($con2)->find()){
+                    $showevent = true;
+                }
+            }else{//全部用户
+                $showevent = true;
+            }
+        }
+        if($showevent){
+            if($value['e_t']&2){//固定价格
+                $remainFee_e = $value['e_p'];
+            }else{
+                $remainFee_e -= $value['e_p'];
+                if($remainFee_e <= 0){
+                    $remainFee_e = 0.01;
+                }
+            }
+        }
+        
+        //计算折扣劵
+        $remianFee_r = $remainFee_e;
         if($cid > 0){
             $cpamount = $this->_checkCoupon($this->uid, $cid, $remainFee);
             //0				抵用劵不存在
@@ -1184,6 +1258,95 @@ class IndexController extends BaseController {
         $this->ajaxOk('');
 
 
+    }
+    
+    //获得［发现］频道信息：免费和活动停车场
+    public  function discover(){
+        //活动停车场
+        $nowstr = date("Y-m-d H:i:s");
+        $con = array('e_start'=>array('lt',$nowstr),'e_end'=>array('gt',$nowstr));
+        //是否老用户?
+        $payment = M('ParkOrder');
+        $con2 = array('uid'=>$this->uid,'state'=>array('neq',－1));
+        if($payment->where($con2)->find()){//老用户
+            $con['e_t'] = array('in','0,2');
+        }
+        $Park = M('ParkInfo');
+        $listdata = $Park->where($con)->select();
+        $list = $listdata;
+        //封装返回值
+        $result = array();
+        $p = array();
+        foreach($list as $key => $value){
+            $tmp = array();
+            
+            //通用信息
+            $tmp['id'] = $value['id'];
+            $tmp['n'] = $value['name'];
+            $tmp['r'] = $value['chargingrules'];
+            $tmp['a'] = $value['address'];
+            $tmp['b'] = $value['address2'];
+            $tmp['i'] = $value['image'];
+            if($value['pretype'] && $value['pretype'] != ''){
+                $tmp['y'] = str_replace("／","/",$value['pretype']);
+            }
+            $tmp['lat'] = $value['lat'];
+            $tmp['lng'] = $value['lng'];
+            $tmp['m'] = $value['spacesum'];
+            $tmp['p'] = $value['prepay'];
+            
+            $style = $value['style'];
+            $styleArr = explode('|', $style);
+            $styleR = array();
+            for($i = 1;$i<count($styleArr)-1; $i++){
+                array_push($styleR, C('PARK_STYLE')[$styleArr[$i]]);
+            }
+            $tmp['t'] = $styleR;//停车场标签
+            
+            //获取停车场当前空位信息 + 下一个车位时间段
+            $parkstate = $this->_getParkState($value);
+            
+            $tmp['e'] = $parkstate['next'];
+            
+            
+            if($value['status'] == 3){//信息化产品
+                $tmp['c'] = 0; //信息化设为0
+                $tmp['s'] = $parkstate['current'];//信息化停车场的空车位状态根据时段来判断
+            }
+            else{//合作停车场
+                $tmp['c'] = 1; //合作停车场设为1
+                $tmp['s'] = $value['parkstate'];
+            }
+            
+            $tmp['d'] = array(($value['e_t']&2)?1:0,$value['e_p']);
+            
+            array_push($p, $tmp);
+        }
+        $result['p'] = $p;
+        
+        $e = array();
+        $e['c'] =  $this->getDefualtCarid($this->uid);
+        $e['u'] = C('PARK_IMG_QINIU').'/Park/';
+        $result['e'] = $e;
+        
+        //免费频道
+        $freeparks = M('park_free_info');
+        $con = array('status'=>1);
+        $result['f'] = $freeparks->where($con)->count();
+        
+        $this->ajaxOk($result);
+    }
+    
+    public function addfreepark($name, $lat, $lng, $dsc, $note){
+        $arr = array('name'=>$name,'lat'=>$lat,'lng'=>$lng,'dsc'=>$dsc,'note'=>$note,'creater'=>$this->uid,'createtime'=>date("Y-m-d H:i:s"));
+        $ParkFree = M('ParkFreeInfo');
+        $id = $ParkFree->add($arr);
+        if(empty($id)){
+            $this->ajaxMsg("提交数据失败，请检查您的输入格式是否有误");
+        }
+        
+        $result = array('id'=>$id);
+        $this->ajaxOk($result);
     }
 
 
