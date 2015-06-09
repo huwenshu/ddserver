@@ -50,19 +50,20 @@
             color:#fff;
             text-decoration: underline;
         }
-        form button{
-
-        }
         #panel-2 input{
             width: 95%;
         }
-
         .timepicker{
             float: left;
             padding: 5px;
             max-width: 150px;
         }
 
+        .pickerTitle{
+            float: left;
+            padding: 10px;
+            width: 100px;
+        }
         .pickerText{
             float: left;
             padding: 10px;
@@ -73,6 +74,19 @@
         .required{
             color:red;
             width: 10px;
+        }
+
+        .allday{
+            float: left;
+            padding: 10px;
+            font-size: 14px;
+
+        }
+
+        #etype label{
+            margin: 10px 0;
+            color: #000000;
+            font-weight: normal;
         }
 
 
@@ -91,6 +105,13 @@
             <form action="{:U('parkinfo')}" method="post" enctype="multipart/form-data">
                 <input type="hidden"  name="id" value="{$park_info[id]}" />
                 <table style="width: 95%;margin: 0 auto;margin-top: 10px;overflow: hidden">
+                    <tr>
+                        <td colspan=2>
+                            <p style="text-align: center;margin-top: 20px;">
+                                <a class="mui-btn  mui-btn-primary" href="{:U('parkinfo')}" >新建</a> <a class="mui-btn  mui-btn-primary" style="margin: 0 10px;">下一个</a> <input type="submit" />
+                            </p>
+                        </td>
+                    </tr>
                     <tr>
                         <td style="width: 33%"><label for="parkname">停车场名称：</label></td>
                         <td style="width: 66%">
@@ -122,10 +143,14 @@
                         </td>
                      </tr>
                     <tr>
+                        <td><label for="note">备注说明：</label></td>
+                        <td> <textarea id="note" style="margin-top:10px;margin-left: 10px" name="note" rows="5">{$park_info[note]}</textarea> </td>
+                    </tr>
+                    <tr>
                         <td><label for="enterplace">入口地址：</label></td>
                         <td>
                             <span class="required">*</span>
-                            <input type="text" id="enterplace" style="margin-top:10px;" name="address" value= "{$park_info[address]}" />
+                            <input type="text" id="enterplace" name="address" value= "{$park_info[address]}" />
                         </td>
                     </tr>
                     <tr>
@@ -184,7 +209,7 @@
                                 if (preg_match($token,$mystyle)) {
                                 $checked = "checked";
                                 }
-                                echo '<input type="checkbox" name="parkstyle[]" value="'.$parkstyle.'" '.$checked.' /><span style="display: inline-block;min-width: 40%">'.$value.'</span>';
+                                echo '<span  style="display:inline-block;width: 45%;"><label style="font-weight: normal;" ><input type="checkbox" name="parkstyle[]" value="'.$parkstyle.'" '.$checked.' />'.$value.'</label></span>';
                                 if($key%2 == 0){
                                     echo '<br/>';
                                 }
@@ -212,7 +237,7 @@
                         	<input type="text" id="opentime" name="opentime" value= "{$park_info[opentime]}" placeholder="如：周一至周日 8点至24点开发..."/> <br>
                             <ul class="pickTime">
                                 <li>
-                                    <p class="pickerText"> 周一至周五:</p>
+                                    <p class="pickerTitle"> 周一至周五:</p>
                                     <div class="input-group  date timepicker " data-date-format="hh:ii:00">
                                         <input class="form-control"  id="startwork" type="text" name="startwork" value= "{$park_info[startmon]}">
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
@@ -222,9 +247,10 @@
                                         <input class="form-control" id="endwork" type="text" name="endwork" value= "{$park_info[endmon]}">
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
                                     </div>
+                                    <div class="allday"><label><input class="allcheck" type="checkbox" value="startwork" />全天 </label></div>
                                 </li>
                                 <li>
-                                    <p class="pickerText"> 周六周日:</p>
+                                    <p class="pickerTitle"> 周六周日:</p>
                                     <div class="input-group  date timepicker " data-date-format="hh:ii:00">
                                         <input class="form-control"  id="startweek" type="text" name="startweek" value= "{$park_info[startsat]}">
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
@@ -234,6 +260,7 @@
                                         <input class="form-control" id="endweek" type="text" name="endweek" value= "{$park_info[endsat]}">
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
                                     </div>
+                                    <div class="allday"><label><input class="allcheck" type="checkbox" value="startweek" />全天 </label></div>
                                 </li>
                             </ul>
                         	</td>
@@ -243,7 +270,7 @@
                         <td>
                             <ul class="pickTime">
                             <li>
-                                <p class="pickerText"> 周一至周五： </p>
+                                <p class="pickerTitle"> 周一至周五:</p>
                                 <div class="input-group  date timepicker " data-date-format="hh:ii:00">
                                     <input class="form-control"  id="freestartwork" type="text" name="freestartwork" value= "{$park_info[freestartwork]}">
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
@@ -253,9 +280,10 @@
                                     <input class="form-control" id="freeendwork" type="text" name="freeendwork" value= "{$park_info[freeendwork]}">
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
                                 </div>
+                                <div class="allday"><label><input class="allcheck" type="checkbox" value="freestartwork" />全天 </label></div>
                             </li>
                             <li>
-                                <p class="pickerText"> 周六周日： </p>
+                                <p class="pickerTitle"> 周六周日:</p>
                                 <div class="input-group  date timepicker " data-date-format="hh:ii:00">
                                     <input class="form-control"  id="freestartweek" type="text" name="freestartweek" value= "{$park_info[freestartweek]}">
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
@@ -265,6 +293,7 @@
                                     <input class="form-control" id="freeendweek" type="text" name="freeendweek" value= "{$park_info[freeendweek]}">
                                     <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
                                 </div>
+                                <div class="allday"><label><input class="allcheck" type="checkbox" value="freestartweek" />全天 </label></div>
                             </li>
                             </ul>
                         </td>
@@ -274,7 +303,7 @@
                         <td>
                             <ul class="pickTime">
                                 <li>
-                                    <p class="pickerText"> 周一至周五： </p>
+                                    <p class="pickerTitle"> 周一至周五:</p>
                                     <div class="input-group  date timepicker " data-date-format="hh:ii:00">
                                         <input class="form-control"  id="fullstartwork" type="text" name="fullstartwork" value= "{$park_info[fullstartwork]}">
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
@@ -284,9 +313,10 @@
                                         <input class="form-control" id="fullendwork" type="text" name="fullendwork" value= "{$park_info[fullendwork]}">
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
                                     </div>
+                                    <div class="allday"><label><input class="allcheck" type="checkbox" value="fullstartwork" />全天 </label></div>
                                 </li>
                                 <li>
-                                    <p class="pickerText"> 周六周日： </p>
+                                    <p class="pickerTitle"> 周六周日:</p>
                                     <div class="input-group  date timepicker " data-date-format="hh:ii:00">
                                         <input class="form-control"  id="fullstartweek" type="text" name="fullstartweek" value= "{$park_info[fullstartweek]}">
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
@@ -296,13 +326,10 @@
                                         <input class="form-control" id="fullendweek" type="text" name="fullendweek" value= "{$park_info[fullendweek]}">
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
                                     </div>
+                                    <div class="allday"><label><input class="allcheck" type="checkbox" value="fullstartweek" />全天 </label></div>
                                 </li>
                             </ul>
                         </td>
-                    </tr>
-                    <tr>
-                        <td><label for="note">备注说明：</label></td>
-                        <td> <textarea id="note" name="note" rows="5">{$park_info[note]}</textarea> </td>
                     </tr>
                     <tr>
                         <td><label for="parkimage">停车场入口图片：</label></td>
@@ -322,19 +349,56 @@
                     </tr>
 
                     <tr>
-                        <td><label for="actype">停车场活动：</label></td>
+                        <td><label for="etype">销售驻场活动：</label></td>
+                        <td>
+                            <p id="etype">
+                            <?php
+                                $e_t = $park_info[e_t];
+                                foreach(C('PARK_E_TYPE') as $key => $value){
+                                    if(($e_t & pow(2,$key-1)) == pow(2,$key-1)){
+                                        echo ' <label><input name="e_t[]" type="checkbox" checked value="'.$key.'" />'.$value.'</label>';
+                                    }
+                                    else{
+                                        echo ' <label><input name="e_t[]" type="checkbox" value="'.$key.'" />'.$value.'</label>';
+                                    }
+                                }
+                            ?>
+                            </p>
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td><label for="e_p">优惠金额：</label></td>
+                        <td><input type="text" id="e_p" name="e_p" value="{$park_info[e_p]}" /> 元</td>
+                    </tr>
+
+                    <tr>
+                        <td><label for="e_start">驻场开始时间：</label></td>
+                        <td>
+                            <input type="text" id="e_start" class="datetimepicker" name="e_start" value="{$park_info[e_start]}" data-date-format="yyyy-mm-dd hh:ii:ss" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="e_end">驻场结束时间：</label></td>
+                        <td>
+                            <input type="text" id="e_end" class="datetimepicker" name="e_end" value="{$park_info[e_end]}" data-date-format="yyyy-mm-dd hh:ii:ss" />
+                        </td>
+                    </tr>
+
+                    <tr>
+                        <td><label for="actype">停车场补助活动：</label></td>
                         <td>
                             <select id="actype" name="actype" style="width: auto">
                                 <?php
                                     $acType = C('PARK_AC_TYPE');
                                     foreach($acType as $key => $value){
-                                        if($key == $park_info[actype]){
-                                            echo "<option value=$key  selected=selected>$value</option>";
-                                        }
-                                        else{
-                                            echo  "<option value=$key >$value</option>";
-                                        }
-                                    }
+                                if($key == $park_info[actype]){
+                                echo "<option value=$key  selected=selected>$value</option>";
+                                }
+                                else{
+                                echo  "<option value=$key >$value</option>";
+                                }
+                                }
                                 ?>
 
                             </select>
@@ -360,7 +424,14 @@
 
                     <tr>
                         <td colspan=2>
-                            <input type="submit" />&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' class='simulateEnter mui-btn-danger'>模拟入库</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' class='simulateLeave mui-btn-danger'>模拟出库</button>
+                           <button type='button' class='simulateEnter mui-btn-danger'>模拟入库</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' class='simulateLeave mui-btn-danger'>模拟出库</button>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan=2>
+                            <p style="text-align: center;margin-top: 20px;">
+                                <a class="mui-btn  mui-btn-primary">新建</a> <a class="mui-btn  mui-btn-primary" style="margin: 0 10px;">下一个</a> <input type="submit" />
+                            </p>
                         </td>
                     </tr>
                 </table>
@@ -1061,6 +1132,18 @@
             startDate:now.getFullYear()+"-"+now.getMonth()+"-"+now.getDate()
         });
 
+        $('.datetimepicker').datetimepicker({
+            language: 'zh-CN',
+            autoclose: true,
+            startView:2,
+            pickerPosition:'bottom-left',
+            hourStep: 1,
+            minuteStep: 5,
+            secondStep: 5,
+            format:"yyyy-mm-dd hh:ii:00",
+            forceParse: false
+        });
+
         var oid = 0;
         $('.simulateEnter').click(function(){
           var myurl = 'http://driver.duduche.me/driver.php/home/public/testEnter/pid/'+"{$park_info[id]}";
@@ -1121,6 +1204,20 @@
                     });
                 }
         );
+
+        //选择全天
+        $('.allcheck').click(function(){
+            var start = $(this).val();
+            var end = start.replace('start','end');
+            if($(this).is(':checked')){
+                $('#'+start).val('00:00:00');
+                $('#'+end).val('24:00:00');
+            }
+            else{
+                $('#'+start).val(null);
+                $('#'+end).val(null);
+            }
+        });
 
     })
 </script>

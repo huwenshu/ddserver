@@ -261,7 +261,7 @@ class BaseController extends \Think\Controller {
         $result = $this->pushMsg($msg_json);
         $result_array = json_decode($result,TRUE);
         if($result_array['errcode'] !=0){
-            sendMail('dubin@duduche.me', "[自动红包错误]", "发送错误, Openid：$openid, Content:$content");
+            sendMail('dubin@duduche.me', "[自动红包错误]", "发送错误, 错误码：".$result_array['errcode']." Openid：$openid, Content:$content");
             return null;
         }
 

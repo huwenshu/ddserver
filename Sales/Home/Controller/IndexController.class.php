@@ -129,6 +129,17 @@ class IndexController extends  BaseController {
                 }
             }
 
+            $e_t = I('post.e_t');
+            $e_t_v = 0;
+            foreach ($e_t as $k => $v) {
+                $e_t_v = $e_t_v + pow(2,$v-1);
+            }
+            $parkInfo['e_t'] = $e_t_v;
+            $parkInfo['e_p'] = I('post.e_p');
+            $parkInfo['e_start'] = I('post.e_start');
+            $parkInfo['e_end'] = I('post.e_end');
+
+
             //停车场活动参数
             $actype = I('post.actype');
             $acendtime = I('post.acendtime');
@@ -250,6 +261,18 @@ class IndexController extends  BaseController {
 	    	$this->parkname=$parkData['name'];
 	    	$this->rules=$parkData['chargingrules'];
 	    	$this->display();
+    }
+
+
+    //获取下一个停车场，根据最新的更改时间
+    public function nextpark($parkid){
+        $ParkInfo = M('ParkInfo');
+        $map = array();
+        $map['creater'] = UID;
+        $parks = $ParkInfo->where($map)->order('updatetime desc')->select();
+
+
+        $this->redirect('/Home/Index/parkinfo/parkid/'.$parkid.'/');
     }
 
 
