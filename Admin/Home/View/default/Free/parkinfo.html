@@ -1,0 +1,129 @@
+<extend name="Public/base" xmlns="http://www.w3.org/1999/html"/>
+
+<block name="style">
+    <style>
+        body{padding: 0}
+    </style>
+</block>
+
+<block name="body">
+    <!-- 主体 -->
+    <div id="indexMain" class="index-main" style="padding-top: 35px">
+        <form action="{:U('parkinfo')}" method="post"  enctype="multipart/form-data">
+            <table style="width: 95%;margin: 0 auto;margin-top: 10px" class="zebra">
+                <tbody>
+                <tr>
+                    <td style="width: 20%"><label for="freeid">免费停车场ID：</label></td>
+                    <td style="width: 80%"><input type="text" id="freeid" name="freeid" value="{$parkInfo['id']}" readonly/> </td>
+                </tr>
+                <tr>
+                    <td><label for="name">停车场名字：</label></td>
+                    <td><input type="text" id="name" name="name" value="{$parkInfo['name']}" /> </td>
+                </tr>
+                <tr>
+                    <td><label for="dsc">停车场标签：</label></td>
+                    <td>
+                        <?php
+                            $tags = C('FREE_PARK_TAG');
+                            $note = $parkInfo['note'];
+                            $k = 1;
+                            foreach($tags as $key => $value){
+                                $tag = '|'.$key.'|';
+
+                                if(strstr($note, $tag)){
+                                    echo '<span  style="display:inline-block;width: 33%;"><label style="font-weight: normal;" ><input type="checkbox" name="parktag[]" value="'.$key.'" checked />'.$value.'</label></span>';
+                                }
+                                else{
+                                    echo '<span  style="display:inline-block;width: 33%;"><label style="font-weight: normal;" ><input type="checkbox" name="parktag[]" value="'.$key.'" />'.$value.'</label></span>';
+                                }
+                                if($key%3 == 0){
+                                    echo '<br/>';
+                                }
+                                $key++;
+                            }
+                        ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="dsc">停车场描述：</label></td>
+                    <td><textarea type="text" id="dsc" name="dsc" rows="5">{$parkInfo['dsc']}</textarea> </td>
+                </tr>
+                <tr>
+                    <td><label for="dsc">行政区：</label></td>
+                    <td>
+                        <input type="text" id="province" name="province" value= "{$parkInfo['province']}" />省
+                        <input type="text" id="city" name="city" value= "{$parkInfo['city']}" />市
+                        <input type="text" id="district" name="district" value= "{$parkInfo['district']}" />区
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="lat">经纬度：</label></td>
+                    <td>
+                        经度： <input type="text" id="lat" name="lat" value= "{$parkInfo['lat']}" />
+                        纬度： <input type="text" id="lng" name="lng" value= "{$parkInfo['lng']}" />
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="parkimage">停车场图片：</label></td>
+                    <td>
+                        <input type="file" id="parkimage" name="parkimage" value= "" style="margin: 10px;display: inline-block"/><span style="color:red;"><?php echo urldecode($fileError);?></urlencode></span>
+                        <br>
+                        <?php
+                        if(!empty($parkInfo[image])){
+                            echo "<img src=".C('PARK_IMG_QINIU')."/Park/".$parkInfo[image].">";
+                        }
+                        ?>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="status">审核状态：</label></td>
+                    <td>
+                        <select id="status" name="status" style="width: auto">
+                            <?php
+                                $status = C('FREE_PARK_STATUS');
+                                foreach($status as $key => $value){
+                                    if($key == $parkInfo['status']){
+                                        echo "<option value=$key  selected=selected>$value</option>";
+                                    }
+                                    else{
+                                        echo  "<option value=$key >$value</option>";
+                                    }
+                                }
+                            ?>
+
+                        </select>
+                    </td>
+                </tr>
+
+                <tr>
+                    <td colspan=2 style="text-align: center">
+                        <input style="background: " type="submit" />
+                    </td>
+                </tr>
+
+                </tbody>
+            </table>
+        </form>
+    </div>
+</block>
+
+<block name="script">
+    <script type="text/javascript" src="__STATIC__/iscroll.js"></script>
+    <script type="text/javascript" src="__STATIC__/datetimepicker/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/datetimepicker/js/bootstrap-datetimepicker.js"></script>
+    <script type="text/javascript" src="__STATIC__/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script type="text/javascript">
+        $('.cont-ft').remove();
+        $(function() {
+            $('.datetimepicker').datetimepicker({
+                language: 'zh-CN',
+                todayBtn: true,
+                autoclose: true,
+                minView: '2',
+                forceParse: false,
+                format:"yyyy-mm-dd"
+            });
+
+        });
+    </script>
+</block>

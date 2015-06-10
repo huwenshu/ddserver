@@ -139,4 +139,32 @@ return array(
         '据说土豪的三大特征是：喝酸奶不舔盖、去医院不看钱、去停车不用券。好吧，检验你是不是土豪的时刻来了，嘟嘟发停车优惠券了：'
     ),
 
+    //免费停车场的状态
+    'FREE_PARK_STATUS' => array(
+        0 => '未审核',
+        1 => '已审核',
+        2 => '作废'
+    ),
+
+    //免费停车场TAG
+    'FREE_PARK_TAG' => array(
+        1 => '有时间限制',
+        2 => '门店停车位',
+        3 => '画有停车线',
+        4 => '小道旁',
+        5 => '断头路',
+        6 => '空地',
+        7 => '小区',
+        8 => '老厂房'
+    ),
+
+    //FTP上传地址
+    'PARK_UPLOAD_PATH' => './default/Public/Uploads/Park/',
+
+    //图片相对访问路径
+    'PARK_IMG_PATH' =>  './Public/Uploads/Park/',
+
+    //图片七牛访问路径
+    'PARK_IMG_QINIU' =>'http://7xispd.com1.z0.glb.clouddn.com',
+
 );

@@ -229,6 +229,11 @@ class IndexController extends BaseController {
             }
             $tmp['t'] = $styleR;//停车场标签
 
+            //todo 不对外开放停车场的特殊处理
+            if(in_array('不对外开放', $styleR)){
+                continue;
+            }
+
             //获取停车场当前空位信息 + 下一个车位时间段
             $parkstate = $this->_getParkState($value);
 
@@ -1472,11 +1477,17 @@ class IndexController extends BaseController {
     }
 
 	//按合作状态 + 距离 排序比较函数
-    protected function status_distance_sort($v1,$v2){
+    protected function status_distance_sort( &$v1,&$v2){
 		$dis1 = $this->getDistance($v1['lat'],$v1['lng'],$this->lat,$this->lng);
 		$dis2 = $this->getDistance($v2['lat'],$v2['lng'],$this->lat,$this->lng);
-
         //先按合作状态排序
+        if($v1['status'] == 1 && $v2['state'] == 0){
+            $v1['status'] = 3;
+        }
+        if($v2['status'] == 1 && $v2['state'] == 0){
+            $v2['status'] = 3;
+        }
+
         if($v1['status'] < $v2['status']){
             return -1;
         }
