@@ -34,7 +34,7 @@
 
             foreach ($parks_info as $key => $value) {
                 echo "<li name='parkitem' class='mui-table-view-cell' alt='".U('parkinfo')."/parkid/".$value['id']."/' ><a class='mui-navigate-right'>";
-                if(strpos($value['style'], 'ZDZJCR') || strpos($value['style'], 'BDWKF')){
+                if(strpos($value['style'], 'BDWKF')){
                     echo "<p style='color:#ddd'>";
                 }
                 else{
@@ -52,36 +52,16 @@
 
                 $temp = " ";
                 $isAuto = false;
-                if(strpos($value['style'], 'ZDZJCR')){
-                    $temp.="[自动闸机]";
-                    $isAuto = true;
-                }
-
                 if(strpos($value['style'], 'BDWKF')){
                     $temp.="[不对外开放]";
                     $isAuto = true;
                 }
 
-                $corArray = C('PARK_COR_STATE');
-                switch($value['status'])
-                {
-                case $corArray['TOUCH']:
-                    $temp.=" [在接触]";
-                    break;
-                case $corArray['PRETOUCH']:
-                    $temp.=" [未接触]";
-                    break;
-                case $corArray['FIND']:
-                    $temp.=" [找到决策人]";
-                    break;
-                case $corArray['TEST']:
-                    $temp.=" [测试中]";
-                    break;
-                case $corArray['CORP']:
-                    $temp.=" [已合作]";
-                    break;
-                default:
-                    $temp.="";
+                if($value['status']>=10){
+                    $temp.= "[信息化]";
+                }
+                else{
+                    $temp.= "[".C('PARK_COR')[$value['status']]."]";
                 }
 
                 if($value['lat'] == 0.0 || $value['lng'] == 0.0){

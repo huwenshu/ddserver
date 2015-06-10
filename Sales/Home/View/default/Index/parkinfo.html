@@ -104,7 +104,7 @@
         <div id="panel-1">
             <form action="{:U('parkinfo')}" method="post" enctype="multipart/form-data">
                 <input type="hidden"  name="id" value="{$park_info[id]}" />
-                <table style="width: 95%;margin: 0 auto;margin-top: 10px;overflow: hidden">
+                <table class="zebra" style="width: 95%;margin: 0 auto;margin-top: 10px;overflow: hidden">
                     <tr>
                         <td colspan=2>
                             <p style="text-align: center;margin-top: 20px;">
@@ -113,8 +113,8 @@
                         </td>
                     </tr>
                     <tr>
-                        <td style="width: 33%"><label for="parkname">停车场名称：</label></td>
-                        <td style="width: 66%">
+                        <td><label for="parkname">停车场名称：</label></td>
+                        <td>
                             <span class="required">*</span>
                             <input type="text" id="parkname" name="name" value="{$park_info[name]}" />
                             <a class="mui-btn  mui-btn-primary" style="margin-left:20px;" href="{:U('index').'?lat='.$park_info[lat].'&lng='.$park_info[lng]}">附近停车场</a>
@@ -143,6 +143,13 @@
                         </td>
                      </tr>
                     <tr>
+                        <td><label for="prepay">预付车费：</label></td>
+                        <td><span class="required">*</span>
+                            <input type="text" id="prepay" name="prepay" value= "{$park_info[prepay]}" />
+                            <input type="text" id="pretype" name="pretype" value= "{$park_info[pretype]}" />
+                        </td>
+                    </tr>
+                    <tr>
                         <td><label for="note">备注说明：</label></td>
                         <td> <textarea id="note" style="margin-top:10px;margin-left: 10px" name="note" rows="5">{$park_info[note]}</textarea> </td>
                     </tr>
@@ -169,11 +176,11 @@
                     </tr>
                     <tr>
                         <td><label>导航坐标：</label></td>
-                        <td>
+                        <td><span class="required">*</span>
                             <table style="width: 100%" border="0">
                                 <tr>
-                                    <td>经度</td>
-                                    <td>纬度</td>
+                                    <td>经度：</td>
+                                    <td>纬度：</td>
                                 </tr>
                                 <tr>
                                     <td><input style="width: 100%" type="text" readonly  name="lat" value= "{$park_info[lat]}" /></td>
@@ -189,11 +196,8 @@
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="2"><label for="parkstyle">停车场类型：</label></td>
-                        <!--<td> </td>-->
-                    </tr>
-                    <tr>
                         <td colspan="2">
+                            <label for="parkstyle">停车场类型：</label><br>
                             <?php
                             $parkstyles = C('PARK_STYLE');
                             $mystyle = $park_info[style];
@@ -206,7 +210,7 @@
 
                                 $token = '|'.$parkstyle.'|';
                                 $checked = "";
-                                if (preg_match($token,$mystyle)) {
+                                if (strstr($mystyle, $token)) {
                                 $checked = "checked";
                                 }
                                 echo '<span  style="display:inline-block;width: 45%;"><label style="font-weight: normal;" ><input type="checkbox" name="parkstyle[]" value="'.$parkstyle.'" '.$checked.' />'.$value.'</label></span>';
@@ -219,22 +223,14 @@
                         </td>
                     </tr>
                     <tr>
-                        <td colspan="2"><br></td>
-                    </tr>
-                    <tr>
                         <td><label for="spacesum">总车位数：</label></td>
                         <td><input type="text" id="spacesum" name="spacesum" value= "{$park_info[spacesum]}" />个 </td>
                     </tr>
                     <tr>
-                        <td><label for="prepay">预付车费：</label></td>
-                        <td><input type="text" id="prepay" name="prepay" value= "{$park_info[prepay]}" />
-                            <input type="text" id="pretype" name="pretype" value= "{$park_info[pretype]}" />
-                        </td>
-                    </tr>
-                    <tr>
                         <td><label for="opentime">开放时间段：</label></td>
                         <td>
-                        	<input type="text" id="opentime" name="opentime" value= "{$park_info[opentime]}" placeholder="如：周一至周日 8点至24点开发..."/> <br>
+                            <p class="pickerTitle">文字描述：</p>
+                            <input type="text" id="opentime" name="opentime" value= "{$park_info[opentime]}" placeholder="如：周一至周日 8点至24点开发..."/> <br>
                             <ul class="pickTime">
                                 <li>
                                     <p class="pickerTitle"> 周一至周五:</p>
@@ -333,21 +329,16 @@
                     </tr>
                     <tr>
                         <td><label for="parkimage">停车场入口图片：</label></td>
-                        <td><input type="file" id="parkimage" name="parkimage" value= "" style="margin: 10px;"/><span style="color:red;"><?php echo urldecode($fileError);?></urlencode></span> </td>
-                    </tr>
-
-                    <tr>
-                        <td></td>
                         <td>
+                            <input type="file" id="parkimage" name="parkimage" value= "" style="margin: 10px;"/><span style="color:red;"><?php echo urldecode($fileError);?></urlencode></span>
+                            <br/>
                             <?php
                                 if(!empty($park_info[image])){
                                     echo "<img src=".C('PARK_IMG_QINIU')."/Park/".$park_info[image].">";
-                                }
+                            }
                             ?>
-
                         </td>
                     </tr>
-
                     <tr>
                         <td><label for="etype">销售驻场活动：</label></td>
                         <td>
@@ -375,13 +366,13 @@
                     <tr>
                         <td><label for="e_start">驻场开始时间：</label></td>
                         <td>
-                            <input type="text" id="e_start" class="datetimepicker" name="e_start" value="{$park_info[e_start]}" data-date-format="yyyy-mm-dd hh:ii:ss" />
+                            <input type="text" id="e_start" class="dateTimepicker" name="e_start" value="{$park_info[e_start]}" data-date-format="yyyy-mm-dd hh:ii:ss" />
                         </td>
                     </tr>
                     <tr>
                         <td><label for="e_end">驻场结束时间：</label></td>
                         <td>
-                            <input type="text" id="e_end" class="datetimepicker" name="e_end" value="{$park_info[e_end]}" data-date-format="yyyy-mm-dd hh:ii:ss" />
+                            <input type="text" id="e_end" class="dateTimepicker" name="e_end" value="{$park_info[e_end]}" data-date-format="yyyy-mm-dd hh:ii:ss" />
                         </td>
                     </tr>
 
@@ -446,18 +437,34 @@
                                 <legend>合作状态:</legend>
                                 <form action="{:U('savecorp')}" method="post">
                                     <input type="hidden"  name="id" value="{$park_info[id]}" />
+                                    合作状态：
                                     <select id="status" name="status">
                                         <?php
                                             $parkCorp = C('PARK_COR');
                                             foreach($parkCorp as $key => $value){
                                                $selected = '';
-                                               if($park_info[status]==$key){
+                                               if($park_info[status]%10==$key){
                                                     $selected = 'selected="selected"';
                                                }
                                                 echo '<option value='.$key.' '.$selected.'>'.$value.'</option>';
                                             }
                                         ?>
                                     </select>
+                                    <br>
+                                    信息化状态：
+                                    <select id="infostatus" name="infostatus">
+                                        <?php
+                                            $parkInf = C('PARK_INF');
+                                            foreach($parkInf as $k => $v){
+                                                $selected = '';
+                                                if(intval($park_info[status]/10)==$k){
+                                                    $selected = 'selected="selected"';
+                                                }
+                                                echo '<option value='.($k*10).' '.$selected.'>'.$v.'</option>';
+                                            }
+                                        ?>
+                                    </select>
+
                                     <input type="submit" class="mui-btn mui-btn-success mui-btn-blue" style="margin-top: 1px" value="保存合作状态"/>
                                 </form>
                         </td>
@@ -1132,7 +1139,7 @@
             startDate:now.getFullYear()+"-"+now.getMonth()+"-"+now.getDate()
         });
 
-        $('.datetimepicker').datetimepicker({
+        $('.dateTimepicker').datetimepicker({
             language: 'zh-CN',
             autoclose: true,
             startView:2,
@@ -1141,6 +1148,8 @@
             minuteStep: 5,
             secondStep: 5,
             format:"yyyy-mm-dd hh:ii:00",
+            bootcssVer:3,
+            startDate:now.getFullYear()+"-"+now.getMonth()+"-"+now.getDate(),
             forceParse: false
         });
 
