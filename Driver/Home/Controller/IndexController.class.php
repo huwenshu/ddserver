@@ -486,10 +486,10 @@ class IndexController extends BaseController {
             }
         }
         if($showevent){
-            if($value['e_t']&2){//固定价格
-                $remainFee_e = $value['e_p'];
+            if($parkinfo['e_t']&2){//固定价格
+                $remainFee_e = $parkinfo['e_p'];
             }else{
-                $remainFee_e -= $value['e_p'];
+                $remainFee_e -= $parkinfo['e_p'];
                 if($remainFee_e <= 0){
                     $remainFee_e = 0.01;
                 }
@@ -499,7 +499,7 @@ class IndexController extends BaseController {
 		//计算折扣劵
 		$remianFee_r = $remainFee_e;
 		if($cid > 0){
-			$cpamount = $this->_checkCoupon($this->uid, $cid, $remainFee);
+			$cpamount = $this->_checkCoupon($this->uid, $cid, $remianFee_r);
 			//0				抵用劵不存在
 			//-1			已领完
 			//-2			活动还没开始
@@ -534,12 +534,12 @@ class IndexController extends BaseController {
 
 		$trade_no = date("YmdHis",$currentTime).$prid;
 		//HardCode 测试人员生成订单0.01元
-		if($parkinfo['status'] == 2){
-			$fee = 0.01;
-		}
-		else{
+		//if($parkinfo['status'] == 2){
+			//$fee = 0.01;
+		//}
+		//else{
 			$fee = $remianFee_r;
-		}
+		//}
 
         $fee = round($fee ,2);//防止float精度丢失问题
 
@@ -617,10 +617,10 @@ class IndexController extends BaseController {
             }
         }
         if($showevent){
-            if($value['e_t']&2){//固定价格
-                $remainFee_e = $value['e_p'];
+            if($parkinfo['e_t']&2){//固定价格
+                $remainFee_e = $parkinfo['e_p'];
             }else{
-                $remainFee_e -= $value['e_p'];
+                $remainFee_e -= $parkinfo['e_p'];
                 if($remainFee_e <= 0){
                     $remainFee_e = 0.01;
                 }
@@ -630,7 +630,7 @@ class IndexController extends BaseController {
         //计算折扣劵
         $remianFee_r = $remainFee_e;
         if($cid > 0){
-            $cpamount = $this->_checkCoupon($this->uid, $cid, $remainFee);
+            $cpamount = $this->_checkCoupon($this->uid, $cid, $remianFee_r);
             //0				抵用劵不存在
             //-1			已领完
             //-2			活动还没开始
@@ -665,12 +665,12 @@ class IndexController extends BaseController {
 
         $trade_no = date("YmdHis",$currentTime).$prid;
         //HardCode 测试人员生成订单0.01元
-        if($parkinfo['status'] == 2){
-            $fee = 0.01;
-        }
-        else{
+        //if($parkinfo['status'] == 2){
+            //$fee = 0.01;
+        //}
+        //else{
             $fee = $remianFee_r;
-        }
+        //}
 
         $fee = round($fee ,2);
 
@@ -974,12 +974,12 @@ class IndexController extends BaseController {
 		$map = array();
 		$map['id'] = $parkid;
 		$parkinfo = $Park->where($map)->find();
-		if($parkinfo['status'] == 2){
-			$fee = 0.01;
-		}
-		else{
+		//if($parkinfo['status'] == 2){
+			//$fee = 0.01;
+		//}
+		//else{
 			$fee = $remianFee_r;
-		}
+		//}
 
         $fee = round($fee ,2);//防止0.01浮点数精度丢失
 
@@ -1075,12 +1075,12 @@ class IndexController extends BaseController {
         $map = array();
         $map['id'] = $parkid;
         $parkinfo = $Park->where($map)->find();
-        if($parkinfo['status'] == 2){
-            $fee = 0.01;
-        }
-        else{
+        //if($parkinfo['status'] == 2){
+            //$fee = 0.01;
+        //}
+        //else{
             $fee = $remianFee_r;
-        }
+        //}
 
         $fee = round($fee ,2);//防止0.01浮点数精度丢失
 
