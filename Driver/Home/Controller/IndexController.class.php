@@ -87,10 +87,10 @@ class IndexController extends BaseController {
 		$openid = $this->getOpenID($this->uid);
 		$opens = C('OPENID');
 		if(in_array($openid, $opens)){
-			$con['status'] = array('in', '1,2');
+			$con['status'] = array('in', '13,14,3,4');
 		}
 		else{
-			$con['status'] = 1;
+			$con['status'] = array('in', '14,4');
 		}
 
 		$listdata = $Park->where($con)->select();
@@ -186,10 +186,10 @@ class IndexController extends BaseController {
         $openid = $this->getOpenID($this->uid);
         $opens = C('OPENID');
         if(in_array($openid, $opens)){
-            $con['status'] = array('in', '1,2,3');
+            $con['status'] = array('EGT', 3);
         }
         else{
-            $con['status'] = array('in', '1,3');
+            $con['status'] = array('EGT', 4);
         }
 
         $listdata = $Park->where($con)->select();
@@ -229,21 +229,25 @@ class IndexController extends BaseController {
             }
             $tmp['t'] = $styleR;//停车场标签
 
+            //todo 不对外开放停车场的特殊处理
+            if(in_array('不对外开放', $styleR)){
+                continue;
+            }
+
             //获取停车场当前空位信息 + 下一个车位时间段
             $parkstate = $this->_getParkState($value);
 
             $tmp['e'] = $parkstate['next'];
 
 
-            if($value['status'] == 3){//信息化产品
-                $tmp['c'] = 0; //信息化设为0
-                $tmp['s'] = $parkstate['current'];//信息化停车场的空车位状态根据时段来判断
-            }
-            else{//合作停车场
+            if($value['status'] == 4 || $value['status'] == 3){//合作停车场
                 $tmp['c'] = 1; //合作停车场设为1
                 $tmp['s'] = $value['parkstate'];
             }
-            
+            else{//信息化产品
+                $tmp['c'] = 0; //信息化设为0
+                $tmp['s'] = $parkstate['current'];//信息化停车场的空车位状态根据时段来判断
+            }
             $showevent = false;
             //echo $value['id'].'/'.$nowstr.'/'.$value['e_start'].'/'.$value['e_end'].'<br>';
             if($nowstr > $value['e_start'] && $nowstr < $value['e_end']){//活动期间
@@ -481,10 +485,10 @@ class IndexController extends BaseController {
             }
         }
         if($showevent){
-            if($value['e_t']&2){//固定价格
-                $remainFee_e = $value['e_p'];
+            if($parkinfo['e_t']&2){//固定价格
+                $remainFee_e = $parkinfo['e_p'];
             }else{
-                $remainFee_e -= $value['e_p'];
+                $remainFee_e -= $parkinfo['e_p'];
                 if($remainFee_e <= 0){
                     $remainFee_e = 0.01;
                 }
@@ -494,7 +498,7 @@ class IndexController extends BaseController {
 		//计算折扣劵
 		$remianFee_r = $remainFee_e;
 		if($cid > 0){
-			$cpamount = $this->_checkCoupon($this->uid, $cid, $remainFee);
+			$cpamount = $this->_checkCoupon($this->uid, $cid, $remianFee_r);
 			//0				抵用劵不存在
 			//-1			已领完
 			//-2			活动还没开始
@@ -529,12 +533,12 @@ class IndexController extends BaseController {
 
 		$trade_no = date("YmdHis",$currentTime).$prid;
 		//HardCode 测试人员生成订单0.01元
-		if($parkinfo['status'] == 2){
-			$fee = 0.01;
-		}
-		else{
+		//if($parkinfo['status'] == 2){
+			//$fee = 0.01;
+		//}
+		//else{
 			$fee = $remianFee_r;
-		}
+		//}
 
         $fee = round($fee ,2);//防止float精度丢失问题
 
@@ -612,10 +616,10 @@ class IndexController extends BaseController {
             }
         }
         if($showevent){
-            if($value['e_t']&2){//固定价格
-                $remainFee_e = $value['e_p'];
+            if($parkinfo['e_t']&2){//固定价格
+                $remainFee_e = $parkinfo['e_p'];
             }else{
-                $remainFee_e -= $value['e_p'];
+                $remainFee_e -= $parkinfo['e_p'];
                 if($remainFee_e <= 0){
                     $remainFee_e = 0.01;
                 }
@@ -625,7 +629,7 @@ class IndexController extends BaseController {
         //计算折扣劵
         $remianFee_r = $remainFee_e;
         if($cid > 0){
-            $cpamount = $this->_checkCoupon($this->uid, $cid, $remainFee);
+            $cpamount = $this->_checkCoupon($this->uid, $cid, $remianFee_r);
             //0				抵用劵不存在
             //-1			已领完
             //-2			活动还没开始
@@ -660,12 +664,12 @@ class IndexController extends BaseController {
 
         $trade_no = date("YmdHis",$currentTime).$prid;
         //HardCode 测试人员生成订单0.01元
-        if($parkinfo['status'] == 2){
-            $fee = 0.01;
-        }
-        else{
+        //if($parkinfo['status'] == 2){
+            //$fee = 0.01;
+        //}
+        //else{
             $fee = $remianFee_r;
-        }
+        //}
 
         $fee = round($fee ,2);
 
@@ -969,12 +973,12 @@ class IndexController extends BaseController {
 		$map = array();
 		$map['id'] = $parkid;
 		$parkinfo = $Park->where($map)->find();
-		if($parkinfo['status'] == 2){
-			$fee = 0.01;
-		}
-		else{
+		//if($parkinfo['status'] == 2){
+			//$fee = 0.01;
+		//}
+		//else{
 			$fee = $remianFee_r;
-		}
+		//}
 
         $fee = round($fee ,2);//防止0.01浮点数精度丢失
 
@@ -1070,12 +1074,12 @@ class IndexController extends BaseController {
         $map = array();
         $map['id'] = $parkid;
         $parkinfo = $Park->where($map)->find();
-        if($parkinfo['status'] == 2){
-            $fee = 0.01;
-        }
-        else{
+        //if($parkinfo['status'] == 2){
+            //$fee = 0.01;
+        //}
+        //else{
             $fee = $remianFee_r;
-        }
+        //}
 
         $fee = round($fee ,2);//防止0.01浮点数精度丢失
 
@@ -1472,15 +1476,44 @@ class IndexController extends BaseController {
     }
 
 	//按合作状态 + 距离 排序比较函数
-    protected function status_distance_sort($v1,$v2){
+    protected function status_distance_sort( &$v1,&$v2){
 		$dis1 = $this->getDistance($v1['lat'],$v1['lng'],$this->lat,$this->lng);
 		$dis2 = $this->getDistance($v2['lat'],$v2['lng'],$this->lat,$this->lng);
 
-        //先按合作状态排序
-        if($v1['status'] < $v2['status']){
+        //先把合作+信息化的都改成合作。
+        $v1['status'] = ($v1['status'] == 14 ? 4 : $v1['status']);
+        $v2['status'] = ($v2['status'] == 14 ? 4 : $v2['status']);
+
+        //针对合作但是已满，作信息化处理
+        if($v1['status'] == 4 && $v1['parkstate'] == 0){
+            $v1['status'] = 14;
+        }
+        if($v2['status'] == 4 && $v2['parkstate'] == 0){
+            $v2['status'] = 14;
+        }
+
+
+        $arr1 = array(3,4);
+        $arr2 = array(10,11,12,13,14);
+
+        if(in_array($v1['status'],$arr1)){
+            $t1 = 1;
+        }
+        else{
+            $t1 = 2;
+        }
+        if(in_array($v2['status'],$arr1)){
+            $t2 = 1;
+        }
+        else{
+            $t2 = 2;
+        }
+
+
+        if($t1 < $t2){
             return -1;
         }
-        elseif($v1['status'] > $v2['status']){
+        elseif($t1 > $t2){
             return 1;
         }
         else{

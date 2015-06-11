@@ -281,9 +281,11 @@ class IndexController extends  BaseController {
 	public function savecorp(){
 		$parkid = I('post.id');
 		$status = I('post.status');
+        $infostatus = I('post.infostatus');
+
 		//更新合作状态
 		$Park = D('ParkInfo');
-		$Park->status = $status;
+		$Park->status = $status + $infostatus;
 		$Park->updater = UID;
 		$Park->updatetime = date('Y-m-d H:i:s');
 		$con = array();
