@@ -64,14 +64,30 @@
                     $temp.= "[".C('PARK_COR')[$value['status']]."]";
                 }
 
-                if($value['lat'] == 0.0 || $value['lng'] == 0.0){
-                    if($isAuto){
-                        $temp.=" <span style='color: #dddddd'>[经纬度缺失]</span>";
-                    }
-                    else{
-                        $temp.=" <span style='color: #ff0000'>[经纬度缺失]</span>";
-                    }
+                if($isAuto){
+                    $temp.=" <span style='color: #dddddd'>";
                 }
+                else{
+                    $temp.=" <span style='color: #ff0000'>";
+                }
+
+                if($value['lat'] == 0.0 || $value['lng'] == 0.0){
+                    $temp.='[经纬度缺失]';
+                }
+
+                if(empty($value['name'])){
+                     $temp.='[名字缺失]';
+                }
+
+                if(empty($value['chargingrules'])){
+                     $temp.='[计费规则缺失]';
+                }
+
+                if(empty($value['address'])){
+                     $temp.='[入口地址缺失]';
+                }
+
+                $temp.= '</span>';
 
                 return $temp;
 
