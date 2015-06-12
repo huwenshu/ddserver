@@ -300,6 +300,23 @@ class IndexController extends BaseController {
             array_push($f, $tmp);
         }
         $result['f'] = $f;
+        if(!$datas){//附近无免费
+            $order = 'abs(lat-'.$lat.')+abs(lng-'.$lng.') asc';
+            $value = $ParkFree->order($order)->find();
+            $tmp = array();
+            
+            //通用信息
+            $tmp['id'] = $value['id'];
+            $tmp['n'] = $value['name'];
+            $tmp['b'] = $value['dsc'];
+            $tmp['i'] = $value['image'];
+            $tmp['lat'] = $value['lat'];
+            $tmp['lng'] = $value['lng'];
+            
+            $tmp['t'] = $value['note'];//停车场标签
+            $tmp['c'] = 2; //免费设为2
+            $result['a'] = $tmp;
+        }
 
         $e = array();
         $e['c'] =  $this->getDefualtCarid($this->uid);

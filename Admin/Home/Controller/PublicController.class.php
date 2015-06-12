@@ -75,6 +75,35 @@ class PublicController extends BaseController {
         $verify->entry(1);
     }
     
+    public function bd_decrypt_all()
+		{
+				$db = M('park_free_info');
+				$list = $db->getField('id,lat,lng');
+				$count = 0;
+				foreach($list as $k=>$v){
+					$ret = $this->bd_decrypt($v['lat'],$v['lng']);
+					$db->where(array('id'=>$v['id']))->data($ret)->save();
+					$count++;
+				}
+				
+				echo 'done:'.$count;
+		}
+    
+    public function bd_decrypt($bd_lat=31.248700, $bd_lon=121.509710)
+		{
+				$x_pi = 3.14159265358979324 * 3000.0 / 180.0;
+		    $x = $bd_lon - 0.0065;
+		    $y = $bd_lat - 0.006;
+		    $z = sqrt($x * $x + $y * $y) - 0.00002 * sin($y * $x_pi);
+		    $theta = atan2($y, $x) - 0.000003 * cos($x * $x_pi);
+		    $gg_lon = $z * cos($theta);
+		    $gg_lat = $z * sin($theta);
+		    
+		    return array('lat'=>$gg_lat,'lng'=>$gg_lon);
+		    
+		    //echo $gg_lon.','.$gg_lat;
+		}
+    
     public function test_park122($city='sh'){
     	include_once(dirname(__FILE__) . '/../Conf/' . 'config_mappoints.php');
     	$jsondata = null;
