@@ -262,39 +262,6 @@
                         	</td>
                     </tr>
                     <tr>
-                        <td><label for="freestart">空闲时间段：</label></td>
-                        <td>
-                            <ul class="pickTime">
-                            <li>
-                                <p class="pickerTitle"> 周一至周五:</p>
-                                <div class="input-group  date timepicker " data-date-format="hh:ii:00">
-                                    <input class="form-control"  id="freestartwork" type="text" name="freestartwork" value= "{$park_info[freestartwork]}">
-                                    <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
-                                </div>
-                                <p class="pickerText"> - </p>
-                                <div class="input-group  date timepicker " data-date-format="hh:ii:00" style="float: left;padding: 5px;">
-                                    <input class="form-control" id="freeendwork" type="text" name="freeendwork" value= "{$park_info[freeendwork]}">
-                                    <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
-                                </div>
-                                <div class="allday"><label><input class="allcheck" type="checkbox" value="freestartwork" />全天 </label></div>
-                            </li>
-                            <li>
-                                <p class="pickerTitle"> 周六周日:</p>
-                                <div class="input-group  date timepicker " data-date-format="hh:ii:00">
-                                    <input class="form-control"  id="freestartweek" type="text" name="freestartweek" value= "{$park_info[freestartweek]}">
-                                    <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
-                                </div>
-                                <p class="pickerText"> - </p>
-                                <div class="input-group  date timepicker " data-date-format="hh:ii:00" style="float: left;padding: 5px;">
-                                    <input class="form-control" id="freeendweek" type="text" name="freeendweek" value= "{$park_info[freeendweek]}">
-                                    <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
-                                </div>
-                                <div class="allday"><label><input class="allcheck" type="checkbox" value="freestartweek" />全天 </label></div>
-                            </li>
-                            </ul>
-                        </td>
-                    </tr>
-                    <tr>
                         <td><label for="fullstart">满时间段：</label></td>
                         <td>
                             <ul class="pickTime">
@@ -324,6 +291,39 @@
                                     </div>
                                     <div class="allday"><label><input class="allcheck" type="checkbox" value="fullstartweek" />全天 </label></div>
                                 </li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="freestart">空闲时间段：</label></td>
+                        <td>
+                            <ul class="pickTime">
+                            <li>
+                                <p class="pickerTitle"> 周一至周五:</p>
+                                <div class="input-group  date timepicker " data-date-format="hh:ii:00">
+                                    <input class="form-control"  id="freestartwork" type="text" name="freestartwork" value= "{$park_info[freestartwork]}">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
+                                </div>
+                                <p class="pickerText"> - </p>
+                                <div class="input-group  date timepicker " data-date-format="hh:ii:00" style="float: left;padding: 5px;">
+                                    <input class="form-control" id="freeendwork" type="text" name="freeendwork" value= "{$park_info[freeendwork]}">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
+                                </div>
+                                <div class="allday"><label><input class="allcheck" type="checkbox" value="freestartwork" />全天 </label></div>
+                            </li>
+                            <li>
+                                <p class="pickerTitle"> 周六周日:</p>
+                                <div class="input-group  date timepicker " data-date-format="hh:ii:00">
+                                    <input class="form-control"  id="freestartweek" type="text" name="freestartweek" value= "{$park_info[freestartweek]}">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
+                                </div>
+                                <p class="pickerText"> - </p>
+                                <div class="input-group  date timepicker " data-date-format="hh:ii:00" style="float: left;padding: 5px;">
+                                    <input class="form-control" id="freeendweek" type="text" name="freeendweek" value= "{$park_info[freeendweek]}">
+                                    <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
+                                </div>
+                                <div class="allday"><label><input class="allcheck" type="checkbox" value="freestartweek" />全天 </label></div>
+                            </li>
                             </ul>
                         </td>
                     </tr>
