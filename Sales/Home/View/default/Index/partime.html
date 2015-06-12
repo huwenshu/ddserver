@@ -1,0 +1,110 @@
+<extend name="Public/base"/>
+
+<block name="style">
+    <style>
+        body{padding: 0}
+
+
+        .parkitem > a:hover{
+            text-decoration: none;
+        }
+
+        .gray {background:#ddd;}
+    </style>
+</block>
+
+<block name="body">
+    <!-- 主体 -->
+    <div id="indexMain" class="index-main">
+        <ul class="mui-table-view">
+            <li class="mui-table-view-cell">
+                <form action="{:U('index')}" method="get">
+                    <input type="search" name="searchpark" placeholder="搜索停车场" />
+
+                    <table style="width: 100%;table-layout: fixed">
+                        <tr>
+                            <td><a class="mui-btn mui-btn-success" href="{:U('parkinfo')}">添加停车场</a></td>
+                            <td  style="text-align: center" ><a class="mui-btn  mui-btn-primary" href="{:U('index',array('my'=>1))}">我的停车场</a></a></td>
+                            <td><input type="submit" style="float: right" value="搜索" /></td>
+                        </tr>
+                    </table>
+                </form>
+            </li>
+
+            <?php
+
+            foreach ($parks_info as $key => $value) {
+            echo "<li name='parkitem' class='mui-table-view-cell parkitem'><a class='mui-navigate-right' target='_blank' href=".U('parkinfo',array('parkid'=>$value['id'])).">";
+            if(strpos($value['style'], 'BDWKF')){
+            echo "<p style='color:#ddd'>";
+                }
+                else{
+                echo "<p>";
+                }
+
+                echo $value['name'].tags($value)."<br>";
+                echo "地址：".$value['address'];
+                echo "</p></a></li>";
+
+            }
+
+            //生成Tags,并且根据情况标注颜色
+            function tags($value){
+
+            $temp = " ";
+            $isAuto = false;
+            if(strpos($value['style'], 'BDWKF')){
+            $temp.="[不对外开放]";
+            $isAuto = true;
+            }
+
+            $temp.= "[".C('PARK_COR')[$value['status']%10]."]";
+
+            if($value['status']>=10){
+            $temp.= "[信息化]";
+            }
+            else{
+            $temp.= "[未信息化]";
+            }
+
+            if($isAuto){
+            $temp.=" <span style='color: #dddddd'>";
+                }
+                else{
+                    $temp.=" <span style='color: #ff0000'>";
+                }
+
+                if($value['lat'] == 0.0 || $value['lng'] == 0.0){
+                    $temp.='[经纬度缺失]';
+                }
+
+                if(empty($value['name'])){
+                     $temp.='[名字缺失]';
+                }
+
+                if(empty($value['chargingrules'])){
+                     $temp.='[计费规则缺失]';
+                }
+
+                if(empty($value['address'])){
+                     $temp.='[入口地址缺失]';
+                }
+
+                $temp.= '</span>';
+
+                return $temp;
+
+            }
+        ?>
+        </ul>
+
+    </div>
+</block>
+
+<block name="script">
+    <script type="text/javascript">
+        $(function(){
+            $(".parkitem").hover(function() {$(this).addClass("gray")}, function() {$(this).removeClass("gray")});
+        });
+    </script>
+</block>

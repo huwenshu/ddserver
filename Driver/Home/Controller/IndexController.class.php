@@ -148,41 +148,8 @@ class IndexController extends BaseController {
         $con = array();
         $con['lat'] = array(array('gt',$lat - $gap),array('lt',$lat + $gap));
         $con['lng'] = array(array('gt',$lng - $gap),array('lt',$lng + $gap));
-        $now = getdate();
-        $startstr='startsun';
-        $endstr='endsun';
-        switch($now['wday']){
-            case 1:
-                $startstr='startmon';
-                $endstr='endmon';
-                break;
-            case 2:
-                $startstr='starttue';
-                $endstr='endtue';
-                break;
-            case 3:
-                $startstr='startwed';
-                $endstr='endwed';
-                break;
-            case 4:
-                $startstr='startthu';
-                $endstr='endthu';
-                break;
-            case 5:
-                $startstr='startfri';
-                $endstr='endfri';
-                break;
-            case 6:
-                $startstr='startsat';
-                $endstr='endsat';
-                break;
-        }
-        $nowstr = date("H:i:s");
-        $con[$startstr] = array('elt',$nowstr);
-        $con[$endstr] = array('gt',$nowstr);
 
-
-        //HardCode 用于测试
+         //HardCode 用于测试
         $openid = $this->getOpenID($this->uid);
         $opens = C('OPENID');
         if(in_array($openid, $opens)){
@@ -236,9 +203,10 @@ class IndexController extends BaseController {
 
             //获取停车场当前空位信息 + 下一个车位时间段
             $parkstate = $this->_getParkState($value);
-
             $tmp['e'] = $parkstate['next'];
 
+            //开放时间段
+            $tmp['o'] = array($this->isClosedNow($value) ? 0 : 1, $value['startmon'], $value['endmon'], $value['startsat'], $value['endsat']);
 
             if($value['status'] == 4 || $value['status'] == 3){//合作停车场
                 $tmp['c'] = 1; //合作停车场设为1
@@ -300,6 +268,23 @@ class IndexController extends BaseController {
             array_push($f, $tmp);
         }
         $result['f'] = $f;
+        if(!$datas){//附近无免费
+            $order = 'abs(lat-'.$lat.')+abs(lng-'.$lng.') asc';
+            $value = $ParkFree->order($order)->find();
+            $tmp = array();
+            
+            //通用信息
+            $tmp['id'] = $value['id'];
+            $tmp['n'] = $value['name'];
+            $tmp['b'] = $value['dsc'];
+            $tmp['i'] = $value['image'];
+            $tmp['lat'] = $value['lat'];
+            $tmp['lng'] = $value['lng'];
+            
+            $tmp['t'] = $value['note'];//停车场标签
+            $tmp['c'] = 2; //免费设为2
+            $result['a'] = $tmp;
+        }
 
         $e = array();
         $e['c'] =  $this->getDefualtCarid($this->uid);
@@ -1336,14 +1321,16 @@ class IndexController extends BaseController {
             
             $tmp['e'] = $parkstate['next'];
             
+            //开放时间段
+            $tmp['o'] = array($this->isClosedNow($value) ? 0 : 1, $value['startmon'], $value['endmon'], $value['startsat'], $value['endsat']);
             
-            if($value['status'] == 3){//信息化产品
-                $tmp['c'] = 0; //信息化设为0
-                $tmp['s'] = $parkstate['current'];//信息化停车场的空车位状态根据时段来判断
-            }
-            else{//合作停车场
+            if(($value['status'] == 4 || $value['status'] == 3) && $tmp['o'][0] == 1 && $value['parkstate'] != 0){//合作停车场&&在开放时段&&非满
                 $tmp['c'] = 1; //合作停车场设为1
                 $tmp['s'] = $value['parkstate'];
+            }
+            else{//信息化产品
+                $tmp['c'] = 0; //信息化设为0
+                $tmp['s'] = $parkstate['current'];//信息化停车场的空车位状态根据时段来判断
             }
             
             $tmp['d'] = array(($value['e_t']&2)?1:0,$value['e_p']);
@@ -1393,11 +1380,11 @@ class IndexController extends BaseController {
             $con['note'] = array('like','%|'.$note.'|%');
         }
         $page = intval($page);
-        $limit = ''.($page*$max).','.$max;
+        $limit = ''.($page*$max).','.($max+1);
         $datas = $ParkFree->where($con)->order($order)->limit($limit)->select();
         //print_r($con);
         
-        $result = array();
+        $result = array('m'=>(count($datas)==$max+1?1:0));
         $p = array();
         foreach($datas as $key => $value){
             $tmp = array();
@@ -1414,6 +1401,10 @@ class IndexController extends BaseController {
             $tmp['c'] = 2; //免费设为2
             
             array_push($p, $tmp);
+            
+            if(count($p) == $max){
+                break;
+            }
         }
         $result['p'] = $p;
         
@@ -1492,6 +1483,14 @@ class IndexController extends BaseController {
             $v2['status'] = 14;
         }
 
+        //针对已合作，但是不在开放时间段的，作信息化处理
+        if($v1['status'] == 4 && $this->isClosedNow($v1)){
+            $v1['status'] = 14;
+        }
+        if($v2['status'] == 4 && $this->isClosedNow($v2)){
+            $v2['status'] = 14;
+        }
+
 
         $arr1 = array(3,4);
         $arr2 = array(10,11,12,13,14);
@@ -1527,5 +1526,44 @@ class IndexController extends BaseController {
             }
         }
 
+    }
+
+    protected function isClosedNow($parkinfo){
+        $nowDay = getdate();
+        $startstr=$parkinfo['startsun'];
+        $endstr=$parkinfo['endsun'];
+        switch($nowDay['wday']){
+            case 1:
+                $startstr=$parkinfo['startmon'];
+                $endstr=$parkinfo['endmon'];
+                break;
+            case 2:
+                $startstr=$parkinfo['starttue'];
+                $endstr=$parkinfo['endtue'];
+                break;
+            case 3:
+                $startstr=$parkinfo['startwed'];
+                $endstr=$parkinfo['endwed'];
+                break;
+            case 4:
+                $startstr=$parkinfo['startthu'];
+                $endstr=$parkinfo['endthu'];
+                break;
+            case 5:
+                $startstr=$parkinfo['startfri'];
+                $endstr=$parkinfo['endfri'];
+                break;
+            case 6:
+                $startstr=$parkinfo['startsat'];
+                $endstr=$parkinfo['endsat'];
+                break;
+        }
+        $nowstr = date("H:i:s");
+        if($startstr <= $nowstr && $nowstr <= $endstr){
+            return false;
+        }
+        else{
+            return true;
+        }
     }
 }

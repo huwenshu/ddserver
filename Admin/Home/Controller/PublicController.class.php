@@ -75,6 +75,35 @@ class PublicController extends BaseController {
         $verify->entry(1);
     }
     
+    public function bd_decrypt_all()
+		{
+				$db = M('park_free_info');
+				$list = $db->getField('id,lat,lng');
+				$count = 0;
+				foreach($list as $k=>$v){
+					$ret = $this->bd_decrypt($v['lat'],$v['lng']);
+					$db->where(array('id'=>$v['id']))->data($ret)->save();
+					$count++;
+				}
+				
+				echo 'done:'.$count;
+		}
+    
+    public function bd_decrypt($bd_lat=31.248700, $bd_lon=121.509710)
+		{
+				$x_pi = 3.14159265358979324 * 3000.0 / 180.0;
+		    $x = $bd_lon - 0.0065;
+		    $y = $bd_lat - 0.006;
+		    $z = sqrt($x * $x + $y * $y) - 0.00002 * sin($y * $x_pi);
+		    $theta = atan2($y, $x) - 0.000003 * cos($x * $x_pi);
+		    $gg_lon = $z * cos($theta);
+		    $gg_lat = $z * sin($theta);
+		    
+		    return array('lat'=>$gg_lat,'lng'=>$gg_lon);
+		    
+		    //echo $gg_lon.','.$gg_lat;
+		}
+    
     public function test_park122($city='sh'){
     	include_once(dirname(__FILE__) . '/../Conf/' . 'config_mappoints.php');
     	$jsondata = null;
@@ -148,32 +177,53 @@ class PublicController extends BaseController {
     	
     }
     
-protected function dom_to_str($root) 
-{ 
-    $result = ''; 
+    protected function dom_to_str($root)
+    {
+        $result = '';
 
-    $children = $root->childNodes; 
+        $children = $root->childNodes;
 
-    if ($children->length == 1) 
-    { 
-        $child = $children->item(0); 
+        if ($children->length == 1)
+        {
+            $child = $children->item(0);
 
-        if ($child->nodeType == XML_TEXT_NODE) 
-        { 
-            $result = $child->nodeValue; 
+            if ($child->nodeType == XML_TEXT_NODE)
+            {
+                $result = $child->nodeValue;
 
-            return $result; 
-        } 
+                return $result;
+            }
+        }
+
+        for($i = 0; $i < $children->length; $i++)
+        {
+            $child = $children->item($i);
+
+            $result .= $this->dom_to_str($child);
+        }
+
+        return $result;
     }
 
-    for($i = 0; $i < $children->length; $i++) 
-    { 
-        $child = $children->item($i); 
+    public function acWarning(){
+        $ParkInfo = M('ParkInfo');
+        $afterweek = date("Y-m-d",strtotime("+1 week"));
 
-        $result .= $this->dom_to_str($child); 
-    } 
+        //停车场补助活动预警
+        $map = array();
+        $map['actype'] = array('NEQ','NULL');
+        $map['acendtime'] = array('ELT', $afterweek);
+        $parkList = $ParkInfo->where($map)->order("acendtime")->select();
 
-    return $result; 
-} 
+        $title = "[停车场补助活动逾期预警-".date("Y.m.d")."]";
+        $content =  "";
+        foreach ($parkList as $value) {
+            $content .= "停车场:".$value['name']." 过期时间:".$value['acendtime']."<br/><br/>";
+        }
+        if(!empty($parkList)){
+            sendMail("dubin@duduche.me", $title, $content);
+        }
+
+    }
 
 }

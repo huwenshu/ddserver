@@ -45,6 +45,16 @@ class IndexController extends  BaseController {
         }
     }
 
+    public function partime($id){
+        $ParkInfo = M('ParkInfo');
+        $map = array();
+        $map['responsible'] = $id;
+        $parkList = $ParkInfo->where($map)->select();
+        $this->parks_info = $parkList;
+        $this->meta_title = '首页 | 嘟嘟销售系统';
+        $this->display();
+    }
+
     public function parkinfo($parkid = null, $fileError = null){
     	if (IS_POST) {
     		$parkInfo = array();
@@ -152,7 +162,12 @@ class IndexController extends  BaseController {
             $parkInfo['responsible'] = empty($responsible) ? UID : $responsible;
 
     		$Park = D('ParkInfo');
-    		$saveParkId = $Park->SaveParkInfo($parkInfo);
+            if( UID==100 && UID!=$parkInfo['responsible']){
+                $saveParkId = 0;
+            }
+            else{
+                $saveParkId = $Park->SaveParkInfo($parkInfo);
+            }
     		if ($saveParkId) {
                 $param = array('parkid' => $saveParkId);
                 if(isset($fileError)){
@@ -161,7 +176,7 @@ class IndexController extends  BaseController {
     			$this->redirect('Index/parkinfo', $param, 0, '保存成功...');
     		}
     		else{
-    			$this->error();
+    			$this->error('抱歉，您不能修改其他人的负责的停车场！');
     		}
 
     	}
