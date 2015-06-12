@@ -1410,11 +1410,11 @@ class IndexController extends BaseController {
             $con['note'] = array('like','%|'.$note.'|%');
         }
         $page = intval($page);
-        $limit = ''.($page*$max).','.$max;
+        $limit = ''.($page*$max).','.($max+1);
         $datas = $ParkFree->where($con)->order($order)->limit($limit)->select();
         //print_r($con);
         
-        $result = array();
+        $result = array('m'=>(count($datas)==$max+1?1:0));
         $p = array();
         foreach($datas as $key => $value){
             $tmp = array();
@@ -1431,6 +1431,10 @@ class IndexController extends BaseController {
             $tmp['c'] = 2; //免费设为2
             
             array_push($p, $tmp);
+            
+            if(count($p) == $max){
+                break;
+            }
         }
         $result['p'] = $p;
         
