@@ -148,32 +148,53 @@ class PublicController extends BaseController {
     	
     }
     
-protected function dom_to_str($root) 
-{ 
-    $result = ''; 
+    protected function dom_to_str($root)
+    {
+        $result = '';
 
-    $children = $root->childNodes; 
+        $children = $root->childNodes;
 
-    if ($children->length == 1) 
-    { 
-        $child = $children->item(0); 
+        if ($children->length == 1)
+        {
+            $child = $children->item(0);
 
-        if ($child->nodeType == XML_TEXT_NODE) 
-        { 
-            $result = $child->nodeValue; 
+            if ($child->nodeType == XML_TEXT_NODE)
+            {
+                $result = $child->nodeValue;
 
-            return $result; 
-        } 
+                return $result;
+            }
+        }
+
+        for($i = 0; $i < $children->length; $i++)
+        {
+            $child = $children->item($i);
+
+            $result .= $this->dom_to_str($child);
+        }
+
+        return $result;
     }
 
-    for($i = 0; $i < $children->length; $i++) 
-    { 
-        $child = $children->item($i); 
+    public function acWarning(){
+        $ParkInfo = M('ParkInfo');
+        $afterweek = date("Y-m-d",strtotime("+1 week"));
 
-        $result .= $this->dom_to_str($child); 
-    } 
+        //停车场补助活动预警
+        $map = array();
+        $map['actype'] = array('NEQ','NULL');
+        $map['acendtime'] = array('ELT', $afterweek);
+        $parkList = $ParkInfo->where($map)->order("acendtime")->select();
 
-    return $result; 
-} 
+        $title = "[停车场补助活动逾期预警-".date("Y.m.d")."]";
+        $content =  "";
+        foreach ($parkList as $value) {
+            $content .= "停车场:".$value['name']." 过期时间:".$value['acendtime']."<br/><br/>";
+        }
+        if(!empty($parkList)){
+            sendMail("dubin@duduche.me", $title, $content);
+        }
+
+    }
 
 }
