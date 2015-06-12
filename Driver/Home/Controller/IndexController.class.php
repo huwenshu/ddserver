@@ -1321,14 +1321,16 @@ class IndexController extends BaseController {
             
             $tmp['e'] = $parkstate['next'];
             
+            //开放时间段
+            $tmp['o'] = array($this->isClosedNow($value) ? 0 : 1, $value['startmon'], $value['endmon'], $value['startsat'], $value['endsat']);
             
-            if($value['status'] == 3){//信息化产品
-                $tmp['c'] = 0; //信息化设为0
-                $tmp['s'] = $parkstate['current'];//信息化停车场的空车位状态根据时段来判断
-            }
-            else{//合作停车场
+            if(($value['status'] == 4 || $value['status'] == 3) && $tmp['o'][0] == 1 && $value['parkstate'] != 0){//合作停车场&&在开放时段&&非满
                 $tmp['c'] = 1; //合作停车场设为1
                 $tmp['s'] = $value['parkstate'];
+            }
+            else{//信息化产品
+                $tmp['c'] = 0; //信息化设为0
+                $tmp['s'] = $parkstate['current'];//信息化停车场的空车位状态根据时段来判断
             }
             
             $tmp['d'] = array(($value['e_t']&2)?1:0,$value['e_p']);
