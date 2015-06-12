@@ -45,6 +45,16 @@ class IndexController extends  BaseController {
         }
     }
 
+    public function partime($id){
+        $ParkInfo = M('ParkInfo');
+        $map = array();
+        $map['responsible'] = $id;
+        $parkList = $ParkInfo->where($map)->select();
+        $this->parks_info = $parkList;
+        $this->meta_title = '首页 | 嘟嘟销售系统';
+        $this->display();
+    }
+
     public function parkinfo($parkid = null, $fileError = null){
     	if (IS_POST) {
     		$parkInfo = array();
