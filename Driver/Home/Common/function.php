@@ -94,6 +94,34 @@ function locCSV($msgs){
 
 
 }
+    
+    //用csv记录查询的经纬度
+    function locCSV2($msgs){
+        
+        $ctime = time();
+        $optid = $msgs['uid'].$ctime;//封装操作编号
+        $data[0] = $optid;
+        $data[1] = $msgs['uid'];
+        $data[2] = date("Y-m-d H:i:s", $ctime);//当前时间
+        $data[3] = $msgs['curlat'];
+        $data[4] = $msgs['curlng'];
+        $data[5] = $msgs['lat'];
+        $data[6] = $msgs['lng'];
+        $data[7] = $msgs['ip'];
+        
+        $filename =  C('CSV_LOG_PATH').'/location2.csv';
+        
+        $log_dir = dirname($filename);
+        if (!is_dir($log_dir)) {
+            mkdir($log_dir, 0755, true);
+        }
+        
+        $fp = fopen($filename, 'a');
+        fputcsv($fp, $data);
+        fclose($fp);
+        
+        
+    }
 
 
 ?>

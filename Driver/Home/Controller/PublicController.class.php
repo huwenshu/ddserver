@@ -441,14 +441,16 @@ class PublicController extends BaseController {
 	}
     
     //返回附近停车场接口2
-    public function search2($lat,$lng){
+    public function search2($lat,$lng,$curlat=0,$curlng=0){
         //CVS记录查询的位置信息
         $msgs = array();
         $msgs['ip'] = $_SERVER['REMOTE_ADDR'];//用户ip
         $msgs['uid'] = $this->uid;//操作者id
+        $msgs['curlat'] = $curlat;
+        $msgs['curlng'] = $curlng;//新值
         $msgs['lat'] = $lat;
         $msgs['lng'] = $lng;//新值
-        locCSV($msgs);
+        locCSV2($msgs);
         
         $this->lat = $lat;
         $this->lng = $lng;
