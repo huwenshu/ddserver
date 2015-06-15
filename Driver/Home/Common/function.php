@@ -109,7 +109,7 @@ function locCSV($msgs){
         $data[6] = $msgs['lng'];
         $data[7] = $msgs['ip'];
         
-        $filename =  C('CSV_LOG_PATH').'/location2.csv';
+        $filename =  C('CSV_LOG_PATH').'/location2_'.date("Ymd", $ctime).'.csv';
         
         $log_dir = dirname($filename);
         if (!is_dir($log_dir)) {
