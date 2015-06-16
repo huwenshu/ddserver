@@ -618,9 +618,9 @@ class PublicController extends BaseController {
         $dis1 = $this->getDistance($v1['lat'],$v1['lng'],$this->lat,$this->lng);
         $dis2 = $this->getDistance($v2['lat'],$v2['lng'],$this->lat,$this->lng);
         
-        //实惠标记
-        $sh1 = (strpos($v1['style'],'|SH|') === false)?0:1;
-        $sh2 = (strpos($v2['style'],'|SH|') === false)?0:1;
+        //实惠标记 + 在开放时间段
+        $sh1 = ((strpos($v1['style'],'|SH|') !== false) && ($this->isClosedNow($v1) === false)) ? 1:0;
+        $sh2 = ((strpos($v2['style'],'|SH|') !== false) && ($this->isClosedNow($v2) === false)) ? 1:0;
         
         //先把合作+信息化的都改成合作。
         $v1['status'] = ($v1['status'] == 14 ? 4 : $v1['status']);
