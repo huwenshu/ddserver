@@ -88,39 +88,19 @@ return array(
         'button'=>array(
 
             array(
-                'name' => '找车位',
-                'sub_button' => array(
-                    array(
-                        'type' => 'view',
-                        'name' => '附近',
-                        'url' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd417c2e70f817f89&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=near#wechat_redirect'
-                    ),
-                    array(
-                        'type' => 'view',
-                        'name' => '目的地',
-                        'url' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd417c2e70f817f89&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=find#wechat_redirect'
-                    ),
-                )
+                'type' => 'view',
+                'name' => '附近',
+                'url' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd417c2e70f817f89&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=map#wechat_redirect'
             ),
             array(
                 'type' => 'view',
-                'name' => '订单',
-                'url' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd417c2e70f817f89&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=order#wechat_redirect'
+                'name' => '省钱',
+                'url' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd417c2e70f817f89&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=discover#wechat_redirect'
             ),
             array(
-                'name' => '我',
-                'sub_button' => array(
-                    array(
-                        'type' => 'view',
-                        'name' => '我的抵用券',
-                        'url' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd417c2e70f817f89&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=coupon#wechat_redirect'
-                    ),
-                    array(
-                        'type' => 'view',
-                        'name' => '我的信息',
-                        'url' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd417c2e70f817f89&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=userinfo#wechat_redirect'
-                    ),
-                )
+                'type' => 'view',
+                'name' => '我的',
+                'url' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd417c2e70f817f89&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=userinfo#wechat_redirect'
             ),
 
         )
@@ -166,7 +146,7 @@ return array(
     'TEMPLATE_ID_PRE' => 'X6Wb3pKX-0sA_kGdD-kQ98jJvwB5pLsnqGDYOnERL6M',
 
     //模板跳转URL
-    'TEMPLATE_REDIRECT_URL_PRE' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd417c2e70f817f89&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=fee#wechat_redirect',
+    'TEMPLATE_REDIRECT_URL_PRE' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd417c2e70f817f89&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=myjiesuan#wechat_redirect',
 
     //发送给用户的消息模板
     'NOTICE_TPL_PRE' => ' {
@@ -214,6 +194,7 @@ return array(
         'YY' => '医院',
         'DWJG' => '单位机构',
         'SYTCC' => '商业停车场',
+        'LYJD' => '景点',
         'ZDZJCR' => '自动闸机进入',
         'USERFX' => '人工放行',
         'ZYSF' => '中央收费',
