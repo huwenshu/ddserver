@@ -847,7 +847,7 @@ class IndexController extends BaseController {
             $map['id'] = $parkid;
             $ParkInfo = M('ParkInfo');
             $status = $ParkInfo->where($map)->getField('status');
-            if($status == 1 ){//已经合作的才会发送提现邮件
+            if($status%10 == 4 ){//已经合作的才会发送提现邮件
                 $send = $this->sendEmail('all@duduche.me', $title, $content);
             }
 			$this->ajaxOk('');
@@ -1048,7 +1048,7 @@ class IndexController extends BaseController {
             $map['id'] = $parkid;
             $ParkInfo = M('ParkInfo');
             $status = $ParkInfo->where($map)->getField('status');
-            if($status == 1 ){//已经合作的才会发送提现邮件
+            if($status%10 == 4 ){//已经合作的才会发送提现邮件
                 $send = $this->sendEmail('all@duduche.me', $title, $content);
             }
 
