@@ -34,7 +34,7 @@
         <?php
 
             foreach ($parks_info as $key => $value) {
-                echo "<li name='parkitem' class='mui-table-view-cell parkitem'><a class='mui-navigate-right' href=".U('parkinfo',array('parkid'=>$value['id'])).">";
+                echo "<li name='parkitem' class='mui-table-view-cell parkitem'><a class='mui-navigate-right'  target='_blank' href=".U('parkinfo',array('parkid'=>$value['id'])).">";
                 if(strpos($value['style'], 'BDWKF')){
                     echo "<p style='color:#ddd'>";
                 }
