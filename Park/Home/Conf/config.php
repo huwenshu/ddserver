@@ -86,7 +86,7 @@ return array(
     'TEMPLATE_ID_IN' => 'CjJwgvm6Jk7ePRNR_exkLqlzCXB-1rprUnGmD_qJZ5g',
 
     //模板跳转URL
-    'TEMPLATE_REDIRECT_URL_IN' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd417c2e70f817f89&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=fee#wechat_redirect',
+    'TEMPLATE_REDIRECT_URL_IN' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd417c2e70f817f89&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=myjiesuan#wechat_redirect',
 
     //发送给用户的消息模板
     'NOTICE_TPL_IN' => ' {

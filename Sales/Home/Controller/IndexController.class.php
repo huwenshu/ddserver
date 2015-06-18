@@ -109,7 +109,14 @@ class IndexController extends  BaseController {
 
  			$parkInfo['chargingrules'] = htmlspecialchars_decode(I('chargingrules'));
  			$parkInfo['note'] = I('note');
- 			$parkInfo['shortname'] = I('shortname');
+ 			//$parkInfo['shortname'] = I('shortname');自动生成缩写，不需要自己来写了
+            $status = I('post.status');
+            $infostatus = I('post.infostatus');
+            $parkInfo['status'] = $status + $infostatus;
+
+            $responsible = I('post.responsible');
+            $parkInfo['responsible'] = empty($responsible) ? UID : $responsible;
+
 
             //采用FTP方式，上传图片
             if($_FILES["parkimage"]["error"] == 0){//存在上传文件
@@ -138,28 +145,6 @@ class IndexController extends  BaseController {
                     $parkInfo['image'] = $info['parkimage']['savename'];
                 }
             }
-
-            $e_t = I('post.e_t');
-            $e_t_v = 0;
-            foreach ($e_t as $k => $v) {
-                $e_t_v = $e_t_v + pow(2,$v-1);
-            }
-            $parkInfo['e_t'] = $e_t_v;
-            $parkInfo['e_p'] = I('post.e_p');
-            $parkInfo['e_start'] = I('post.e_start');
-            $parkInfo['e_end'] = I('post.e_end');
-
-
-            //停车场活动参数
-            $actype = I('post.actype');
-            $acendtime = I('post.acendtime');
-            $acscore = I('post.acscore');
-            $parkInfo['actype'] = empty($actype) ?  null : $actype;
-            $parkInfo['acendtime'] = empty($acendtime) ?  null : $acendtime;
-            $parkInfo['acscore'] = empty($acscore) ? null : $acscore;
-
-            $responsible = I('post.responsible');
-            $parkInfo['responsible'] = empty($responsible) ? UID : $responsible;
 
     		$Park = D('ParkInfo');
             if( UID==100 && UID!=$parkInfo['responsible']){
@@ -191,6 +176,11 @@ class IndexController extends  BaseController {
 			$cond = array();
 			$cond['parkid'] = $parkid;
 			$this->rulecount = $rulestime->where($cond)->count();
+            $Sales = M('SalesAuth');
+            $map = array();
+            $map['id'] = $onePark['responsible'];
+            $resName = $Sales->where($map)->getField('name');
+            $this->resName = 'NO.'.$onePark['responsible'].'_'.$resName;
     		$this->display();
     	}
     }
@@ -559,7 +549,7 @@ class IndexController extends  BaseController {
 
     }
 
-    //修改个人基本信息
+    //检查缩写信息
     public function checkShortName($shortName){
         $ParkInfo = M('ParkInfo');
         $map = array();
@@ -574,61 +564,78 @@ class IndexController extends  BaseController {
 
     }
 
-//	//保存所以拜访记录，早期的，不能记录每条记录的改变。
-//	public function savevisit1(){
-//		$parkid = I('post.id');
-//		$status = I('post.status');
-//		$contactInfo = array('contactname' => I('post.contactname'), 'contactgender' => I('post.contactgender'),'contactphone' => I('post.contactphone'),
-//			'contactjob' => I('post.contactjob'));
-//
-//		$visitRecord = array('visitime' => I('post.visitime'), 'note' => I('post.note'), 'intention' => I('post.intention'));
-//
-//		//更新合作状态
-//		$Park = D('ParkInfo');
-//		$Park->status = $status;
-//		$Park->updater = UID;
-//		$Park->updatetime = date('Y-m-d H:i:s');
-//		$con = array();
-//		$con['id'] = $parkid;
-//		$Park->where($con)->save();
-//
-//		//更新联系人数据
-//		$Contact = D('ContactInfo');
-//		//先把数据全部删除
-//		$map = array();
-//		$map['parkid'] = $parkid;
-//		$Contact->where($map)->delete();
-//		//再添加新数据
-//		if(is_array($contactInfo['contactname'])){//判断是否有传入的值
-//			$count = count($contactInfo['contactname']);
-//			$dataList1 = array();
-//			for ($i=0; $i < $count ; $i++) {
-//				$dataList1[] = array('parkid' => $parkid,'name' => $contactInfo['contactname'][$i], 'gender' => $contactInfo['contactgender'][$i],
-//					'telephone' => $contactInfo['contactphone'][$i], 'job' => $contactInfo['contactjob'][$i], 'creater' => UID,
-//					'createtime' => date('Y-m-d H:i:s'),'updater' => UID);
-//			}
-//			$Contact->addAll($dataList1);
-//		}
-//
-//
-//		//更新拜访记录
-//		$Visit = D('VisitRecord');
-//		//先把数据全部删除
-//		$map = array();
-//		$map['parkid'] = $parkid;
-//		$Visit->where($map)->delete();
-//		//再添加新数据
-//		if(is_array($visitRecord['visitime'])){
-//			$count = count($visitRecord['visitime']);
-//			$dataList2 = array();
-//			for ($i=0; $i < $count ; $i++) {
-//				$dataList2[] = array('parkid' => $parkid,'visitime' => $visitRecord['visitime'][$i], 'intention' => $visitRecord['intention'][$i],
-//					'note' => $visitRecord['note'][$i], 'creater' => UID, 'createtime' => date('Y-m-d H:i:s'),'updater' => UID);
-//			}
-//			$Visit->addAll($dataList2);
-//		}
-//		$this->redirect('/Home/Index/parkinfo/parkid/'.$parkid.'/#panel-2');
-//
-//	}
+    //检查名字重复
+    public function checkName($id,$name){
+        $ParkInfo = M('ParkInfo');
+        $map = array();
+        $map['id'] = array('NEQ', $id);
+        $map['name'] = $name;
+        $result = $ParkInfo->where($map)->find();
+        if(empty($result)){
+            echo  json_encode(array('check' => true));
+        }
+        else{
+            echo  json_encode(array('check' => false, 'id' => $result['id'], 'name' => $result['name']));
+        }
+    }
 
+    //检查入口地址重复
+    public function checkAddress($id,$addr){
+        $ParkInfo = M('ParkInfo');
+        $map = array();
+        $map['id'] = array('NEQ', $id);
+        $map['address'] = $addr;
+        $result = $ParkInfo->where($map)->find();
+        if(empty($result)){
+            echo  json_encode(array('check' => true));
+        }
+        else{
+            echo  json_encode(array('check' => false, 'id' => $result['id'], 'name' => $result['name']));
+        }
+
+    }
+
+    //保存驻场活动信息
+    public function zhuchang_ac(){
+        $parkid = I('post.parkid');
+        $parkInfo = array();
+        $parkInfo['id'] = $parkid;
+
+        $e_t = I('post.e_t');
+        $e_t_v = 0;
+        foreach ($e_t as $k => $v) {
+            $e_t_v = $e_t_v + pow(2,$v-1);
+        }
+        $parkInfo['e_t'] = $e_t_v;
+        $parkInfo['e_p'] = I('post.e_p');
+        $parkInfo['e_start'] = I('post.e_start');
+        $parkInfo['e_end'] = I('post.e_end');
+
+        $ParkInfo = M('ParkInfo');
+        $ParkInfo->save($parkInfo);
+
+        $this->redirect('/Home/Index/parkinfo/parkid/'.$parkid.'/#panel-3');
+
+    }
+
+    //保存补助活动信息
+    public function buzhu_ac(){
+        $parkid = I('post.parkid');
+        $parkInfo = array();
+        $parkInfo['id'] = $parkid;
+
+        //停车场活动参数
+        $actype = I('post.actype');
+        $acendtime = I('post.acendtime');
+        $acscore = I('post.acscore');
+        $parkInfo['actype'] = empty($actype) ?  null : $actype;
+        $parkInfo['acendtime'] = empty($acendtime) ?  null : $acendtime;
+        $parkInfo['acscore'] = empty($acscore) ? null : $acscore;
+
+        $ParkInfo = M('ParkInfo');
+        $ParkInfo->save($parkInfo);
+
+        $this->redirect('/Home/Index/parkinfo/parkid/'.$parkid.'/#panel-3');
+
+    }
 }
