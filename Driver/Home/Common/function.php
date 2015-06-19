@@ -108,8 +108,40 @@ function locCSV($msgs){
         $data[5] = $msgs['lat'];
         $data[6] = $msgs['lng'];
         $data[7] = $msgs['ip'];
+        $data[8] = $msgs['pushid'];
         
         $filename =  C('CSV_LOG_PATH').'/location2_'.date("Ymd", $ctime).'.csv';
+        
+        $log_dir = dirname($filename);
+        if (!is_dir($log_dir)) {
+            mkdir($log_dir, 0755, true);
+        }
+        
+        $fp = fopen($filename, 'a');
+        fputcsv($fp, $data);
+        fclose($fp);
+        
+        
+    }
+    
+    //用csv记录查询的经纬度
+    function locFreeList($msgs){
+        
+        $ctime = time();
+        $optid = $msgs['uid'].$ctime;//封装操作编号
+        $data[0] = $optid;
+        $data[1] = $msgs['uid'];
+        $data[2] = date("Y-m-d H:i:s", $ctime);//当前时间
+        $data[3] = $msgs['lat'];
+        $data[4] = $msgs['lng'];
+        $data[5] = $msgs['province'];
+        $data[6] = $msgs['city'];
+        $data[7] = $msgs['district'];
+        $data[8] = $msgs['note'];
+        $data[9] = $msgs['ip'];
+        $data[10] = $msgs['pushid'];
+        
+        $filename =  C('CSV_LOG_PATH').'/freelist_'.date("Ymd", $ctime).'.csv';
         
         $log_dir = dirname($filename);
         if (!is_dir($log_dir)) {
