@@ -441,15 +441,16 @@ class PublicController extends BaseController {
 	}
     
     //返回附近停车场接口2
-    public function search2($lat,$lng,$curlat=0,$curlng=0){
+    public function search2($lat,$lng,$curlat=0,$curlng=0,$pushid=''){
         //CVS记录查询的位置信息
         $msgs = array();
         $msgs['ip'] = $_SERVER['REMOTE_ADDR'];//用户ip
         $msgs['uid'] = $this->uid;//操作者id
         $msgs['curlat'] = $curlat;
-        $msgs['curlng'] = $curlng;//新值
+        $msgs['curlng'] = $curlng;//当前值
         $msgs['lat'] = $lat;
         $msgs['lng'] = $lng;//新值
+        $msgs['pushid'] = $pushid;
         locCSV2($msgs);
         
         $this->lat = $lat;
@@ -910,7 +911,20 @@ class PublicController extends BaseController {
         $this->ajaxOk($result);
     }
     
-    public function getfreepark($lat, $lng, $province, $city, $district=null, $note=null, $page, $max){
+    public function getfreepark($lat, $lng, $province, $city, $district=null, $note=null, $page=0, $max=10, $pushid=''){
+        if($page == 0){//do log
+            $msgs = array();
+            $msgs['ip'] = $_SERVER['REMOTE_ADDR'];//用户ip
+            $msgs['uid'] = $this->uid;//操作者id
+            $msgs['lat'] = $lat;
+            $msgs['lng'] = $lng;//新值
+            $msgs['province'] = $province;
+            $msgs['city'] = $city;
+            $msgs['district'] = $district;
+            $msgs['note'] = $note;
+            $msgs['pushid'] = $pushid;
+            locFreeList($msgs);
+        }
         if(!$max){
             $max = 10;
         }
