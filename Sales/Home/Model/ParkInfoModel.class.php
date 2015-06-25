@@ -104,6 +104,11 @@ class ParkInfoModel extends Model {
             $result = $parkInfo['id'];
         } else {
             /* 添加停车场数据 */
+            $PinYin = new Home\Common\PinYin();
+            $pinYin = strtoupper($PinYin->getFirstPY($parkInfo['name']));
+            $shortName = $this->getShort($pinYin, 0);
+            $parkInfo['shortname'] = $shortName;
+
             $parkInfo['creater'] = UID;
             $parkInfo['createtime'] = date('Y-m-d H:i:s');
             $parkInfo['updater'] = UID;
@@ -119,5 +124,27 @@ class ParkInfoModel extends Model {
        return $result;
     }
 
+    //找出一个没有重复的停车场缩写
+    private function getShort($pinyin, $i=0){
+        if($i == 0){
+            $str = $pinyin;
+        }
+        else{
+            $str = $pinyin.$i;
+        }
+
+        $ParkInfo = M('ParkInfo');
+        $map = array();
+        $map['shortname'] = $str;
+        $park = $ParkInfo->where($map)->find();
+        if(is_array($park)){
+            $i++;
+            return $this->getShort($pinyin,$i);
+        }
+        else{
+            return $str;
+        }
+
+    }
  
 }

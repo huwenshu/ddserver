@@ -4,6 +4,7 @@
     <style>
         body{padding: 0}
         .myborder{
+            padding: 10px 0;
         }
         #panel-2 .myborder input,#panel-2 .myborder select,#panel-1 .myborder input,#panel-1 .myborder select{
             width: 65%;
@@ -35,23 +36,31 @@
             text-overflow: ellipsis;
             white-space: nowrap;
             border-color: #383838;
-            border-left: 1px solid #007aff;
-            -webkit-transition: background-color .1s linear;
-            transition: background-color .1s linear;
+            border-left: 1px solid #383838;
+
         }
         .ui-tabs-nav>li.ui-tabs-active{
             color: #fff;
             background-color: #383838;
+            text-decoration: none;
         }
         .ui-tabs-nav>li>a{
             color: #007aff;
         }
         .ui-tabs-nav>li.ui-tabs-active>a{
             color:#fff;
-            text-decoration: underline;
         }
         #panel-2 input{
             width: 95%;
+        }
+        #panel-2>table>tbody>tr>td>fieldset{
+            max-width: 500px;
+            margin: 10px 20px;
+        }
+        #panel-2 input[type=submit] {
+            display: block;
+            width: 60%;
+            margin: 0 auto;
         }
         .timepicker{
             float: left;
@@ -83,11 +92,31 @@
 
         }
 
+        legend{
+            width: auto;
+            padding: 0 10px;
+
+        }
+        #panel-3 > div{
+            max-width: 500px;
+            margin: 20px;
+        }
+        #panel-3 label{
+            width: 120px;
+            margin: 10px;
+        }
+        #panel-3 input[type=text]{
+            width: auto;
+        }
+        #panel-3 input[type=submit]{
+            width: 60%;
+        }
         #etype label{
             margin: 10px 0;
             color: #000000;
             font-weight: normal;
         }
+
 
 
     </style>
@@ -100,10 +129,11 @@
         <ul>
             <li><a href="#panel-1">基本资料</a></li>
             <li><a href="#panel-2">拜访记录</a></li>
+            <li><a href="#panel-3">活动信息</a></li>
         </ul>
         <div id="panel-1">
             <form action="{:U('parkinfo')}" method="post" enctype="multipart/form-data">
-                <input type="hidden"  name="id" value="{$park_info[id]}" />
+                <input type="hidden"  class="parkid" name="id" value="{$park_info[id]}" />
                 <table class="zebra" style="width: 95%;margin: 0 auto;margin-top: 10px;overflow: hidden">
                     <tr>
                         <td colspan=2>
@@ -117,16 +147,8 @@
                         <td>
                             <span class="required">*</span>
                             <input type="text" id="parkname" name="name" value="{$park_info[name]}" />
-                            <a class="mui-btn  mui-btn-primary" style="margin-left:20px;" href="{:U('index').'?lat='.$park_info[lat].'&lng='.$park_info[lng]}">附近停车场</a>
-                        </td>
-                    </tr>
-                    <tr>
-                        <td><label for="shortname">停车场缩写：</label></td>
-                        <td><span class="required">*</span>
-                            <input type="text" id="shortname" name="shortname" value="{$park_info[shortname]}" />
-                            <button type='button' id="checkBtn" class='mui-btn-primary' style="margin-left:20px;">检查缩写</button>
-                            <span id="checkF" style="color:red"></span>
-                            <span id="checkS" style="color:green"></span>
+                            <a class="mui-btn  mui-btn-primary" style="margin-left:20px;" target="_blank" href="{:U('index').'?lat='.$park_info[lat].'&lng='.$park_info[lng]}">附近停车场</a>
+                            <span id="nameError"></span>
                         </td>
                     </tr>
                     <tr>
@@ -158,6 +180,7 @@
                         <td>
                             <span class="required">*</span>
                             <input type="text" id="enterplace" name="address" value= "{$park_info[address]}" />
+                            <span id="enterError" style="color: red"></span>
                         </td>
                     </tr>
                     <tr>
@@ -167,7 +190,7 @@
                         </td>
                     </tr>
                     <tr>
-                        <td><label for="enterplace">城市：</label></td>
+                        <td><label for="entercity">城市：</label></td>
                         <td>
                             <select id="entercity">
                                 <option value ="021">上海</option>
@@ -206,6 +229,7 @@
 
                                 if(array_key_exists($parkstyle, C('PARK_STYLE_CAT'))){
                                     echo "<br/><p style='margin: 0px'>".C('PARK_STYLE_CAT')[$parkstyle].":</p>";
+                                    $key =  1;
                                 }
 
                                 $token = '|'.$parkstyle.'|';
@@ -235,12 +259,12 @@
                                 <li>
                                     <p class="pickerTitle"> 周一至周五:</p>
                                     <div class="input-group  date timepicker " data-date-format="hh:ii:00">
-                                        <input class="form-control"  id="startwork" type="text" name="startwork" value= "{$park_info[startmon]}">
+                                        <input class="form-control"  id="startwork" type="text" name="startwork" value= "<?php echo ($park_info[startmon] == '00:00:00' && $park_info[endmon] == '00:00:00') ? null: $park_info[startmon];?>">
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
                                     </div>
                                     <p class="pickerText"> - </p>
                                     <div class="input-group  date timepicker " data-date-format="hh:ii:00" style="float: left;padding: 5px;">
-                                        <input class="form-control" id="endwork" type="text" name="endwork" value= "{$park_info[endmon]}">
+                                        <input class="form-control" id="endwork" type="text" name="endwork" value= "<?php echo ($park_info[startmon] == '00:00:00' && $park_info[endmon] == '00:00:00') ? null: $park_info[endmon];?>">
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
                                     </div>
                                     <div class="allday"><label><input class="allcheck" type="checkbox" value="startwork" />全天 </label></div>
@@ -248,12 +272,12 @@
                                 <li>
                                     <p class="pickerTitle"> 周六周日:</p>
                                     <div class="input-group  date timepicker " data-date-format="hh:ii:00">
-                                        <input class="form-control"  id="startweek" type="text" name="startweek" value= "{$park_info[startsat]}">
+                                        <input class="form-control"  id="startweek" type="text" name="startweek" value= "<?php echo ($park_info[startsat] == '00:00:00' && $park_info[endsat] == '00:00:00') ? null: $park_info[startsat];?>">
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
                                     </div>
                                     <p class="pickerText"> - </p>
                                     <div class="input-group  date timepicker " data-date-format="hh:ii:00" style="float: left;padding: 5px;">
-                                        <input class="form-control" id="endweek" type="text" name="endweek" value= "{$park_info[endsat]}">
+                                        <input class="form-control" id="endweek" type="text" name="endweek" value= "<?php echo ($park_info[startsat] == '00:00:00' && $park_info[endsat] == '00:00:00') ? null: $park_info[endsat];?>">
                                         <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
                                     </div>
                                     <div class="allday"><label><input class="allcheck" type="checkbox" value="startweek" />全天 </label></div>
@@ -340,82 +364,36 @@
                         </td>
                     </tr>
                     <tr>
-                        <td><label for="etype">销售驻场活动：</label></td>
-                        <td>
-                            <p id="etype">
-                            <?php
-                                $e_t = $park_info[e_t];
-                                foreach(C('PARK_E_TYPE') as $key => $value){
-                                    if(($e_t & pow(2,$key-1)) == pow(2,$key-1)){
-                                        echo ' <label><input name="e_t[]" type="checkbox" checked value="'.$key.'" />'.$value.'</label>';
-                                    }
-                                    else{
-                                        echo ' <label><input name="e_t[]" type="checkbox" value="'.$key.'" />'.$value.'</label>';
-                                    }
-                                }
-                            ?>
-                            </p>
-                        </td>
+                        <td><label for="responsible">销售负责人：</label></td>
+                        <td><input type="hidden" name="responsible" value="{$park_info[responsible]}" readonly />
+                            <input type="text" id="responsible"  value="{$resName}" readonly /> </td>
                     </tr>
-
                     <tr>
-                        <td><label for="e_p">优惠金额：</label></td>
-                        <td><input type="text" id="e_p" name="e_p" value="{$park_info[e_p]}" /> 元</td>
-                    </tr>
-
-                    <tr>
-                        <td><label for="e_start">驻场开始时间：</label></td>
+                        <td><label for="shortname">停车场缩写：</label></td>
                         <td>
-                            <input type="text" id="e_start" class="dateTimepicker" name="e_start" value="{$park_info[e_start]}" data-date-format="yyyy-mm-dd hh:ii:ss" />
+                            <input type="text" id="shortname" name="shortname" value="{$park_info[shortname]}" readonly/>
+                            <!--<button type='button' id="checkBtn" class='mui-btn-primary' style="margin-left:20px;">检查缩写</button>-->
+                            <!--<span id="checkF" style="color:red"></span>-->
+                            <!--<span id="checkS" style="color:green"></span>-->
                         </td>
                     </tr>
                     <tr>
-                        <td><label for="e_end">驻场结束时间：</label></td>
+                        <td><label for="responsible">信息化状态：</label></td>
                         <td>
-                            <input type="text" id="e_end" class="dateTimepicker" name="e_end" value="{$park_info[e_end]}" data-date-format="yyyy-mm-dd hh:ii:ss" />
-                        </td>
-                    </tr>
 
-                    <tr>
-                        <td><label for="actype">停车场补助活动：</label></td>
-                        <td>
-                            <select id="actype" name="actype" style="width: auto">
+                            <input type="hidden" name="status" value="<?php echo $park_info[status]%10?>">
+                            <select id="infostatus" name="infostatus">
                                 <?php
-                                    $acType = C('PARK_AC_TYPE');
-                                    foreach($acType as $key => $value){
-                                if($key == $park_info[actype]){
-                                echo "<option value=$key  selected=selected>$value</option>";
-                                }
-                                else{
-                                echo  "<option value=$key >$value</option>";
-                                }
-                                }
+                                    $parkInf = C('PARK_INF');
+                                    foreach($parkInf as $k => $v){
+                                        $selected = '';
+                                        if(intval($park_info[status]/10)==$k){
+                                            $selected = 'selected="selected"';
+                                        }
+                                        echo '<option value='.($k*10).' '.$selected.'>'.$v.'</option>';
+                                    }
                                 ?>
-
                             </select>
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td><label for="acscore">活动积分：</label></td>
-                        <td><input type="text" id="acscore" name="acscore" value="{$park_info[acscore]}" /> </td>
-                    </tr>
-
-                    <tr>
-                        <td><label for="acendtime">活动截止时间：</label></td>
-                        <td>
-                            <input type="text" id="acendtime" name="acendtime" value="{$park_info[acendtime]}" data-date-format="yyyy-mm-dd" />
-                        </td>
-                    </tr>
-
-                    <tr>
-                        <td><label for="responsible">销售负责人ID：</label></td>
-                        <td><input type="text" id="responsible" name="responsible" value="{$park_info[responsible]}" /> </td>
-                    </tr>
-
-                    <tr>
-                        <td colspan=2>
-                           <button type='button' class='simulateEnter mui-btn-danger'>模拟入库</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' class='simulateLeave mui-btn-danger'>模拟出库</button>
                         </td>
                     </tr>
                     <tr>
@@ -430,7 +408,7 @@
 
         </div>
         <div id="panel-2">
-                <table style="display: flex;width: 95%;margin: 0 auto;margin-top: 10px">
+                <table>
                     <tr>
                         <td>
                             <fieldset>
@@ -450,20 +428,8 @@
                                             }
                                         ?>
                                     </select>
-                                    <br>
-                                    信息化状态：
-                                    <select id="infostatus" name="infostatus">
-                                        <?php
-                                            $parkInf = C('PARK_INF');
-                                            foreach($parkInf as $k => $v){
-                                                $selected = '';
-                                                if(intval($park_info[status]/10)==$k){
-                                                    $selected = 'selected="selected"';
-                                                }
-                                                echo '<option value='.($k*10).' '.$selected.'>'.$v.'</option>';
-                                            }
-                                        ?>
-                                    </select>
+
+                                    <input type="hidden" name="infostatus" value="<?php echo intval($park_info[status]/10)*10?>" />
 
                                     <input type="submit" class="mui-btn mui-btn-success mui-btn-blue" style="margin-top: 1px" value="保存合作状态"/>
                                 </form>
@@ -564,7 +530,8 @@
                         <button type="button" class="mui-btn mui-btn-success mui-btn-block" id="addContact">添加联系人</button>
                         </fieldset>
                     </td>
-                    </tr><tr>
+                    </tr>
+                    <tr>
                     <td>
                         <fieldset>
                             <legend>车场管理员:</legend>
@@ -638,13 +605,101 @@
                             <button type="button" class="mui-btn mui-btn-success mui-btn-block" id="addAdmin">添加管理员</button>
                         </fieldset>
                     </td>
-
                 </table>
+        </div>
+        <div id="panel-3">
+            <div>
+                <fieldset>
+                    <legend>销售驻场活动:</legend>
+                    <form action="{:U('zhuchang_ac')}" method=post>
+                        <input type='hidden'  name='parkid' value={$park_info[id]} />
+                        <ul>
+                            <li>
+                                <label for="etype">活动优惠：</label>
+                                <span id="etype">
+                                    <?php
+                                    $e_t = $park_info[e_t];
+                                    foreach(C('PARK_E_TYPE') as $key => $value){
+                                    if(($e_t & pow(2,$key-1)) == pow(2,$key-1)){
+                                    echo ' <label><input name="e_t[]" type="checkbox" checked value="'.$key.'" />'.$value.'</label>';
+                                    }
+                                    else{
+                                    echo ' <label><input name="e_t[]" type="checkbox" value="'.$key.'" />'.$value.'</label>';
+                                    }
+                                    }
+                                    ?>
+                                </span>
+                            </li>
+                            <li>
+                                <label for="e_p">优惠金额：</label>
+                                <input type="text" id="e_p" name="e_p" value="<?php echo ($park_info[e_p]==0.0)? null:$park_info[e_p] ?>" /> 元
+                            </li>
+                            <li>
+                                <label for="e_start">驻场开始时间：</label>
+                                <input type="text" id="e_start" class="dateTimepicker" name="e_start" value="<?php echo ($park_info[e_start]=='0000-00-00 00:00:00')? null:$park_info[e_start] ?>" data-date-format="yyyy-mm-dd hh:ii:ss" />
+                            </li>
+                            <li>
+                                <label for="e_end">驻场结束时间：</label>
+                                <input type="text" id="e_end" class="dateTimepicker" name="e_end" value="<?php echo ($park_info[e_end]=='0000-00-00 00:00:00')? null:$park_info[e_end] ?>" data-date-format="yyyy-mm-dd hh:ii:ss" />
+                            </li>
+                            <li style="text-align: center">
+                                <input type="submit" class="mui-btn mui-btn-success mui-btn-blue" value="保存驻场活动"/>
+                            </li>
+                        </ul>
+                    </form>
+                </fieldset>
+            </div>
+
+           <div>
+               <fieldset>
+                   <legend>停车场补助活动:</legend>
+                   <form action="{:U('buzhu_ac')}" method=post>
+                       <input type='hidden'  name='parkid' value={$park_info[id]} />
+                       <ul>
+                           <li>
+                               <label for="actype">补助活动：</label>
+                               <select id="actype" name="actype" style="width: auto">
+                                   <?php
+                                            $acType = C('PARK_AC_TYPE');
+                                            foreach($acType as $key => $value){
+                                   if($key == $park_info[actype]){
+                                   echo "<option value=$key  selected=selected>$value</option>";
+                                   }
+                                   else{
+                                   echo  "<option value=$key >$value</option>";
+                                   }
+                                   }
+                                   ?>
+
+                               </select>
+                           </li>
+                           <li>
+                               <label for="acscore">活动积分：</label>
+                               <input type="text" id="acscore" name="acscore" value="{$park_info[acscore]}" />
+                           </li>
+                           <li>
+                               <label for="acendtime">活动截止时间：</label>
+                               <input type="text" id="acendtime" name="acendtime" value="{$park_info[acendtime]}" data-date-format="yyyy-mm-dd" />
+                           </li>
+                           <li style="text-align: center">
+                               <input type="submit" class="mui-btn mui-btn-success mui-btn-blue" value="保存补助活动"/>
+                           </li>
+                       </ul>
+                   </form>
+               </fieldset>
+           </div>
+            <div>
+                <fieldset>
+                    <legend>模拟操作:</legend>
+                    <div style="text-align: center;">
+                        <button type='button' class='simulateEnter mui-btn-danger'>模拟入库</button>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;<button type='button' class='simulateLeave mui-btn-danger'>模拟出库</button>
+                    </div>
+                </fieldset>
+            </div>
 
         </div>
-        </div>
 
-      
+        </div>
     </div>
 </block>
 
@@ -658,6 +713,8 @@
     <script type="text/javascript" src="__STATIC__/ueditor/ueditor.all.js"></script>
     <script type="text/javascript" src="__STATIC__/ueditor/lang/zh-cn/zh-cn.js"></script>
     <script>
+        $(".tabs").tabs();
+
         var um = UE.getEditor('chargingrules',{
             toolbars: [
                 ['source', 'undo', 'redo', "forecolor"]
@@ -962,12 +1019,59 @@
     </script>
 <script type="text/javascript">
     $(function(){
+        //检查名字重复
+        $('#parkname').focus(function(){
+            $('#nameError').html("");
+        });
+        $('#parkname').blur(function(){
+            var name = $('#parkname').val();
+            if(name != ''){
+                $.ajax({
+                    url:"{:U('checkName')}",
+                    type:'get',
+                    async : true,
+                    data:{id:$('.parkid').val(),name:name},
+                    success:function(data){
+                        var dataObj=eval("("+data+")");//转换为json对象
+                        if(dataObj.check){
+                            $('#nameError').html("");
+                        }
+                        else{
+                            $('#nameError').html("Sorry,已经存在<a target='_blank' href='{:U('parkinfo')}"+ "/parkid/"+dataObj.id+"'>"+dataObj.name+"</a>");
+                        }
+                    }
+                });
+            }
+        });
+        //检查地址重复
+        $('#enterplace').focus(function(){
+            $('#enterError').html("");
+        });
+        $('#enterplace').blur(function(){
+            var addr = $('#enterplace').val();
+            if(addr != ''){
+                $.ajax({
+                    url:"{:U('checkAddress')}",
+                    type:'get',
+                    async : true,
+                    data:{id:$('.parkid').val(),addr:addr},
+                    success:function(data){
+                        var dataObj=eval("("+data+")");//转换为json对象
+                        if(dataObj.check){
+                            $('#enterError').html("");
+                        }
+                        else{
+                            $('#enterError').html("Sorry,<a target='_blank' href='{:U('parkinfo')}"+ "/parkid/"+dataObj.id+"'>"+dataObj.name+"</a>已经使用该地址");
+                        }
+                    }
+                });
+            }
+        });
         $('#btgetloc').Maplocation(function(position){
                 console.log(position);
                 $('[name=lng]').val(position.lng);
                 $('[name=lat]').val(position.lat);
             },$('#enterplace'));
-        $(".tabs").tabs();
         $('#addContact').click(function(){
                 //var temp = "<li class='myborder'>姓名：<input type='text'  name='contactname[]' /> 性别：<select  name='contactgender[]'><option value='1'>男</option><option value='0' selected='selected'>女</option></select> 电话：<input type='text'  name='contactphone[]' value='' /> 职务：<input type='text'  name='contactjob[]' value='' /> <button type='button' class='removeContact'>删除</button></li>";
 

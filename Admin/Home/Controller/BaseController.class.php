@@ -221,6 +221,7 @@ class BaseController extends \Think\Controller {
                     sendMail('dubin@duduche.me',"[自动红包-紧张]", "自动红包已经发完，请尽快补充！红包ID：".$autoArr[$key]);
                     return null;
                 }
+                break;
             }
         }
 

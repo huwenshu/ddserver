@@ -117,7 +117,11 @@ class PublicController extends BaseController {
     		$jsondata = $map122_sz;
     		$dbname = 'test_122park_sz';
     		$qurl = 'http://www.122park.com/sz/mapquery.php?sidinfo=';
-    	}else{
+        }else if($city=='bj'){
+            $jsondata = $map122_bj;
+            $dbname = 'test_122park_bj';
+            $qurl = 'http://www.122park.com/mapquery.php?sidinfo=';
+        }else{
     		$jsondata = $map122_sh;
     		$dbname = 'test_122park_sh';
     		$qurl = 'http://www.122park.com/sh/mapquery.php?sidinfo=';
@@ -224,6 +228,48 @@ class PublicController extends BaseController {
             sendMail("dubin@duduche.me", $title, $content);
         }
 
+    }
+
+    public function cleanData(){
+        $ParkInfo = M('ParkInfo');
+        $parkList = $ParkInfo->select();
+        $count = 0;
+        foreach($parkList as $value){
+            $change = false;
+            $rules = $value['chargingrules'];
+            $rules_r = $rules;
+            if(strpos($rules,'首停') !== false){
+                if(strpos($rules,'超过') === false && strpos($rules,'超时') === false){
+                    $change = true;
+                    $rules = str_replace("首停","", $rules);
+                }
+            }
+
+            if(strpos($rules,'元/时') !== false){
+                $change = true;
+                $rules = str_replace("元/时","元/小时", $rules);
+            }
+
+            $pattern = '/(\d+)(元)?封顶/i';
+            $replacement = '封顶${1}元';
+            if(preg_match($pattern, $rules)){
+                $change = true;
+                $rules = preg_replace($pattern, $replacement, $rules);
+            }
+
+            if($change){
+                $count ++;
+                echo $rules_r;
+                echo $rules;
+                echo '<br>';
+                $data = array();
+                $data['id'] = $value['id'];
+                $data['chargingrules'] = $rules;
+                $ParkInfo->save($data);
+            }
+        }
+
+        echo "总数：".$count;
     }
 
 }

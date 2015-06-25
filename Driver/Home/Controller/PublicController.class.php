@@ -19,7 +19,7 @@ class PublicController extends BaseController {
     /**
      * 用户登录
      */
-    public function login($phone = null){
+    public function login($phone = null, $env = null){
         $uid=null;
 
         $Driver = M('DriverInfo');
@@ -28,12 +28,19 @@ class PublicController extends BaseController {
 
         if(!empty($data)){
             $uid = $data['id'];
-            //todo:更新车牌号
+            if($env){
+                $map = array('id' => $uid);
+                $temp['env'] = $env;
+                $Driver->where($map)->save($temp);
+            }
         }
         else{
             $arr['telephone'] = $phone;
             //$arr['carid'] = $carid;
             $arr['createtime'] = date('Y-m-d H:i:s');
+            if($env){
+                $arr['env'] = $env;
+            }
             $uid = $Driver->add($arr);
         }
         $uuid = $this->createUUID($uid);
@@ -441,14 +448,17 @@ class PublicController extends BaseController {
 	}
     
     //返回附近停车场接口2
-    public function search2($lat,$lng){
+    public function search2($lat,$lng,$curlat=0,$curlng=0,$pushid=''){
         //CVS记录查询的位置信息
         $msgs = array();
         $msgs['ip'] = $_SERVER['REMOTE_ADDR'];//用户ip
         $msgs['uid'] = $this->uid;//操作者id
+        $msgs['curlat'] = $curlat;
+        $msgs['curlng'] = $curlng;//当前值
         $msgs['lat'] = $lat;
         $msgs['lng'] = $lng;//新值
-        locCSV($msgs);
+        $msgs['pushid'] = $pushid;
+        locCSV2($msgs);
         
         $this->lat = $lat;
         $this->lng = $lng;
@@ -616,9 +626,9 @@ class PublicController extends BaseController {
         $dis1 = $this->getDistance($v1['lat'],$v1['lng'],$this->lat,$this->lng);
         $dis2 = $this->getDistance($v2['lat'],$v2['lng'],$this->lat,$this->lng);
         
-        //实惠标记
-        $sh1 = (strpos($v1['style'],'|SH|') === false)?0:1;
-        $sh2 = (strpos($v2['style'],'|SH|') === false)?0:1;
+        //实惠标记 + 在开放时间段
+        $sh1 = ((strpos($v1['style'],'|SH|') !== false) && ($this->isClosedNow($v1) === false)) ? 1:0;
+        $sh2 = ((strpos($v2['style'],'|SH|') !== false) && ($this->isClosedNow($v2) === false)) ? 1:0;
         
         //先把合作+信息化的都改成合作。
         $v1['status'] = ($v1['status'] == 14 ? 4 : $v1['status']);
@@ -908,7 +918,20 @@ class PublicController extends BaseController {
         $this->ajaxOk($result);
     }
     
-    public function getfreepark($lat, $lng, $province, $city, $district=null, $note=null, $page, $max){
+    public function getfreepark($lat, $lng, $province, $city, $district=null, $note=null, $page=0, $max=10, $pushid=''){
+        if($page == 0){//do log
+            $msgs = array();
+            $msgs['ip'] = $_SERVER['REMOTE_ADDR'];//用户ip
+            $msgs['uid'] = $this->uid;//操作者id
+            $msgs['lat'] = $lat;
+            $msgs['lng'] = $lng;//新值
+            $msgs['province'] = $province;
+            $msgs['city'] = $city;
+            $msgs['district'] = $district;
+            $msgs['note'] = $note;
+            $msgs['pushid'] = $pushid;
+            locFreeList($msgs);
+        }
         if(!$max){
             $max = 10;
         }

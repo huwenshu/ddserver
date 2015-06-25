@@ -139,9 +139,9 @@ class WeixinController extends BaseController {
 		$_openid  =  (string)trim($postObj->FromUserName);
 		$_msgType =  (string)trim($postObj->MsgType);
 
-		$nearURL = "http://duduche.me/driver.php/home/weixin/redirectURL/m/near/openid/".$_openid;
-		$findURL = "http://duduche.me/driver.php/home/weixin/redirectURL/m/find/openid/".$_openid;
-		$feeURL  = "http://duduche.me/driver.php/home/weixin/redirectURL/m/fee/openid/".$_openid;
+		$nearURL = "http://duduche.me/driver.php/home/weixin/redirectURL/m/map/openid/".$_openid;
+        $disURL = "http://duduche.me/driver.php/home/weixin/redirectURL/m/discover/openid/".$_openid;
+        $myURL  = "http://duduche.me/driver.php/home/weixin/redirectURL/m/userinfo/openid/".$_openid;
 
 		if ($_msgType == 'event') {
 			$_event = (string)$postObj->Event;
@@ -152,9 +152,9 @@ class WeixinController extends BaseController {
 
 1-找附近的空车位：<a href="'.$nearURL.'">点击这里>></a>
 
-2-搜索地址找空车位：<a href="'.$findURL.'">点击这里>></a>
+2-免费和优惠活动：<a href="'.$disURL.'">点击这里>></a>
 
-3-停车缴费：<a href="'.$feeURL.'">点击这里>></a>
+3-停车场预约记录：<a href="'.$myURL.'">点击这里>></a>
 
 目前只在上海提供服务，其他城市正在准备中。';
 				$resultStr = sprintf ( C('HINT_TPL'), $_openid, C('USERNAME_WEIXIN'), time(), 'text', $content );
@@ -236,23 +236,8 @@ class WeixinController extends BaseController {
 		}
 
         $baseURL = "http://static.duduche.me/redirect/user/indexhtml.php";
-		$nearURL = $baseURL."?m=map&openid=".$openid.$tmpStr;
-		$findURL =  $baseURL."?m=mapsearch&openid=".$openid.$tmpStr;
-		$feeURL  =  $baseURL."?m=myjiesuan&openid=".$openid.$tmpStr;
-        $orderURL  =  $baseURL."?m=myorder&openid=".$openid.$tmpStr;
-        $userinfoURL  =  $baseURL."?m=userinfo&openid=".$openid.$tmpStr;
-        $couponURL  =  $baseURL."?m=coupon&openid=".$openid.$tmpStr;
-
-
-		switch($m){
-			case 'near' : header("Location:".$nearURL); break;
-			case 'find' : header("Location:".$findURL); break;
-			case 'fee' : header("Location:".$feeURL); break;
-            case 'order' : header("Location:".$orderURL); break;
-            case 'userinfo' : header("Location:".$userinfoURL); break;
-            case 'coupon' : header("Location:".$couponURL); break;
-			default : header("Location:".$nearURL); break;
-		}
+        $reURL = $baseURL."?m=".$m."&openid=".$openid.$tmpStr;
+        header("Location:".$reURL);
 
         $this->_exit();
 	}
