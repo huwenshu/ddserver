@@ -1029,7 +1029,7 @@
                 $.ajax({
                     url:"{:U('checkName')}",
                     type:'get',
-                    async : false,
+                    async : true,
                     data:{id:$('.parkid').val(),name:name},
                     success:function(data){
                         var dataObj=eval("("+data+")");//转换为json对象
@@ -1053,7 +1053,7 @@
                 $.ajax({
                     url:"{:U('checkAddress')}",
                     type:'get',
-                    async : false,
+                    async : true,
                     data:{id:$('.parkid').val(),addr:addr},
                     success:function(data){
                         var dataObj=eval("("+data+")");//转换为json对象
