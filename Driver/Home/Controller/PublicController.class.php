@@ -19,7 +19,7 @@ class PublicController extends BaseController {
     /**
      * 用户登录
      */
-    public function login($phone = null){
+    public function login($phone = null, $env = null){
         $uid=null;
 
         $Driver = M('DriverInfo');
@@ -28,12 +28,19 @@ class PublicController extends BaseController {
 
         if(!empty($data)){
             $uid = $data['id'];
-            //todo:更新车牌号
+            if($env){
+                $map = array('id' => $uid);
+                $temp['env'] = $env;
+                $Driver->where($map)->save($temp);
+            }
         }
         else{
             $arr['telephone'] = $phone;
             //$arr['carid'] = $carid;
             $arr['createtime'] = date('Y-m-d H:i:s');
+            if($env){
+                $arr['env'] = $env;
+            }
             $uid = $Driver->add($arr);
         }
         $uuid = $this->createUUID($uid);

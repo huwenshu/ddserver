@@ -117,7 +117,11 @@ class PublicController extends BaseController {
     		$jsondata = $map122_sz;
     		$dbname = 'test_122park_sz';
     		$qurl = 'http://www.122park.com/sz/mapquery.php?sidinfo=';
-    	}else{
+        }else if($city=='bj'){
+            $jsondata = $map122_bj;
+            $dbname = 'test_122park_bj';
+            $qurl = 'http://www.122park.com/mapquery.php?sidinfo=';
+        }else{
     		$jsondata = $map122_sh;
     		$dbname = 'test_122park_sh';
     		$qurl = 'http://www.122park.com/sh/mapquery.php?sidinfo=';
