@@ -151,4 +151,7 @@ return array(
     //附近停车场距离，单位米
     'NEAR_DIS' => 500,
 
+    //规则说明相对地址
+    'PARK_RULES_PATH' => './Public/Uploads/parkrules/rules.html',
+
 );

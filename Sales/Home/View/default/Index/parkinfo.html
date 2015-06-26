@@ -138,7 +138,7 @@
                     <tr>
                         <td colspan=2>
                             <p style="text-align: center;margin-top: 20px;">
-                                <a class="mui-btn  mui-btn-primary" href="{:U('parkinfo')}" >新建</a> <a class="mui-btn  mui-btn-primary" style="margin: 0 10px;">下一个</a> <input type="submit" />
+                                <a class="mui-btn  mui-btn-primary" href="{:U('parkinfo')}" >新建</a> <a class="mui-btn  mui-btn-primary" style="margin: 0 10px;">下一个</a> <input type="submit" class="baseinfo" value="提交"/>
                             </p>
                         </td>
                     </tr>
@@ -399,7 +399,7 @@
                     <tr>
                         <td colspan=2>
                             <p style="text-align: center;margin-top: 20px;">
-                                <a class="mui-btn  mui-btn-primary">新建</a> <a class="mui-btn  mui-btn-primary" style="margin: 0 10px;">下一个</a> <input type="submit" />
+                                <a class="mui-btn  mui-btn-primary">新建</a> <a class="mui-btn  mui-btn-primary" style="margin: 0 10px;">下一个</a> <input type="submit" class="baseinfo" value="提交"/>
                             </p>
                         </td>
                     </tr>
@@ -1331,6 +1331,135 @@
                 $('#'+end).val(null);
             }
         });
+
+        //基本资料提交前JS验证
+        $('.baseinfo').click(function(){
+            var error = "";
+
+           //验证停车场名字：不能为空+以停车场结尾
+            if($('#parkname').val() == ''){
+                error += "停车场名字不能为空！\n";
+            }
+
+            //验证入口地址：不能为空
+            if($('#enterplace').val() == ''){
+                error += "入口地址不能为空！\n";
+            }
+
+            //验证开放时间段：不能一个为空，另一个有时间
+            var t1 = $('#startwork').val() == '' ? 0 : 1;
+            var t2 = $('#endwork').val() == '' ? 0 : 1;
+            var t3 = $('#startweek').val() == '' ? 0 : 1;
+            var t4 = $('#endweek').val() == '' ? 0 : 1;
+            if((t1+t2 == 1) || (t3+t4 == 1)){
+                error += "开放时间段填写不完整！\n";
+            }
+
+            //验证满时间段：不能一个为空，另一个有时间
+            var m1 = $('#fullstartwork').val() == '' ? 0 : 1;
+            var m2 = $('#fullendwork').val() == '' ? 0 : 1;
+            var m3 = $('#fullstartweek').val() == '' ? 0 : 1;
+            var m4 = $('#fullendweek').val() == '' ? 0 : 1;
+            if((m1+m2 == 1) || (m3+m4 == 1)){
+                error += "满时间段填写不完整！\n";
+            }
+
+            //验证空闲时间段：不能一个为空，另一个有时间
+            var k1 = $('#freestartwork').val() == '' ? 0 : 1;
+            var k2 = $('#freeendwork').val() == '' ? 0 : 1;
+            var k3 = $('#freestartweek').val() == '' ? 0 : 1;
+            var k4 = $('#freeendweek').val() == '' ? 0 : 1;
+            if((k1+k2 == 1) || (k3+k4 == 1)){
+                error += "空闲时间段填写不完整！\n";
+            }
+
+            //验证满和空闲时间段：是否有交集
+            var ms1 = $('#fullstartwork').val();
+            var me1 = $('#fullendwork').val();
+            var ks1 = $('#freestartwork').val();
+            var ke1 = $('#freeendwork').val();
+            var ms2 = $('#fullstartweek').val();
+            var me2 = $('#fullendweek').val();
+            var ks2 = $('#freestartweek').val();
+            var ke2 = $('#freeendweek').val();
+            if(ms1 != '' && me1 != '' && ke1 != '' && ks1 != ''){
+                if(me1 < ms1 && ke1 < ks1){
+                    error += "周一至周五:满和空闲时间段交叉！\n";
+                }
+                else if(me1 < ms1)
+                {
+                    if(ks1 >= me1 && ke1 <= ms1){
+                        error +='';
+                    }
+                    else{
+                        error += "周一至周五:满和空闲时间段交叉！\n";
+                    }
+                }
+                else if(ke1 < ks1)
+                {
+                    if(ms1 >= ke1 && me1 <= ks1){
+                        error +='';
+                    }
+                    else{
+                        error += "周一至周五:满和空闲时间段交叉！\n";
+                    }
+                }
+                else{
+                    if(ks1 >= me1 || ke1 <= ms1){
+                        error +='';
+                    }
+                    else{
+                        error += "周一至周五:满和空闲时间段交叉！\n";
+                    }
+
+                }
+            }
+
+            if(ms2 != '' && me2 != '' && ke2 != '' && ks2 != ''){
+                if(me2 < ms2 && ke2 < ks2){
+                    error += "周六周日:满和空闲时间段交叉！\n";
+                }
+                else if(me2 < ms2)
+                {
+                    if(ks2 >= me2 && ke2 <= ms2){
+                        error +='';
+                    }
+                    else{
+                        error += "周六周日:满和空闲时间段交叉！\n";
+                    }
+                }
+                else if(ke2 < ks2)
+                {
+                    if(ms2 >= ke2 && me2 <= ks2){
+                        error +='';
+                    }
+                    else{
+                        error += "周六周日:满和空闲时间段交叉！\n";
+                    }
+                }
+                else{
+                    if(ks2 >= me2 || ke2 <= ms2){
+                        error +='';
+                    }
+                    else{
+                        error += "周六周日:满和空闲时间段交叉！\n";
+                    }
+
+                }
+            }
+
+
+            //根据错误提交
+            if(error == ""){
+                return true;
+            }
+            else{
+                alert(error);
+                return false;
+            }
+
+        });
+
 
     })
 </script>
