@@ -156,7 +156,7 @@ class WeixinController extends BaseController {
 
 3-停车场预约记录：<a href="'.$myURL.'">点击这里>></a>
 
-目前只在上海提供服务，其他城市正在准备中。';
+你也可以<a href="http://driver.duduche.me/driver.php/home/public/wx_app_down/">点击这里</a>下载我们的APP来使用，目前只在上海提供服务，其他城市正在准备中。';
 				$resultStr = sprintf ( C('HINT_TPL'), $_openid, C('USERNAME_WEIXIN'), time(), 'text', $content );
 				echo  $resultStr;
 			}
