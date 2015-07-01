@@ -96,6 +96,8 @@
                                             <label style="font-weight: normal;"><input type="checkbox" name="parkstate[]" value="GPS" <?php if(array_search('GPS',$state) !== false){echo "checked";}?>>经纬度缺失</label>
                                             <label style="font-weight: normal;"><input type="checkbox" name="parkstate[]" value="NOPEN" <?php if(array_search('NOPEN',$state) !== false){echo "checked";}?>>不对外开放</label>
                                             <label style="font-weight: normal;"><input type="checkbox" name="parkstate[]" value="CORP" <?php if(array_search('CORP',$state) !== false){echo "checked";}?>>已合作停车场</label>
+                                            <label style="font-weight: normal;"><input type="checkbox" name="parkstate[]" value="NPUB" <?php if(array_search('NPUB',$state) !== false){echo "checked";}?>>未发布</label>
+                                            <label style="font-weight: normal;"><input type="checkbox" name="parkstate[]" value="MY" <?php if(array_search('MY',$state) !== false){echo "checked";}?>>我的停车场</label>
                                         </div>
                                     </li>
                                 </ul>
@@ -135,10 +137,10 @@
             $temp.= "[".C('PARK_COR')[$value['status']%10]."]";
 
             if($value['status']>=10){
-            $temp.= "[信息化]";
+            $temp.= "[已发布]";
             }
             else{
-            $temp.= "[未信息化]";
+            $temp.= "[未发布]";
             }
 
             if($isAuto){

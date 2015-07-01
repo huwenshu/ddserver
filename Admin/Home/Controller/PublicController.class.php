@@ -225,7 +225,7 @@ class PublicController extends BaseController {
             $content .= "停车场:".$value['name']." 过期时间:".$value['acendtime']."<br/><br/>";
         }
         if(!empty($parkList)){
-            sendMail("dubin@duduche.me", $title, $content);
+            sendMail(array("xubo@duduche.me","huweiwei@duduche.me","dubin@duduche.me",), $title, $content);
         }
 
     }

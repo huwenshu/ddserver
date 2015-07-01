@@ -94,6 +94,12 @@ class IndexController extends  BaseController {
                     if($value == 'CORP'){
                         $map['status'] = array('in', '4,14');
                     }
+                    if($value == 'NPUB'){
+                        $map['status'] = array('lt', '10');
+                    }
+                    if($value == 'MY'){
+                        $map['responsible'] = UID;
+                    }
                 }
 
             }

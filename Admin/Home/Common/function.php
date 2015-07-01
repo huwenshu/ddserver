@@ -19,7 +19,14 @@ function sendMail($to, $subject, $content) {
     $mail->Password = C('MAIL_PASSWORD') ; //邮箱密码
     $mail->From = C('MAIL_FROM'); //发件人地址（也就是你的邮箱地址）
     $mail->FromName = C('MAIL_FROMNAME'); //发件人姓名
-    $mail->AddAddress($to,"name");
+    if(is_array($to)){
+        foreach($to as $value){
+            $mail->AddAddress($value,"name");
+        }
+    }
+    else{
+        $mail->AddAddress($to,"name");
+    }
     $mail->WordWrap = 50; //设置每行字符长度
     $mail->IsHTML(C('MAIL_ISHTML')); // 是否HTML格式邮件
     $mail->CharSet=C('MAIL_CHARSET'); //设置邮件编码
