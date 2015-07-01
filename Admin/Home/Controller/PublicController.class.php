@@ -75,6 +75,76 @@ class PublicController extends BaseController {
         $verify->entry(1);
     }
     
+    public function parseFreeCsv(){
+        $excludes = array(//排除自己人的设备，或非来自设备的访问（第10字段）
+        10=>array('1d601e9ae58ed02dfdbbb8a1cd5a3fde92e0e34daaf7439e21cdfd013557fb74','ae4537a81c7c56518ae29a1b8d35f0f8','b96fa82c0d7f2c9fb006231673700119','b283b7837f84088172f652569dcd7751','')
+        );
+        $names = array(//文件列表
+            'freelist_20150629','freelist_20150630'
+        );
+        $total = 0;
+        $nofreenodata = 0;
+        foreach($names as $name){
+            $datas = readCSV($name,$excludes);
+            //echo '<br>'.$name.':<br>';print_r($datas);
+        }
+    }
+    
+    public function parseLocation($files='location2_20150629,location2_20150630'){
+        $excludes = array(//排除自己人的设备，或非来自设备的访问（第8字段）
+                          8=>array('1d601e9ae58ed02dfdbbb8a1cd5a3fde92e0e34daaf7439e21cdfd013557fb74','ae4537a81c7c56518ae29a1b8d35f0f8','b96fa82c0d7f2c9fb006231673700119','b283b7837f84088172f652569dcd7751','')
+                          );
+        $names = explode(',',$files);
+        $total = 0;
+        $cons = array('fn_dn'=>0,'fy_dn'=>0,'fn_dy'=>0,'fy_dy'=>0,'search'=>0);
+        $Park = M('ParkInfo');
+        $ParkFree = M('ParkFreeInfo');
+        foreach($names as $name){
+            $datas = readCSV($name,$excludes);
+            $total1 = count($datas);
+            $cons1 = array('fn_dn'=>0,'fy_dn'=>0,'fn_dy'=>0,'fy_dy'=>0,'search'=>0);
+            foreach($datas as $data){
+                if($data[3] != $data[5] || $data[4] != $data[6]){
+                    $cons1['search']++;
+                    $cons['search']++;
+                }
+                $lat = $data[5];
+                $lng = $data[6];
+                $gap = 0.004545;//0.002727;
+                $con = array();
+                $con['lat'] = array(array('gt',$lat - $gap),array('lt',$lat + $gap));
+                $con['lng'] = array(array('gt',$lng - $gap),array('lt',$lng + $gap));
+                $con['status'] = array('EGT', 4);
+                $count1 = $Park->where($con)->count();
+                
+                $con['status'] = 1;
+                $count2 = $ParkFree->where($con)->count();
+                
+                if($count1 > 0){
+                    if($count2 > 0){
+                        $cons1['fy_dy']++;
+                        $cons['fy_dy']++;
+                    }else{
+                        $cons1['fn_dy']++;
+                        $cons['fn_dy']++;
+                    }
+                }else{
+                    if($count2 > 0){
+                        $cons1['fy_dn']++;
+                        $cons['fy_dn']++;
+                    }else{
+                        $cons1['fn_dn']++;
+                        $cons['fn_dn']++;
+                    }
+                }
+            }
+            
+            $total += $total1;
+            echo '<br>'.$name.':<br>Total'.$total1.'<br>';print_r($cons1);
+        }
+        echo '<br><br>Total'.$total.'<br>';print_r($cons);
+    }
+    
     public function bd_decrypt_all()
 		{
 				$db = M('park_free_info');
@@ -89,7 +159,7 @@ class PublicController extends BaseController {
 				echo 'done:'.$count;
 		}
     
-    public function bd_decrypt($bd_lat=31.248700, $bd_lon=121.509710)
+    public function bd_decrypt($bd_lat=31.15601, $bd_lon=121.12323)
 		{
 				$x_pi = 3.14159265358979324 * 3000.0 / 180.0;
 		    $x = $bd_lon - 0.0065;
@@ -98,10 +168,12 @@ class PublicController extends BaseController {
 		    $theta = atan2($y, $x) - 0.000003 * cos($x * $x_pi);
 		    $gg_lon = $z * cos($theta);
 		    $gg_lat = $z * sin($theta);
+            
+            $ret = array('lat'=>$gg_lat,'lng'=>$gg_lon);
+            print_r($ret);
+            
+            return $ret;
 		    
-		    return array('lat'=>$gg_lat,'lng'=>$gg_lon);
-		    
-		    //echo $gg_lon.','.$gg_lat;
 		}
     
     public function test_park122($city='sh'){

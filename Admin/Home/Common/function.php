@@ -68,5 +68,30 @@ function takeCSV($msgs){
 
 }
 
+function readCSV($name,$excludes){
+    $retArr = array();
+    $filename =  C('CSV_LOG_PATH').'/'.$name.'.csv';
+    if (($handle = fopen($filename, "r")) !== FALSE) {
+        while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
+            $found = 0;
+            foreach($excludes as $k=>$v){
+                foreach($v as $str){
+                    if($str == $data[$k]){
+                        $found = 1;
+                        break;
+                    }
+                }
+                if($found){
+                    break;
+                }
+            }
+            if(!$found){
+                $retArr[] = $data;
+            }
+        }
+        fclose($handle);
+    }
+    return $retArr;
+}
 
 ?>
