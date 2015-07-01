@@ -141,7 +141,7 @@ class WeixinController extends BaseController {
 
 		$nearURL = "http://duduche.me/driver.php/home/weixin/redirectURL/m/map/openid/".$_openid;
         $disURL = "http://duduche.me/driver.php/home/weixin/redirectURL/m/discover/openid/".$_openid;
-        $myURL  = "http://duduche.me/driver.php/home/weixin/redirectURL/m/userinfo/openid/".$_openid;
+        $downURL  = "http://driver.duduche.me/driver.php/home/public/wx_app_down/";
 
 		if ($_msgType == 'event') {
 			$_event = (string)$postObj->Event;
@@ -150,13 +150,13 @@ class WeixinController extends BaseController {
 				$content = '欢迎您关注嘟嘟停车！我们专注于解决您的停车难问题。
 嘟嘟停车有如下功能，请点击下面的链接使用：
 
-1-找附近的空车位：<a href="'.$nearURL.'">点击这里>></a>
+1-找附近的停车场：<a href="'.$nearURL.'">点击这里>></a>
 
-2-免费和优惠活动：<a href="'.$disURL.'">点击这里>></a>
+2-免费停车点和商圈查询：<a href="'.$disURL.'">点击这里>></a>
 
-3-停车场预约记录：<a href="'.$myURL.'">点击这里>></a>
+3-Android版APP下载：<a href="'.$downURL.'">点击这里>></a>
 
-你也可以<a href="http://driver.duduche.me/driver.php/home/public/wx_app_down/">点击这里</a>下载我们的APP来使用，目前只在上海提供服务，其他城市正在准备中。';
+目前只在上海提供服务，其他城市正在准备中。';
 				$resultStr = sprintf ( C('HINT_TPL'), $_openid, C('USERNAME_WEIXIN'), time(), 'text', $content );
 				echo  $resultStr;
 			}
