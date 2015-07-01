@@ -1,0 +1,43 @@
+<extend name="Public/base"/>
+
+<block name="sidebar"></block>
+
+<block name="style">
+    <style>
+        body{padding: 0}
+
+        .saleitem{list-style:none;width:490px;padding:5px 0 5px 10px;}
+
+        .gray {background:#ddd;}
+    </style>
+</block>
+
+<block name="body">
+    <!-- 主体 -->
+    <div id="indexMain" class="index-main">
+        <ul class="mui-table-view">
+            <?php
+            foreach ($saleList as $key => $value) {
+            if($value[2] == 0) continue;
+            echo "<li name='saleitem' class='mui-table-view-cell'>
+                    <p>销售ID:".$value[0]."</p>
+                    <p>销售姓名:".$value[1]."</p>
+                    <p>新建数量:".$value[2]."</p>
+                    <p>对外发布数量:".$value[3]."</p>
+                    <p>不对外开放数量:".$value[4]."</p>
+                    <p>已合作数量:".$value[5]."</p>
+                </li>";
+            }
+            ?>
+        </ul>
+
+    </div>
+</block>
+
+<block name="script">
+    <script type="text/javascript">
+        $(function(){
+            $(".saleitem").hover(function() {$(this).addClass("gray")}, function() {$(this).removeClass("gray")});
+        });
+    </script>
+</block>

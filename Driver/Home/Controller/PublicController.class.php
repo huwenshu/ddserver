@@ -1030,6 +1030,18 @@ class PublicController extends BaseController {
         echo 'success';
 
     }
+    /*
+	 * @desc 微信下载APP链接
+	*/
+    public function wx_app_down(){
+        $agent = $_SERVER['HTTP_USER_AGENT'];
+        if (stristr($agent, 'Android')) {
+            header("Location:http://a.app.qq.com/o/simple.jsp?pkgname=com.parking.driverApp");
+        } else {
+            header("Location:http://duduche.me");
+        }
+    }
+
 	//测试区
 	public function testCreateGiftPack(){
 		print_r($this->_createGiftPack(0, 0, date("Y-m-d H:i:s"), date("Y-m-d H:i:s",time()+3600), date("Y-m-d H:i:s",time()), date("Y-m-d H:i:s",time()+7200), 1, rand(2,5), 100));

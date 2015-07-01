@@ -36,6 +36,11 @@ class IndexController extends  BaseController {
                 $con['_complex'] = $where;
             }
             $parks = $Park->where($con)->order('updatetime desc')->select();
+            $p_sum = $Park->count();
+            $c_sum = $Park->where(array('status' => array('in', '4,14')))->count();
+            $i_sum = $Park->where(array('status' => array('EGT', 10)))->count();
+            $n_sum = $Park->where(array('status' => array('LT', 10)))->count();
+            $this->sum = array($p_sum, $c_sum, $i_sum, $n_sum);
             $this->parks_info = $parks;
         	$this->meta_title = '首页 | 嘟嘟销售系统';
         	$this->display();
@@ -43,6 +48,72 @@ class IndexController extends  BaseController {
         else{
         	
         }
+    }
+
+    //高级搜索
+    public function adsearch(){
+
+            $searchname = I('get.searchname');
+            $openarea = I('get.openarea');
+            $parkstate = I('get.parkstate');
+
+            $Park = M('ParkInfo');
+            $map = array();
+            if(!empty($searchname)){
+                $where = array();
+                $where['name']  = array('like','%'.$searchname.'%');
+                $where['address']  = array('like','%'.$searchname.'%');
+                $where['_logic'] = 'or';
+                $map['_complex'] = $where;
+            }
+            if(!empty($openarea)){
+                $gps_lat = array();
+                $gps_lng = array();
+                $gap = 0.004545;//1km
+                foreach($openarea as $v){
+                    $tmp = explode('|', $v);
+                    $lat = $tmp[0];
+                    $lng = $tmp[1];
+                    array_push($gps_lat, array(array('gt',$lat-$gap),array('lt',$lat+$gap))) ;
+                    array_push($gps_lng, array(array('gt',$lng-$gap),array('lt',$lng+$gap))) ;
+                }
+                array_push($gps_lat, 'or');
+                array_push($gps_lng, 'or');
+                $map['lat'] = $gps_lat;
+                $map['lng'] = $gps_lng;
+            }
+            if(!empty($parkstate)){
+                foreach($parkstate as $key => $value){
+                    if($value == 'GPS'){
+                        $map['lat'] = 0.0;
+                        $map['lng'] = 0.0;
+                    }
+                    if($value == 'NOPEN'){
+                        $map['style'] = array('like', '%|BDWKF|%');
+                    }
+                    if($value == 'CORP'){
+                        $map['status'] = array('in', '4,14');
+                    }
+                    if($value == 'NPUB'){
+                        $map['status'] = array('lt', '10');
+                    }
+                    if($value == 'MY'){
+                        $map['responsible'] = UID;
+                    }
+                }
+
+            }
+            $parks = $Park->where($map)->select();
+            $p_sum = $Park->count();
+            $c_sum = $Park->where(array('status' => array('in', '4,14')))->count();
+            $i_sum = $Park->where(array('status' => array('EGT', 10)))->count();
+            $n_sum = $Park->where(array('status' => array('LT', 10)))->count();
+            $this->area = empty($openarea) ? array():$openarea;
+            $this->state = empty($parkstate) ? array():$parkstate;
+            $this->sum = array($p_sum, $c_sum, $i_sum, $n_sum);
+            $this->parks_info = $parks;
+            $this->meta_title = '高级搜索 | 嘟嘟销售系统';
+            $this->display();
     }
 
     public function partime($id){

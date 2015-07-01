@@ -10,6 +10,8 @@
         }
 
         .gray {background:#ddd;}
+
+        
     </style>
 </block>
 
@@ -19,13 +21,28 @@
         <ul class="mui-table-view">
             <li class="mui-table-view-cell">
                <form action="{:U('index')}" method="get">
-                   <input type="search" name="searchpark" placeholder="搜索停车场" />
+                    <div>
+                        <div  style="width:80px;float: right;text-align: center" >
+                            <button type="submit" class="mui-btn" >
+                                <span class="mui-icon mui-icon-search"></span>
+                                搜索
+                            </button>
+                        </div>
+                        <div style="margin-right: 90px;" >
+                            <input type="search" name="searchpark" placeholder="搜索停车场" />
+                        </div>
+                    </div>
 
                    <table style="width: 100%;table-layout: fixed">
                        <tr>
                            <td><a class="mui-btn mui-btn-success" href="{:U('parkinfo')}">添加停车场</a></td>
-                           <td  style="text-align: center" ><a class="mui-btn  mui-btn-primary" href="{:U('index',array('my'=>1))}">我的停车场</a></a></td>
-                           <td><input type="submit" style="float: right" value="搜索" /></td>
+                           <td  style="text-align: center" ><a class="mui-btn  mui-btn-primary" href="{:U('index',array('my'=>1))}">我的停车场</a></td>
+                           <td><a class="mui-btn  mui-btn-primary" style="float: right" href="{:U('adsearch')}">高级搜索</a></td>
+                       </tr>
+                       <tr>
+                           <td colspan="3">
+                               <p style="margin-top: 10px;">当前入库{$sum[0]}个停车场，其中已合作{$sum[1]}个停车场，已发布{$sum[2]}个停车场，未发布{$sum[3]}个停车场</p>
+                           </td>
                        </tr>
                    </table>
                 </form>
@@ -61,10 +78,10 @@
                 $temp.= "[".C('PARK_COR')[$value['status']%10]."]";
 
                 if($value['status']>=10){
-                    $temp.= "[信息化]";
+                    $temp.= "[已发布]";
                 }
                 else{
-                    $temp.= "[未信息化]";
+                    $temp.= "[未发布]";
                 }
 
                 if($isAuto){
