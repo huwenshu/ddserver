@@ -709,4 +709,8 @@ class IndexController extends  BaseController {
         $this->redirect('/Home/Index/parkinfo/parkid/'.$parkid.'/#panel-3');
 
     }
+    
+    public function parkmap(){
+        $this->display();
+    }
 }

@@ -890,7 +890,7 @@ class PublicController extends BaseController {
             //开放时间段
             $tmp['o'] = array($this->isClosedNow($value) ? 0 : 1, $value['startmon'], $value['endmon'], $value['startsat'], $value['endsat']);
             
-            if(($value['status'] == 4 || $value['status'] == 3) && $tmp['o'][0] == 1 && $value['parkstate'] != 0){//合作停车场&&在开放时段&&非满
+            if(($value['status'] == 4 || $value['status'] == 3 || $value['status'] == 14 || $value['status'] == 13) && $value['parkstate'] != 0){//合作停车场&&在开放时段&&非满
                 $tmp['c'] = 1; //合作停车场设为1
                 $tmp['s'] = $value['parkstate'];
             }
