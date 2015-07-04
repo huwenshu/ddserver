@@ -19,7 +19,7 @@ class PublicController extends BaseController {
     /**
      * 用户登录
      */
-    public function login($phone = null, $env = null){
+    public function login($phone = null, $env = null, $carid = null){
         $uid=null;
 
         $Driver = M('DriverInfo');
@@ -29,8 +29,8 @@ class PublicController extends BaseController {
         if(!empty($data)){
             $uid = $data['id'];
             if($env){
-                $map = array('id' => $uid);
-                $temp['env'] = $env;
+                $map = array('id'=>$uid);
+                $temp = array('env'=>$env);
                 $Driver->where($map)->save($temp);
             }
         }
@@ -42,6 +42,18 @@ class PublicController extends BaseController {
                 $arr['env'] = $env;
             }
             $uid = $Driver->add($arr);
+            if($carid){
+            $DriverCar = M('DriverCar');
+            //保存数据
+            $temp = array();
+            $temp['driverid'] = $uid;
+            $temp['carid'] = $carid;
+            $temp['status'] = 1;
+            $temp['creater'] = $uid;
+            $temp['createtime'] = date("Y-m-d H:i:s",time());
+            $temp['updater'] = $uid;
+            $DriverCar->add($temp);
+            }
         }
         $uuid = $this->createUUID($uid);
         $temp = array('uid' => $uid, 'uuid' =>$uuid);
@@ -51,7 +63,7 @@ class PublicController extends BaseController {
 	/**
 	 * 微信用户登录
 	 */
-	public function wxlogin($openid=null, $phone = null){
+	public function wxlogin($openid=null, $phone = null, $carid = null){
 
 		$Driver = M('DriverInfo');
 
@@ -60,10 +72,10 @@ class PublicController extends BaseController {
 		if(!empty($data)){//openid已经存在,先解除绑定
 			$data['openid'] = null;
             $Driver->where($map)->save($data);
-            $uid = $this->_wxlogin($openid,$phone);
+            $uid = $this->_wxlogin($openid,$phone,$carid);
 		}
 		else{//openid不存在
-            $uid = $this->_wxlogin($openid,$phone);
+            $uid = $this->_wxlogin($openid,$phone,$carid);
 		}
 
 
@@ -74,7 +86,7 @@ class PublicController extends BaseController {
 
     //数据库里面还没有这个openid，采取登录方式
 
-    protected  function _wxlogin($openid, $phone){
+    protected  function _wxlogin($openid, $phone, $carid){
 
         $Driver = M('DriverInfo');
         $map = array('telephone' => $phone);
@@ -92,6 +104,18 @@ class PublicController extends BaseController {
             $arr['telephone'] = $phone;
             $arr['createtime'] = date('Y-m-d H:i:s');
             $uid = $Driver->add($arr);
+            if($carid){
+                $DriverCar = M('DriverCar');
+                //保存数据
+                $temp = array();
+                $temp['driverid'] = $uid;
+                $temp['carid'] = $carid;
+                $temp['status'] = 1;
+                $temp['creater'] = $uid;
+                $temp['createtime'] = date("Y-m-d H:i:s",time());
+                $temp['updater'] = $uid;
+                $DriverCar->add($temp);
+            }
         }
 
         return $uid;

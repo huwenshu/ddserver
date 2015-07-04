@@ -710,7 +710,34 @@ class IndexController extends  BaseController {
 
     }
     
-    public function parkmap(){
+    /*
+     status:
+     0          所有
+     1          信息化
+     2          已合作
+     3          未上线
+     */
+    public function parkmap($status=0){
+        $this->city = '021';
+        $this->addr = '';
+        
+        $Park = D('ParkInfo');
+        $parks = null;
+        if($status == 0){
+            $parks = $Park->getField('id,name,lat,lng,status,prepay');
+        }else if($status == 1){
+            $parks = $Park->where('status>=10')->getField('id,name,lat,lng,status,prepay');
+        }else if($status == 2){
+            $parks = $Park->where('status=14 or status=4')->getField('id,name,lat,lng,status,prepay');
+        }else if($status == 3){
+            $parks = $Park->where('status<4')->getField('id,name,lat,lng,status,prepay');
+        }
+        $parray = array();
+        foreach($parks as $pdata){
+            $parray[] = $pdata;
+        }
+        $this->parklist = json_encode($parray);
+        
         $this->display();
     }
 }
