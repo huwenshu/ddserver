@@ -45,7 +45,6 @@ return array(
 
     /* SESSION 和 COOKIE 配置 */
     'SESSION_PREFIX' => 'dudu_sales', //session前缀
-    'COOKIE_PREFIX'  => 'dudu_sales_', // Cookie前缀 避免冲突
     'VAR_SESSION_ID' => 'session_id',	//修复uploadify插件无法传递session_id的bug
 
     /* 后台错误页面模板 */

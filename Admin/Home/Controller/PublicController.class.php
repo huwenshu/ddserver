@@ -39,7 +39,10 @@ class PublicController extends BaseController {
                     //action_log('user_login', 'member', $uid, $uid);
 
                     // session记录登录信息
-                    session('admin_auth', $auth);
+                    session(array('name'=>'PHPSESSID','expire'=>30*24*3600,'use_cookies'=>1));
+                    session('admin_auth',$auth);
+                    $PHPSESSID = session_id();
+                    cookie('PHPSESSID',$PHPSESSID,30*24*3600);
 
                     $this->success('登录成功！', U('Index/index'));
 
@@ -62,7 +65,6 @@ class PublicController extends BaseController {
     public function logout(){
         if($this->is_login()){
             session('admin_auth', null);
-            session('[destroy]');
             $this->redirect('login');
         } else {
             $this->redirect('login');
