@@ -42,6 +42,8 @@
 
 <body>
 <div id="alertinfo" style="position: absolute; width: 100%; z-index: 10001; left: 0px; bottom: 0px; display: block;text-align:center;background-color:white;">
+<span></span>
+<input id="address1" placeholder="输入地址"><button id='bttest'>定位</button>
 </div>
 </body>
 <script>
@@ -155,7 +157,7 @@
                                                       },500);
                                            }
                                            
-                                           $('#alertinfo').html('地图模块加载完成');
+                                           $('#alertinfo span').html('地图模块加载完成');
                     });
 
 /*
@@ -214,16 +216,29 @@
                                             position:data.point,
                                             icon:"",
                                             content:content,
-                                           offset:new AMap.Pixel(-16,-64)
+                                           offset:new AMap.Pixel(-16,-32)
                                          });
          data.marker = marker;
          AMap.event.addListener(marker,'click',function callback(e){/*点击图标:id,name,lat,lng,status,prepay*/
-            $('#alertinfo').html(data.id+':'+data.name+'（'+data.lat+','+data.lng+'）状态：'+data.status);
+            $('#alertinfo span').html(data.id+':'+data.name+'（'+data.lat+','+data.lng+'）状态：'+data.status);
           });
          }
          };
-         $('#alertinfo').html('开始加载地图模块...');
+         $('#alertinfo span').html('开始加载地图模块...');
          obj.init({'city':'<?php echo $city;?>','addr':'<?php echo $addr;?>'});
+         $('#bttest').click(function(){
+                            var addr = $('#address1').val();
+                            var address = {'city':'<?php echo $city;?>','addr':addr};
+                            obj.loadPosition(address, function(geocoderresult){
+                                             if(geocoderresult && geocoderresult.geocodes && geocoderresult.geocodes.length > 0){
+                                                      var data = geocoderresult.geocodes[0];
+                                                      obj.mapobj.setCenter(data.location);
+                                                      $('#alertinfo span').html(data.formattedAddress);
+                                                }else{
+                                                      $('#alertinfo span').html('找不到地址');
+                                                }
+                            });
+        });
         })();
     })(jQuery);
 </script>
