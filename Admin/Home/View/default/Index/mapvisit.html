@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>停车场地图</title>
+    <meta charset="utf-8">
+    <script src="__STATIC__/sys.js"></script>
+</head>
+<style>
+    html,body{
+        padding: 0;
+        margin: 0;
+        width: 100%;
+        height: 100%;
+    }
+</style>
+<style>
+    .mk1{
+        background-image: url(http://7xispd.com1.z0.glb.clouddn.com/user/img/maks.png);
+        background-size: 96px 32px;
+        width: 32px;
+        height: 32px;
+        line-height: 28px;
+        color: #fff;
+        text-align: center;
+        font-size: 12px;
+    }
+.mk1.state0{
+    background-position-x: 0;
+}
+.mk1.state1{
+    background-position-x: -32px;
+}
+.mk1.state2{
+    background-position-x: 0;
+}
+.mk1.stateno{
+    background-position-x: -64px;
+}
+</style>
+<script src="__STATIC__/jquery-1.10.2.min.js"></script>
+<script src="__STATIC__/iscroll.js"></script>
+
+<body>
+<div id="alertinfo" style="position: absolute; width: 100%; z-index: 10001; left: 0px; bottom: 0px; display: block;text-align:center;background-color:white;">
+<span></span>
+<input id="address1" placeholder="输入地址"><button id='bttest'>定位</button>
+</div>
+</body>
+<script>
+    var routelist = eval("(" + '<?php echo $routelist;?>' + ")");
+    (function($){
+        (function(){
+            var mapcontaion = $('<div></div>');
+            var mapdom = $('<div></div>');
+            var mapid = '__________mapid';
+
+            mapdom.attr('id',mapid);
+            mapcontaion.append(mapdom);
+            mapcontaion.css({
+                position:'absolute'
+                ,width:'100%'
+                ,height:'100%'
+                ,'zIndex':'10000'
+                ,left:0
+                ,top:0
+                ,backgroundColor:'rgba(0,0,0,.5)'
+            });
+            mapdom.css({
+               position:'absolute'
+                ,width:'100%'
+                ,height:'100%'
+                ,left:0
+                ,top:0
+
+            });
+            $(document.body).append(mapcontaion);
+
+            var loadmapscript = (function(){
+               var callback = null;
+                var isloading = false;
+               var initname = 'loadmapscriptinit_'+(new Date()-0);
+               window[initname] = function(){
+                   isloading = true;
+                    //alert('initname'+'\n'+'loadmap');
+                   callback && callback();
+                };
+               var obj = {
+                   load:function(_callback){
+                       if(isloading){
+                           callback && callback();
+                       }else{
+                           callback = _callback;
+                           var script = document.createElement("script");
+                           script.type = "text/javascript";
+                           script.src = "http://webapi.amap.com/maps?v=1.3&key=bc59f27d65900532cc4f3c1048dd6122&callback="+initname;
+                           document.body.appendChild(script);
+                       }
+                   }
+               };
+               return obj;
+            })();
+
+            var obj = {
+                mapobj:null
+                ,init:function(address){
+                    var me = this;
+
+                    loadmapscript.load(function(){
+                        me.loadPosition(address, function(geocoderresult){
+                            me.initMap(geocoderresult);
+                        });
+                    });
+                }
+                ,initMap:function(geocoderresult){
+                    var me = this;;
+                    //var centermaker = null;
+                    var mapObj = this.mapobj = new AMap.Map(mapid,{
+                      view: new AMap.View2D({
+                        zoom:10,
+                       rotation:0
+                     }),
+                     lang:"zh_cn"//设置地图语言类型，默认：中文简体
+                    });//创建地图实例
+                    mapObj.plugin(["AMap.ToolBar","AMap.OverView","AMap.Scale"],function(){
+                      //加载工具条
+                      var tool = new AMap.ToolBar({
+                        direction:false,//隐藏方向导航
+                        ruler:false,//隐藏视野级别控制尺
+                         offset:new AMap.Pixel(10,200)
+                        //autoPosition:true//自动定位
+                      });
+                      mapObj.addControl(tool);
+                      //加载鹰眼
+                      var view = new AMap.OverView();
+                      mapObj.addControl(view);
+                      //加载比例尺
+                      //var scale = new AMap.Scale();mapObj.addControl(scale);
+                    });
+
+                    var callbacking = false;
+                    AMap.event.addListener(mapObj,'complete',function(){
+                                           $.each(routelist, function(idx,obj){
+                                                  me.getroute(obj, idx);
+                                                  });
+                    
+                         /*centermaker = new AMap.Marker({
+                            map:mapObj
+                            ,content:"<div style='width: 50px;height: 50px;border-radius: 25px;background-color: rgba(0,0,0,.2)'><div style='position: absolute;left: 50%;top:50%;width: 6px;height: 6px;border-radius: 3px;margin-left: -3px;margin-top: -3px;background-color:red'></div></div>"
+                            ,position:mapObj.getCenter()
+                             ,offset:new AMap.Pixel(-25,-25)
+                        });*/
+                                           if(geocoderresult){
+                                           var data = geocoderresult.geocodes[0];
+                                           this.mapObj.setCenter(data.location);
+                                           /*setTimeout(function(){
+                                                      setposition();
+                                                      },500);*/
+                                           }
+                                           
+                                           $('#alertinfo span').html('地图模块加载完成');
+                    });
+
+/*
+                    AMap.event.addListener(mapObj,'moveend',function(){
+                        setposition();
+                    });
+                    AMap.event.addListener(mapObj,'mapmove',function(){
+                        setposition();
+                    });
+                    function setposition(){
+                        centermaker.setPosition(mapObj.getCenter());
+                    }
+*/
+                }
+                ,loadPosition:function(address, cb){
+                    if(address && address.addr && address.addr != ''){
+                        var MGeocoder;
+                        //加载地理编码插件
+                        AMap.service(["AMap.Geocoder"], function() {
+                            MGeocoder = new AMap.Geocoder({
+                                city:address.city, //城市，默认：“全国”
+                                radius:1000 //范围，默认：500
+                            });
+                            //返回地理编码结果
+                            //地理编码
+                            MGeocoder.getLocation(address.addr, function(status, result){
+                                if(status === 'complete' && result.info === 'OK'){
+                                    cb && cb(result);
+                                }else{
+                                    cb && cb(null);
+                                }
+                            });
+                        });
+                    }else{
+                        cb && cb(null);
+                    }
+                }
+         ,getroute:function(data, index){
+            var me = this;
+            var start = data.start;
+            start.point = new AMap.LngLat(start.lng, start.lat);
+            var content = '<div  class="mk1 state0">S</div>';
+            var marker = new AMap.Marker({
+                                            map:me.mapobj,
+                                            position:start.point,
+                                            icon:"",
+                                            content:content,
+                                           offset:new AMap.Pixel(-16,-32)
+                                         });
+            start.marker = marker;
+            AMap.event.addListener(start.marker,'click',function callback(e){
+                                $('#alertinfo span').html('（'+start.lat+','+start.lng+'）');
+                                });
+            var target = data.target;
+            target.point = new AMap.LngLat(target.lng, target.lat);
+            var content = '<div  class="mk1 state1">T</div>';
+            var marker = new AMap.Marker({
+                                            map:me.mapobj,
+                                            position:target.point,
+                                            icon:"",
+                                      content:content,
+                                           offset:new AMap.Pixel(-16,-32)
+                                         });
+            target.marker = marker;
+            AMap.event.addListener(target.marker,'click',function callback(e){
+                                $('#alertinfo span').html('（'+target.lat+','+target.lng+'）');
+                                });
+            var arr = new Array();
+            arr.push(start.point);
+            arr.push(target.point);
+            var extra_line1 = new AMap.Polyline({
+                                             map:me.mapobj,
+                                             path:arr,
+                                             strokeColor:"#9400D3",
+                                             strokeOpacity:0.7,
+                                             strokeWeight:2,
+                                             strokeStyle:"dashed",
+                                             strokeDasharray:[10, 5]
+                                             });
+            data.line = extra_line1;
+         }
+         };
+         $('#alertinfo span').html('开始加载地图模块...');
+         obj.init({'city':'<?php echo $city;?>','addr':'<?php echo $addr;?>'});
+         $('#bttest').click(function(){
+                            var addr = $('#address1').val();
+                            var address = {'city':'<?php echo $city;?>','addr':addr};
+                            obj.loadPosition(address, function(geocoderresult){
+                                             if(geocoderresult && geocoderresult.geocodes && geocoderresult.geocodes.length > 0){
+                                                      var data = geocoderresult.geocodes[0];
+                                                      obj.mapobj.setCenter(data.location);
+                                                      $('#alertinfo span').html(data.formattedAddress);
+                                                }else{
+                                                      $('#alertinfo span').html('找不到地址');
+                                                }
+                            });
+        });
+        })();
+    })(jQuery);
+</script>
+</html>
