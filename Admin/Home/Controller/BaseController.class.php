@@ -209,16 +209,17 @@ class BaseController extends \Think\Controller {
         $giftArr  = $DriverCoupon->where($map)->getField('source',true);
 
         //3.遍历自动红包数组，拿到最后发送的红包ID
-        $key = -1;
         $autoArr = C('AUTO_GIFT');
-        for($i = count($autoArr)-1; $i>=0; $i--){
+        for($i = 0; $i < count($autoArr); $i++){
             if(in_array($autoArr[$i], $giftArr)){
-                $key = $i;
-                if($key == count($autoArr)-3){
-                    sendMail('dubin@duduche.me',"[自动红包-紧张]", "自动红包已经发送到倒数第二个了，请尽快补充！红包ID：".$autoArr[$key]);
+                continue;
+            }
+            else{
+                if($i == count($autoArr)-3){
+                    sendMail('dubin@duduche.me',"[自动红包-紧张]", "自动红包已经发送到倒数第二个了，请尽快补充！红包ID：".$autoArr[$i]);
                 }
-                if($key == count($autoArr)-1){
-                    sendMail('dubin@duduche.me',"[自动红包-紧张]", "自动红包已经发完，请尽快补充！红包ID：".$autoArr[$key]);
+                if($i == count($autoArr)-1){
+                    sendMail('dubin@duduche.me',"[自动红包-紧张]", "自动红包已经发完，请尽快补充！红包ID：".$autoArr[$i]);
                     return null;
                 }
                 break;
@@ -226,8 +227,7 @@ class BaseController extends \Think\Controller {
         }
 
         //4.根据gid获取hcode
-        $key = $key + 1;
-        $gid = $autoArr[$key];
+        $gid = $autoArr[$i];
         $GiftPack = M('DriverGiftpack');
         $map = array();
         $map['id'] = $gid;
@@ -250,10 +250,10 @@ class BaseController extends \Think\Controller {
         $openid = $this->getOpenID($uid);
         $contentArr = C('AUTO_GIFT_MSG');
         if(empty($tinyurl)){
-            $content = $contentArr[$key%count($contentArr)]." <a href='".$lineLink."'>点击领取>></a>";
+            $content = $contentArr[$i%count($contentArr)]." <a href='".$lineLink."'>点击领取>></a>";
         }
         else{
-            $content = $contentArr[$key%count($contentArr)]." <a href='".$tinyurl."'>$tinyurl</a>";
+            $content = $contentArr[$i%count($contentArr)]." <a href='".$tinyurl."'>$tinyurl</a>";
         }
 
         //7.发送消息模板给用户的公共号
