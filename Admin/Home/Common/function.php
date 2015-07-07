@@ -78,6 +78,7 @@ function takeCSV($msgs){
 function readCSV($name,$excludes){
     $retArr = array();
     $filename =  C('CSV_LOG_PATH').'/'.$name.'.csv';
+    //echo $filename;
     if (($handle = fopen($filename, "r")) !== FALSE) {
         while (($data = fgetcsv($handle, 1000, ",")) !== FALSE) {
             $found = 0;

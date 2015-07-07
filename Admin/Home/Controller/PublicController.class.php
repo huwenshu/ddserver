@@ -197,20 +197,26 @@ class PublicController extends BaseController {
         }
     }
     
-    public function parseLocation($files='location2_20150629,location2_20150630'){
+    public function parseLocation($files='20150629,20150630',$searchonly=1){
         $excludes = array(//排除自己人的设备，或非来自设备的访问（第8字段）
                           8=>array('1d601e9ae58ed02dfdbbb8a1cd5a3fde92e0e34daaf7439e21cdfd013557fb74','ae4537a81c7c56518ae29a1b8d35f0f8','b96fa82c0d7f2c9fb006231673700119','b283b7837f84088172f652569dcd7751','')
                           );
+        $tgap = 0.4545;//50000m
         $names = explode(',',$files);
         $total = 0;
         $cons = array('fn_dn'=>0,'fy_dn'=>0,'fn_dy'=>0,'fy_dy'=>0,'search'=>0);
         $Park = M('ParkInfo');
         $ParkFree = M('ParkFreeInfo');
         foreach($names as $name){
-            $datas = readCSV($name,$excludes);
+            $datas = readCSV('location2_'.$name,$excludes);
             $total1 = count($datas);
             $cons1 = array('fn_dn'=>0,'fy_dn'=>0,'fn_dy'=>0,'fy_dy'=>0,'search'=>0);
             foreach($datas as $data){
+                if($searchonly){
+                    if($data[3] == 0 || $data[4] == 0 || ($data[3] == $data[5] && $data[4] == $data[6]) || abs($data[3]-$data[5])>=$tgap || abs($data[4]-$data[6])>=$tgap){
+                        continue;
+                    }
+                }
                 if($data[3] != $data[5] || $data[4] != $data[6]){
                     $cons1['search']++;
                     $cons['search']++;
