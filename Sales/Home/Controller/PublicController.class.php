@@ -44,7 +44,6 @@ class PublicController extends \Think\Controller {
     public function logout(){
         if(is_login()){
             D('SalesAuth')->logout();
-            session('[destroy]');
             $this->success('退出成功！', U('login'));
         } else {
             $this->redirect('login');
@@ -55,6 +54,14 @@ class PublicController extends \Think\Controller {
     public function verify(){
         $verify = new \Think\Verify();
         $verify->entry(1);
+    }
+
+    public function testS(){
+        dump(session('user_auth'));
+        dump($_SESSION);
+        echo  session_id();
+        echo "<br/>";
+        echo session_name();
     }
 
 }

@@ -37,13 +37,26 @@
     background-position-x: -64px;
 }
 </style>
+<link rel="stylesheet" type="text/css" href="__STATIC__/datetimepicker/css/bootstrap.min.css" media="all">
+<link rel="stylesheet" type="text/css" href="__STATIC__/datetimepicker/css/bootstrap-datetimepicker.min.css" media="all">
 <script src="__STATIC__/jquery-1.10.2.min.js"></script>
 <script src="__STATIC__/iscroll.js"></script>
+<script type="text/javascript" src="__STATIC__/datetimepicker/js/bootstrap.min.js"></script>
+<script type="text/javascript" src="__STATIC__/datetimepicker/js/bootstrap-datetimepicker.js"></script>
+<script type="text/javascript" src="__STATIC__/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
 
 <body>
-<div id="alertinfo" style="position: absolute; width: 100%; z-index: 10001; left: 0px; bottom: 0px; display: block;text-align:center;background-color:white;">
-<span></span>
-<input id="address1" placeholder="输入地址"><button id='bttest'>定位</button>
+<div id="alertinfo" style="position: absolute; width: 100%; z-index: 10001; left: 0px; top: 0px; display: block;text-align:center;background-color:white;padding: 5px;">
+        <label for="startime">起始时间：</label>
+        <input type="text" id="startime" class="datetimepicker" name="startime" value="{$startime}" style="width: 150px"/>
+        &nbsp;
+        <label for="endtime">结束时间：</label>
+        <input type="text" id="endtime" class="datetimepicker" name="endtime" value="{$endtime}" style="width: 150px"/>
+        &nbsp;
+        <button id="searchBtn">查询</button>
+        &nbsp;
+        <span></span>
+        <input id="address1" placeholder="输入地址">&nbsp;<button id='bttest'>定位</button>
 </div>
 </body>
 <script>
@@ -255,7 +268,53 @@
                                                 }
                             });
         });
+            $('.datetimepicker').datetimepicker({
+                language: 'zh-CN',
+                todayBtn: true,
+                autoclose: true,
+                minView: '2',
+                forceParse: false,
+                format:"yyyy-mm-dd"
+            });
+            $('#searchBtn').click(function(){
+                var startime = $('#startime').val();
+                var endtime = $('#endtime').val();
+                startime = startime.replace(new RegExp("-","gm"),"/");
+                endtime = endtime.replace(new RegExp("-","gm"),"/");
+                var date1 = new Date(startime);
+                var date2 = new Date(endtime);
+                var str = "{:U('Index/mapvisit/')}"+"?files=";
+                str += date1.format('yyyyMMdd');
+                date1.setDate(date1.getDate()+ 1);
+                while(date1.getTime()<=date2.getTime()){
+                    str += ","+date1.format('yyyyMMdd');
+                    date1.setDate(date1.getDate()+ 1);
+                }
+
+                window.location.href=str;
+            });
+            Date.prototype.format =function(format)
+            {
+                var o = {
+                    "M+" : this.getMonth()+1, //month
+                    "d+" : this.getDate(), //day
+                    "h+" : this.getHours(), //hour
+                    "m+" : this.getMinutes(), //minute
+                    "s+" : this.getSeconds(), //second
+                    "q+" : Math.floor((this.getMonth()+3)/3), //quarter
+                    "S" : this.getMilliseconds() //millisecond
+                }
+                if(/(y+)/.test(format)) format=format.replace(RegExp.$1,
+                        (this.getFullYear()+"").substr(4- RegExp.$1.length));
+                for(var k in o)if(new RegExp("("+ k +")").test(format))
+                    format = format.replace(RegExp.$1,
+                            RegExp.$1.length==1? o[k] :
+                                    ("00"+ o[k]).substr((""+ o[k]).length));
+                return format;
+            }
         })();
     })(jQuery);
+
+
 </script>
 </html>
