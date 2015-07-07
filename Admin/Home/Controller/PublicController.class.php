@@ -257,7 +257,51 @@ class PublicController extends BaseController {
         }
         echo '<br><br>Total'.$total.'<br>';print_r($cons);
     }
-    
+
+    //处理道路停车场
+//    public function parseRoadPark()
+//    {
+//        Vendor('PHPExcel.PHPExcel');
+//        $file = C('CSV_LOG_PATH') . '/road_park_2015_07_07.xlsx';
+//        $PHPReader = new PHPExcel_Reader_Excel2007();
+//        if (!$PHPReader->canRead($file)) {
+//            $PHPReader = new PHPExcel_Reader_Excel5();
+//            if (!$PHPReader->canRead($file)) {
+//                return array("error" => "类型不匹配");
+//            }
+//        }
+//        $objPHPExcel = $PHPReader->load($file); //上传的文件，或者是指定的文件
+//        $sheet = $objPHPExcel->getSheet(0);
+//        $highestRow = $sheet->getHighestRow(); //取得总行数
+//
+//        $Park = M('ParkInfo');
+//        $PinYin = new Home\Common\PinYin();
+//        for($i=3;$i<=$highestRow;$i++)
+//        {
+//            $temp = array();
+//            $temp['address'] = (string)$sheet->getCellByColumnAndRow(4, $i)->getValue();
+//            $temp['spacesum'] = (string)$sheet->getCellByColumnAndRow(5, $i)->getValue();
+//            $temp['opentime'] = (string)$sheet->getCellByColumnAndRow(6, $i)->getValue();
+//            $name =  (string)$sheet->getCellByColumnAndRow(7, $i)->getValue();
+//            $nameArr = explode('～',$name);
+//            $name = str_replace('（','',$nameArr[0]);
+//            $temp['name'] = $name.'道路停车场';
+//            $pinYin = strtoupper($PinYin->getFirstPY($temp['name']));
+//            $temp['shortname'] = $this->getShort($pinYin, 0);
+//            $temp['style'] = '|LUB|';
+//            $temp['status'] = 0;
+//            $temp['note'] = (string)$sheet->getCellByColumnAndRow(2, $i)->getValue().':'.(string)$sheet->getCellByColumnAndRow(3, $i)->getValue().' 未审核';
+//            $temp['responsible'] = -3;
+//            $temp['creator'] = -3;
+//            $temp['createtime'] = date('Y-m-d H:i:s');
+//            $temp['updater'] = -3;
+//            $temp['updatetime'] = date('Y-m-d H:i:s');
+//            echo "插入：".$Park->add($temp)."<br/>";
+//        }
+//
+//
+//    }
+
     public function bd_decrypt_all()
 		{
 				$db = M('park_free_info');
