@@ -45,6 +45,7 @@ return array(
 
     /* SESSION 和 COOKIE 配置 */
     'SESSION_PREFIX' => 'dudu_admin', //session前缀
+    'SESSION_OPTIONS' => array('expire'=>30*24*3600),
     'VAR_SESSION_ID' => 'session_id',	//修复uploadify插件无法传递session_id的bug
 
     /* 后台错误页面模板 */

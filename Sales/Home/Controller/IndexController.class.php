@@ -122,7 +122,13 @@ class IndexController extends  BaseController {
         $map['responsible'] = $id;
         $parkList = $ParkInfo->where($map)->select();
         $this->parks_info = $parkList;
-        $this->meta_title = '首页 | 嘟嘟销售系统';
+        $p_sum = $ParkInfo->where(array('responsible' => $id))->count();
+        $c_sum = $ParkInfo->where(array('status' => array('in', '4,14'),'responsible' => $id))->count();
+        $i_sum = $ParkInfo->where(array('status' => array('EGT', 10),'responsible' => $id))->count();
+        $n_sum = $ParkInfo->where(array('status' => array('LT', 10),'responsible' => $id))->count();
+        $this->sum = array($p_sum, $c_sum, $i_sum, $n_sum);
+        $this->id = $id;
+        $this->meta_title = '统计 | 嘟嘟销售系统';
         $this->display();
     }
 
@@ -717,27 +723,33 @@ class IndexController extends  BaseController {
      2          已合作
      3          未上线
      */
-    public function parkmap($status=0){
+    public function parkmap($status=0,$responsible=null){
         $this->city = '021';
         $this->addr = '';
         
         $Park = D('ParkInfo');
         $parks = null;
         if($status == 0){
-            $parks = $Park->getField('id,name,lat,lng,status,prepay');
+            $parks = $Park->getField('id,name,lat,lng,status,prepay,responsible');
         }else if($status == 1){
-            $parks = $Park->where('status>=10')->getField('id,name,lat,lng,status,prepay');
+            $parks = $Park->where('status>=10')->getField('id,name,lat,lng,status,prepay,responsible');
         }else if($status == 2){
-            $parks = $Park->where('status=14 or status=4')->getField('id,name,lat,lng,status,prepay');
+            $parks = $Park->where('status=14 or status=4')->getField('id,name,lat,lng,status,prepay,responsible');
         }else if($status == 3){
-            $parks = $Park->where('status<4')->getField('id,name,lat,lng,status,prepay');
+            $parks = $Park->where('status<4')->getField('id,name,lat,lng,status,prepay,responsible');
         }
         $parray = array();
         foreach($parks as $pdata){
-            $parray[] = $pdata;
+            if(isset($responsible)){
+                if($responsible == $pdata['responsible']){
+                    $parray[] = array('id' => $pdata['id'],'name'=>$pdata['name'],'lat'=>$pdata['lat'],'lng'=>$pdata['lng'],'status'=>$pdata['status'],'prepay'=>$pdata['prepay']);
+                }
+            }
+            else{
+                $parray[] = array('id' => $pdata['id'],'name'=>$pdata['name'],'lat'=>$pdata['lat'],'lng'=>$pdata['lng'],'status'=>$pdata['status'],'prepay'=>$pdata['prepay']);
+            }
         }
         $this->parklist = json_encode($parray);
-        
         $this->display();
     }
 }
