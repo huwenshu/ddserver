@@ -62,6 +62,8 @@ class PublicController extends \Think\Controller {
         echo  session_id();
         echo "<br/>";
         echo session_name();
+        echo "<br/>";
+        echo ini_get('session.gc_maxlifetime');
     }
 
 }
