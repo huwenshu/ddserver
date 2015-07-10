@@ -15,10 +15,10 @@ return array(
 
     /* 数据库配置 */
     'DB_TYPE'   => 'mysqli', // 数据库类型
-    'DB_HOST'   => 'duduche.me', // 服务器地址
+    'DB_HOST'   => '127.0.0.1', // 服务器地址
     'DB_NAME'   => 'dudu_parking', // 数据库名
-    'DB_USER'   => 'dududbuser', // 用户名
-    'DB_PWD'    => 'Dudu8796',  // 密码
+    'DB_USER'   => 'root', // 用户名
+    'DB_PWD'    => '',  // 密码
     'DB_PORT'   => '3306', // 端口
     'DB_PREFIX' => 'dudu_', // 数据库表前缀
 
@@ -45,6 +45,7 @@ return array(
 
     /* SESSION 和 COOKIE 配置 */
     'SESSION_PREFIX' => 'dudu_admin', //session前缀
+    'SESSION_OPTIONS' => array('expire'=>30*24*3600),
     'VAR_SESSION_ID' => 'session_id',	//修复uploadify插件无法传递session_id的bug
 
     /* 后台错误页面模板 */

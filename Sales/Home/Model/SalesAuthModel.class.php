@@ -33,7 +33,6 @@ class SalesAuthModel extends Model {
                 //action_log('user_login', 'member', $uid, $uid);
 
                 // session记录登录信息
-                session(array('name'=>'PHPSESSID','expire'=>30*24*3600,'use_cookies'=>1));
                 session('user_auth',$auth);
                 $PHPSESSID = session_id();
                 cookie('PHPSESSID',$PHPSESSID,30*24*3600);
