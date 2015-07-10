@@ -19,13 +19,11 @@ class StatisticController extends BaseController {
     //重复购买的用户统计
     public function reorder(){
         $Model = new \Think\Model(); // 实例化一个model对象 没有对应任何数据表
-        $sql = "SELECT uid FROM `dudu_park_order` WHERE state >-1 and pid <>1 and uid > 40 GROUP by uid HAVING COUNT(*) >1 ORDER BY uid desc";
+        $sql = "SELECT uid FROM `dudu_park_order` WHERE state >-1 and pid >1 and uid > 0 GROUP by uid HAVING COUNT(*) >1 ORDER BY uid desc";
         $uidList = $Model->query($sql);
-
         $ParkOrder = M('ParkOrder');
         $PayMent = M('PaymentRecord');
         $result = array();
-
         foreach($uidList as $key => $value){
             $temp = array();
             $uid = $value['uid'];
@@ -37,6 +35,7 @@ class StatisticController extends BaseController {
             $map = array();
             $map['uid'] = $uid;
             $map['state'] = array('EGT', 0);
+            $map['pid'] = array('GT', 1);
             $orderList = $ParkOrder->where($map)->order('startime desc')->select();
             foreach($orderList as $k => $v){
                 $o = array();
@@ -73,6 +72,13 @@ class StatisticController extends BaseController {
 
         }
 
+
+        //总用户下单数
+        $sql = "SELECT DISTINCT uid FROM `dudu_park_order` WHERE state >-1 and pid >1 and uid > 0";
+        $totalSum = count($Model->query($sql));
+        $reoderSum = count($result);
+        $this->totalSum = $totalSum;
+        $this->reorderSum = $reoderSum;
         $this->List = $result;
         $this->meta_title = "二次下单用户统计页面";
         $this->display();
