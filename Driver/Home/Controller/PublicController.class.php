@@ -439,13 +439,40 @@ class PublicController extends BaseController {
 			return false;
 		}
 	}
-	
-	public  function  getOpenArea($city='sh'){
-		include_once(dirname(__FILE__) . '/../Conf/' . 'config_open_area.php');
-		
-		$result=array('area'=>$config_open_area[$city]);
-		$this->ajaxOk($result);
-	}
+
+    public  function  getOpenArea($city='sh') {
+        $cache_key = 'open_area_list_' . $city;
+        $result = S($cache_key);
+        if ($result) {
+            $result = unserialize($result);
+            $result['cache'] = 1;
+        } else {
+            include_once(dirname(__FILE__) . '/../Conf/' . 'config_open_area.php');
+
+            $result=['area'=>$config_open_area[$city]];
+
+            foreach ($result['area'] as &$district) {
+                foreach ($district[2] as &$place) {
+                    $lat = $place[1];
+                    $lng = $place[2];
+                    $gap = 0.004545; //0.002727;
+
+                    $Park = M('ParkInfo');
+                    $con = [];
+                    $con['lat'] = [['gt', $lat - $gap], ['lt', $lat + $gap]];
+                    $con['lng'] = [['gt', $lng - $gap], ['lt', $lng + $gap]];
+                    $con['status'] = ['EGT', 4];
+
+                    $place[3] = intval($Park->where($con)->count());
+                }
+            }
+
+            S('open_area_list_' . $city, serialize($result), 3600);
+            $result['cache'] = 0;
+        }
+
+        $this->ajaxOk($result);
+    }
     
     //返回附近停车场接口2
     public function search2($lat,$lng,$curlat=0,$curlng=0,$pushid=''){
