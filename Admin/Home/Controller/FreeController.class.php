@@ -25,7 +25,7 @@ class FreeController extends BaseController{
         $ParkFreeInfo = M('ParkFreeInfo');
         $map = array();
         $map['name'] = array('like','%'.$searchName.'%');
-        $parkList = $ParkFreeInfo->where($map)->order('status')->select();
+        $parkList = $ParkFreeInfo->where($map)->order('status, createtime desc')->select();
         $this->parkList = $parkList;
         $this->meta_title = '首页 | 嘟嘟销售系统';
         $this->display();
@@ -100,6 +100,7 @@ class FreeController extends BaseController{
             $map = array();
             $map['id'] = $freeid;
             $parkInfo = $FreePark->where($map)->find();
+            $this->telephone = $parkInfo['creater'] == 0 ? "系统" : $this->getDriver($parkInfo['creater'])['telephone'];
             $this->parkInfo = $parkInfo;
             $this->fileError = $fileError;
             $this->meta_title = '免费停车场 | 嘟嘟后台管理';
