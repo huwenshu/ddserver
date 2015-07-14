@@ -41,7 +41,7 @@
                        </tr>
                        <tr>
                            <td colspan="3">
-                               <p style="margin-top: 10px;">当前入库<a href="parkmap" target=_blank>{$sum[0]}</a>个停车场，其中已合作<a href="parkmap/status/2" target=_blank>{$sum[1]}</a>个停车场，已发布<a href="parkmap/status/1" target=_blank>{$sum[2]}</a>个停车场，未发布<a href="parkmap/status/3" target=_blank>{$sum[3]}</a>个停车场</p>
+                               <p style="margin-top: 10px;">当前入库<a href="{:U('Home/index/parkmap')}" target=_blank>{$sum[0]}</a>个停车场，其中已合作<a href="{:U('Home/index/parkmap/status/2')}" target=_blank>{$sum[1]}</a>个停车场，已发布<a href="{:U('Home/index/parkmap/status/1')}" target=_blank>{$sum[2]}</a>个停车场，未发布<a href="{:U('Home/index/parkmap/status/3')}" target=_blank>{$sum[3]}</a>个停车场</p>
                            </td>
                        </tr>
                    </table>
