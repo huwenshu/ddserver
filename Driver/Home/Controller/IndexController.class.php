@@ -1024,7 +1024,34 @@ class IndexController extends BaseController {
         if(empty($id)){
             $this->ajaxMsg("提交数据失败，请检查您的输入格式是否有误");
         }
-        
+        $title = '[UGC-免费停车场]';
+        $content = '停车场名称:'.$name .'<br>描述:'.$dsc.'<br>提交者ID:'.$this->uid.'<br>';
+        sendMail('all@duduche.me', $title, $content);
+        $result = array('id'=>$id);
+        $this->ajaxOk($result);
+    }
+
+    //用户提交的付费停车场
+    public function addpaidpark($name, $lat, $lng, $dsc, $note){
+        $ParkPaid = M('ParkPaidInfo');
+        $data = array();
+        $data['name'] = $name;
+        $data['lat'] = $lat;
+        $data['lng'] = $lng;
+        $data['dsc'] = $dsc;
+        $data['note'] = $note;
+        $data['status'] = 0;
+        $data['creater'] = $this->uid;
+        $data['createtime'] = date("Y-m-d H:i:s");
+        $data['updater'] = $this->uid;
+
+        $id = $ParkPaid->add($data);
+        if(empty($id)){
+            $this->ajaxMsg("提交数据失败，请检查您的输入格式是否有误");
+        }
+        $title = '[UGC-付费停车场]';
+        $content = '停车场名称:'.$name .'<br>描述:'.$dsc.'<br>提交者ID:'.$this->uid.'<br>';
+        sendMail('all@duduche.me', $title, $content);
         $result = array('id'=>$id);
         $this->ajaxOk($result);
     }
