@@ -27,7 +27,7 @@ class FreeController extends BaseController{
         $map['name'] = array('like','%'.$searchName.'%');
         $parkList = $ParkFreeInfo->where($map)->order('status, createtime desc')->select();
         $this->parkList = $parkList;
-        $this->meta_title = '首页 | 嘟嘟销售系统';
+        $this->meta_title = '免费停车场 | 嘟嘟后台管理';
         $this->display();
     }
 
@@ -110,6 +110,69 @@ class FreeController extends BaseController{
             $this->telephone = $parkInfo['creater'] == 0 ? "系统" : $this->getDriver($parkInfo['creater'])['telephone'];
             $this->parkInfo = $parkInfo;
             $this->fileError = $fileError;
+            $this->meta_title = '免费停车场 | 嘟嘟后台管理';
+            $this->display();
+        }
+
+    }
+
+    public function  paidlist(){
+        $searchName = I('get.search');
+
+        $ParkPaidInfo = M('ParkPaidInfo');
+        $map = array();
+        $map['name'] = array('like','%'.$searchName.'%');
+        $parkList = $ParkPaidInfo->where($map)->order('status, createtime desc')->select();
+        $this->parkList = $parkList;
+        $this->meta_title = '付费停车场 | 嘟嘟后台管理';
+        $this->display();
+    }
+
+    public function paidparkinfo($pid =null){
+        if (IS_POST) {
+            $Park = M('ParkPaidInfo');
+            $u_park = $Park->where(array('id' => $pid))->find();
+
+            $parkInfo = array();
+            //处理POST过来的信息
+            $parkInfo['id'] = $pid;
+            $parkInfo['name'] = I('post.name');
+            $tags = I('post.parktag');
+            $note = "|";
+            foreach ($tags as $key => $value) {
+                $note = $note.$value.'|';
+            }
+            $parkInfo['note'] = $note;
+            $parkInfo['dsc'] = I('post.dsc');
+            $parkInfo['lat'] = I('post.lat');
+            $parkInfo['lng'] = I('post.lng');
+            $parkInfo['status'] = I('post.status');
+
+            //保存
+
+            $saved = $Park->save($parkInfo);
+
+            if ($saved === false) {
+                //$this->error();
+                dump($parkInfo);
+            }
+            else{
+                if($u_park['status'] == 0 && $parkInfo['status'] ==1){
+                    $this->pushNotice($u_park['creater'],'恭喜您，您提交的停车场信息已经通过审核，嘟嘟感谢您为大家提供信息！',json_encode(array('r' => 'reload')));
+                }
+
+                $param = array('pid' => $parkInfo['id']);
+                $this->redirect('Free/paidparkinfo', $param, 0, '保存成功...');
+            }
+
+        }
+        else{
+            $PaidPark = M('ParkPaidInfo');
+            $map = array();
+            $map['id'] = $pid;
+            $parkInfo = $PaidPark->where($map)->find();
+            $this->telephone = $parkInfo['creater'] == 0 ? "系统" : $this->getDriver($parkInfo['creater'])['telephone'];
+            $this->parkInfo = $parkInfo;
             $this->meta_title = '免费停车场 | 嘟嘟后台管理';
             $this->display();
         }

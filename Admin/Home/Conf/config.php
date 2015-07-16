@@ -157,6 +157,32 @@ return array(
         8 => '老厂房'
     ),
 
+    //付费停车场TAG
+    'PARK_STYLE' => array (
+        'DM' => '地面',
+        'DXK' => '地下库',
+        'LTCK' => '立体车库',
+        'LUB' => '路侧边',
+        'XQ' => '普通小区',
+        'GDXQ' => '高档小区',
+        'GWZX' => '购物中心',
+        'DXCS' => '大型超市',
+        'FWMD' => '消费门店',//原来是服务门店
+        'SYXZL' => '商业写字楼',
+        'JD' => '酒店',
+        'YY' => '医院',
+        'DWJG' => '单位机构',
+        'SYTCC' => '商业停车场',
+        'LYJD' => '景点',
+        'ZDZJCR' => '自动闸机进入',
+        'USERFX' => '人工放行',
+        'ZYSF' => '中央收费',
+        'BDWKF' => '不对外开放',
+        'LDCD' => '流动车多',
+        'SH' => '实惠',
+        'WYTG' => '网友提供',
+    ),
+
     //FTP上传地址
     'PARK_UPLOAD_PATH' => './default/Public/Uploads/Park/',
 
