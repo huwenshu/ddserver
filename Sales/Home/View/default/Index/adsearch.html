@@ -1,0 +1,190 @@
+<extend name="Public/base"/>
+
+<block name="style">
+    <style>
+        body{padding: 0}
+
+
+        .parkitem > a:hover{
+            text-decoration: none;
+        }
+        .filter{
+            background-color:rgb(229, 229, 229) ;
+        }
+        .filter li{
+
+        }
+        .filter a{
+
+        }
+        .filter  a:hover{
+            text-decoration: none;
+            border: none;
+        }
+        .filter  a:focus{
+            text-decoration: none;
+            border: none;
+        }
+
+        .filter-content {
+            margin: 10px -15px -11px -15px;
+            padding: 11px 15px;
+            font-size: 14px ;
+            background-color: #efefef;
+        }
+        .filter-content > ul {
+            background-color: transparent;
+
+        }
+        .district{
+            float: left;
+            width: 100px;
+        }
+        .gray {background:#ddd;}
+
+
+    </style>
+</block>
+
+<block name="body">
+    <!-- 主体 -->
+    <div id="indexMain" class="index-main">
+        <ul class="mui-table-view">
+            <li class="mui-table-view-cell">
+                <form action="{:U('adsearch')}" method="get">
+                    <div>
+                        <div  style="width:100px;float: right;text-align: center" >
+                            <button type="submit" class="mui-btn" >
+                                <span class="mui-icon mui-icon-search"></span>
+                                高级搜索
+                            </button>
+                        </div>
+                        <div style="margin-right: 120px;">
+                            <input type="search" name="searchname" placeholder="搜索停车场" />
+                        </div>
+                    </div>
+
+                    <table style="width: 100%;table-layout: fixed;margin-bottom: 30px" >
+                        <tr>
+                            <td colspan="3">
+                                <p style="margin-top: 10px;">当前入库{$sum[0]}个停车场，其中已合作{$sum[1]}个停车场，已发布{$sum[2]}个停车场，未发布{$sum[3]}个停车场</p>
+                            </td>
+                        </tr>
+                        <tr>
+                            <td colspan="3">
+                                <ul class="mui-table-view filter">
+                                    <li class="mui-table-view-cell" ><a class="mui-navigate-right" href="#">商圈筛选</a>
+                                        <div class="filter-content" style="display: <?php if(empty($area)){echo "none";}else{echo "block";}?>;">
+                                                <?php
+                                                    foreach(C('SH_OPEN_AREA') as $value){
+                                                        echo '<div style="margin:0 10px;">';
+                                                        echo '<span>'.$value[0].':</span><br></span><span>';
+                                                        foreach($value[2] as $k => $v){
+                                                            $check='';
+                                                            if(array_search($v[1].'|'.$v[2],$area) !== false){
+                                                                $check='checked';
+                                                            }
+                                                            echo '<label style="font-weight: normal;"><input type="checkbox" name="openarea[]" value="'.$v[1].'|'.$v[2].'"'.$check.'>'.$v[0].'</label>';
+                                                        }
+                                                        echo '</span></div>';
+                                                    }
+                                                ?>
+                                        </div>
+                                    </li>
+                                    <li class="mui-table-view-cell"><a class="mui-navigate-right" href="#">停车场状态</a>
+                                        <div class="filter-content" style="display:  <?php if(empty($state)){echo "none";}else{echo "block";}?>;">
+                                            <label style="font-weight: normal;"><input type="checkbox" name="parkstate[]" value="GPS" <?php if(array_search('GPS',$state) !== false){echo "checked";}?>>经纬度缺失</label>
+                                            <label style="font-weight: normal;"><input type="checkbox" name="parkstate[]" value="NOPEN" <?php if(array_search('NOPEN',$state) !== false){echo "checked";}?>>不对外开放</label>
+                                            <label style="font-weight: normal;"><input type="checkbox" name="parkstate[]" value="CORP" <?php if(array_search('CORP',$state) !== false){echo "checked";}?>>已合作停车场</label>
+                                            <label style="font-weight: normal;"><input type="checkbox" name="parkstate[]" value="NPUB" <?php if(array_search('NPUB',$state) !== false){echo "checked";}?>>未发布</label>
+                                            <label style="font-weight: normal;"><input type="checkbox" name="parkstate[]" value="MY" <?php if(array_search('MY',$state) !== false){echo "checked";}?>>我的停车场</label>
+                                        </div>
+                                    </li>
+                                </ul>
+                            </td>
+                        </tr>
+                    </table>
+                </form>
+            </li>
+
+            <?php
+
+            foreach ($parks_info as $key => $value) {
+            echo "<li name='parkitem' class='mui-table-view-cell parkitem'><a class='mui-navigate-right'  target='_blank' href=".U('parkinfo',array('parkid'=>$value['id'])).">";
+            if(strpos($value['style'], 'BDWKF')){
+            echo "<p style='color:#ddd'>";
+                }
+                else{
+                echo "<p>";
+                }
+
+                echo $value['name'].tags($value)."<br>";
+                echo "地址：".$value['address'];
+                echo "</p></a></li>";
+
+            }
+
+            //生成Tags,并且根据情况标注颜色
+            function tags($value){
+
+            $temp = " ";
+            $isAuto = false;
+            if(strpos($value['style'], 'BDWKF')){
+            $temp.="[不对外开放]";
+            $isAuto = true;
+            }
+
+            $temp.= "[".C('PARK_COR')[$value['status']%10]."]";
+
+            if($value['status']>=10){
+            $temp.= "[已发布]";
+            }
+            else{
+            $temp.= "[未发布]";
+            }
+
+            if($isAuto){
+            $temp.=" <span style='color: #dddddd'>";
+                }
+                else{
+                    $temp.=" <span style='color: #ff0000'>";
+                }
+
+                if($value['lat'] == 0.0 || $value['lng'] == 0.0){
+                    $temp.='[经纬度缺失]';
+                }
+
+                if(empty($value['name'])){
+                     $temp.='[名字缺失]';
+                }
+
+                if(empty($value['chargingrules'])){
+                     $temp.='[计费规则缺失]';
+                }
+
+                if(empty($value['address'])){
+                     $temp.='[入口地址缺失]';
+                }
+
+                $temp.= '</span>';
+
+                return $temp;
+
+            }
+        ?>
+        </ul>
+
+    </div>
+</block>
+
+<block name="script">
+
+    <script type="text/javascript">
+        $(function(){
+            $(".parkitem").hover(function() {$(this).addClass("gray")}, function() {$(this).removeClass("gray")});
+            $(".filter > li > a").click(function(){
+                $(this).next('div').toggle();
+            });
+        });
+    </script>
+</block>

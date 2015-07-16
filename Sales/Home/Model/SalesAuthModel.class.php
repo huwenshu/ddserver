@@ -32,9 +32,11 @@ class SalesAuthModel extends Model {
                 //记录行为日志
                 //action_log('user_login', 'member', $uid, $uid);
 
-                // session记录登录信息 
-                session('user_auth', $auth);                     
-       	
+                // session记录登录信息
+                session('user_auth',$auth);
+                $PHPSESSID = session_id();
+                cookie('PHPSESSID',$PHPSESSID,30*24*3600);
+
 				return $uid ; //登录成功，返回用户UID
 			} else {
 				return -2; //密码错误

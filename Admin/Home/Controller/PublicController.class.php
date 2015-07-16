@@ -39,7 +39,10 @@ class PublicController extends BaseController {
                     //action_log('user_login', 'member', $uid, $uid);
 
                     // session记录登录信息
-                    session('admin_auth', $auth);
+                    session(array('name'=>'PHPSESSID','expire'=>30*24*3600,'use_cookies'=>1));
+                    session('admin_auth',$auth);
+                    $PHPSESSID = session_id();
+                    cookie('PHPSESSID',$PHPSESSID,30*24*3600);
 
                     $this->success('登录成功！', U('Index/index'));
 
@@ -62,7 +65,6 @@ class PublicController extends BaseController {
     public function logout(){
         if($this->is_login()){
             session('admin_auth', null);
-            session('[destroy]');
             $this->redirect('login');
         } else {
             $this->redirect('login');
@@ -75,6 +77,231 @@ class PublicController extends BaseController {
         $verify->entry(1);
     }
     
+    private function getShort($pinyin, $i=0){
+        if($i == 0){
+            $str = $pinyin;
+        }
+        else{
+            $str = $pinyin.$i;
+        }
+        
+        $ParkInfo = M('ParkInfo');
+        $map = array();
+        $map['shortname'] = $str;
+        $park = $ParkInfo->where($map)->find();
+        if(is_array($park)){
+            $i++;
+            return $this->getShort($pinyin,$i);
+        }
+        else{
+            return $str;
+        }
+        
+    }
+    
+    public function parsePark(){
+        $excludes = array();
+        $datas = readCSV('park122_0101_t',$excludes);
+        $Park = M('ParkInfo');
+        $PinYin = new Home\Common\PinYin();
+        foreach($datas as $data){
+            $dbdata = $this->bd_decrypt($data[1], $data[0]);
+            $dbdata['name'] = $data[2];
+            $pinYin = strtoupper($PinYin->getFirstPY($dbdata['name']));
+            $dbdata['shortname'] = $this->getShort($pinYin, 0);
+            $dbdata['prepay'] = $data[3];
+            $dbdata['pretype'] = $data[4];
+            $dbdata['chargingrules'] = $data[5];
+            $dbdata['address'] = $data[6]==''?$dbdata['name']:$data[6];
+            $dbdata['address2'] = $data[7]==''?$data[9]:$data[7];
+            $dbdata['style'] = $data[8];
+            $dbdata['opentime'] = '全天';
+            $dbdata['status'] = 10;
+            $dbdata['responsible'] = -1;
+            
+            var_dump($dbdata);
+            $Park->add($dbdata);
+            echo "<br>";
+            //return;
+        }
+        echo "<br>done";
+    }
+    
+    public function parsePark2(){
+        $excludes = array();
+        $datas = readCSV('shanghai_all_from_ryun',$excludes);
+        //var_dump($datas);
+        //return;
+        $Park = M('ParkInfo');
+        $PinYin = new Home\Common\PinYin();
+        foreach($datas as $data){
+            $con = array('name'=>$data[2],'address'=>$data[3],'_logic'=>'OR');
+            $info = $Park->where($con)->find();
+            if(is_array($info)){//存在
+                echo '<br>duplicate:<br>';
+                var_dump($data);
+            }else{
+                $dbdata = array();
+                $dbdata['lng'] = $data[0];
+                $dbdata['lat'] = $data[1];
+                $dbdata['name'] = $data[2];
+                $pinYin = strtoupper($PinYin->getFirstPY($dbdata['name']));
+                $dbdata['shortname'] = $this->getShort($pinYin, 0);
+                $dbdata['address'] = $data[3]==''?$dbdata['name']:$data[3];
+                $dbdata['address2'] = $data[4];
+                $dbdata['prepay'] = $data[5];
+                $dbdata['pretype'] = $data[6];
+                $dbdata['chargingrules'] = $data[7];
+                $dbdata['style'] = '|WYTG|';
+                $dbdata['opentime'] = '全天';
+                $dbdata['status'] = 10;
+                $dbdata['responsible'] = -2;
+                
+                echo ':'.$Park->add($dbdata);
+            }
+            //return;
+        }
+        echo "<br>done";
+    }
+    
+    public function updatePark(){
+        $excludes = array();
+        $datas = readCSV('park122_0101_t',$excludes);
+        $Park = M('ParkInfo');
+        foreach($datas as $data){
+            $con = array('name'=>$data[2]);
+            if($data[8] == ''){
+               $data[8] = '|WYTG|';
+            }else{
+               $data[8] .= 'WYTG|';
+            }
+            $dbdata = array('style'=>$data[8]);
+            $Park->where($con)->data($dbdata)->save();
+            //return;
+        }
+        echo "<br>done";
+    }
+    
+    public function parseFreeCsv(){
+        $excludes = array(//排除自己人的设备，或非来自设备的访问（第10字段）
+        10=>array('1d601e9ae58ed02dfdbbb8a1cd5a3fde92e0e34daaf7439e21cdfd013557fb74','ae4537a81c7c56518ae29a1b8d35f0f8','b96fa82c0d7f2c9fb006231673700119','b283b7837f84088172f652569dcd7751','')
+        );
+        $names = array(//文件列表
+            'freelist_20150629','freelist_20150630'
+        );
+        $total = 0;
+        $nofreenodata = 0;
+        foreach($names as $name){
+            $datas = readCSV($name,$excludes);
+            //echo '<br>'.$name.':<br>';print_r($datas);
+        }
+    }
+    
+    public function parseLocation($files='20150629,20150630',$searchonly=1){
+        $excludes = array(//排除自己人的设备，或非来自设备的访问（第8字段）
+                          8=>array('1d601e9ae58ed02dfdbbb8a1cd5a3fde92e0e34daaf7439e21cdfd013557fb74','ae4537a81c7c56518ae29a1b8d35f0f8','b96fa82c0d7f2c9fb006231673700119','b283b7837f84088172f652569dcd7751','')
+                          );
+        $tgap = 0.4545;//50000m
+        $names = explode(',',$files);
+        $total = 0;
+        $cons = array('fn_dn'=>0,'fy_dn'=>0,'fn_dy'=>0,'fy_dy'=>0,'search'=>0);
+        $Park = M('ParkInfo');
+        $ParkFree = M('ParkFreeInfo');
+        foreach($names as $name){
+            $datas = readCSV('location2_'.$name,$excludes);
+            $total1 = count($datas);
+            $cons1 = array('fn_dn'=>0,'fy_dn'=>0,'fn_dy'=>0,'fy_dy'=>0,'search'=>0);
+            foreach($datas as $data){
+                if($searchonly){
+                    if($data[3] == 0 || $data[4] == 0 || ($data[3] == $data[5] && $data[4] == $data[6]) || abs($data[3]-$data[5])>=$tgap || abs($data[4]-$data[6])>=$tgap){
+                        continue;
+                    }
+                }
+                if($data[3] != $data[5] || $data[4] != $data[6]){
+                    $cons1['search']++;
+                    $cons['search']++;
+                }
+                $lat = $data[5];
+                $lng = $data[6];
+                $gap = 0.004545;//0.002727;
+                $con = array();
+                $con['lat'] = array(array('gt',$lat - $gap),array('lt',$lat + $gap));
+                $con['lng'] = array(array('gt',$lng - $gap),array('lt',$lng + $gap));
+                $con['status'] = array('EGT', 4);
+                $count1 = $Park->where($con)->count();
+                
+                $con['status'] = 1;
+                $count2 = $ParkFree->where($con)->count();
+                
+                if($count1 > 0){
+                    if($count2 > 0){
+                        $cons1['fy_dy']++;
+                        $cons['fy_dy']++;
+                    }else{
+                        $cons1['fn_dy']++;
+                        $cons['fn_dy']++;
+                    }
+                }else{
+                    if($count2 > 0){
+                        $cons1['fy_dn']++;
+                        $cons['fy_dn']++;
+                    }else{
+                        $cons1['fn_dn']++;
+                        $cons['fn_dn']++;
+                    }
+                }
+            }
+            
+            $total += $total1;
+            echo '<br>'.$name.':<br>Total'.$total1.'<br>';print_r($cons1);
+        }
+        echo '<br><br>Total'.$total.'<br>';print_r($cons);
+    }
+
+    //处理道路停车场
+//    public function parseRoadPark()
+//    {
+//        Vendor('PHPExcel.PHPExcel');
+//        $file = C('CSV_LOG_PATH') . '/road_park_2015_07_07.xlsx';
+//        $PHPReader = new PHPExcel_Reader_Excel2007();
+//        if (!$PHPReader->canRead($file)) {
+//            $PHPReader = new PHPExcel_Reader_Excel5();
+//            if (!$PHPReader->canRead($file)) {
+//                return array("error" => "类型不匹配");
+//            }
+//        }
+//        $objPHPExcel = $PHPReader->load($file); //上传的文件，或者是指定的文件
+//        $sheet = $objPHPExcel->getSheet(0);
+//        $highestRow = $sheet->getHighestRow(); //取得总行数
+//
+//        $Park = M('ParkInfo');
+//        $PinYin = new Home\Common\PinYin();
+//        for($i=3;$i<=$highestRow;$i++)
+//        {
+//            $temp = array();
+//            $temp['address'] = (string)$sheet->getCellByColumnAndRow(4, $i)->getValue();
+//            $temp['spacesum'] = (string)$sheet->getCellByColumnAndRow(5, $i)->getValue();
+//            $temp['opentime'] = (string)$sheet->getCellByColumnAndRow(6, $i)->getValue();
+//            $name =  (string)$sheet->getCellByColumnAndRow(7, $i)->getValue();
+//            $nameArr = explode('～',$name);
+//            $name = str_replace('（','',$nameArr[0]);
+//            $temp['name'] = $name.'道路停车场';
+//            $pinYin = strtoupper($PinYin->getFirstPY($temp['name']));
+//            $temp['shortname'] = $this->getShort($pinYin, 0);
+//            $temp['style'] = '|LUB|';
+//            $temp['status'] = 0;
+//            $temp['note'] = (string)$sheet->getCellByColumnAndRow(2, $i)->getValue().':'.(string)$sheet->getCellByColumnAndRow(3, $i)->getValue().' 未审核';
+//            $temp['responsible'] = -3;
+//            $temp['creator'] = -3;
+//            $temp['createtime'] = date('Y-m-d H:i:s');
+//            $temp['updater'] = -3;
+//            $temp['updatetime'] = date('Y-m-d H:i:s');
+//            echo "插入：".$Park->add($temp)."<br/>";
+//        }
+//
+//
+//    }
+
     public function bd_decrypt_all()
 		{
 				$db = M('park_free_info');
@@ -89,7 +316,7 @@ class PublicController extends BaseController {
 				echo 'done:'.$count;
 		}
     
-    public function bd_decrypt($bd_lat=31.248700, $bd_lon=121.509710)
+    public function bd_decrypt($bd_lat=31.15601, $bd_lon=121.12323)
 		{
 				$x_pi = 3.14159265358979324 * 3000.0 / 180.0;
 		    $x = $bd_lon - 0.0065;
@@ -98,10 +325,12 @@ class PublicController extends BaseController {
 		    $theta = atan2($y, $x) - 0.000003 * cos($x * $x_pi);
 		    $gg_lon = $z * cos($theta);
 		    $gg_lat = $z * sin($theta);
+            
+            $ret = array('lat'=>$gg_lat,'lng'=>$gg_lon);
+            print_r($ret);
+            
+            return $ret;
 		    
-		    return array('lat'=>$gg_lat,'lng'=>$gg_lon);
-		    
-		    //echo $gg_lon.','.$gg_lat;
 		}
     
     public function test_park122($city='sh'){
@@ -225,7 +454,7 @@ class PublicController extends BaseController {
             $content .= "停车场:".$value['name']." 过期时间:".$value['acendtime']."<br/><br/>";
         }
         if(!empty($parkList)){
-            sendMail("dubin@duduche.me", $title, $content);
+            sendMail(array("xubo@duduche.me","huweiwei@duduche.me","dubin@duduche.me",), $title, $content);
         }
 
     }

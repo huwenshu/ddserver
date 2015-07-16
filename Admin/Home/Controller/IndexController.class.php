@@ -496,6 +496,76 @@ class IndexController extends BaseController {
         $this->meta_title = '自动红包 | 嘟嘟后台管理系统';
         $this->display();
     }
+    
+    public function mapvisit($files='20150629,20150630'){
+        $excludes = array(//排除自己人的设备，或非来自设备的访问（第8字段）
+                          8=>array('1d601e9ae58ed02dfdbbb8a1cd5a3fde92e0e34daaf7439e21cdfd013557fb74','ae4537a81c7c56518ae29a1b8d35f0f8','b96fa82c0d7f2c9fb006231673700119','b283b7837f84088172f652569dcd7751','')
+                          );
+        $gap = 0.4545;//50000m
+        $names = explode(',',$files);
+        $routelist = array();
+        foreach($names as $name){
+            $datas = readCSV('location2_'.$name,$excludes);
+            foreach($datas as $data){
+                if($data[3] != 0 && $data[4] != 0 && ($data[3] != $data[5] || $data[4] != $data[6]) && abs($data[3]-$data[5])<$gap && abs($data[4]-$data[6])<$gap){
+                    //user search
+                    $target = array('lat'=>$data[5],'lng'=>$data[6]);
+                    $start = array('lat'=>$data[3],'lng'=>$data[4]);
+                    $dup = false;
+                    foreach($routelist as $route){
+                        if($route['start']['lat'] == $start['lat'] && $route['start']['lng'] == $start['lng'] && $route['target']['lat'] == $target['lat'] && $route['target']['lng'] == $target['lng']){
+                            $dup = true;
+                            break;
+                        }
+                    }
+                    if(!$dup){
+                        $route = array('start'=>$start,'target'=>$target);
+                        $routelist[] = $route;
+                    }
+                }
+            }
+        }
+        $this->routelist=json_encode($routelist);
+        $this->display();
+    }
+    
+    public function mapstart($files='20150629,20150630'){
+        $excludes = array(//排除自己人的设备，或非来自设备的访问（第8字段）
+                          8=>array('1d601e9ae58ed02dfdbbb8a1cd5a3fde92e0e34daaf7439e21cdfd013557fb74','ae4537a81c7c56518ae29a1b8d35f0f8','b96fa82c0d7f2c9fb006231673700119','b283b7837f84088172f652569dcd7751','')
+                          );
+        $gap = 0.4545;//50000m
+        $names = explode(',',$files);
+        $plist = array();
+        $Park = M('ParkInfo');
+        foreach($names as $name){
+            $datas = readCSV('location2_'.$name,$excludes);
+            foreach($datas as $data){
+                $start = array('lat'=>$data[3],'lng'=>$data[4]);
+                if($data[3] == 0 || $data[4] == 0){
+                    $start = array('lat'=>$data[5],'lng'=>$data[6]);
+                }
+                $dup = false;
+                foreach($plist as $p){
+                    if($p['lat'] == $start['lat'] && $p['lng'] == $start['lng']){
+                        $dup = true;
+                        break;
+                    }
+                }
+                if(!$dup){
+                    $gap = 0.004545;//0.002727;
+                    $con = array();
+                    $con['lat'] = array(array('gt',$start['lat'] - $gap),array('lt',$start['lat'] + $gap));
+                    $con['lng'] = array(array('gt',$start['lng'] - $gap),array('lt',$start['lng'] + $gap));
+                    $con['status'] = array('EGT', 4);
+                    $count1 = $Park->where($con)->count();
+                    $start['count']=$count1;
+                    $plist[] = $start;
+                }
+            }
+        }
+        $this->plist=json_encode($plist);
+        $this->display();
+    }
 
 
 }

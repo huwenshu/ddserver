@@ -440,6 +440,9 @@ class IndexController extends BaseController {
 			}
 			$tmp['money'] = $sum;
 			$tmp['carid'] = $value['carid'];
+            if($tmp['carid'] == '' && $value['uid'] == 0){
+                $tmp['carid'] = '测A88888';
+            }
             $tmp['tel'] = $this->getDriver($value['uid'])['telephone'];
 
 			array_push($result, $tmp);

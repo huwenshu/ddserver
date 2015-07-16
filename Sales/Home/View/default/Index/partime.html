@@ -18,17 +18,7 @@
     <div id="indexMain" class="index-main">
         <ul class="mui-table-view">
             <li class="mui-table-view-cell">
-                <form action="{:U('index')}" method="get">
-                    <input type="search" name="searchpark" placeholder="搜索停车场" />
-
-                    <table style="width: 100%;table-layout: fixed">
-                        <tr>
-                            <td><a class="mui-btn mui-btn-success" href="{:U('parkinfo')}">添加停车场</a></td>
-                            <td  style="text-align: center" ><a class="mui-btn  mui-btn-primary" href="{:U('index',array('my'=>1))}">我的停车场</a></a></td>
-                            <td><input type="submit" style="float: right" value="搜索" /></td>
-                        </tr>
-                    </table>
-                </form>
+                <p style="margin-top: 10px;">当前列表有<a href="{:U('parkmap',array('status'=>0,'responsible'=>$id))}" target=_blank>{$sum[0]}</a>个停车场，其中已合作<a href="{:U('parkmap',array('status'=>2,'responsible'=>$id))}" target=_blank>{$sum[1]}</a>个停车场，已发布<a href="{:U('parkmap',array('status'=>1,'responsible'=>$id))}" target=_blank>{$sum[2]}</a>个停车场，未发布<a href="{:U('parkmap',array('status'=>3,'responsible'=>$id))}" target=_blank>{$sum[3]}</a>个停车场</p>
             </li>
 
             <?php
@@ -61,10 +51,10 @@
             $temp.= "[".C('PARK_COR')[$value['status']%10]."]";
 
             if($value['status']>=10){
-            $temp.= "[信息化]";
+            $temp.= "[已发布]";
             }
             else{
-            $temp.= "[未信息化]";
+            $temp.= "[未发布]";
             }
 
             if($isAuto){

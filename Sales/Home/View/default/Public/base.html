@@ -43,20 +43,29 @@
     <script type="text/javascript" src="__STATIC__/jquery-ui.min.js"></script>
     <script type="text/javascript" src="__JS__/jquery.mousewheel.js"></script>
     <!--<![endif]-->
+    <style>
+        .main-nav{
+            position:absolute;
+            left:50%;
+            width: 204px;
+            margin-left:-102px;
+        }
+    </style>
     <block name="style"></block>
 </head>
 <body>
     <!-- 头部 -->
     <div class="header">
         <!-- Logo -->
-        <span style="color:#007aff;margin-left:5%;width:35%;font-size:20px;float:left">嘟嘟停车</span>
+        <span style="color:#007aff;margin-left:5%;font-size:20px;float:left">嘟嘟停车</span>
             <!-- /Logo -->
         <!-- /Logo -->
 
         <!-- 主导航 -->
         <ul class="main-nav">
-            <li style="width:70px;"><a href="{:U('Index/index')}">停车场</a></li>
-            <li style="width:70px;"><a href="{:U('Prom/index')}">推广员</a></li>
+            <li style="width: 64px;"><a href="{:U('Index/index')}">停车场</a></li>
+            <li style="width: 70px;"><a href="{:U('Rules/index')}">规则说明</a></li>
+            <li style="width: 70px;"><a href="{:U('Statistic/index')}">销售统计</a></li>
         </ul>
         <!-- /主导航 -->
 
@@ -98,7 +107,7 @@
             </div>
         </block>
         <!-- /子导航 -->
-    </div>-->
+    <!--</div>-->
    <!-- /边栏 -->
 
     <!-- 内容区 -->

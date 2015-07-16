@@ -9,14 +9,19 @@
 
         td{border:solid#000 1px;padding: 5px;text-align: center;}
 
+        #indexMain{
+            padding-top: 30px;
+        }
     </style>
 </block>
 
 <block name="body">
-    <h2 style="margin-top: 40px;">二次下单用户统计(<?php echo count($List)?>):</h2>
+    <h2 style="margin-top: 40px;">二次下单用户统计:</h2>
+    <h4 style="margin-top: 20px;">
+        下单用户总数:{$totalSum}&nbsp&nbsp二次下单用户总数:{$reorderSum}&nbsp&nbsp占比:<?php echo round(($reorderSum/$totalSum)*100,2).'%'; ?>
+    </h4>
     <!-- 主体 -->
     <div id="indexMain" class="index-main">
-
         <?php
             foreach($List as $value){
                 echo "用户UID:".$value['uid']." 电话号码:".$value['telephone']."<br>";

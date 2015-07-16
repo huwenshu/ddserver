@@ -98,9 +98,19 @@ return array(
                 'url' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd417c2e70f817f89&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=discover#wechat_redirect'
             ),
             array(
-                'type' => 'view',
-                'name' => '我的',
-                'url' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd417c2e70f817f89&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=userinfo#wechat_redirect'
+                "name" => "我的",
+                "sub_button" => array(
+                array(
+                    "type" => "view",
+                    "name" => "我的账户",
+                    'url' => 'https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd417c2e70f817f89&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=userinfo#wechat_redirect'
+                ),
+                array(
+                    "type"=> "view",
+                    "name"=>"APP下载",
+                    'url' => 'http://driver.duduche.me/driver.php/home/public/wx_app_down/'
+                )
+                )
             ),
 
         )
@@ -200,6 +210,7 @@ return array(
         'ZYSF' => '中央收费',
         'BDWKF' => '不对外开放',
         'LDCD' => '流动车多',
-        'SH' => '实惠'
+        'SH' => '实惠',
+        'WYTG' => '网友提供'
     ),
 );

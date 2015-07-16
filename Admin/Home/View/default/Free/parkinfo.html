@@ -17,6 +17,10 @@
                     <td style="width: 80%"><input type="text" id="freeid" name="freeid" value="{$parkInfo['id']}" readonly/> </td>
                 </tr>
                 <tr>
+                    <td><label for="submitor">提交者：</label></td>
+                    <td>用户ID:{$parkInfo['creater']}     电话:{$telephone} </td>
+                </tr>
+                <tr>
                     <td><label for="name">停车场名字：</label></td>
                     <td><input type="text" id="name" name="name" value="{$parkInfo['name']}" /> </td>
                 </tr>

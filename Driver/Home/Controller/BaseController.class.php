@@ -821,6 +821,8 @@ class BaseController extends \Think\Controller {
     	$arr = array();
       $arr['uid'] = $uid;
       $arr['pid'] = $pid;
+      $arr['carid'] = '测A88888';
+      //$arr['cost'] = 10;
       $arr['state'] = 0;
       $arr['startime'] = date("Y-m-d H:i:s");
       $arr['endtime'] = date("Y-m-d H:i:s",$endtime);

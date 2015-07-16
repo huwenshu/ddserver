@@ -45,8 +45,7 @@ return array(
 
     /* SESSION 和 COOKIE 配置 */
     'SESSION_PREFIX' => 'dudu_admin', //session前缀
-    'SESSION_EXPIRE' => '300000',        //session过期时间
-    'COOKIE_PREFIX'  => 'dudu_admin_', // Cookie前缀 避免冲突
+    'SESSION_OPTIONS' => array('expire'=>30*24*3600),
     'VAR_SESSION_ID' => 'session_id',	//修复uploadify插件无法传递session_id的bug
 
     /* 后台错误页面模板 */
@@ -166,5 +165,13 @@ return array(
 
     //图片七牛访问路径
     'PARK_IMG_QINIU' =>'http://7xispd.com1.z0.glb.clouddn.com',
+
+    //个推参数
+    'GETUI' => array(
+        'GT_APPID' =>  '0J2ipM3D2V5WQDpWnQZC1',
+        'GT_HOST' => 'http://sdk.open.api.igexin.com/apiex.htm',
+        'GT_APPKEY' => 'qaHlPWSeAu9M5bG9D8akm7',
+        'GT_MASTERSECRET' => 'FbBqTqUhAp7e4KCoiNmTx1',
+    ),
 
 );

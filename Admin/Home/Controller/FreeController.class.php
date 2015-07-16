@@ -25,7 +25,7 @@ class FreeController extends BaseController{
         $ParkFreeInfo = M('ParkFreeInfo');
         $map = array();
         $map['name'] = array('like','%'.$searchName.'%');
-        $parkList = $ParkFreeInfo->where($map)->order('status')->select();
+        $parkList = $ParkFreeInfo->where($map)->order('status, createtime desc')->select();
         $this->parkList = $parkList;
         $this->meta_title = '首页 | 嘟嘟销售系统';
         $this->display();
@@ -33,6 +33,9 @@ class FreeController extends BaseController{
 
     public function parkinfo($freeid =null, $fileError = null){
         if (IS_POST) {
+            $Park = M('ParkFreeInfo');
+            $u_park = $Park->where(array('id' => $freeid))->find();
+
             $parkInfo = array();
             //处理POST过来的信息
             $parkInfo['id'] = $freeid;
@@ -80,13 +83,17 @@ class FreeController extends BaseController{
             }
 
             //保存
-            $Park = D('ParkFreeInfo');
+
             $saved = $Park->save($parkInfo);
 
             if ($saved === false) {
                 $this->error();
             }
             else{
+                if($u_park['status'] == 0 && $parkInfo['status'] ==1){
+                    $this->pushNotice($u_park['creater'],'恭喜您，您提交的免费停车场已经通过审核，嘟嘟感谢您为大家提供信息！',json_encode(array('r' => 'reload')));
+                }
+
                 $param = array('freeid' => $parkInfo['id']);
                 if(isset($fileError)){
                     $param['fileError'] = $fileError;
@@ -100,6 +107,7 @@ class FreeController extends BaseController{
             $map = array();
             $map['id'] = $freeid;
             $parkInfo = $FreePark->where($map)->find();
+            $this->telephone = $parkInfo['creater'] == 0 ? "系统" : $this->getDriver($parkInfo['creater'])['telephone'];
             $this->parkInfo = $parkInfo;
             $this->fileError = $fileError;
             $this->meta_title = '免费停车场 | 嘟嘟后台管理';

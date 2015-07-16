@@ -36,6 +36,11 @@ class IndexController extends  BaseController {
                 $con['_complex'] = $where;
             }
             $parks = $Park->where($con)->order('updatetime desc')->select();
+            $p_sum = $Park->count();
+            $c_sum = $Park->where(array('status' => array('in', '4,14')))->count();
+            $i_sum = $Park->where(array('status' => array('EGT', 10)))->count();
+            $n_sum = $Park->where(array('status' => array('LT', 10)))->count();
+            $this->sum = array($p_sum, $c_sum, $i_sum, $n_sum);
             $this->parks_info = $parks;
         	$this->meta_title = '首页 | 嘟嘟销售系统';
         	$this->display();
@@ -45,13 +50,85 @@ class IndexController extends  BaseController {
         }
     }
 
+    //高级搜索
+    public function adsearch(){
+
+            $searchname = I('get.searchname');
+            $openarea = I('get.openarea');
+            $parkstate = I('get.parkstate');
+
+            $Park = M('ParkInfo');
+            $map = array();
+            if(!empty($searchname)){
+                $where = array();
+                $where['name']  = array('like','%'.$searchname.'%');
+                $where['address']  = array('like','%'.$searchname.'%');
+                $where['_logic'] = 'or';
+                $map['_complex'] = $where;
+            }
+            if(!empty($openarea)){
+                $gps_lat = array();
+                $gps_lng = array();
+                $gap = 0.004545;//1km
+                foreach($openarea as $v){
+                    $tmp = explode('|', $v);
+                    $lat = $tmp[0];
+                    $lng = $tmp[1];
+                    array_push($gps_lat, array(array('gt',$lat-$gap),array('lt',$lat+$gap))) ;
+                    array_push($gps_lng, array(array('gt',$lng-$gap),array('lt',$lng+$gap))) ;
+                }
+                array_push($gps_lat, 'or');
+                array_push($gps_lng, 'or');
+                $map['lat'] = $gps_lat;
+                $map['lng'] = $gps_lng;
+            }
+            if(!empty($parkstate)){
+                foreach($parkstate as $key => $value){
+                    if($value == 'GPS'){
+                        $map['lat'] = 0.0;
+                        $map['lng'] = 0.0;
+                    }
+                    if($value == 'NOPEN'){
+                        $map['style'] = array('like', '%|BDWKF|%');
+                    }
+                    if($value == 'CORP'){
+                        $map['status'] = array('in', '4,14');
+                    }
+                    if($value == 'NPUB'){
+                        $map['status'] = array('lt', '10');
+                    }
+                    if($value == 'MY'){
+                        $map['responsible'] = UID;
+                    }
+                }
+
+            }
+            $parks = $Park->where($map)->select();
+            $p_sum = $Park->count();
+            $c_sum = $Park->where(array('status' => array('in', '4,14')))->count();
+            $i_sum = $Park->where(array('status' => array('EGT', 10)))->count();
+            $n_sum = $Park->where(array('status' => array('LT', 10)))->count();
+            $this->area = empty($openarea) ? array():$openarea;
+            $this->state = empty($parkstate) ? array():$parkstate;
+            $this->sum = array($p_sum, $c_sum, $i_sum, $n_sum);
+            $this->parks_info = $parks;
+            $this->meta_title = '高级搜索 | 嘟嘟销售系统';
+            $this->display();
+    }
+
     public function partime($id){
         $ParkInfo = M('ParkInfo');
         $map = array();
         $map['responsible'] = $id;
         $parkList = $ParkInfo->where($map)->select();
         $this->parks_info = $parkList;
-        $this->meta_title = '首页 | 嘟嘟销售系统';
+        $p_sum = $ParkInfo->where(array('responsible' => $id))->count();
+        $c_sum = $ParkInfo->where(array('status' => array('in', '4,14'),'responsible' => $id))->count();
+        $i_sum = $ParkInfo->where(array('status' => array('EGT', 10),'responsible' => $id))->count();
+        $n_sum = $ParkInfo->where(array('status' => array('LT', 10),'responsible' => $id))->count();
+        $this->sum = array($p_sum, $c_sum, $i_sum, $n_sum);
+        $this->id = $id;
+        $this->meta_title = '统计 | 嘟嘟销售系统';
         $this->display();
     }
 
@@ -147,7 +224,8 @@ class IndexController extends  BaseController {
             }
 
     		$Park = D('ParkInfo');
-            if( UID==100 && UID!=$parkInfo['responsible']){
+            $info_arr = array(100,101,102,103);
+            if( in_array(UID, $info_arr) && UID!=$parkInfo['responsible']){
                 $saveParkId = 0;
             }
             else{
@@ -637,5 +715,42 @@ class IndexController extends  BaseController {
 
         $this->redirect('/Home/Index/parkinfo/parkid/'.$parkid.'/#panel-3');
 
+    }
+    
+    /*
+     status:
+     0          所有
+     1          信息化
+     2          已合作
+     3          未上线
+     */
+    public function parkmap($status=0,$responsible=null){
+        $this->city = '021';
+        $this->addr = '';
+        
+        $Park = D('ParkInfo');
+        $parks = null;
+        if($status == 0){
+            $parks = $Park->getField('id,name,lat,lng,status,prepay,responsible');
+        }else if($status == 1){
+            $parks = $Park->where('status>=10')->getField('id,name,lat,lng,status,prepay,responsible');
+        }else if($status == 2){
+            $parks = $Park->where('status=14 or status=4')->getField('id,name,lat,lng,status,prepay,responsible');
+        }else if($status == 3){
+            $parks = $Park->where('status<4')->getField('id,name,lat,lng,status,prepay,responsible');
+        }
+        $parray = array();
+        foreach($parks as $pdata){
+            if(isset($responsible)){
+                if($responsible == $pdata['responsible']){
+                    $parray[] = array('id' => $pdata['id'],'name'=>$pdata['name'],'lat'=>$pdata['lat'],'lng'=>$pdata['lng'],'status'=>$pdata['status'],'prepay'=>$pdata['prepay']);
+                }
+            }
+            else{
+                $parray[] = array('id' => $pdata['id'],'name'=>$pdata['name'],'lat'=>$pdata['lat'],'lng'=>$pdata['lng'],'status'=>$pdata['status'],'prepay'=>$pdata['prepay']);
+            }
+        }
+        $this->parklist = json_encode($parray);
+        $this->display();
     }
 }

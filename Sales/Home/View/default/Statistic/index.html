@@ -1,0 +1,79 @@
+<extend name="Public/base"/>
+
+<block name="sidebar"></block>
+
+<block name="style">
+    <style>
+        body{padding: 0}
+
+        .parkitem > a:hover{
+            text-decoration: none;
+            border-bottom: none;
+        }
+        .saleitem > a:hover{
+            text-decoration: none;
+            border-bottom: none;
+        }
+
+        .gray {background:#ddd;}
+    </style>
+</block>
+
+<block name="body">
+    <!-- 主体 -->
+    <div id="indexMain" class="index-main">
+        <p>自动抓取停车场数据统计：</p>
+        <ul class="mui-table-view">
+            <li class='mui-table-view-cell parkitem'>
+                <a class='mui-navigate-right'  target='_blank' href="{:U('Index/partime',array('id'=>-1))}">
+                    <p>全上海市实惠停车场数据</p>
+                    <p>来源:P司机网站 http://www.122park.com/ </p>
+                    <p>代码:-1</p>
+                </a>
+            </li>
+            <li class='mui-table-view-cell parkitem'>
+                <a class='mui-navigate-right'  target='_blank' href="{:U('Index/partime',array('id'=>-2))}">
+                    <p>百度地图抓取数据</p>
+                    <p>来源:百度</p>
+                    <p>代码:-2</p>
+                </a>
+            </li>
+            <li class='mui-table-view-cell parkitem'>
+                <a class='mui-navigate-right'  target='_blank' href="{:U('Index/partime',array('id'=>-3))}">
+                    <p>上海市区外环线以内道路停车场</p>
+                    <p>来源:百度百科 类似官方文档</p>
+                    <p>代码:-3</p>
+                </a>
+            </li>
+        </ul>
+        <br>
+        <p>全职销售人员统计：</p>
+        <ul class="mui-table-view">
+            <?php
+            foreach ($saleList as $key => $value) {
+            if($value[2] == 0) continue;
+            echo "<li class='mui-table-view-cell saleitem'>
+                    <a class='mui-navigate-right'  target='_blank' href=".U('Index/partime',array('id'=>$value[0])).">
+                    <p>销售ID:".$value[0]."</p>
+                    <p>销售姓名:".$value[1]."</p>
+                    <p>新建数量:".$value[2]."</p>
+                    <p>对外发布数量:".$value[3]."</p>
+                    <p>不对外开放数量:".$value[4]."</p>
+                    <p>已合作数量:".$value[5]."</p>
+                    </a>
+                </li>";
+            }
+            ?>
+        </ul>
+
+    </div>
+</block>
+
+<block name="script">
+    <script type="text/javascript">
+        $(function(){
+            $(".parkitem").hover(function() {$(this).addClass("gray")}, function() {$(this).removeClass("gray")});
+            $(".saleitem").hover(function() {$(this).addClass("gray")}, function() {$(this).removeClass("gray")});
+        });
+    </script>
+</block>
