@@ -394,6 +394,93 @@ class BaseController extends \Think\Controller {
         return urldecode($ret);
     }
 
+    /*
+        *  @desc 向指定的用户发送消息
+        *  @param uid 推送的用户名
+        *  @param msg 推送的消息体
+       */
+    protected function pushNotice($uid, $msg, $tran){
+        $Driver = M('DriverInfo');
+        $driver = $Driver->where(array('id'=>$uid))->find();
+        //推送微信用户
+        if(!empty($driver['openid'])){
+            $msg_json =  sprintf ( C('CUSTOM_TEXT_TPL'), $driver['openid'], $msg);
+            $this->pushMsg($msg_json);
+        }
+        //推送APP用户
+        if(!empty($driver['pushid'])){
+            $this->getuiPush($driver['pushid'], $msg, $tran);
+        }
+    }
+
+    /*
+     *  @desc 利用个推向指定的APP用户发送消息
+     *  @param pushid 推送的用户机器号
+     *  @param msg 推送的消息体
+     *  @param tran 透传内容
+    */
+    protected function getuiPush($pushid, $msg, $tran){
+        include_once(dirname(__FILE__) . '/../Common/getui/' . 'IGt.Push.php');
+        /*推送*/
+        $igt = new IGeTui(C('GETUI')['GT_HOST'],C('GETUI')['GT_APPKEY'],C('GETUI')['GT_MASTERSECRET']);
+        //接收方
+        $target = new IGtTarget();
+        $target->set_appId(C('GETUI')['GT_APPID']);
+        $target->set_clientId($pushid);
+        //个推popup消息
+        $template = $this->IGtNotificationTemplateDemo('嘟嘟停车', $msg, $tran);
+        $message = new IGtSingleMessage();
+        $message->set_isOffline(true);//是否离线
+        $message->set_offlineExpireTime(3600*12*1000);//离线时间
+        $message->set_data($template);//设置推送消息类型
+        //$message->set_PushNetWorkType(0);	//设置是否根据WIFI推送消息，1为wifi推送，0为不限制推送
+        //$rep = $igt->pushMessageToSingle($message, $target);
+        //var_dump($rep);
+        try {
+            $rep = $igt->pushMessageToSingle($message, $target);
+        }catch(RequestException $e){
+            $requstId =e.getRequestId();
+            $rep = $igt->pushMessageToSingle($message, $target,$requstId);
+        }
+        //dump($rep);
+        //dump($pushid);
+    }
+
+    //个推通知消息模板
+    protected function IGtNotificationTemplateDemo($title, $notice, $msg){
+        $template =  new IGtNotificationTemplate();
+        $template->set_appId(C('GETUI')['GT_APPID']);//应用appid
+        $template->set_appkey(C('GETUI')['GT_APPKEY']);//应用appkey
+        $template->set_transmissionType(1);//透传消息类型
+        $template->set_transmissionContent($msg);//透传内容
+        $template->set_title($title);//通知栏标题
+        $template->set_text($notice);//通知栏内容
+        $template->set_logo('icon.png');//通知栏logo
+        $template->set_logoURL("http://duduche.me/html/userhtml/img/icon.png");//通知栏logo链接
+        $template->set_isRing(true);//是否响铃
+        $template->set_isVibrate(true);//是否震动
+        $template->set_isClearable(true);//通知栏是否可清除
+        // iOS推送需要设置的pushInfo字段
+        //$template ->set_pushInfo($actionLocKey,$badge,$message,$sound,$payload,$locKey,$locArgs,$launchImage);
+        //$template ->set_pushInfo("test",1,"message","","","","","");
+        //$template->set_pushInfo(null, 1, $notice, "sound", $msg, null, null, null); // iOS参数
+        return $template;
+    }
+
+    //个推透传消息模板
+    protected function IGtTransmissionTemplateDemo($title, $notice, $msg){
+        $template =  new IGtTransmissionTemplate();
+        $template->set_appId(C('GETUI')['GT_APPID']);//应用appid
+        $template->set_appkey(C('GETUI')['GT_APPKEY']);//应用appkey
+        $template->set_transmissionType(1);//透传消息类型
+        $template->set_transmissionContent($msg);//透传内容
+        //iOS推送需要设置的pushInfo字段
+        //$template ->set_pushInfo($actionLocKey,$badge,$message,$sound,$payload,$locKey,$locArgs,$launchImage);
+        //$template ->set_pushInfo("", 0, "", "", "", "", "", "");
+        //$template->set_pushInfo(null, 1, null, "sound", "", $notice, null, null); // iOS参数
+        $template->set_pushInfo(null, 1, $notice, "sound", $msg, null, null, null); // iOS参数
+        return $template;
+    }
 
     /*
      *  @desc 利用客户接口向指定的微信用户发送消息

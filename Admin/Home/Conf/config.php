@@ -166,4 +166,12 @@ return array(
     //图片七牛访问路径
     'PARK_IMG_QINIU' =>'http://7xispd.com1.z0.glb.clouddn.com',
 
+    //个推参数
+    'GETUI' => array(
+        'GT_APPID' =>  '0J2ipM3D2V5WQDpWnQZC1',
+        'GT_HOST' => 'http://sdk.open.api.igexin.com/apiex.htm',
+        'GT_APPKEY' => 'qaHlPWSeAu9M5bG9D8akm7',
+        'GT_MASTERSECRET' => 'FbBqTqUhAp7e4KCoiNmTx1',
+    ),
+
 );
