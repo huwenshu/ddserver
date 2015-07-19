@@ -664,8 +664,36 @@ class PublicController extends BaseController {
         $result['e'] = $e;
         
         if(count($result['p']) == 0){
-            include_once(dirname(__FILE__) . '/../Conf/' . 'config_open_area.php');
-            $this->ajaxOk($result,array('area'=>$config_open_area['sh']));
+            $cache_key = 'open_area_list_sh';
+            $areas = S($cache_key);
+            if ($areas) {
+                $areas = unserialize($areas);
+                $areas['cache'] = 1;
+            } else {
+                include_once(dirname(__FILE__) . '/../Conf/' . 'config_open_area.php');
+
+                $areas=['area'=>$config_open_area['sh']];
+
+                foreach ($areas['area'] as &$district) {
+                    foreach ($district[2] as &$place) {
+                        $lat = $place[1];
+                        $lng = $place[2];
+                        $gap = 0.004545; //0.002727;
+
+                        $Park = M('ParkInfo');
+                        $con = [];
+                        $con['lat'] = [['gt', $lat - $gap], ['lt', $lat + $gap]];
+                        $con['lng'] = [['gt', $lng - $gap], ['lt', $lng + $gap]];
+                        $con['status'] = ['EGT', 4];
+
+                        $place[3] = intval($Park->where($con)->count());
+                    }
+                }
+
+                S('open_area_list_sh', serialize($areas), 3600);
+                $areas['cache'] = 0;
+            }
+            $this->ajaxOk($result,$areas);
         }else{
             $this->ajaxOk($result);
         }
