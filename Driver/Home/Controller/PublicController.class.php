@@ -542,10 +542,10 @@ class PublicController extends BaseController {
         $nowstr = date("Y-m-d H:i:s");
         foreach($list as $key => $value){
             $tmp = array();
-            
             //通用信息
             $tmp['id'] = $value['id'];
             $tmp['n'] = $value['name'];
+            $tmp['sn'] = $value['shortname'];
             $tmp['r'] = $value['chargingrules'];
             $tmp['a'] = $value['address'];
             $tmp['b'] = $value['address2'];
