@@ -471,6 +471,90 @@ class PublicController extends BaseController {
 		$this->ajaxOk($result);
 	}
     
+    public function parkinfo($n){
+        $Park = M('ParkInfo');
+        $con = array('shortname'=>$n);
+        $value = $Park->where($con)->find();
+        $result = array();
+        if($value){
+            $tmp = array();
+            $tmp['id'] = $value['id'];
+            $tmp['n'] = $value['name'];
+            $tmp['r'] = $value['chargingrules'];
+            $tmp['a'] = $value['address'];
+            $tmp['b'] = $value['address2'];
+            $tmp['i'] = $value['image'];
+            if($value['pretype'] && $value['pretype'] != ''){
+                $tmp['y'] = str_replace("／","/",$value['pretype']);
+            }
+            $tmp['lat'] = $value['lat'];
+            $tmp['lng'] = $value['lng'];
+            $tmp['m'] = $value['spacesum'];
+            $tmp['p'] = $value['prepay'];
+            
+            $style = $value['style'];
+            $styleArr = explode('|', $style);
+            $styleR = array();
+            for($i = 1;$i<count($styleArr)-1; $i++){
+                array_push($styleR, C('PARK_STYLE')[$styleArr[$i]]);
+            }
+            $tmp['t'] = $styleR;//停车场标签
+            
+            //todo 不对外开放停车场的特殊处理
+            if(in_array('不对外开放', $styleR)){
+                
+            }
+            else{
+            //获取停车场当前空位信息 + 下一个车位时间段
+            $parkstate = $this->_getParkState($value);
+            $tmp['e'] = $parkstate['next'];
+            
+            //开放时间段
+            $tmp['o'] = array($this->isClosedNow($value) ? 0 : 1, $value['startmon'], $value['endmon'], $value['startsat'], $value['endsat']);
+            
+            if($value['status'] == 4 || $value['status'] == 3){//合作停车场
+                $tmp['c'] = 1; //合作停车场设为1
+                $tmp['s'] = $value['parkstate'];
+            }
+            else{//信息化产品
+                $tmp['c'] = 0; //信息化设为0
+                $tmp['s'] = $parkstate['current'];//信息化停车场的空车位状态根据时段来判断
+            }
+            $showevent = false;
+            //echo $value['id'].'/'.$nowstr.'/'.$value['e_start'].'/'.$value['e_end'].'<br>';
+            if($nowstr > $value['e_start'] && $nowstr < $value['e_end']){//活动期间
+                if($value['e_t']&1){//只限第一单用户
+                    if($porder === null){//需要获取用户下单数量信息
+                        $payment = M('ParkOrder');
+                        $con2 = array('uid'=>$this->uid,'state'=>array('neq',－1));
+                        if($payment->where($con2)->find()){
+                            $porder = 1;
+                        }else{
+                            $porder = 0;
+                        }
+                    }
+                    if($porder === 0){
+                        $showevent = true;
+                    }
+                }else{//全部用户
+                    $showevent = true;
+                }
+            }
+            if($showevent){
+                $tmp['d'] = array(($value['e_t']&2)?1:0,$value['e_p']);
+            }
+
+            $result['p']=$tmp;
+            }
+        }
+        $e = array();
+        $e['c'] =  $this->getDefualtCarid($this->uid);
+        $e['u'] = C('PARK_IMG_QINIU').'/Park/';
+        $result['e'] = $e;
+        
+        $this->ajaxOk($result);
+    }
+    
     //返回附近停车场接口2
     public function search2($lat,$lng,$curlat=0,$curlng=0,$pushid='',$m=0){
         //CVS记录查询的位置信息
