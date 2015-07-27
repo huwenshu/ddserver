@@ -1,0 +1,83 @@
+<extend name="Public/base"/>
+
+<block name="sidebar"></block>
+
+<block name="style">
+    <style>
+        body{padding: 0}
+
+        .parkitem > a:hover{
+            text-decoration: none;
+        }
+        .parkitem > a > p> button{
+            padding: 2px 4px;
+            margin: 5px 5px 5px 0;
+        }
+
+        .gray {background:#ddd;}
+    </style>
+</block>
+
+<block name="body">
+    <!-- 主体 -->
+    <div id="indexMain" class="index-main">
+        <ul class="mui-table-view">
+            <li class="mui-table-view-cell">
+                <form action="{:U('paidlist')}" method="get">
+                    <input type="search" name="search" placeholder="搜索停车场" />
+                    <table style="width: 100%;table-layout: fixed">
+                        <tr>
+                            <td style="width: 50%"><input type="submit" style="float: right" value="搜索" /></td>
+                        </tr>
+                    </table>
+                </form>
+            </li>
+
+            <?php
+            foreach ($parkList as $key => $value) {
+                if($value['status'] == 0){
+                    $status = '<span class="mui-badge mui-badge-danger" >';
+                }
+                elseif($value['status'] == 1){
+                    $status = '<span class="mui-badge" >';
+                }
+                else{
+                    $status = '<span class="mui-badge mui-badge-danger" >';
+                }
+                $status .= C('FREE_PARK_STATUS')[$value['status']].'</button>';
+
+                $note = $value['note'];
+                $tags = C('FREE_PARK_TAG');
+                    $tag_html = '';
+                    foreach($tags as $key => $tag){
+                        $e = '|'.$key.'|';
+                        if(strstr($note,$e)){
+                            $tag_html.="<button class='mui-btn mui-btn-outlined'>".$tag."</button>";
+                        }
+                }
+
+                echo "<li class='mui-table-view-cell parkitem' alt=".U('paidparkinfo', array('pid' => $value['id']))." ><a class='mui-navigate-right'>";
+                    echo "<p>".$value['name']." ".$status."</p>";
+                    echo "<p>$tag_html</p>";
+                    echo "</a></li>";
+            }
+            ?>
+        </ul>
+
+    </div>
+</block>
+
+<block name="script">
+
+    <script type="text/javascript">
+        $(function(){
+            $('.sidebar').remove();
+            $('.parkitem').click(function(){
+                var url= $(this).attr("alt");
+                location.href = url;
+            });
+
+            $(".parkitem").hover(function() {$(this).addClass("gray")}, function() {$(this).removeClass("gray")});
+        });
+    </script>
+</block>

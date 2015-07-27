@@ -56,6 +56,7 @@ class IndexController extends  BaseController {
             $searchname = I('get.searchname');
             $openarea = I('get.openarea');
             $parkstate = I('get.parkstate');
+            $sparkstate =I('get.sparkstate');
 
             $Park = M('ParkInfo');
             $map = array();
@@ -103,6 +104,21 @@ class IndexController extends  BaseController {
                 }
 
             }
+        if(!empty($sparkstate)){
+            foreach($sparkstate as $key => $value){
+                if($value == 'SRULE'){
+                    $map['chargingrules'] = array('NEQ', '');
+                }
+                if($value == 'SOPEN'){
+                    $map['style'] = array('notlike', '%|BDWKF|%');
+                }
+                if($value == 'SNPUB'){
+                    $map['status'] = array('lt', '10');
+                }
+            }
+
+        }
+
             $parks = $Park->where($map)->select();
             $p_sum = $Park->count();
             $c_sum = $Park->where(array('status' => array('in', '4,14')))->count();
@@ -110,6 +126,7 @@ class IndexController extends  BaseController {
             $n_sum = $Park->where(array('status' => array('LT', 10)))->count();
             $this->area = empty($openarea) ? array():$openarea;
             $this->state = empty($parkstate) ? array():$parkstate;
+            $this->sstate = empty($sparkstate) ? array():$sparkstate;
             $this->sum = array($p_sum, $c_sum, $i_sum, $n_sum);
             $this->parks_info = $parks;
             $this->meta_title = '高级搜索 | 嘟嘟销售系统';

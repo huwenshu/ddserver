@@ -100,6 +100,13 @@
                                             <label style="font-weight: normal;"><input type="checkbox" name="parkstate[]" value="MY" <?php if(array_search('MY',$state) !== false){echo "checked";}?>>我的停车场</label>
                                         </div>
                                     </li>
+    <li class="mui-table-view-cell"><a class="mui-navigate-right" href="#">特殊筛选</a>
+        <div class="filter-content" style="display:  <?php if(empty($sstate)){echo "none";}else{echo "block";}?>;">
+        <label style="font-weight: normal;"><input type="checkbox" name="sparkstate[]" value="SRULE" <?php if(array_search('SRULE',$sstate) !== false){echo "checked";}?>>存在计费规则</label>
+        <label style="font-weight: normal;"><input type="checkbox" name="sparkstate[]" value="SOPEN" <?php if(array_search('SOPEN',$sstate) !== false){echo "checked";}?>>对外开放</label>
+        <label style="font-weight: normal;"><input type="checkbox" name="sparkstate[]" value="SNPUB" <?php if(array_search('SNPUB',$sstate) !== false){echo "checked";}?>>未发布</label>
+        </div>
+    </li>
                                 </ul>
                             </td>
                         </tr>

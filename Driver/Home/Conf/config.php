@@ -205,6 +205,7 @@ return array(
         'DWJG' => '单位机构',
         'SYTCC' => '商业停车场',
         'LYJD' => '景点',
+        'CGZLG' => '场馆/展览馆',
         'ZDZJCR' => '自动闸机进入',
         'USERFX' => '人工放行',
         'ZYSF' => '中央收费',
