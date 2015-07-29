@@ -583,7 +583,7 @@ class PublicController extends BaseController {
     }
     
     //返回附近停车场接口2
-    public function search2($lat,$lng,$curlat=0,$curlng=0,$pushid='',$m=0){
+    public function search2($lat,$lng,$curlat=0,$curlng=0,$pushid='',$mm=0){
         //CVS记录查询的位置信息
         $msgs = array();
         $msgs['ip'] = $_SERVER['REMOTE_ADDR'];//用户ip
@@ -598,7 +598,7 @@ class PublicController extends BaseController {
         $this->lat = $lat;
         $this->lng = $lng;
         $Park = M('ParkInfo');
-        $gap = 0.004545 + 0.004545*$m;//0.002727;
+        $gap = 0.004545 + 0.004545*$mm;//0.002727;
         $con = array();
         $con['lat'] = array(array('gt',$lat - $gap),array('lt',$lat + $gap));
         $con['lng'] = array(array('gt',$lng - $gap),array('lt',$lng + $gap));
