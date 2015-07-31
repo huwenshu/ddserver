@@ -148,7 +148,7 @@ class WeixinController extends BaseController {
 			$_eventKey = (string)$postObj->EventKey;
 			if($_event == 'subscribe'){
 				$content = '欢迎您关注嘟嘟停车！我们专注于解决您的停车难问题。
-嘟嘟停车有如下功能，请点击下面的链接使用：
+嘟嘟停车有如下功能：
 
 1-找附近的停车场：<a href="'.$nearURL.'">点击这里>></a>
 
@@ -156,7 +156,10 @@ class WeixinController extends BaseController {
 
 3-Android版APP下载：<a href="'.$downURL.'">点击这里>></a>
 
-目前只在上海提供服务，其他城市正在准备中。';
+目前只在上海提供服务，其他城市正在准备中。
+
+最新活动：合作停车场首停只要0.01元，包月费用8折起。手快有，手慢无！点击查看：<a href="http://dwz.cn/1d87hh">http://dwz.cn/1d87hh</a>';
+                
 				$resultStr = sprintf ( C('HINT_TPL'), $_openid, C('USERNAME_WEIXIN'), time(), 'text', $content );
 				echo  $resultStr;
 			}
