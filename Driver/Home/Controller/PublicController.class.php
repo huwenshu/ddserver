@@ -697,53 +697,57 @@ class PublicController extends BaseController {
             array_push($p, $tmp);
         }
         $result['p'] = $p;
-        
-        $ParkFree = M('ParkFreeInfo');
-        $con = array();
-        $con['lat'] = array(array('gt',$lat - $gap),array('lt',$lat + $gap));
-        $con['lng'] = array(array('gt',$lng - $gap),array('lt',$lng + $gap));
-        $con['status'] = 1;
-        $order = 'id desc';
-        $datas = $ParkFree->where($con)->order($order)->select();
-        $f = array();
-        foreach($datas as $key => $value){
-            $tmp = array();
-            
-            //通用信息
-            $tmp['id'] = $value['id'];
-            $tmp['n'] = $value['name'];
-            $tmp['b'] = $value['dsc'];
-            $tmp['i'] = $value['image'];
-            $tmp['lat'] = $value['lat'];
-            $tmp['lng'] = $value['lng'];
-            
-            $tmp['t'] = $value['note'];//停车场标签
-            $tmp['c'] = 2; //免费设为2
-            
-            array_push($f, $tmp);
+
+        if ($mm == 0) { // 附近500时附加免费停车场列表
+            $ParkFree = M('ParkFreeInfo');
+            $con = [];
+            $con['lat'] = [['gt', $lat - $gap], ['lt', $lat + $gap]];
+            $con['lng'] = [['gt', $lng - $gap], ['lt', $lng + $gap]];
+            $con['status'] = 1;
+            $order = 'id desc';
+            $datas = $ParkFree->where($con)->order($order)->select();
+            $f = [];
+            foreach ($datas as $key => $value) {
+                $tmp = [];
+
+                //通用信息
+                $tmp['id'] = $value['id'];
+                $tmp['n'] = $value['name'];
+                $tmp['b'] = $value['dsc'];
+                $tmp['i'] = $value['image'];
+                $tmp['lat'] = $value['lat'];
+                $tmp['lng'] = $value['lng'];
+
+                $tmp['t'] = $value['note'];//停车场标签
+                $tmp['c'] = 2; //免费设为2
+
+                array_push($f, $tmp);
+            }
+            $result['f'] = $f;
+            if (!$datas) {//附近无免费
+                $order = 'abs(lat-' . $lat . ')+abs(lng-' . $lng . ') asc';
+                $con = ['status' => 1];
+                $value = $ParkFree->where($con)->order($order)->find();
+                $tmp = [];
+
+                //通用信息
+                $tmp['id'] = $value['id'];
+                $tmp['n'] = $value['name'];
+                $tmp['b'] = $value['dsc'];
+                $tmp['i'] = $value['image'];
+                $tmp['lat'] = $value['lat'];
+                $tmp['lng'] = $value['lng'];
+
+                $tmp['t'] = $value['note'];//停车场标签
+                $tmp['c'] = 2; //免费设为2
+                $result['a'] = $tmp;
+            }
+        } else {
+            $result['f'] = [];
         }
-        $result['f'] = $f;
-        if(!$datas){//附近无免费
-            $order = 'abs(lat-'.$lat.')+abs(lng-'.$lng.') asc';
-            $con = array('status' => 1);
-            $value = $ParkFree->where($con)->order($order)->find();
-            $tmp = array();
-            
-            //通用信息
-            $tmp['id'] = $value['id'];
-            $tmp['n'] = $value['name'];
-            $tmp['b'] = $value['dsc'];
-            $tmp['i'] = $value['image'];
-            $tmp['lat'] = $value['lat'];
-            $tmp['lng'] = $value['lng'];
-            
-            $tmp['t'] = $value['note'];//停车场标签
-            $tmp['c'] = 2; //免费设为2
-            $result['a'] = $tmp;
-        }
-        
+
         $e = array();
-        $e['c'] =  $this->getDefualtCarid($this->uid);
+        $e['c'] = $this->getDefualtCarid($this->uid);
         $e['u'] = C('PARK_IMG_QINIU').'/Park/';
         $result['e'] = $e;
         
