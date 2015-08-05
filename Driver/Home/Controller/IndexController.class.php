@@ -303,7 +303,140 @@ class IndexController extends BaseController {
 
 	}
 
-    //生成预付订单借口-APP
+	/**
+	 * @param $pid String Park Id
+	 * @return String Order Id or NULL
+	 */
+	private function createOrder($pid, $createtime) {
+		$Order = M('ParkOrder');
+		$arr['uid'] = I('get.uid');
+		$arr['pid'] = $pid;
+		$arr['carid'] = $this->getDefualtCarid(I('get.uid'));
+		$arr['state'] = -1;
+		$arr['startime'] = date("Y-m-d H:i:s", 0);
+		$arr['endtime'] = date("Y-m-d H:i:s", 0);
+		$arr['creater'] = $this->uid;
+		$arr['createtime'] = $createtime;
+		$arr['updater'] = $this->uid;
+		return $Order->add($arr);
+	}
+
+	/**
+	 * @param $oid String Order Id
+	 * @return String PaymentRecord Id or NULL
+	 */
+	private function createPaymentRecord($oid, $cid, $remainFee, $remianFee_r) {
+		$Payment = M('PaymentRecord');
+		$temp['oid'] = $oid;
+		$temp['money'] = $remainFee;
+		$temp['money_r'] = $remianFee_r;
+		$temp['cid'] = $cid;
+		$temp['state'] = 0;
+		$temp['creater'] = $this->uid;
+		$temp['createtime'] = date("Y-m-d H:i:s");
+		$temp['updater'] = $this->uid;
+		return $Payment->add($temp);
+	}
+
+	private function recalcRemainFee($cid, $parkinfo, $createtime) {
+		$Order = M('ParkOrder');
+		$showevent = false;
+		$remainFee_e = $parkinfo['prepay'];
+		if ($createtime > $parkinfo['e_start'] && $createtime < $parkinfo['e_end']) {//活动期间
+			if ($parkinfo['e_t'] & 1) {//只限第一单用户
+				$con2 = array('uid' => $this->uid, 'state' => array('neq',-1));
+				if (!$Order->where($con2)->find()) {
+					$showevent = true;
+				}
+			} else {//全部用户
+				$showevent = true;
+			}
+		}
+		if ($showevent) {
+			if ($parkinfo['e_t'] & 2) {//固定价格
+				$remainFee_e = $parkinfo['e_p'];
+			} else {
+				$remainFee_e -= $parkinfo['e_p'];
+				if ($remainFee_e <= 0) {
+					$remainFee_e = 0.01;
+				}
+			}
+		}
+
+		//计算折扣劵
+		$remianFee_r = $remainFee_e;
+		if ($cid > 0) {
+			$cpamount = $this->_checkCoupon($this->uid, $cid, $remianFee_r);
+			//0				抵用劵不存在
+			//-1			已领完
+			//-2			活动还没开始
+			//-3			活动已结束
+			//int			抵扣金额
+			if ($cpamount == 0) {
+				$this->ajaxMsg("该抵用劵信息不正确，请重新选择");
+			} else if ($cpamount == -1) {
+				$this->ajaxMsg("该抵用劵已被使用过，请重新选择");
+			} else if ($cpamount == -2) {
+				$this->ajaxMsg("该抵用劵活动尚未开始，请重新选择");
+			} else if ($cpamount == -3) {
+				$this->ajaxMsg("该抵用劵已过期，请重新选择");
+			}
+			$remianFee_r -= $cpamount;
+		}
+
+		return $remianFee_r;
+	}
+
+	/**
+	 * @param $pid String Park Id
+	 * @param $cid String Coupon Id
+	 */
+	public function genOrderAlipay($pid, $cid) {
+		$Park = M('ParkInfo');
+		$createtime = date("Y-m-d H:i:s");
+
+		$map = ['id' => $pid];
+		$parkinfo = $Park->where($map)->find();
+		if (empty($parkinfo)) {
+			$this->ajaxMsg("停车场信息错误");
+		}
+
+		//生成订单，处理业务逻辑
+		$oid = $this->createOrder($pid, $createtime);
+		if (empty($oid)) {
+			$this->ajaxMsg("创建订单失败");
+		}
+
+		//计算价格是否受驻场活动影响
+		$remianFee = $this->recalcRemainFee($cid, $parkinfo, $createtime);
+
+		//生成支付凭证
+		$prid = $this->createPaymentRecord($oid, $cid, $parkinfo['prepay'], $remianFee);
+		if (empty($prid)) {
+			$this->ajaxMsg("创建支付消息失败");
+		}
+
+		$tradeNo = date("YmdHis") . $prid;
+		//HardCode 测试人员生成订单0.01元
+		//if($parkinfo['status'] == 2){
+		//$fee = 0.01;
+		//}
+		//else{
+		$fee = $remianFee;
+		//}
+
+		$fee = round($fee, 2);
+
+		//返回订单信息
+		$body = "#{$oid}";
+		$subject = "预付停车费：{$fee}";
+		$price = $fee;
+		$notifyUrl = 'http://duduche.me/notify.html';
+		$result = compact('subject', 'body', 'price', 'notifyUrl', 'prid', 'oid');
+		$this->ajaxOk($result);
+	}
+
+	//生成预付订单借口-APP
     public function genOrderAPP($pid, $cid = 0){
 
         //生成订单，处理业务逻辑
@@ -336,7 +469,7 @@ class IndexController extends BaseController {
         $remainFee_e = $remainFee;
         if($createtime > $parkinfo['e_start'] && $createtime < $parkinfo['e_end']){//活动期间
             if($parkinfo['e_t']&1){//只限第一单用户
-                $con2 = array('uid'=>$this->uid,'state'=>array('neq',－1));
+                $con2 = array('uid'=>$this->uid,'state'=>array('neq',-1));
                 if(!$Order->where($con2)->find()){
                     $showevent = true;
                 }
