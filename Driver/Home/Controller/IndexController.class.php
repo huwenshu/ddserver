@@ -431,8 +431,8 @@ class IndexController extends BaseController {
 		$body = "#{$oid}";
 		$subject = "预付停车费：{$fee}";
 		$price = $fee;
-		$notifyUrl = 'http://duduche.me/notify.html';
-		$result = compact('subject', 'body', 'price', 'notifyUrl', 'prid', 'oid');
+		$notifyUrl = 'http://' . $_SERVER['HTTP_HOST'] . '/driver.php/Home/public/alipay_notify/';
+		$result = compact('subject', 'body', 'price', 'notifyUrl', 'tradeNo', 'oid');
 		$this->ajaxOk($result);
 	}
 
@@ -1223,19 +1223,4 @@ class IndexController extends BaseController {
 		);
 		$this->ajaxOk($result);
 	}
-
-
-    //距离比较函数
-    protected function distance_sort($v1,$v2){
-        $dis1 = $this->getDistance($v1['lat'],$v1['lng'],$this->lat,$this->lng);
-        $dis2 = $this->getDistance($v2['lat'],$v2['lng'],$this->lat,$this->lng);
-
-        if($dis1 < $dis2) {
-            return -1;
-        } elseif ($dis1 > $dis2)  {
-            return 1;
-        } else {
-            return 0;
-        }
-    }
 }

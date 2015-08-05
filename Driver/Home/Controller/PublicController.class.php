@@ -232,10 +232,118 @@ class PublicController extends BaseController {
 		//echo md5('bank_billno=201501276132442103&bank_type=2011&discount=0&fee_type=1&input_charset=UTF-8&notify_id=0PRAX7awQjsfvE0jZktMdMTotGwtKBgW2wgF9uqHMZACokHFsnWi3DSUBN3tfw1-A06znTU8bRxR2PpN4zuxbNX1NAxIEy2D&out_trade_no=92&partner=1220503701&product_fee=1&sign_type=MD5&time_end=20150127111801&total_fee=1&trade_mode=1&trade_state=0&transaction_id=1220503701201501276028125413&transport_fee=0&key='.PARTNERKEY);
 	}
 
-	/*
-	 * @desc 处理微信支付成功
-	*/
-	protected function doOrderDone($isIn){
+    public function alipay_notify() {
+        $base_path = dirname(__FILE__) . '/../Common/alipay/';
+
+        //↓↓↓↓↓↓↓↓↓↓请在这里配置您的基本信息↓↓↓↓↓↓↓↓↓↓↓↓↓↓↓
+        //合作身份者id，以2088开头的16位纯数字
+        $alipay_config['partner'] = '2088812264045844';
+
+        //商户的私钥（后缀是.pen）文件相对路径
+        $alipay_config['private_key_path'] = $base_path . 'key/rsa_private_key.pem';
+
+        //支付宝公钥（后缀是.pen）文件相对路径
+        $alipay_config['ali_public_key_path'] = $base_path . 'key/alipay_public_key.pem';
+
+        //↑↑↑↑↑↑↑↑↑↑请在这里配置您的基本信息↑↑↑↑↑↑↑↑↑↑↑↑↑↑↑
+
+        //签名方式 不需修改
+        $alipay_config['sign_type'] = strtoupper('RSA');
+
+        //字符编码格式 目前支持 gbk 或 utf-8
+        $alipay_config['input_charset'] = strtolower('utf-8');
+
+        //ca证书路径地址，用于curl中ssl校验
+        //请保证cacert.pem文件在当前文件夹目录中
+        $alipay_config['cacert'] = $base_path . 'key/cacert.pem';
+
+        //访问模式,根据自己的服务器是否支持ssl访问，若支持请选择https；若不支持请选择http
+        $alipay_config['transport'] = 'http';
+        require_once($base_path . "alipay_notify.class.php");
+
+        //计算得出通知验证结果
+        $alipayNotify = new AlipayNotify($alipay_config);
+        $verify_result = $alipayNotify->verifyNotify();
+
+        file_put_contents('/tmp/alipay_data', var_export($_POST, true));
+        file_put_contents('/tmp/alipay_result', var_export($verify_result, true));
+
+        if ($verify_result) {//验证成功
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+            //请在这里加上商户的业务逻辑程序代
+
+
+            //——请根据您的业务逻辑来编写程序（以下代码仅作参考）——
+
+            //获取支付宝的通知返回参数，可参考技术文档中服务器异步通知参数列表
+
+            //商户订单号
+
+            $out_trade_no = $_POST['out_trade_no'];
+
+            //支付宝交易号
+
+            $trade_no = $_POST['trade_no'];
+
+            //交易状态
+            $trade_status = $_POST['trade_status'];
+
+            if ($trade_status == 'TRADE_FINISHED') {
+                //判断该笔订单是否在商户网站中已经做过处理
+                //如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
+                //如果有做过处理，不执行商户的业务程序
+
+                //注意：
+                //该种交易状态只在两种情况下出现
+                //1、开通了普通即时到账，买家付款成功后。
+                //2、开通了高级即时到账，从该笔交易成功时间算起，过了签约时的可退款时限（如：三个月以内可退款、一年以内可退款等）后。
+
+                //调试用，写文本函数记录程序运行情况是否正常
+                //logResult("这里写入想要调试的代码变量值，或其他运行的结果记录");
+
+            } else if ($_POST['trade_status'] == 'TRADE_SUCCESS') {
+                //判断该笔订单是否在商户网站中已经做过处理
+                //如果没有做过处理，根据订单号（out_trade_no）在商户网站的订单系统中查到该笔订单的详细，并执行商户的业务程序
+                //如果有做过处理，不执行商户的业务程序
+
+                //注意：
+                //该种交易状态只在一种情况下出现——开通了高级即时到账，买家付款成功后。
+
+                //调试用，写文本函数记录程序运行情况是否正常
+                //logResult("这里写入想要调试的代码变量值，或其他运行的结果记录");
+                $trade_no = substr($out_trade_no, 14); //截取付款号，去除时间戳
+                $this->doOrderDone($trade_no, true);
+            }
+
+            //——请根据您的业务逻辑来编写程序（以上代码仅作参考）——
+
+            echo "success";        //请不要修改或删除
+
+            /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+        } else {
+            //验证失败
+            echo "fail";
+
+            //调试用，写文本函数记录程序运行情况是否正常
+            //logResult("这里写入想要调试的代码变量值，或其他运行的结果记录");
+        }
+    }
+
+    //距离比较函数
+    protected function distance_sort($v1,$v2){
+        $dis1 = $this->getDistance($v1['lat'],$v1['lng'],$this->lat,$this->lng);
+        $dis2 = $this->getDistance($v2['lat'],$v2['lng'],$this->lat,$this->lng);
+
+        if($dis1 < $dis2) {
+            return -1;
+        } elseif ($dis1 > $dis2)  {
+            return 1;
+        } else {
+            return 0;
+        }
+    }
+
+    protected function doWeixinOrderDone($isIn) {
         include_once(dirname(__FILE__) . '/../Common/Weixin/WxPay/' . 'WxPayPubHelper.php');
         $notify = new Notify_pub();
 
@@ -261,33 +369,42 @@ class PublicController extends BaseController {
 //		if(!$sign || !$this->checkSign($_GET, $sign)){
 //			return;
 //		}
-		//写log
-		$wxlog = M('payment_wx_log');
-		$trade_no = $notify->data["out_trade_no"] ;
-		if(!$trade_no){
-			return;
-		}
-		$out_trade_no = substr($trade_no,14); //截取付款号，去除时间戳
-		if($wxlog->where(array('out_trade_no'=>$out_trade_no))->getField('out_trade_no')){//已存在纪录
-			//echo 'success';
-			return;
-		}
-		//获取log数据
-		$getdata = null;
-		foreach ($_GET as $key=>$value){
-			if($getdata == null){
-				$getdata = $key.'='.$value;
-			}else{
-				$getdata .= '&'.$key.'='.$value;
-			}
-		}
-		$postdata = $xml;
-    $wxlog->add(array('out_trade_no'=>$out_trade_no, 'getdata'=>$getdata, 'postdata'=>$postdata));//日志
-    
+        //写log
+        $wxlog = M('payment_wx_log');
+        $trade_no = $notify->data["out_trade_no"] ;
+        if(!$trade_no){
+            return;
+        }
+        $out_trade_no = substr($trade_no,14); //截取付款号，去除时间戳
+        if($wxlog->where(array('out_trade_no'=>$out_trade_no))->getField('out_trade_no')){//已存在纪录
+            //echo 'success';
+            return;
+        }
+        //获取log数据
+        $getdata = null;
+        foreach ($_GET as $key=>$value){
+            if($getdata == null){
+                $getdata = $key.'='.$value;
+            }else{
+                $getdata .= '&'.$key.'='.$value;
+            }
+        }
+        $postdata = $xml;
+        $wxlog->add(array('out_trade_no'=>$out_trade_no, 'getdata'=>$getdata, 'postdata'=>$postdata));//日志
+
+        $this->doOrderDone($out_trade_no, $isIn);
+    }
+
+	/*
+	 * @desc 处理微信支付成功
+	*/
+	protected function doOrderDone($out_trade_no, $isIn) {
+
     //处理订单逻辑
     $payment_record = M('payment_record');
     $park_order = M('park_order');
     $prdata = $payment_record->where(array('id'=>$out_trade_no))->limit(1)->select();
+        var_dump($out_trade_no, $prdata);
     if(!$prdata || count($prdata) == 0){//订单不存在
 			return;
 		}
@@ -408,14 +525,14 @@ class PublicController extends BaseController {
 	 * @desc 预付成功，微信调用的回调函数
 	*/
 	public function genOrderDone(){
-        $this->doOrderDone(true);
+        $this->doWeixinOrderDone(true);
         $this->_exit();
 	}
 	/*
 	 * @desc 车费结算付款成功微信的回调接口
 	*/
 	public  function checkOutDone(){
-        $this->doOrderDone(false);
+        $this->doWeixinOrderDone(false);
         $this->_exit();
 	}
 	public function parkingTimeTest($parkid, $mins){
