@@ -404,7 +404,6 @@ class PublicController extends BaseController {
     $payment_record = M('payment_record');
     $park_order = M('park_order');
     $prdata = $payment_record->where(array('id'=>$out_trade_no))->limit(1)->select();
-        var_dump($out_trade_no, $prdata);
     if(!$prdata || count($prdata) == 0){//订单不存在
 			return;
 		}
@@ -670,7 +669,7 @@ class PublicController extends BaseController {
                 if($value['e_t']&1){//只限第一单用户
                     if($porder === null){//需要获取用户下单数量信息
                         $payment = M('ParkOrder');
-                        $con2 = array('uid'=>$this->uid,'state'=>array('neq',－1));
+                        $con2 = array('uid'=>$this->uid,'state'=>array('neq',-1));
                         if($payment->where($con2)->find()){
                             $porder = 1;
                         }else{
@@ -793,7 +792,7 @@ class PublicController extends BaseController {
                 if($value['e_t']&1){//只限第一单用户
                     if($porder === null){//需要获取用户下单数量信息
                         $payment = M('ParkOrder');
-                        $con2 = array('uid'=>$this->uid,'state'=>array('neq',－1));
+                        $con2 = array('uid'=>$this->uid,'state'=>array('neq',-1));
                         if($payment->where($con2)->find()){
                             $porder = 1;
                         }else{
@@ -1130,7 +1129,7 @@ class PublicController extends BaseController {
         }
         //是否老用户?
         $payment = M('ParkOrder');
-        $con2 = array('uid'=>$this->uid,'state'=>array('neq',－1));
+        $con2 = array('uid'=>$this->uid,'state'=>array('neq',-1));
         if($payment->where($con2)->find()){//老用户
             $con['e_t'] = array('in','0,2');
         }
