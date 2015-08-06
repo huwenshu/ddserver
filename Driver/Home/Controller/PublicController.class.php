@@ -515,8 +515,10 @@ class PublicController extends BaseController {
         $map = array();
         $map['id'] = $parkid;
         $status = $ParkInfo->where($map)->getField('status');
-        if($status > 3 ){
-            $send = $this->sendEmail('all@duduche.me', $title, $content);
+        if($status > 3 && $_SERVER['HTTP_HOST'] != 't.duduche.me') {
+            $send = $this->sendemail('all@duduche.me', $title, $content);
+        } else {
+            $send = $this->sendemail('hejiachen@duduche.me', $title, $content);
         }
 	}
 
