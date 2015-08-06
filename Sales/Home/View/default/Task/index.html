@@ -1,0 +1,266 @@
+    <extend name="Public/base"/>
+
+    <block name="style">
+        <style>
+            body{padding: 0}
+
+
+            .parkitem > a:hover{
+                text-decoration: none;
+            }
+            .filter{
+                background-color:rgb(229, 229, 229) ;
+            }
+            .filter li{
+
+            }
+            .filter a{
+
+            }
+            .filter  a:hover{
+                text-decoration: none;
+                border: none;
+            }
+            .filter  a:focus{
+                text-decoration: none;
+                border: none;
+            }
+
+            .filter-content {
+                margin: 10px -15px -11px -15px;
+                padding: 11px 15px;
+                font-size: 14px ;
+                background-color: #efefef;
+            }
+            .filter-content > ul {
+                background-color: transparent;
+
+            }
+            .district{
+                float: left;
+                width: 100px;
+            }
+            .gray {background:#ddd;}
+
+
+            .parkitem > input{
+                margin: 10px 5px 0 0;
+            }
+            .parkitem > a{
+                left: 20px;
+                margin: 0px !important;
+                padding: 0px   !important;
+            }
+            #distr{
+                position: fixed;
+                bottom: 30px;
+                width: 220px;
+                left: 50%;
+                display: none;
+                margin-left: -110px;
+                text-align: center;
+                background: #cccccc;
+                padding: 10px;
+                border-radius: 5px;
+            }
+
+        </style>
+    </block>
+
+    <block name="body">
+        <!-- 主体 -->
+        <div id="indexMain" class="index-main">
+            <ul class="mui-table-view">
+                <li class="mui-table-view-cell">
+                    <form action="{:U('index')}" method="get">
+                        <div>
+                            <div  style="width:100px;float: right;text-align: center" >
+                                <button type="submit" class="mui-btn" >
+                                    <span class="mui-icon mui-icon-search"></span>
+                                    搜索
+                                </button>
+                            </div>
+                            <div style="margin-right: 100px;">
+                                <input type="search" name="searchname" placeholder="搜索任务停车场" />
+                            </div>
+                        </div>
+
+                        <table style="width: 100%;table-layout: fixed;margin-bottom: 30px" >
+                            <tr>
+                                <!--<td colspan="3">-->
+                                    <!--<p style="margin-top: 10px;">当前入库{$sum[0]}个停车场，其中已合作{$sum[1]}个停车场，已发布{$sum[2]}个停车场，未发布{$sum[3]}个停车场</p>-->
+                                <!--</td>-->
+                            </tr>
+                            <tr>
+                                <td colspan="3">
+                                    <ul class="mui-table-view filter">
+                                        <li class="mui-table-view-cell" ><a class="mui-navigate-right" href="#">地标筛选</a>
+                                            <div class="filter-content" style="display: <?php if(empty($marks)){echo "none";}else{echo "block";}?>;">
+                                            <?php
+                                                        echo '<span>';
+                                                        foreach($landmark as $value){
+
+                                                            $check='';
+                                                            if(array_search($value['landmark'],$marks) !== false){
+                                                                $check='checked';
+                                                            }
+                                                            echo '<label style="font-weight: normal;"><input type="checkbox" name="marks[]" value="'.$value['landmark'].'" '.$check.'>'.$value['landmark'].'</label>';
+                                                        }
+                                                        echo '</span>';
+                                            ?>
+                                            </div>
+                                        </li>
+        <li class="mui-table-view-cell"><a class="mui-navigate-right" href="#">任务状态</a>
+            <div class="filter-content" style="display:  <?php if(empty($state)){echo "none";}else{echo "block";}?>;">
+            <label style="font-weight: normal;"><input type="checkbox" name="taskstate[]" value="-1" <?php if(array_search(-1,$state) !== false){echo "checked";}?>>作废</label>
+            <label style="font-weight: normal;"><input type="checkbox" name="taskstate[]" value="0" <?php if(array_search(0,$state) !== false){echo "checked";}?>>未预审</label>
+            <label style="font-weight: normal;"><input type="checkbox" name="taskstate[]" value="1" <?php if(array_search(1,$state) !== false){echo "checked";}?>>预审通过</label>
+            <label style="font-weight: normal;"><input type="checkbox" name="taskstate[]" value="2" <?php if(array_search(2,$state) !== false){echo "checked";}?>>已分派</label>
+            <label style="font-weight: normal;"><input type="checkbox" name="taskstate[]" value="3" <?php if(array_search(3,$state) !== false){echo "checked";}?>>审核通过</label>
+            </div>
+        </li>
+        </ul>
+        </td>
+        </tr>
+        </table>
+        </form>
+        </li>
+
+        <?php
+                $search = $searchname.'|';
+                $m = '';
+                foreach($marks as $k => $v){
+                    if($k == count($marks)-1){
+                        $m .= $v;
+                    }
+                    else{
+                        $m .= $v.',';
+                    }
+                }
+                $search .= $m.'|';
+                $s = '';
+                foreach($state as $k => $v){
+                    if($k == count($state)-1){
+                        $s .= $v;
+                    }
+                    else{
+                        $s .= $v.',';
+                    }
+                }
+                $search .= $s;
+
+                foreach ($tasks as $key => $value) {
+                    echo "<li name='parkitem' class='mui-table-view-cell mui-checkbox mui-left parkitem'>";
+                    if($value['status'] == 1){
+                        echo "<input class='s_checkbox' name='checkbox' type='checkbox' value=".$value['id']." alt=".$value['status'].">";
+                    }
+                    echo "<a class='mui-navigate-right'  target='_blank' href=".U('tparkinfo',array('tpid'=>$value['id'],'search'=>$search)).">";
+                    echo "<p>".$value['_name']." ";
+                    echo "[".$value['landmark']."] ";
+                    echo empty($value['_tags'])? '': "[".substr($value['_tags'],1,-1)."]";
+                    echo "</p><p>地址：".$value['_address']."</p>";
+                    echo "</a></li>";
+                }
+            ?>
+        </ul>
+
+        </div>
+        <div id = "distr">
+            <span style="display: inline-block;margin: 5px;">已选中<span id="selected">0</span>个</span> <button class="mui-btn-blue" data-toggle="modal" data-target=".bs-example-modal-sm">立即分配</button>
+        </div>
+        <div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+            <div class="modal-dialog modal-sm">
+                <div class="modal-content">
+                    <ul class="fenpei" style="margin: 10px auto;width: 80%;">
+                        <li>
+                            <label style="width: 100px;margin: 5px 20px;text-align: right">兼职列表:</label>
+                            <select id="o_partime" style="width: 200px;margin: 5px 20px;">
+                                <option value="" title=""></option>
+                                <?php
+                                    foreach($partimes as $value){
+                                        echo  "<option value=".$value['id']." title=".$value['pwd'].">".$value['name']."</option>";
+                                    }
+                                ?>
+                            </select>
+                        </li>
+                        <li><input type="hidden" name="id" id="f_id" value="">
+                            <label style="width: 100px;margin: 5px 20px;text-align: right">姓名:</label><input id="f_name" type="text" name="name" style="width: 200px;"></li>
+                        <li><label style="width: 100px;margin: 5px 20px;text-align: right">密码:</label><input id="f_pwd" type="text" name="pwd"  style="width: 200px;"></li>
+                        <li style="text-align: center"><button class="mui-btn-blue" id="btn-fenpei">确认分配</button></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </block>
+
+    <block name="script">
+        <script type="text/javascript" src="__STATIC__/js/bootstrap.min.js"></script>
+        <script type="text/javascript">
+            $(function(){
+                $(".parkitem").hover(function() {$(this).addClass("gray")}, function() {$(this).removeClass("gray")});
+                $(".filter > li > a").click(function(){
+                    $(this).next('div').toggle();
+                });
+                $('.s_checkbox').click(function(){
+                    var checkboxs = $('.s_checkbox');
+                    var checked_counts = 0;
+                    for(var i=0;i<checkboxs.length;i++){
+                        if(checkboxs[i].checked){
+                            checked_counts++;
+                        }
+                    }
+                    $('#selected').html(checked_counts);
+                    if(checked_counts>0){
+                        $("#distr").show();
+                    }
+                    else{
+                        $("#distr").hide();
+                    }
+                });
+                $("#btn-fenpei").click(function(){
+                    if($('#f_name').val()==''){
+                        alert('姓名不能为空');
+                    }
+                    else{
+                        var parks = new Array();
+                        var checkboxs = $('.s_checkbox');
+                        for(var i=0;i<checkboxs.length;i++){
+                            if(checkboxs[i].checked){
+                                parks.push(checkboxs[i].value);
+                            }
+                        }
+
+
+                        $.ajax({
+                            type : 'POST',
+
+                            url:" {:U('Task/allocate')}",
+                            data: { id:$('#f_id').val(),
+                                name:$('#f_name').val(),
+                                pwd:$('#f_pwd').val(),
+                                parks:parks},
+                            success: function(json){
+                                if(json.meta.code ==200){
+                                    window.location.reload();
+                                }
+                                else{
+                                    alert('导入错误，请检查参数！1');
+                                }
+                            },
+                            error: function(){
+                                alert('导入错误，请检查参数！');
+                            },
+                            dataType: 'json'
+                        });
+                    }
+                });
+
+                $('#o_partime').change(function(){
+                    $('#f_id').val($("#o_partime").find("option:selected").val());
+                    $('#f_name').val($("#o_partime").find("option:selected").text());
+                    $('#f_pwd').val($("#o_partime").find("option:selected").attr('title'));
+                });
+
+            });
+        </script>
+    </block>

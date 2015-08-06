@@ -1,0 +1,86 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>嘟嘟停车</title>
+    <script>
+        var deviceAgent = navigator.userAgent.toLowerCase();
+        var agentID = deviceAgent.match(/(iphone|ipod|ipad|android)/) || '';
+        var mobile = {
+            iphone:agentID.indexOf("iphone")>=0
+            ,android:agentID.indexOf("android")>=0
+            ,ipad:agentID.indexOf("ipad")>=0
+            ,ipad:agentID.indexOf("ipod")>=0
+        }
+        if(mobile.iphone){
+            //alert('iphone');
+            document.write('<meta name="viewport" content="width=device-width, initial-scale=01, user-scalable=0,minimal-ui">');
+        }else if(mobile.android){
+            //alert('android');
+            document.write('<meta name="viewport" content="width=device-width, initial-scale=1, user-scalable=0">');
+            //document.write('<meta name="viewport" content="target-densitydpi=device-dpi">');
+        }else{
+            //alert('other');
+            document.write('<meta name="viewport" content="width=device-width, initial-scale=0.5, user-scalable=0,minimal-ui">');
+        }
+    </script>
+    <link rel="stylesheet" type="text/css" href="__STATIC__/css/bootstrap.min.css" media="all">
+    <style>
+        body{
+            background: #eeeeee;
+        }
+        .login-main{
+            margin: 30% 5%;
+            font-size: 18px;
+        }
+        .form-control{
+            font-size: 18px;
+            padding: 20px 12px;
+        }
+        .danger{
+            font-size: 14px;
+            padding: 5px;
+            text-align: center;
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<div id="main-content">
+
+    <!-- 主体 -->
+    <div class="login-body">
+        <div class="login-main">
+            <form action="{:U('Partime/login')}" method="post" class="login-form">
+                <div class="panel panel-primary">
+                    <div class="panel-heading" style="text-align: center">
+                        <img src="http://duduche.me/images/logo.png" style="width: 30px;height: 40px;">
+                        <span >嘟嘟停车信息搜集系统</span>
+                    </div>
+                    <div class="panel-body">
+                        <div class="danger">
+                          {$error}
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword" class="col-sm-2 control-label">姓名：</label>
+                            <div class="col-sm-10">
+                                <input type="text" class="form-control" id="inputUsername" placeholder="Username" name="username">
+                            </div>
+                        </div>
+                        <div class="form-group">
+                            <label for="inputPassword" class="col-sm-2 control-label">密码：</label>
+                            <div class="col-sm-10">
+                                <input type="password" class="form-control" id="inputPassword" placeholder="Password" name="password">
+                            </div>
+                        </div>
+                        <div style="text-align: center">
+                            <input style="width: 80%;margin: 10px auto;padding: 10px;font-size: 18px;" type="submit" class="btn btn-primary" value="登 录">
+                        </div>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+</div>
+</body>
+</html>

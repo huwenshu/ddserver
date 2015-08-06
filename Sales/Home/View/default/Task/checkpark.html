@@ -1,0 +1,855 @@
+<extend name="Public/base" xmlns="http://www.w3.org/1999/html"/>
+
+<block name="style">
+    <style>
+        body{padding: 0}
+        .myborder{
+            padding: 10px 0;
+        }
+        #panel-2 .myborder input,#panel-2 .myborder select,#panel-1 .myborder input,#panel-1 .myborder select{
+            width: 65%;
+        }
+        #panel-1 .myborder textarea,#panel-2 .myborder textarea{
+            height: 100px;
+        }
+        .ui-tabs-nav{
+            position: relative;
+            display: table;
+            width: 100%;
+            overflow: hidden;
+            font-size: 15px;
+            font-weight: 400;
+            table-layout: fixed;
+            background-color: transparent;
+            border: 1px solid #383838;
+            border-radius: 3px;
+        }
+        .ui-tabs-nav>li{
+            display: table-cell;
+            width: 1%;
+            padding-top: 6px;
+            padding-bottom: 7px;
+            overflow: hidden;
+            line-height: 1;
+            color: #007aff;
+            text-align: center;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            border-color: #383838;
+            border-left: 1px solid #383838;
+
+        }
+        .ui-tabs-nav>li.ui-tabs-active{
+            color: #fff;
+            background-color: #383838;
+            text-decoration: none;
+        }
+        .ui-tabs-nav>li>a{
+            color: #007aff;
+        }
+        .ui-tabs-nav>li.ui-tabs-active>a{
+            color:#fff;
+        }
+        #panel-2 input{
+            width: 95%;
+        }
+        #panel-2>table>tbody>tr>td>fieldset{
+            max-width: 500px;
+            margin: 10px 20px;
+        }
+        #panel-2 input[type=submit] {
+            display: block;
+            width: 60%;
+            margin: 0 auto;
+        }
+        .timepicker{
+            float: left;
+            padding: 5px;
+            max-width: 150px;
+        }
+
+        .pickerTitle{
+            float: left;
+            padding: 10px;
+            width: 100px;
+        }
+        .pickerText{
+            float: left;
+            padding: 10px 1px;
+        }
+        .pickTime>li{
+            clear: both;
+        }
+        .required{
+            color:red;
+            width: 10px;
+        }
+
+        .allday{
+            float: left;
+            padding: 10px 0 10px 2px;
+            font-size: 14px;
+
+        }
+
+        legend{
+            width: auto;
+            padding: 0 10px;
+
+        }
+        #panel-3 > div{
+            max-width: 500px;
+            margin: 20px;
+        }
+        #panel-3 label{
+            width: 120px;
+            margin: 10px;
+        }
+        #panel-3 input[type=text]{
+            width: auto;
+        }
+        #panel-3 input[type=submit]{
+            width: 60%;
+        }
+        #etype label{
+            margin: 10px 0;
+            color: #000000;
+            font-weight: normal;
+        }
+
+
+        .left-content{
+            float: left;
+            width: 50%;
+        }
+        .right-content{
+            float: left;
+            width: 50%;
+            border-left: 1px solid #000000;
+        }
+
+    </style>
+</block>
+
+<block name="body">
+    <!-- 主体 -->
+    <div id="indexMain" class="index-main" style="padding-top: 35px">
+        <div class="left-content">
+
+            <table class="zebra" style="width: 95%;margin: 0 auto;margin-top: 10px;overflow: hidden">
+                <tr>
+                    <td style="width: 25%;"><label for="_name">停车场名称：</label></td>
+                    <td style="width: 75%;">
+                        <input type="text" id="_name" name="_name" value="{$tpark[_name]}" readonly/>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="_address">入口地址：</label></td>
+                    <td>
+                        <input type="text" id="_address" name="_address" value= "{$tpark[_address]}" readonly/>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="_area">地理位置：</label></td>
+                    <td>
+                        <input type="text" id="_area" name="_area" value= "<?php echo $tpark[_prov].' '.$tpark[_city].' '.$tpark[_dist].' '.$tpark[_area]; ?>" readonly/>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label>导航坐标：</label></td>
+                    <td>
+                        <table style="width: 100%" border="0">
+                            <tr>
+                                <td>纬度：</td>
+                                <td>经度：</td>
+                            </tr>
+                            <tr>
+                                <td><input style="width: 100%" type="text"   name="_lat" value= "{$tpark[_lat]}" readonly/></td>
+                                <td><input style="width: 100%" type="text"   name="_lng" value= "{$tpark[_lng]}" readonly/></td>
+                            </tr>
+                        </table>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="_type">类型：</label></td>
+                    <td>
+                        <input type="text" id="_type" name="_type" value= "<?php echo C('IN_PARK_STYLE')[$tpark[_type]]; ?>" readonly/>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="_tags">标签：</label></td>
+                    <td>
+                        <input type="text" id="_tags" name="_tags" value= "{$tpark[_tags]}" readonly/>
+                    </td>
+                </tr>
+                <tr>
+                    <td><label for="_parking">总车位数：</label></td>
+                    <td><input type="text" id="_parking" name="_parking" value= "{$tpark[_parking]}" readonly/>个</td>
+                </tr>
+            </table>
+        </div>
+        <div class="right-content">
+            <form id="checkform" action="{:U('checkpark')}" method="post" enctype="multipart/form-data">
+                <input type="hidden"  name="tpid" value="{$tpark[id]}" />
+                <input type="hidden"  name="partid" value="{$tpark[partime]}" />
+                <table class="zebra" style="width: 95%;margin: 0 auto;margin-top: 10px;overflow: hidden">
+                    <tr>
+                        <td style="width: 23%;"><label for="name">停车场名称：</label></td>
+                        <td  style="width: 77%;">
+                            <input type="text" id="name" name="name" value="{$tpark[name]}" />
+                            <span id="nameError"></span>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="address">入口地址：</label></td>
+                        <td>
+                            <input type="text" id="address" name="address" value= "{$tpark[address]}" />
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label>导航坐标：</label></td>
+                        <td>
+                            <table style="width: 100%" border="0">
+                                <tr>
+                                    <td>纬度：</td>
+                                    <td>经度：</td>
+                                </tr>
+                                <tr>
+                                    <td><input style="width: 100%" type="text"   name="lat" value= "{$tpark[lat]}" /></td>
+                                    <td><input style="width: 100%" type="text"   name="lng" value= "{$tpark[lng]}" /></td>
+                                </tr>
+                                <tr>
+                                    <td colspan="2" style="text-align:center">
+                                        <div id="btgetloc" class="mui-btn mui-btn-warning mui-btn-block">获取坐标</div>
+                                    </td>
+                                </tr>
+                            </table>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td colspan="2">
+                            <label>停车场类型：</label><br>
+                            <?php
+                            $parkstyles = C('PARK_STYLE');
+                            $mystyle = $tpark['style'];
+                            $key = 1;
+                            foreach($parkstyles as $parkstyle => $value){
+
+                            if(array_key_exists($parkstyle, C('PARK_STYLE_CAT'))){
+                            echo "<br/><p style='margin: 0px'>".C('PARK_STYLE_CAT')[$parkstyle].":</p>";
+                            $key =  1;
+                            }
+
+                            $token = '|'.$parkstyle.'|';
+                            $checked = "";
+                            if (strstr($mystyle, $token)) {
+                            $checked = "checked";
+                            }
+                            echo '<span  style="display:inline-block;width: 45%;"><label style="font-weight: normal;" ><input type="checkbox" name="parkstyle[]" value="'.$parkstyle.'" '.$checked.' />'.$value.'</label></span>';
+                            if($key%2 == 0){
+                            echo '<br/>';
+                            }
+                            $key++;
+                            }
+                            ?>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="parking">总车位数：</label></td>
+                        <td><input type="text" id="parking" name="parking" value= "{$tpark[parking]}" />个</td>
+                    </tr>
+                    <tr>
+                        <td><label for="opentime">开放时间段：</label></td>
+                        <td>
+                            <p class="pickerTitle">文字描述：</p>
+                            <input type="text" id="opentime" name="opentime" value= "{$tpark[opentime]}" placeholder="如：周一至周日 8点至24点..."/> <br>
+                            <ul class="pickTime">
+                                <li>
+                                    <p class="pickerTitle">周一至周五:</p>
+                                    <div class="input-group  date timepicker " data-date-format="hh:ii:00">
+                                        <input class="form-control"  id="startwork" type="text" name="startwork" value= "<?php echo ($tpark[startwork] == '00:00:00' && $tpark[endwork] == '00:00:00') ? null: $tpark[startwork];?>">
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
+                                    </div>
+                                    <p class="pickerText">-</p>
+                                    <div class="input-group  date timepicker " data-date-format="hh:ii:00" style="float: left;padding: 5px;">
+                                        <input class="form-control" id="endwork" type="text" name="endwork" value= "<?php echo ($tpark[startwork] == '00:00:00' && $tpark[endwork] == '00:00:00') ? null: $tpark[endwork];?>">
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
+                                    </div>
+                                    <div class="allday"><label><input class="allcheck" type="checkbox" value="startwork" />全天 </label></div>
+                                </li>
+                                <li>
+                                    <p class="pickerTitle">周六周日:</p>
+                                    <div class="input-group  date timepicker " data-date-format="hh:ii:00">
+                                        <input class="form-control"  id="startweek" type="text" name="startweek" value= "<?php echo ($tpark[startweek] == '00:00:00' && $tpark[endweek] == '00:00:00') ? null: $tpark[startweek];?>">
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
+                                    </div>
+                                    <p class="pickerText">-</p>
+                                    <div class="input-group  date timepicker " data-date-format="hh:ii:00" style="float: left;padding: 5px;">
+                                        <input class="form-control" id="endweek" type="text" name="endweek" value= "<?php echo ($tpark[startweek] == '00:00:00' && $tpark[endweek] == '00:00:00') ? null: $tpark[endweek];?>">
+                                        <span class="input-group-addon"><span class="glyphicon glyphicon-time"></span></span>
+                                    </div>
+                                    <div class="allday"><label><input class="allcheck" type="checkbox" value="startweek" />全天 </label></div>
+                                </li>
+                            </ul>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="chargingrules">计费规则：</label></td>
+                        <td>
+                            <div style="clear: both;">
+                                <div style="float:left;max-width: 95%">
+                                    <textarea id="chargingrules" name="chargingrules" rows="5">{$tpark[chargingrules]}</textarea>
+                                </div>
+                            </div>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="note">备注说明：</label></td>
+                        <td> <textarea id="note" style="margin-top:10px;" name="note" rows="5">{$tpark[note]}</textarea> </td>
+                    </tr>
+                    <tr>
+                        <td><label for="intention">合作意愿：</label></td>
+                        <td>
+                            <select  id="intention" name="intention">
+                                <option value="0"  <?php echo $tpark[intention] == 0 ? 'selected':'';?>>无</option>
+                                <option value="1"  <?php echo $tpark[intention] == 1 ? 'selected':'';?>>一般</option>
+                                <option value="2"  <?php echo $tpark[intention] == 2 ? 'selected':'';?>>强烈</option>
+                            </select>
+                        </td>
+                    </tr>
+                    <tr>
+                        <td><label for="status">任务状态：</label></td>
+                        <td>
+                            <select  id="status" name="status">
+                                <option value="-1"  <?php echo $tpark[status] == -1 ? 'selected':'';?>>作废</option>
+                                <option value="1"  <?php echo $tpark[status] == 1 ? 'selected':'';?>>重新分配</option>
+                                <option value="2"  <?php echo $tpark[status] == 2 ? 'selected':'';?>>待审核</option>
+                                <option value="3"  <?php echo $tpark[status] == 3 ? 'selected':'';?>>完成任务</option>
+                            </select>
+                        </td>
+                    </tr>
+                </table>
+
+        </div>
+        <div style="clear: both"></div>
+        <div>
+                <p style="text-align: center;margin-top: 20px;">
+                   <a id="nextPark" alt="{$nextid}" href="{:U('Task/checkpark', array('partid'=>$tpark[partime], 'tpid'=>$nextid))}" class="mui-btn  mui-btn-primary" style="margin: 0 10px;">下一个</a> <input type="submit" class="baseinfo" value="提交"/>
+                </p>
+        </div>
+        </form>
+    </div>
+</block>
+
+<block name="script">
+    <!--<script src="http://webapi.amap.com/maps?v=1.3&key=5b768e7a9bc53cf2286ba6122e599bb4" type="text/javascript"></script>-->
+    <script type="text/javascript" src="__STATIC__/iscroll.js"></script>
+    <script type="text/javascript" src="__STATIC__/datetimepicker/js/bootstrap.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/datetimepicker/js/bootstrap-datetimepicker.js"></script>
+    <script type="text/javascript" src="__STATIC__/datetimepicker/js/locales/bootstrap-datetimepicker.zh-CN.js"></script>
+    <script type="text/javascript" src="__STATIC__/ueditor/ueditor.config.js"></script>
+    <script type="text/javascript" src="__STATIC__/ueditor/ueditor.all.js"></script>
+    <script type="text/javascript" src="__STATIC__/ueditor/lang/zh-cn/zh-cn.js"></script>
+    <script>
+        $(".tabs").tabs();
+
+        var um = UE.getEditor('chargingrules',{
+            toolbars: [
+                ['source', 'undo', 'redo', "forecolor"]
+            ],
+            initialFrameWidth: null,
+            minFrameWidth:500,
+            wordCount: false
+        });
+
+        (function($){
+            $.fn.Maplocation = (function(){
+                var mapcontaion = $('<div></div>');
+                var mapmake = $('<div></div>');
+                var mapdom = $('<div></div>');
+                var mapoppanel = $('<div>' +
+                '<div name="info" style="clear: both;padding: 10px;border-bottom: solid 1px #ccc;position: absolute;left: 0;bottom: 100%;z-index: 10000;background-color: rgba(0,0,0,.8);width: 100%;color: #fff">' +
+                '<table style="width: 100%"><tr>' +
+                '<td>经度:<span name="lat"></span></td>' +
+                '<td>纬度:<span name="lng"></span></td>' +
+                '</tr>' +
+                '<tr>' +
+                '<td><div name="btclose" style="text-align: center;border: solid 1px #ccc;margin: 5%;">退出</div></td>' +
+                '<td><div name="btselect" style="text-align: center;border: solid 1px #ccc;margin: 5%;">选择</div></td>' +
+                '</tr>' +
+                '</table>' +
+                '</div>' +
+                '<div name="list" style="width: 100%;height: 100%;overflow: hidden;position: absolute;left: 0;top: 0;background-color: #fff"><ul style="list-style: none;margin: 0;padding: 0"></ul></div>' +
+                '</div>');
+                var mapid = '__________mapid';
+
+                mapdom.attr('id',mapid);
+                mapcontaion.append(mapmake).append(mapdom).append(mapoppanel);
+                mapcontaion.css({
+                    position:'fixed'
+                    ,display:'none'
+                    ,width:'100%'
+                    ,height:'100%'
+                    ,'zIndex':'10000'
+                    ,left:0
+                    ,top:0
+                    ,backgroundColor:'rgba(0,0,0,.5)'
+                });
+                mapmake.css({
+                    position:'absolute'
+                    ,width:'100%'
+                    ,height:'100%'
+                }).click(function(){
+                    mapcontaion.hide();
+                });
+                mapdom.css({
+                    position:'absolute'
+                    ,width:'100%'
+                    ,height:'60%'
+                    ,left:0
+                    ,top:0
+
+                });
+                mapoppanel.css({
+                    position:'absolute'
+                    ,width:'100%'
+                    ,height:'40%'
+                    ,left:0
+                    ,top:'60%'
+                    ,backgroundColor:'#fff'
+                }).find('[name=btclose]').click(function(){
+                    obj.close();
+                }).end().find('[name=btselect]').click(function(){
+                    obj.select();
+                });
+                $(document.body).append(mapcontaion);
+
+                var mapcontaionui = {
+                    iscroll:null
+                    ,show:function(){
+                        mapcontaion.show();
+                    }
+                    ,hide:function(){
+                        mapcontaion.hide();
+                    }
+                    ,list:function(datas, cb){
+                        var list = mapcontaion.find('[name=list]');
+                        var innerlist = list.find('>ul');
+                        innerlist.empty();
+
+                        for(var i = 0;i<datas.length;i++){
+                            var data = datas[i];
+                            var row = $('<li style="padding-top: 10px;padding-bottom: 10px"></li>');
+                            (function(row,data){
+                                row.html(data.formattedAddress);
+                                row.click(function(){
+                                    console.log(data);
+                                    cb && cb(data);
+                                })
+                            })(row,data);
+                            innerlist.append(row);
+                        }
+                        if(datas.length>0){
+                            list.show();
+                        }else{
+                            list.hide();
+                        }
+                        if(!this.iscroll){
+                            this.iscroll = new iScroll(innerlist[0], {desktopCompatibility:true});
+                        }else{
+                            this.iscroll.refresh();
+                        }
+                    }
+                    ,setInfo:function(position){
+                        var lat = mapcontaion.find('[name=lat]');
+                        var lng = mapcontaion.find('[name=lng]');
+                        lat.html(position.lat);
+                        lng.html(position.lng);
+                    }
+                }
+                var loadmapscript = (function(){
+                    var callback = null;
+                    var isloading = false;
+                    var initname = 'loadmapscriptinit_'+(new Date()-0);
+                    window[initname] = function(){
+                        isloading = true;
+                        //alert('initname'+'\n'+'loadmap');
+                        callback && callback();
+                    }
+
+
+                    var obj = {
+                        load:function(_callback){
+                            if(isloading){
+                                callback && callback();
+                            }else{
+                                callback = _callback;
+                                var script = document.createElement("script");
+                                script.type = "text/javascript";
+                                script.src = "http://webapi.amap.com/maps?v=1.3&key=bc59f27d65900532cc4f3c1048dd6122&callback="+initname;
+                                document.body.appendChild(script);
+                            }
+                        }
+                    };
+                    return obj;
+                })();
+
+                var obj = {
+                    mapobj:null
+                    ,onclose:null
+                    ,init:function(callback, addressdom){
+                        var me = this;
+                        //var a = addressdom?addressdom.val():null;
+
+                        loadmapscript.load(function(){
+                            me.loadPosition(addressdom?addressdom.val():null, function(geocoderresult){
+                                me.initMap(callback, geocoderresult);
+                            });
+                        });
+                    }
+                    ,initMap:function(callback,geocoderresult){
+                        mapcontaion.show();
+                        this.onclose = callback || null;
+                        //var position=new AMap.LngLat(116.397428,39.90923);
+                        var centermaker = null;
+                        var mapObj = this.mapobj = new AMap.Map(mapid,{
+                            view: new AMap.View2D({
+                                //center:position,//创建中心点坐标
+                                zoom:17, //设置地图缩放级别      //1 -  19
+                                rotation:0 //设置地图旋转角度
+                            }),
+                            lang:"zh_cn"//设置地图语言类型，默认：中文简体
+                        });//创建地图实例
+                        mapObj.plugin(["AMap.ToolBar","AMap.OverView","AMap.Scale"],function(){
+                            //加载工具条
+                            var tool = new AMap.ToolBar({
+                                direction:false,//隐藏方向导航
+                                ruler:false,//隐藏视野级别控制尺
+                                offset:new AMap.Pixel(10,200)
+                                //autoPosition:true//自动定位
+                            });
+                            mapObj.addControl(tool);
+                            //加载鹰眼
+                            var view = new AMap.OverView();
+                            mapObj.addControl(view);
+                            //加载比例尺
+                            //var scale = new AMap.Scale();mapObj.addControl(scale);
+                        });
+
+                        if(geocoderresult){
+                            mapcontaionui.list(geocoderresult.geocodes, function(data){
+                                mapObj.panTo(data.location);
+                                setTimeout(function(){
+                                    setposition();
+                                },500);
+                            });
+                        }
+
+                        AMap.event.addListener(mapObj,'complete',function(){
+                            centermaker = new AMap.Marker({
+                                map:mapObj
+                                ,content:"<div style='width: 50px;height: 50px;border-radius: 25px;background-color: rgba(0,0,0,.2)'><div style='position: absolute;left: 50%;top:50%;width: 6px;height: 6px;border-radius: 3px;margin-left: -3px;margin-top: -3px;background-color:red'></div></div>"
+                                ,position:mapObj.getCenter()
+                                ,offset:new AMap.Pixel(-25,-25)
+                            });
+
+                            var lng =$('[name=lng]').val();
+                            var lat =$('[name=lat]').val();
+                            if(lng != null && lat != null && lng!='' && lat!='' && parseInt(lng)!=0 && parseInt(lat)!=0){
+                                var position=new AMap.LngLat(lng,lat);
+                                mapObj.panTo(position);
+                                setTimeout(function(){setposition();},500);
+                            }else{
+                                mapObj.plugin('AMap.Geolocation', function () {
+                                    var geolocation = new AMap.Geolocation({
+                                        enableHighAccuracy: true,//是否使用高精度定位，默认:true
+                                        timeout: 5000,          //超过10秒后停止定位，默认：无穷大
+                                        maximumAge: 0,           //定位结果缓存0毫秒，默认：0
+                                        convert: true,           //自动偏移坐标，偏移后的坐标为高德坐标，默认：true
+                                        showButton: false,        //显示定位按钮，默认：true
+                                        buttonPosition: 'LB',    //定位按钮停靠位置，默认：'LB'，左下角
+                                        buttonOffset: new AMap.Pixel(10, 20),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+                                        showMarker: false,        //定位成功后在定位到的位置显示点标记，默认：true
+                                        showCircle: false,        //定位成功后用圆圈表示定位精度范围，默认：true
+                                        panToLocation: true,     //定位成功后将定位到的位置作为地图中心点，默认：true
+                                        zoomToAccuracy:false      //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+                                    });
+                                    mapObj.addControl(geolocation);
+                                    AMap.event.addListener(geolocation, 'complete', function(arg){
+                                        if(!callbacking){
+                                            callbacking = true;
+                                            mapObj.panTo(arg.position);
+                                            setTimeout(function(){setposition();},500);
+
+                                        }
+                                    });//返回定位信息
+                                    AMap.event.addListener(geolocation, 'error', function(){
+                                        alert('当前环境不支持获取定位,请在设置中允许使用[位置定位服务]');
+                                    });//返回定位出错信息
+                                    geolocation.getCurrentPosition();
+                                });
+                            }
+
+                        });
+
+
+                        AMap.event.addListener(mapObj,'moveend',function(){
+                            setposition();
+                        });
+                        AMap.event.addListener(mapObj,'mapmove',function(){
+                            setposition();
+                        });
+                        function setposition(){
+                            centermaker.setPosition(mapObj.getCenter());
+                            mapcontaionui.setInfo(mapObj.getCenter());
+                        }
+                        /**
+                         navigator.geolocation.getCurrentPosition(function(a){
+                            console.log(a)
+                            //alert('当前支持获取位置');
+                        }, function(e){
+                            console.log('error',e);
+                            alert('当前不支持获取地理位置');
+                        })
+                         */
+                    }
+                    ,loadPosition:function(address, cb){
+                        if(address){
+                            var MGeocoder;
+                            //加载地理编码插件
+                            AMap.service(["AMap.Geocoder"], function() {
+                                MGeocoder = new AMap.Geocoder({
+                                    city:$('#entercity').val(), //城市，默认：“全国”
+                                    radius:1000 //范围，默认：500
+                                });
+                                //返回地理编码结果
+                                //地理编码
+                                MGeocoder.getLocation(address, function(status, result){
+                                    if(status === 'complete' && result.info === 'OK'){
+                                        cb && cb(result);
+                                    }else{
+                                        cb && cb(null);
+                                    }
+                                });
+                            });
+                        }else{
+                            cb && cb(null);
+                        }
+                    }
+                    ,close:function(){
+                        this.mapobj.destroy();
+                        this.mapobj = null;
+                        this.onclose = null;
+                        mapcontaion.hide();
+                    }
+                    ,select:function(){
+                        this.onclose && this.onclose(this.mapobj.getCenter());
+                        this.close();
+                    }
+                }
+                return function(callback, addressdom){
+                    $(this).click(function(){
+                        obj.init(callback, addressdom);
+                    });
+                }
+            })();
+        })(jQuery);
+    </script>
+    <script type="text/javascript">
+        $(function(){
+            //检查名字重复
+            $('#parkname').focus(function(){
+                $('#nameError').html("");
+            });
+            $('#parkname').blur(function(){
+                var name = $('#parkname').val();
+                if(name != ''){
+                    $.ajax({
+                        url:"{:U('checkName')}",
+                        type:'get',
+                        async : true,
+                        data:{id:$('.parkid').val(),name:name},
+                        success:function(data){
+                            var dataObj=eval("("+data+")");//转换为json对象
+                            if(dataObj.check){
+                                $('#nameError').html("");
+                            }
+                            else{
+                                $('#nameError').html("Sorry,已经存在<a target='_blank' href='{:U('parkinfo')}"+ "/parkid/"+dataObj.id+"'>"+dataObj.name+"</a>");
+                            }
+                        }
+                    });
+                }
+            });
+            //检查地址重复
+            $('#enterplace').focus(function(){
+                $('#enterError').html("");
+            });
+            $('#enterplace').blur(function(){
+                var addr = $('#enterplace').val();
+                if(addr != ''){
+                    $.ajax({
+                        url:"{:U('checkAddress')}",
+                        type:'get',
+                        async : true,
+                        data:{id:$('.parkid').val(),addr:addr},
+                        success:function(data){
+                            var dataObj=eval("("+data+")");//转换为json对象
+                            if(dataObj.check){
+                                $('#enterError').html("");
+                            }
+                            else{
+                                $('#enterError').html("Sorry,<a target='_blank' href='{:U('parkinfo')}"+ "/parkid/"+dataObj.id+"'>"+dataObj.name+"</a>已经使用该地址");
+                            }
+                        }
+                    });
+                }
+            });
+            $('#btgetloc').Maplocation(function(position){
+                console.log(position);
+                $('[name=lng]').val(position.lng);
+                $('[name=lat]').val(position.lat);
+            },$('#enterplace'));
+
+            $('.visitTime').datetimepicker({
+                language: 'zh-CN',
+                todayBtn: true,
+                autoclose: true,
+                minView: '2',
+                forceParse: false,
+                format:"yyyy-mm-dd",
+                bootcssVer:3
+            });
+
+            $('#acendtime').datetimepicker({
+                language: 'zh-CN',
+                todayBtn: true,
+                autoclose: true,
+                minView: '2',
+                forceParse: false,
+                format:"yyyy-mm-dd",
+                bootcssVer:3
+            });
+
+            var now  = new Date();
+            $('.timepicker').datetimepicker({
+                language: 'zh-CN',
+                autoclose: true,
+                startView:1,
+                pickerPosition:'bottom-left',
+                hourStep: 1,
+                minuteStep: 5,
+                secondStep: 0,
+                format:"hh:ii:00",
+                forceParse: false,
+                startDate:now.getFullYear()+"-"+now.getMonth()+"-"+now.getDate()
+            });
+
+            $('.dateTimepicker').datetimepicker({
+                language: 'zh-CN',
+                autoclose: true,
+                startView:2,
+                pickerPosition:'bottom-left',
+                hourStep: 1,
+                minuteStep: 5,
+                secondStep: 5,
+                format:"yyyy-mm-dd hh:ii:00",
+                bootcssVer:3,
+                startDate:now.getFullYear()+"-"+now.getMonth()+"-"+now.getDate(),
+                forceParse: false
+            });
+
+            //检查缩写名称
+            $('#checkBtn').click(function(){
+
+                        //清空显示结果
+                        $('#checkS').html("");
+                        $('#checkF').html("");
+                        $.ajax({
+                            url:"{:U('checkShortName')}",
+                            type:'get',
+                            async : false,
+                            data:{shortName:$('#shortname').val()},
+                            success:function(data){
+                                var dataObj=eval("("+data+")");//转换为json对象
+                                if(dataObj.check){
+                                    $('#checkS').html("OK,名字可以使用！");
+                                }
+                                else{
+                                    $('#checkF').html("Sorry,该名字已经被使用，请尝试在后面加数字1,2,3...");
+                                }
+                            }
+                        });
+                    }
+            );
+
+            //选择全天
+            $('.allcheck').click(function(){
+                var start = $(this).val();
+                var end = start.replace('start','end');
+                if($(this).is(':checked')){
+                    $('#'+start).val('00:00:00');
+                    $('#'+end).val('24:00:00');
+                }
+                else{
+                    $('#'+start).val(null);
+                    $('#'+end).val(null);
+                }
+            });
+
+            //基本资料提交前JS验证
+            $('.baseinfo').click(function(){
+                var error = "";
+
+                //验证停车场名字：不能为空+以停车场结尾
+                if($('#parkname').val() == ''){
+                    error += "停车场名字不能为空！\n";
+                }
+
+                //验证入口地址：不能为空
+                if($('#enterplace').val() == ''){
+                    error += "入口地址不能为空！\n";
+                }
+
+                //验证开放时间段：不能一个为空，另一个有时间
+                var t1 = $('#startwork').val() == '' ? 0 : 1;
+                var t2 = $('#endwork').val() == '' ? 0 : 1;
+                var t3 = $('#startweek').val() == '' ? 0 : 1;
+                var t4 = $('#endweek').val() == '' ? 0 : 1;
+                if((t1+t2 == 1) || (t3+t4 == 1)){
+                    error += "开放时间段填写不完整！\n";
+                }
+
+                var status = {$tpark[status]};
+                if(status == 3){
+                    alert('本次任务已经结束，更改已没有意义！');
+                    return false;
+                }
+
+
+                //根据错误提交
+                if(error == ""){
+                    return true;
+                }
+                else{
+                    alert(error);
+                    return false;
+                }
+
+            });
+
+            $('#nextPark').click(function(){
+                $nextid = $(this).attr('alt');
+                if($nextid < 0){
+                    alert('这已经是当前列表最后一个停车场了！');
+                    return false;
+                }
+                else{
+                    return true;
+                }
+            });
+
+
+        })
+    </script>
+</block>

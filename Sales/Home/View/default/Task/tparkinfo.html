@@ -1,0 +1,274 @@
+<extend name="Public/base" xmlns="http://www.w3.org/1999/html"/>
+
+<block name="style">
+    <style>
+        body{padding: 0}
+        .index-main{
+            padding-top: 35px;
+            width:80%;
+            margin: 0 auto;
+        }
+        .index-main ul li {
+            clear: both;
+        }
+        .index-main ul li:nth-child(even) {
+            background: #fefefe;
+            -webkit-box-shadow: 0 1px 0 rgba(255,255,255,.8) inset;
+            -moz-box-shadow: 0 1px 0 rgba(255,255,255,.8) inset;
+            box-shadow: 0 1px 0 rgba(255,255,255,.8) inset;
+        }
+        .lefthalf{
+            float: left;
+            width: 40%;
+            text-align: right;
+            padding: 20px 20px 10px 0;
+        }
+        .righthalf{
+            float: left;
+            width: 60%;
+            text-align: left;
+            padding: 10px  0;
+        }
+        input[type = text], textarea {
+            width: 300px;
+            background-color: transparent;
+            box-shadow: inset 2px 3px 3px #eee;
+        }
+        #tpark_status{
+            width: 300px;
+        }
+        #container{
+            float: left;
+        }
+        #pano_holder{
+            float: left;
+        }
+
+        .modal-content{
+            margin:0 auto;
+            height:600px;
+            width:1260px;
+            font-size:12px;
+        }
+        .modal-dialog{
+            width: auto;
+            text-align: center;
+        }
+
+
+    </style>
+</block>
+
+<block name="body">
+    <!-- 主体 -->
+    <div id="indexMain" class="index-main" >
+        <ul>
+            <form action="{:U('Task/tparkinfo')}" method="post">
+                <input type="hidden" name="tpid" value="{$tpark['id']}">
+                <input type="hidden" name="search" value="{$search}">
+            <li>
+                <div class="lefthalf">名字:</div>
+                <div class="righthalf"><input type="text" name="_name" value="{$tpark['_name']}"></div>
+            </li>
+            <li>
+                <div class="lefthalf">标签:</div>
+                <div class="righthalf"><input type="text" name="_tags" value="{$tpark['_tags']}"><span style="font-size: 13px;color: #888;"> 多个标签之间请用'|'分隔开</span></div>
+            </li>
+            <li>
+                <div class="lefthalf">地址:</div>
+                <div class="righthalf"><input type="text" name="_address" value="{$tpark['_address']}"></div>
+            </li>
+            <li>
+                <div class="lefthalf">经纬度:</div>
+                <div class="righthalf" style="font-size: 15px;">
+                    经度：<input id="id_lat" style="width: 130px;" type="text" name="_lat" value="{$tpark['_lat']}">
+                    纬度：<input id="id_lng" style="width: 130px;" type="text" name="_lng" value="{$tpark['_lng']}">
+                    <button class="mui-btn-blue" type="button" id="mapcheck">街景检查</button>
+                </div>
+            </li>
+            <li>
+                <div class="lefthalf">审核:</div>
+                <div class="righthalf">
+                    <select id="tpark_status" name="status">
+                        <option value="-1" <?php echo $tpark['status']==-1 ? 'selected':'' ?>>作废</option>
+                        <option value="0" <?php echo $tpark['status']==0 ? 'selected':'' ?>>未审核</option>
+                        <option value="1" <?php echo $tpark['status']==1 ? 'selected':'' ?>>预审通过</option>
+                        <option value="2" <?php echo $tpark['status']==2 ? 'selected':'' ?>>已分派</option>
+                        <option value="3" <?php echo $tpark['status']==3 ? 'selected':'' ?>>审核通过</option>
+                    </select>
+                </div>
+            </li>
+            <li>
+                <div class="lefthalf" style="padding: 10px;">
+                    <input id="submit" type="submit" class="mui-btn-blue" value="提交">
+                </div>
+                <div class="righthalf">
+                    <button id="next" class="mui-btn-blue" type="button">下一个</button>
+                </div>
+            </li>
+            </form>
+        </ul>
+    </div>
+    <div id="qqmap" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content" id="map-content">
+                <p>经度：<input id="_lat" type="text" style="width: 130px;margin: 10px 10px;"/>纬度：<input id="_lng" type="text" style="width: 130px;margin: 10px 10px;"/></p>
+                <div style="width: 1280px;">
+                    <div style="width:600px;height:480px;margin: 0px 10px;" id="container"></div>
+                    <div style="width:600px;height:480px;margin: 0px 10px;" id="pano_holder"></div>
+                </div>
+                <div>
+                    <button id="btn-cancle" class="mui-btn-blue"  style="margin:5px 10px ">取消</button>
+                    <button id="btn-confirm" class="mui-btn-blue"  style="margin:5px 10px ">确定</button>
+                </div>
+
+
+            </div>
+        </div>
+    </div>
+</block>
+
+<block name="script">
+    <script type="text/javascript" src="__STATIC__/js/bootstrap.min.js"></script>
+    <script src="http://map.qq.com/api/js?v=2.exp&key=RKUBZ-JWSHO-6UZWU-SLQPD-W7M62-2NFBM"></script>
+    <script type="text/javascript">
+        var init = function() {
+
+            var center = new qq.maps.LatLng($("#id_lat").val(), $("#id_lng").val());
+
+            var map = new qq.maps.Map(document.getElementById("container"), {
+                center: center,
+                zoom: 18
+            });
+
+            //设置路网图层
+            var pano_layer = new qq.maps.PanoramaLayer();
+            pano_layer.setMap(map);
+
+            // 创建街景
+            var pano = new qq.maps.Panorama(document.getElementById('pano_holder'), {
+                pano: '10051001111220105028000',
+                disableMove: false,
+                pov: {
+                    heading: 20,
+                    pitch: 15
+                },
+                zoom: 1
+            });
+            //创建一个Marker
+            var marker = new qq.maps.Marker({
+                //设置Marker的位置坐标
+                position: center,
+                //设置显示Marker的地图
+                map: map
+            });
+
+            //设置Marker的可见性，为true时可见,false时不可见，默认属性为true
+            marker.setVisible(true);
+            //设置Marker的动画属性为从落下
+            marker.setAnimation(qq.maps.MarkerAnimation.DOWN);
+            //设置Marker是否可以被拖拽，为true时可拖拽，false时不可拖拽，默认属性为false
+            marker.setDraggable(true);
+            ////设置Marker自定义图标的属性，size是图标尺寸，该尺寸为显示图标的实际尺寸，origin是切图坐标，该坐标是相对于图片左上角默认为（0,0）的相对像素坐标，anchor是锚点坐标，描述经纬度点对应图标中的位置
+            var anchor = new qq.maps.Point(32, 64),
+                    size = new qq.maps.Size(64, 64),
+                    origin = new qq.maps.Point(0, 0),
+                    icon = new qq.maps.MarkerImage(
+                            "http://t.duduche.me/html/userhtml/img/icon-map-location.png",
+                            size,
+                            origin,
+                            anchor
+                    );
+            marker.setIcon(icon);
+            //设置Marker阴影图片属性，size是图标尺寸，该尺寸为显示图标的实际尺寸，origin是切图坐标，该坐标是相对于图片左上角默认为（0,0）的相对像素坐标，anchor是锚点坐标，描述经纬度点对应图标中的位置
+//            var anchorb = new qq.maps.Point(3, -30),
+//                    sizeb = new qq.maps.Size(36, 11),
+//                    origin = new qq.maps.Point(0, 0),
+//                    iconb = new qq.maps.MarkerImage(
+//                            "http://open.map.qq.com/doc/img/nilb.png",
+//                            sizeb,
+//                            origin,
+//                            anchorb
+//                    );
+//            marker.setShadow(iconb);
+            //设置标注的名称，当鼠标划过Marker时显示
+//            marker.setTitle("测试");
+
+            //添加信息窗口
+            // var info = new qq.maps.InfoWindow({
+            //     map: map
+            // });
+            // //获取标记的可拖动属性
+            // info.open();
+            // info.setContent('标记的可拖动属性为：' + marker.getDraggable());
+            // info.setPosition(marker.getPosition());
+            //标记Marker点击事件
+            // qq.maps.event.addListener(marker, 'click', function() {
+            //     info.open();
+            //     info.setContent('<div style="text-align:center;white-space:nowrap;' +
+            //         'margin:10px;">单击标记</div>');
+            //     info.setPosition(marker.getPosition());
+            // });
+            //设置Marker停止拖动事件
+            pano_service = new qq.maps.PanoramaService();
+
+            var point = marker.getPosition();
+            var radius =1000;
+            $('#_lat').val(point.lat.toFixed(6));
+            $('#_lng').val(point.lng.toFixed(6));
+            pano_service.getPano(point, radius, function (result) {
+                pano.setPano(result.svid);
+            });
+
+            qq.maps.event.addListener(marker, 'dragend', function () {
+                var point = marker.getPosition();
+                var radius =1000;
+                $('#_lat').val(point.lat.toFixed(6));
+                $('#_lng').val(point.lng.toFixed(6));
+                pano_service.getPano(point, radius, function (result) {
+                    pano.setPano(result.svid);
+                });
+            });
+//            qq.maps.event.addListener(pano, 'position_changed', function () {
+//                var point = pano.getPosition();
+//                $('#_lat').val(point.lat.toFixed(6));
+//                $('#_lng').val(point.lng.toFixed(6));
+//                map.setCenter(point);
+//                marker.setPosition(point);
+//            });
+        };
+
+
+        $(function(){
+            $('#mapcheck').click(function(){
+                $('#qqmap').modal('show');
+                init();
+            });
+            $('#btn-cancle').click(function(){
+                $('#qqmap').modal('hide');
+            });
+            $('#btn-confirm').click(function(){
+                $('#qqmap').modal('hide');
+                $('#id_lat').val($('#_lat').val());
+                $('#id_lng').val($('#_lng').val());
+            });
+
+            $('#submit').click(function(){
+                if($('#tpark_status').val() > 1){
+                    alert('对不起，你还不能做后续的操作');
+                    return false;
+                }
+            });
+
+            $('#next').click(function(){
+               $nextid = {$nextid};
+                if($nextid == -1){
+                    alert('这已经是本列表最后一个停车场！');
+                }
+                else{
+                    window.location.href = "{:U('Task/tparkinfo', array('tpid'=>$nextid, 'search'=>$search))}";
+                }
+            });
+        });
+    </script>
+</block>

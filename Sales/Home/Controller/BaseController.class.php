@@ -34,4 +34,55 @@ class BaseController extends \Think\Controller {
         return $giftInfo;
 
     }
+
+    /**
+     * @desc 封装curl的调用接口，post的请求方式
+     */
+    protected function doCurlPostRequest($url, $requestString, $timeout = 5) {
+        if($url == "" || $requestString == "" || $timeout <= 0){
+            return false;
+        }
+
+        $con = curl_init((string)$url);
+        curl_setopt($con, CURLOPT_HEADER, false);
+        curl_setopt($con, CURLOPT_POSTFIELDS, $requestString);
+        curl_setopt($con, CURLOPT_POST, true);
+        curl_setopt($con, CURLOPT_RETURNTRANSFER,true);
+        curl_setopt($con, CURLOPT_TIMEOUT, (int)$timeout);
+
+        return curl_exec($con);
+    }
+
+    /**
+     * @desc 封装curl的调用接口，get的请求方式
+     */
+    protected function doCurlGetRequest($url, $data = array(), $timeout = 10) {
+        if($url == "" || $timeout <= 0){
+            return false;
+        }
+        if($data != array()) {
+            $url = $url . '?' . http_build_query($data);
+        }
+        $con = curl_init((string)$url);
+        curl_setopt($con, CURLOPT_HEADER, false);
+        curl_setopt($con, CURLOPT_RETURNTRANSFER,true);
+        curl_setopt($con, CURLOPT_TIMEOUT, (int)$timeout);
+        return curl_exec($con);
+    }
+
+    /**
+     * @desc tags array => string
+     */
+    protected function arrayToString($arr){
+        if(empty($arr)){
+            return '';
+        }
+        else{
+            $result = '|';
+            foreach($arr as $value){
+                $result .= $value.'|';
+            }
+            return $result;
+        }
+    }
 }

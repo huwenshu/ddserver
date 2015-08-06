@@ -75,6 +75,7 @@ return array(
         'DWJG' => '单位机构',
         'SYTCC' => '商业停车场',
         'LYJD' => '景点',
+        'CGZLG' => '场馆/展览馆',
         'ZDZJCR' => '自动闸机进入',
         'USERFX' => '人工放行',
         'ZYSF' => '中央收费',
@@ -154,6 +155,21 @@ return array(
 
     //规则说明相对地址
     'PARK_RULES_PATH' => './Public/Uploads/parkrules/rules.html',
+
+    //导入的停车场的类型
+    'IN_PARK_STYLE' => array(
+        0  => '未知',
+        1  => '住宅',
+        2  => '别墅',
+        3  => '商铺',
+        4  => '写字楼',
+        5  => '创意园区',
+        6  => '商住楼',
+        7  => '购物中心',
+        8  => '商业街',
+        9  => '门店',
+        10  => '道路'
+    ),
 
     'SH_OPEN_AREA'    =>  array(//1级地名，1级地名描述，2级地名列表
         array('黄浦','来福士、新世界、置地广场、宏伊广场等',array(

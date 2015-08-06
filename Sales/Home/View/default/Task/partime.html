@@ -1,0 +1,134 @@
+<extend name="Public/base" xmlns="http://www.w3.org/1999/html"/>
+
+<block name="style">
+    <style>
+        body{padding: 0}
+        a:hover{
+            text-decoration: none;
+        }
+        .mui-table-view-cell.mui-checkbox.mui-left, .mui-table-view-cell.mui-radio.mui-left {
+            padding-left: 28px;
+        }
+        .myborder{
+            padding: 10px 0;
+        }
+        #panel-2 .myborder input,#panel-2 .myborder select,#panel-1 .myborder input,#panel-1 .myborder select{
+            width: 65%;
+        }
+        #panel-1 .myborder textarea,#panel-2 .myborder textarea{
+            height: 100px;
+        }
+        .ui-tabs-nav{
+            position: relative;
+            display: table;
+            width: 100%;
+            overflow: hidden;
+            font-size: 15px;
+            font-weight: 400;
+            table-layout: fixed;
+            background-color: transparent;
+            border: 1px solid #383838;
+            border-radius: 3px;
+        }
+        .ui-tabs-nav>li{
+            display: table-cell;
+            width: 1%;
+            padding-top: 6px;
+            padding-bottom: 7px;
+            overflow: hidden;
+            line-height: 1;
+            color: #007aff;
+            text-align: center;
+            text-overflow: ellipsis;
+            white-space: nowrap;
+            border-color: #383838;
+            border-left: 1px solid #383838;
+
+        }
+        .ui-tabs-nav>li.ui-tabs-active{
+            color: #fff;
+            background-color: #383838;
+            text-decoration: none;
+        }
+        .ui-tabs-nav>li>a{
+            color: #007aff;
+        }
+        .ui-tabs-nav>li.ui-tabs-active>a{
+            color:#fff;
+        }
+
+        .gray {
+            background:#ddd;
+        }
+        h4{
+            background: #eee;
+            padding: 5px 20px;
+            margin: 0;
+            font-size: 16px;
+        }
+
+    </style>
+</block>
+
+<block name="body">
+    <!-- 主体 -->
+    <div id="indexMain" class="index-main" style="padding-top: 35px">
+        <div class="tabs">
+            <ul>
+                <li><a href="#panel-1">正在扫街</a></li>
+                <li><a href="#panel-2">已完成</a></li>
+            </ul>
+            <div id="panel-1">
+                <ul class="mui-table-view">
+                    <?php
+                    $date = $undo_parks[0]['allocatedate'];
+                    echo "<h4>".$date."</h4>";
+            foreach ($undo_parks as $key => $value) {
+                    if($date != $value['allocatedate']){
+                        $date = $value['allocatedate'];
+                        echo "<h4>".$date."</h4>";
+                    }
+                    echo "<li name='parkitem' class='mui-table-view-cell mui-checkbox mui-left parkitem'>";
+                    echo "<a class='mui-navigate-right'  target='_blank' href=".U('checkpark',array('partid'=>$value['partime'],'tpid'=>$value['id'])).">";
+                        echo "<p>".$value['_name']." ";
+                            echo "[".$value['landmark']."] ";
+                            echo empty($value['_tags'])? '': "[".substr($value['_tags'],1,-1)."]";
+                            echo "</p><p>地址：".$value['_address']."</p>";
+                        echo "</a></li>";
+                    }
+                    ?>
+                </ul>
+            </div>
+            <div id="panel-2">
+                <ul class="mui-table-view">
+                    <?php
+                    $date = $done_parks[0]['allocatedate'];
+                    echo "<h4>".$date."</h4>";
+            foreach ($done_parks as $key => $value) {
+                    if($date != $value['allocatedate']){
+                    $date = $value['allocatedate'];
+                    echo "<h4>".$date."</h4>";
+                    }
+                    echo "<li name='parkitem' class='mui-table-view-cell mui-checkbox mui-left parkitem'>";
+                    echo "<a class='mui-navigate-right'  target='_blank' href=".U('checkpark',array('partid'=>$value['partime'],'tpid'=>$value['id'])).">";
+                        echo "<p>".$value['_name']." ";
+                            echo "[".$value['landmark']."] ";
+                            echo empty($value['_tags'])? '': "[".substr($value['_tags'],1,-1)."]";
+                            echo "</p><p>地址：".$value['_address']."</p>";
+                        echo "</a></li>";
+                    }
+                    ?>
+                </ul>
+            </div>
+
+        </div>
+    </div>
+</block>
+
+<block name="script">
+    <script>
+        $(".tabs").tabs();
+        $(".parkitem").hover(function() {$(this).addClass("gray")}, function() {$(this).removeClass("gray")});
+
+    </script>
+</block>
