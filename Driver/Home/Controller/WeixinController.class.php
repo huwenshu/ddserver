@@ -159,7 +159,7 @@ class WeixinController extends BaseController {
 目前只在上海提供服务，其他城市正在准备中。
 
 最新活动：合作停车场首停只要0.01元，包月费用8折起。手快有，手慢无！点击查看：<a href="http://dwz.cn/1d87hh">http://dwz.cn/1d87hh</a>';
-                
+
 				$resultStr = sprintf ( C('HINT_TPL'), $_openid, C('USERNAME_WEIXIN'), time(), 'text', $content );
 				echo  $resultStr;
 			}
