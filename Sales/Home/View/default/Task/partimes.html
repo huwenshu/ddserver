@@ -1,0 +1,43 @@
+<extend name="Public/base"/>
+
+<block name="style">
+    <style>
+        body{padding: 0}
+
+
+        .partitem > a:hover{
+            text-decoration: none;
+        }
+
+        .gray {background:#ddd;}
+
+
+    </style>
+</block>
+
+<block name="body">
+    <!-- 主体 -->
+    <div id="indexMain" class="index-main">
+        <ul class="mui-table-view">
+            <?php
+            foreach ($partimes as $key => $value) {
+            echo "<li name='partitem' class='mui-table-view-cell partitem'><a class='mui-navigate-right'  target='_blank' href=".U('partime',array('partid'=>$value['id'])).">";
+            echo "<p>".$value['name']."</p>";
+            echo "<p>在职：";
+                echo $value['iswork'] == 1 ? '是' : '否';
+            echo "</p>";
+            echo "</a></li>";
+            }
+        ?>
+        </ul>
+
+    </div>
+</block>
+
+<block name="script">
+    <script type="text/javascript">
+        $(function(){
+            $(".partitem").hover(function() {$(this).addClass("gray")}, function() {$(this).removeClass("gray")});
+        });
+    </script>
+</block>

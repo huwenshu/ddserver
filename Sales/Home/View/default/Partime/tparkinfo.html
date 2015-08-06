@@ -1,0 +1,500 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8">
+    <title>嘟嘟停车</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1,maximum-scale=1,user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="black">
+
+    <link rel="stylesheet" type="text/css" href="__CSS__/mui.min.css" media="all">
+    <link rel="stylesheet" type="text/css" href="__STATIC__/css/bootstrap.min.css" media="all">
+    <script type="text/javascript" src="__JS__/mui.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/jquery-2.0.3.min.js"></script>
+    <script type="text/javascript" src="__STATIC__/js/bootstrap.min.js"></script>
+    <style>
+        html,
+        body {
+            background-color: #efeff4;
+        }
+        p {
+            text-indent: 22px;
+        }
+        span.mui-icon {
+            font-size: 14px;
+            color: #007aff;
+            margin-left: -15px;
+            padding-right: 10px;
+        }
+
+        .mui-off-canvas-right{
+            color: #fff;
+        }
+
+        .title{
+            margin: 35px 15px 10px;
+            text-align: right;
+        }
+        .title+.content{
+            margin: 10px 15px 35px;
+            color: #bbb;
+            font-size: 14px;
+            line-height: 24px;
+            text-align: right;
+        }
+        input{
+            color: #000;
+            height: 34px;
+            padding: 6px 12px;
+            font-size: 14px;
+            line-height: 1.428571429;
+            color: #555;
+            vertical-align: middle;
+            background-color: #fff;
+            background-image: none;
+            border: 1px solid #ccc;
+            border-radius: 4px;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+            box-shadow: inset 0 1px 1px rgba(0,0,0,0.075);
+            -webkit-transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+            transition: border-color ease-in-out .15s,box-shadow ease-in-out .15s;
+        }
+        input:focus{
+            border-color: #66afe9;
+            outline: 0;
+            -webkit-box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(102,175,233,0.6);
+            box-shadow: inset 0 1px 1px rgba(0,0,0,0.075),0 0 8px rgba(102,175,233,0.6);
+        }
+
+
+        .mui-table-view{
+            margin-bottom: 50px;
+        }
+        .footer-fixed{
+            position: fixed;
+            bottom: 10px;
+            z-index: 10;
+            width: 100%;
+        }
+        .mui-table-view-cell label{
+            width: 25%;!important;
+            text-align: right;
+        }
+
+        .modal-dialog{
+            margin: 0;
+        }
+
+        #mapContainer{
+            position: relative;
+            top:0;
+            left: 0;
+            right:0;
+            bottom:0;
+            width: 100%;
+            height: 250px;
+        }
+
+        #tip{
+            background-color:#fff;
+            border:1px solid #ccc;
+            padding-left:10px;
+            padding-right:2px;
+            position:absolute;
+            min-height:65px;
+            top:10px;
+            font-size:12px;
+            right:10px;
+            border-radius:3px;
+            overflow:hidden;
+            line-height:20px;
+            min-width:400px;
+        }
+        #tip input[type="button"]{
+            background-color: #0D9BF2;
+            height:25px;
+            text-align:center;
+            line-height:25px;
+            color:#fff;
+            font-size:12px;
+            border-radius:3px;
+            outline: none;
+            border:0;
+            cursor:pointer;
+        }
+
+        #tip input[type="text"]{
+            height:25px;
+            border:1px solid #ccc;
+            padding-left:5px;
+            border-radius:3px;
+            outline:none;
+        }
+
+
+        #getlat{
+            width: 90px;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+        #getlng{
+            width: 90px;
+            font-size: 14px;
+            margin-left: 10px;
+        }
+
+        #mapValue{
+            width: 90%;
+            margin: 10px 0;
+            text-align: center;
+        }
+
+
+        input{
+            padding: 5px;
+            color: #000;
+
+        }
+        .logout-btn{
+            color:#bbb;
+            margin-top: 10px;
+
+        }
+        input[name=name]{
+            width: 70%;
+        }
+        input[name=address]{
+            width: 70%;
+        }
+        input[name=latlng]{
+            width: 45%;
+        }
+        textarea{
+            width: 70%;
+        }
+        select{
+            width: 70%;
+        }
+
+
+    </style>
+</head>
+
+<body>
+<!--侧滑菜单容器-->
+<div id="offCanvasWrapper" class="mui-off-canvas-wrap mui-draggable">
+    <!--菜单部分-->
+    <aside id="offCanvasSide" class="mui-off-canvas-right">
+        <div id="offCanvasSideScroll" class="mui-scroll-wrapper">
+            <div class="mui-scroll">
+                <div class="title">嘟嘟停车</div>
+                <div class="content">
+                    <h4>{:session('partime_auth.username')}</h4>
+                    <div><a id="logout-btn" class="mui-btn mui-btn-outlined logout-btn" href="{:U('Partime/logout')}">注销</a></div>
+                </div>
+            </div>
+        </div>
+    </aside>
+    <div class="mui-inner-wrap">
+        <header class="mui-bar mui-bar-nav">
+            <a class="mui-icon mui-icon-left-nav mui-pull-left" href="{:U('Partime/index')}"></a>
+            <a id="offCanvasBtn" href="#offCanvasSide" class="mui-icon mui-action-menu mui-icon-bars mui-pull-right"></a>
+            <h1 class="mui-title">嘟嘟停车</h1>
+        </header>
+        <div id="offCanvasContentScroll" class="mui-content mui-scroll-wrapper">
+            <div class="mui-scroll">
+                <form id="form" action="{:U('Partime/tparkinfo')}" method="post">
+                <div class="mui-content">
+                        <ul class="mui-table-view">
+                            <input id="tpid" type="hidden" name="tpid" value="{$tparkinfo['id']}">
+                            <li class="mui-table-view-cell">
+                                <label for="name">名称：</label>
+                                <input id="name" name="name" value="<?php echo empty($tparkinfo['name']) ? $tparkinfo['_name']:$tparkinfo['name'] ?>">
+                            </li>
+                            <li class="mui-table-view-cell">
+                                <label for="address">地址：</label>
+                                <input id="address" name="address" value="<?php echo empty($tparkinfo["address"]) ? $tparkinfo["_address"]:$tparkinfo["address"] ?>">
+                            </li>
+                            <li class="mui-table-view-cell">
+                                <label for="latlng">定位：</label>
+                                <input id="latlng" name="latlng" value="{$tparkinfo["lat"]},{$tparkinfo["lng"]}">
+                                <button type="button" id="loc_btn" class="mui-btn mui-btn-primary">定位</button>
+                            </li>
+                            <li class="mui-table-view-cell">
+                                <label for="parking">车位数：</label>
+                                <input id="parking" name="parking" value="{$tparkinfo["parking"]}">个
+                            </li>
+                            <li class="mui-table-view-cell">
+                                <label for="chargingrules">收费规则：</label>
+                                <textarea id="chargingrules" name="chargingrules" rows="2">{$tparkinfo["chargingrules"]}</textarea>
+                            </li>
+                            <li class="mui-table-view-cell">
+                                <label for="opentime">开放时间：</label>
+                                <textarea id="opentime" name="opentime" rows="2">{$tparkinfo["opentime"]}</textarea>
+                            </li>
+                            <li class="mui-table-view-cell mui-collapse"><a class="mui-navigate-right " style="font-weight: bold" href="#">停车场类型：</a>
+                                <ul class="mui-table-view mui-table-view-chevron">
+                                    <?php
+                        $styles = C('PARK_STYLE');
+                        $cat = C('PARK_STYLE_CAT');
+
+                        $t_arr = array();
+                        $k_styles =array();
+                        $v_styles =array();
+                        $t = 0;
+                        foreach($styles as $k => $v){
+                                    if(array_key_exists($k,$cat)){
+                                    array_push($t_arr,$t);
+                                    }
+                                    $t++;
+                                    array_push($k_styles,$k);
+                                    array_push($v_styles,$v);
+                                    }
+                                    array_push($t_arr,count($styles));
+
+                                    $i = 0;
+                                    foreach($cat as $key => $value){
+                                    echo '<li class="mui-table-view-cell">';
+                                    echo '<div class="type_left">'.$value.'</div>';
+                                    echo '<div class="type_right">';
+                                        $start = $t_arr[$i];
+                                        $end = $t_arr[$i+1];
+                                        for($j = $start;$j<$end;$j++){
+                                            $token = '|'.$k_styles[$j].'|';
+                                            $checked = "";
+                                            if (strstr($tparkinfo["style"], $token)) {
+                                                $checked = "checked";
+                                            }
+                                        echo '<span><label style="font-weight: normal;width: 33%;text-align: left;"><input type="checkbox" name="parkstyle[]" value='.$k_styles[$j].' '.$checked.'>'.$v_styles[$j].'</label></span>';
+                                        }
+                                        echo '</div>';
+                                    $i++;
+                                    }
+
+                                    ?>
+
+                                    <li class="mui-table-view-cell">
+                                        <div class="type_left"></div>
+                                        <div class="type_right"></div>
+                                    </li>
+                                </ul>
+                            </li>
+                            <li class="mui-table-view-cell">
+                                <label for="note">备注：</label>
+                                <textarea id="note" name="note" rows="2"></textarea>
+                            </li>
+                            <li class="mui-table-view-cell">
+                                <label for="intention">合作意愿：</label>
+                                <select  id="intention" name="intention">
+                                    <option value="0"  <?php echo $tparkinfo[intention] == 0 ? 'selected':'';?>>无</option>
+                                    <option value="1"  <?php echo $tparkinfo[intention] == 1 ? 'selected':'';?>>一般</option>
+                                    <option value="2"  <?php echo $tparkinfo[intention] == 2 ? 'selected':'';?>>强烈</option>
+                                </select>
+                            </li>
+                        </ul>
+                </div>
+            </div>
+        </div>
+        <div class="footer-fixed">
+            <input id="next-input" type="hidden" name="next" value="0">
+            <button class="mui-btn-primary" style="width: 80px;left: 50%;margin-left:-80px ;" id="btn-next" type="button" >下一个</button>
+            <button class="mui-btn-primary" style="width: 80px;left: 50%;" id="btn-submit" type="button">提交</button>
+        </div>
+        </form>
+        <!-- off-canvas backdrop -->
+        <div class="mui-off-canvas-backdrop"></div>
+    </div>
+</div>
+<div class="modal fade bs-example-modal-sm" tabindex="-1" role="dialog" aria-labelledby="mySmallModalLabel">
+    <div class="modal-dialog modal-sm">
+        <div class="modal-content">
+            <div id="mapContainer" ></div>
+            <div id="mapValue">
+                <table style="width: 100%">
+                    <tbody>
+                    <tr><td>经度:<input id="getlat" name="lat" value="" readonly></td><td>纬度:<input id="getlng" name="lng" value="" readonly></td></tr>
+                    <tr><td><div id="btclose" style="text-align: center;border: solid 1px #ccc;margin: 25px 5px 5px 5px;width: 80%;padding: 10px 0;">退出</div></td><td><div id="btselect" style="text-align:center;border: solid 1px #ccc;margin: 25px 5px 5px 5px;width: 80%;padding: 10px 0;">选择</div></td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <script type="text/javascript" src="http://webapi.amap.com/maps?v=1.3&key=bc59f27d65900532cc4f3c1048dd6122"></script>
+        <script type="text/javascript">
+            var windowsArr = [];
+            var marker = [];
+            var centermaker;
+            var mapObj = new AMap.Map("mapContainer", {
+                resizeEnable: true,
+                view: new AMap.View2D({
+                    resizeEnable: true,
+                    center:new AMap.LngLat(121.472644,31.231706),//地图中心点
+                    zoom:17//地图显示的缩放级别
+                }),
+                keyboardEnable:false
+            });
+
+            AMap.event.addListener(mapObj,'complete',function(){
+                centermaker = new AMap.Marker({
+                    map:mapObj
+                    ,content:"<div style='width: 50px;height: 50px;border-radius: 25px;background-color: rgba(0,0,0,.2)'><div style='position: absolute;left: 50%;top:50%;width: 6px;height: 6px;border-radius: 3px;margin-left: -3px;margin-top: -3px;background-color:red'></div></div>"
+                    ,position:mapObj.getCenter()
+                    ,offset:new AMap.Pixel(-25,-25)
+                });
+
+
+                    mapObj.plugin('AMap.Geolocation', function () {
+                        var geolocation = new AMap.Geolocation({
+                            enableHighAccuracy: true,//是否使用高精度定位，默认:true
+                            timeout: 5000,          //超过10秒后停止定位，默认：无穷大
+                            maximumAge: 0,           //定位结果缓存0毫秒，默认：0
+                            convert: true,           //自动偏移坐标，偏移后的坐标为高德坐标，默认：true
+                            showButton: false,        //显示定位按钮，默认：true
+                            buttonPosition: 'LB',    //定位按钮停靠位置，默认：'LB'，左下角
+                            buttonOffset: new AMap.Pixel(10, 20),//定位按钮与设置的停靠位置的偏移量，默认：Pixel(10, 20)
+                            showMarker: false,        //定位成功后在定位到的位置显示点标记，默认：true
+                            showCircle: false,        //定位成功后用圆圈表示定位精度范围，默认：true
+                            panToLocation: true,     //定位成功后将定位到的位置作为地图中心点，默认：true
+                            zoomToAccuracy:false      //定位成功后调整地图视野范围使定位位置及精度范围视野内可见，默认：false
+                        });
+                        mapObj.addControl(geolocation);
+                        AMap.event.addListener(geolocation, 'complete', function(arg){
+                            mapObj.panTo(arg.position);
+                            setTimeout(function(){setposition();},500);
+                        });//返回定位信息
+                        AMap.event.addListener(geolocation, 'error', function(){
+                            alert('当前环境不支持获取定位,请在设置中允许使用[位置定位服务]');
+                        });//返回定位出错信息
+                        geolocation.getCurrentPosition();
+                    });
+            });
+
+
+            AMap.event.addListener(mapObj,'moveend',function(){
+                setposition();
+            });
+            AMap.event.addListener(mapObj,'mapmove',function(){
+                setposition();
+            });
+            function setposition(){
+                centermaker.setPosition(mapObj.getCenter());
+                $('#getlat').val(mapObj.getCenter().lat);
+                $('#getlng').val(mapObj.getCenter().lng);
+
+            }
+
+
+            //鼠标滑过查询结果改变背景样式，根据id打开信息窗体
+            function openMarkerTipById1(pointid, thiss) {
+                thiss.style.background = '#CAE1FF';
+                windowsArr[pointid].open(mapObj, marker[pointid]);
+            }
+
+        </script>
+    </div>
+</div>
+
+
+
+<script>
+    mui.init({
+        swipeBack: false,
+    });
+
+    //侧滑容器父节点
+    var offCanvasWrapper = mui('#offCanvasWrapper');
+    //主界面容器
+    var offCanvasInner = offCanvasWrapper[0].querySelector('.mui-inner-wrap');
+    //菜单容器
+    var offCanvasSide = document.getElementById("offCanvasSide");
+
+    //Android暂不支持整体移动动画
+    //    if(!mui.os.android){
+    //        document.getElementById("move-togger").classList.remove('mui-hidden');
+    //        var spans = document.querySelectorAll('.android-only');
+    //        for (var i=0,len=spans.length;i<len;i++) {
+    //            spans[i].style.display = "none";
+    //        }
+    //    }
+
+    //移动效果是否为整体移动
+    var moveTogether = false;
+    //侧滑容器的class列表，增加.mui-slide-in即可实现菜单移动、主界面不动的效果；
+    var classList = offCanvasWrapper[0].classList;
+    //变换侧滑动画移动效果；
+    mui('.mui-input-group').on('change','input',function () {
+        if(this.checked){
+            switch (this.value){
+                case 'main-move':
+                    classList.remove('mui-slide-in');
+                    if(moveTogether){
+                        //仅主内容滑动时，侧滑菜单在off-canvas-wrap内，和主界面并列
+                        offCanvasWrapper[0].insertBefore(offCanvasSide, offCanvasWrapper[0].firstElementChild);
+                        moveTogether = false;
+                    }
+                    break;
+                case 'menu-move':
+                    classList.add('mui-slide-in');
+                    break;
+                case 'all-move':
+                    if(classList.contains('mui-slide-in')){
+                        classList.remove('mui-slide-in');
+                    }
+                    moveTogether = true;
+                    //整体滑动时，侧滑菜单在inner-wrap内
+                    offCanvasInner.insertBefore(offCanvasSide, offCanvasInner.firstElementChild);
+                    break;
+            }
+            offCanvasWrapper.offCanvas().refresh();
+            offCanvasSide.classList.remove('mui-transitioning');
+            offCanvasSide.setAttribute('style', '');
+        }
+    });
+
+
+    //主界面和侧滑菜单界面均支持区域滚动；
+    mui('#offCanvasSideScroll').scroll();
+    mui('#offCanvasContentScroll').scroll();
+
+    //实现ios平台的侧滑关闭页面；
+    if (mui.os.plus && mui.os.ios) {
+        offCanvasWrapper[0].addEventListener('shown', function(e) { //菜单显示完成事件
+            plus.webview.currentWebview().setStyle({
+                'popGesture': 'none'
+            });
+        });
+        offCanvasWrapper[0].addEventListener('hidden', function(e) { //菜单关闭完成事件
+            plus.webview.currentWebview().setStyle({
+                'popGesture': 'close'
+            });
+        });
+    }
+
+    $('#loc_btn').bind("tap", function () {
+        $('.modal').modal();
+    });
+
+    $("a").each(function(index) {
+        this.addEventListener("tap", function () {
+            window.location.href=this.href;
+        });
+    });
+
+    $('#btn-next').bind("tap", function () {
+        $('#next-input').val(1)
+        $("#form").submit()
+    });
+    $('#btn-submit').bind("tap", function () {
+        $("#form").submit()
+    });
+    $('#btclose').bind("tap", function () {
+        $('.modal').modal('toggle');
+    });
+    $('#btselect').bind("tap", function () {
+        var str =  $('#getlat').val() + ','+ $('#getlng').val();
+        $('#latlng').val(str);
+        $('.modal').modal('toggle');
+    });
+
+</script>
+</body>
+</html>

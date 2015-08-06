@@ -47,8 +47,35 @@
         .main-nav{
             position:absolute;
             left:50%;
-            width: 204px;
-            margin-left:-102px;
+            width: 250px;
+            margin-left:-125px;
+            overflow: visible;
+        }
+        .main-nav li ul {
+            margin: 0;
+            padding: 0;
+            position: absolute;
+            visibility: hidden;
+            border-top: 1px solid white;
+            overflow: visible;
+            background: #656565;
+            width: 85px;
+        }
+        .main-nav > li > ul > li{
+            width: 85px;
+        }
+        .main-nav > li > ul > li > a {
+            font-size: 14px;
+            font-weight: normal;
+        }
+        .main-nav > li > ul > li > a:hover {
+            text-decoration: none;
+            background: #383838;
+            color: #ffffff;
+        }
+
+        .caret{
+            border-top: 4px solid #FFF;
         }
     </style>
     <block name="style"></block>
@@ -63,9 +90,22 @@
 
         <!-- 主导航 -->
         <ul class="main-nav">
-            <li style="width: 64px;"><a href="{:U('Index/index')}">停车场</a></li>
-            <li style="width: 70px;"><a href="{:U('Rules/index')}">规则说明</a></li>
-            <li style="width: 70px;"><a href="{:U('Statistic/index')}">销售统计</a></li>
+            <li style="width: 80px;"><a href="{:U('Index/index')}">停车场</a></li>
+            <li style="width: 85px;"><a href="#">兼职扫街<span class="caret"></span></a>
+                <ul>
+                    <li><a href="{:U('Task/import')}">导入数据</a></li>
+                    <li><a href="{:U('Task/index')}">预审数据</a></li>
+                    <li><a href="{:U('Task/index')}">分配任务</a></li>
+                    <li><a href="{:U('Task/partimes')}">审核扫街</a></li>
+                </ul>
+            </li>
+            <li style="width: 85px;"><a href="#">销售统计<span class="caret"></span></a>
+                <ul>
+                    <li><a href="{:U('Rules/index')}">规则说明</a></li>
+                    <li><a href="{:U('Statistic/index')}">销售统计</a></li>
+                </ul>
+            </li>
+
         </ul>
         <!-- /主导航 -->
 
@@ -227,6 +267,32 @@
                     }
                 });
             }
+
+            var timeout         = 500;
+            var closetimer		= 0;
+            var ddmenuitem      = 0;
+
+            function jsddm_open()
+            {	jsddm_canceltimer();
+                jsddm_close();
+                ddmenuitem = $(this).find('ul').eq(0).css('visibility', 'visible');}
+
+            function jsddm_close()
+            {	if(ddmenuitem) ddmenuitem.css('visibility', 'hidden');}
+
+            function jsddm_timer()
+            {	closetimer = window.setTimeout(jsddm_close, timeout);}
+
+            function jsddm_canceltimer()
+            {	if(closetimer)
+            {	window.clearTimeout(closetimer);
+                closetimer = null;}}
+
+
+           	$('.main-nav > li').bind('mouseover', jsddm_open);
+            $('.main-nav > li').bind('mouseout',  jsddm_timer);
+
+
         }();
     </script>
     <block name="script"></block>
