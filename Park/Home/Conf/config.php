@@ -71,6 +71,12 @@ return array(
     //积分活动上限
     'SCORE_LIMIT' => 5000,//积分奖励上限
 
+    //合作模式
+    'CORP_TYPE' => array(
+        'Order' =>  1,
+        'Monthly' => 2
+    ),
+
     //自己公司微信参数
     'USERNAME_WEIXIN' => "gh_6f67ef5e0539",
     'APPID' =>  'wxd417c2e70f817f89',

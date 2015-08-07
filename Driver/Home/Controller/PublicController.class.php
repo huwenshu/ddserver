@@ -420,6 +420,7 @@ class PublicController extends BaseController {
         $cost = $park_order_data['cost'];
         $cost = $cost + $prdata[0]['money'];
 
+        $ParkInfo = M('ParkInfo');
         $now = time();
 		if($isIn){
 			include_once(dirname(__FILE__) . '/../Conf/' . 'config_biz.php');
@@ -427,7 +428,21 @@ class PublicController extends BaseController {
 			$payment_record->where(array('id'=>$out_trade_no))->save(array('state'=>1));
 			$endtime = $this->_parkingEndTime($now, $now+100, $parkid);
 			$park_order->where(array('id'=>$oid,'state'=>-1))->save(array('state'=>0, 'cost'=>$cost, 'startime'=>date("Y-m-d H:i:s", $now),'endtime'=>date("Y-m-d H:i:s", $endtime)));
-		}else{
+
+            //如果是包月合作方式，需要动态更新剩余停车位
+            $map = array();
+            $map['id'] = $parkid;
+            $parkInfo = $ParkInfo->where($map)->find();
+            $corp_type = $parkInfo['corp_type'];
+            if($corp_type == C('CORP_TYPE')['Monthly']){
+                $leftsum = $parkInfo['parkstate'];
+                if($leftsum > 0){//防止减多了
+                    $ParkInfo->where($map)->setInc('parkstate',-1);
+                }
+            }
+
+
+        }else{
 			$payment_record->where(array('id'=>$out_trade_no))->save(array('state'=>1));
 			$starttime = strtotime($park_order_data['startime']);
             $map = array('oid' => $oid, 'state'=>1);
@@ -449,7 +464,6 @@ class PublicController extends BaseController {
         $change = $pay['money'];
         $note = $pay['id'];
 				//账户余额
-        $ParkInfo = M('ParkInfo');
         $map['id'] = $parkid;
         $balance = $ParkInfo->where($map)->getField('balance');
         $ParkInfo->where($map)->setInc('balance',$change); //账户余额更新
@@ -900,7 +914,7 @@ class PublicController extends BaseController {
             }
             $this->ajaxOk($result,$areas);
         }else{
-            $this->ajaxOk($result);
+            $this->ajaxOk($list);
         }
         
     }
@@ -909,6 +923,10 @@ class PublicController extends BaseController {
     protected function status_distance_sort( &$v1,&$v2){
         $dis1 = $this->getDistance($v1['lat'],$v1['lng'],$this->lat,$this->lng);
         $dis2 = $this->getDistance($v2['lat'],$v2['lng'],$this->lat,$this->lng);
+
+        //包月分销模式的停车场优先
+        $monthly1 = $v1['corp_type'];
+        $monthly2 = $v2['corp_type'];
         
         //实惠标记 + 在开放时间段
         $sh1 = ((strpos($v1['style'],'|SH|') !== false) && ($this->isClosedNow($v1) === false)) ? 1:0;
@@ -959,7 +977,14 @@ class PublicController extends BaseController {
             return 1;
         }
         else{
-            //合作状态相同情况下先按照实惠排序
+            //合作状态相同情况下包月分销的停车场优先
+            if($monthly1 < $monthly2){
+                return 1;
+            }
+            elseif($monthly1 > $monthly2){
+                return -1;
+            }
+            //再按实惠排序
             if($sh1 < $sh2){
                 return 1;
             }else if($sh1 > $sh2){

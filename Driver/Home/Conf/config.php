@@ -214,4 +214,10 @@ return array(
         'SH' => '实惠',
         'WYTG' => '网友提供'
     ),
+
+    //合作模式
+    'CORP_TYPE' => array(
+        'Order' =>  1,
+        'Monthly' => 2
+    ),
 );

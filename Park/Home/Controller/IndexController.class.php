@@ -326,15 +326,26 @@ class IndexController extends BaseController {
 		$orderData = $Order->where($con)->save($updateData);
         $driverId = $Order->where($con)->getField('uid');
         $change = 0;
+
+        //包月车辆离场，需要更新车位数
+        $ParkInfo = M('ParkInfo');
+        $map = array();
+        $map['id'] = $parkid;
+        $parkInfo = $ParkInfo->where($map)->find();
+        $corp_type = $parkInfo['corp_type'];
+        if($corp_type == C('CORP_TYPE')['Monthly']){
+            $spacesum = $parkInfo['corp_type'];
+            $leftsum = $parkInfo['parkstate'];
+            if($leftsum < $spacesum){//防止加多了
+                $ParkInfo->where($map)->setInc('parkstate',1);
+            }
+        }
         
         if(!array_key_exists($driverId,$conf_simulation_uids) || $conf_simulation_uids[$driverId]["type"] == 1){
             
             if(!array_key_exists($driverId,$conf_simulation_uids)){//非测试模式
                 //是否在活动中,来确定增加积分策略
-                $ParkInfo = M('ParkInfo');
-                $map = array();
-                $map['id'] = $parkid;
-                $parkInfo = $ParkInfo->where($map)->find();
+
                 $acType = $parkInfo['actype'];
                 $acScore = $parkInfo['acscore'];
                 $acEndtime = strtotime($parkInfo['acendtime']);
