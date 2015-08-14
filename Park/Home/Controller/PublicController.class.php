@@ -33,6 +33,7 @@ class PublicController extends BaseController {
 
         if(!empty($parkInfo)){
             $parkFullName = $parkInfo['name'];
+            $parkCorpType = $parkInfo['corp_type'];
         }
         else{
             $this->ajaxMsg('用户名或者密码错误！');
@@ -42,7 +43,7 @@ class PublicController extends BaseController {
         $arr = array('parkid' => $parkid);
         $uuid = $this->createUUID($uid,$arr);
 
-        $temp = array('uid' => $uid, 'uuid' =>$uuid, 'permission' => $permission, 'fullname' => $parkFullName);
+        $temp = array('uid' => $uid, 'uuid' =>$uuid, 'permission' => $permission, 'type' => $parkCorpType,'fullname' => $parkFullName);
         $this->ajaxOk($temp);
     }
 

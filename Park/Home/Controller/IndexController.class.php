@@ -334,7 +334,7 @@ class IndexController extends BaseController {
         $parkInfo = $ParkInfo->where($map)->find();
         $corp_type = $parkInfo['corp_type'];
         if($corp_type == C('CORP_TYPE')['Monthly']){
-            $spacesum = $parkInfo['corp_type'];
+            $spacesum = $parkInfo['spacesum'];
             $leftsum = $parkInfo['parkstate'];
             if($leftsum < $spacesum){//防止加多了
                 $ParkInfo->where($map)->setInc('parkstate',1);
@@ -454,7 +454,8 @@ class IndexController extends BaseController {
             if($tmp['carid'] == '' && $value['uid'] == 0){
                 $tmp['carid'] = '测A88888';
             }
-            $tmp['tel'] = $this->getDriver($value['uid'])['telephone'];
+            $tmp['telephone'] = $this->getDriver($value['uid'])['telephone'];
+            $tmp['r_fee'] = $this->parkingFee(strtotime($value['startime']), $value['pid']) - $sum;
 
 			array_push($result, $tmp);
 

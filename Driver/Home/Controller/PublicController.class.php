@@ -436,10 +436,9 @@ class PublicController extends BaseController {
             if($corp_type == C('CORP_TYPE')['Monthly']){
                 $leftsum = $parkInfo['parkstate'];
                 if($leftsum > 0){//防止减多了
-                    $ParkInfo->where($map)->setInc('parkstate',-1);
+                    $ParkInfo->where($map)->setDec('parkstate');
                 }
             }
-
 
         }else{
 			$payment_record->where(array('id'=>$out_trade_no))->save(array('state'=>1));
@@ -773,6 +772,8 @@ class PublicController extends BaseController {
             $tmp['lng'] = $value['lng'];
             $tmp['m'] = $value['spacesum'];
             $tmp['p'] = $value['prepay'];
+
+            $tmp['c_t'] = $value['corp_type'];
             
             $style = $value['style'];
             $styleArr = explode('|', $style);
@@ -915,7 +916,7 @@ class PublicController extends BaseController {
             }
             $this->ajaxOk($result,$areas);
         }else{
-            $this->ajaxOk($list);
+            $this->ajaxOk($result);
         }
         
     }
@@ -936,21 +937,24 @@ class PublicController extends BaseController {
         //先把合作+信息化的都改成合作。
         $v1['status'] = ($v1['status'] == 14 ? 4 : $v1['status']);
         $v2['status'] = ($v2['status'] == 14 ? 4 : $v2['status']);
+        //先把测试+信息化的都改成测试。
+        $v1['status'] = ($v1['status'] == 13 ? 3 : $v1['status']);
+        $v2['status'] = ($v2['status'] == 13 ? 3 : $v2['status']);
         
-        //针对合作但是已满，作信息化处理
-        if($v1['status'] == 4 && $v1['parkstate'] == 0){
-            $v1['status'] = 14;
+        //针对测试+合作但是已满，作信息化处理
+        if(($v1['status'] == 3||$v1['status'] == 4) && $v1['parkstate'] == 0){
+            $v1['status'] =  $v1['status']+10;
         }
-        if($v2['status'] == 4 && $v2['parkstate'] == 0){
-            $v2['status'] = 14;
+        if(($v2['status'] == 3 || $v2['status'] == 4) && $v2['parkstate'] == 0){
+            $v2['status'] = $v2['status'] + 10;
         }
         
         //针对已合作，但是不在开放时间段的，作信息化处理
-        if($v1['status'] == 4 && $this->isClosedNow($v1)){
-            $v1['status'] = 14;
+        if(($v1['status'] == 3||$v1['status'] == 4) && $this->isClosedNow($v1)){
+            $v1['status'] =  $v1['status']+10;
         }
-        if($v2['status'] == 4 && $this->isClosedNow($v2)){
-            $v2['status'] = 14;
+        if(($v2['status'] == 3 || $v2['status'] == 4) && $this->isClosedNow($v2)){
+            $v2['status'] = $v2['status'] + 10;
         }
         
         
@@ -1161,7 +1165,7 @@ class PublicController extends BaseController {
             $con['e_t'] = array('in','0,2');
         }
         $Park = M('ParkInfo');
-        $listdata = $Park->where($con)->select();
+        $listdata = $Park->where($con)->order('corp_type desc')->select();
         $list = $listdata;
         //封装返回值
         $result = array();
@@ -1183,6 +1187,8 @@ class PublicController extends BaseController {
             $tmp['lng'] = $value['lng'];
             $tmp['m'] = $value['spacesum'];
             $tmp['p'] = $value['prepay'];
+
+            $tmp['c_t'] = $value['corp_type'];
             
             $style = $value['style'];
             $styleArr = explode('|', $style);
@@ -1200,7 +1206,7 @@ class PublicController extends BaseController {
             //开放时间段
             $tmp['o'] = array($this->isClosedNow($value) ? 0 : 1, $value['startmon'], $value['endmon'], $value['startsat'], $value['endsat']);
             
-            if(($value['status'] == 4 || $value['status'] == 3 || $value['status'] == 14 || $value['status'] == 13) && $value['parkstate'] != 0){//合作停车场&&在开放时段&&非满
+            if(($value['status'] == 4 || $value['status'] == 3 || $value['status'] == 14 || $value['status'] == 13) && (!$this->isClosedNow($value)) &&$value['parkstate'] != 0){//合作停车场&&在开放时段&&非满
                 $tmp['c'] = 1; //合作停车场设为1
                 $tmp['s'] = $value['parkstate'];
             }
