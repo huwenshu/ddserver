@@ -40,7 +40,7 @@
             float: left;
             width: 100px;
         }
-        .gray {background:#ddd;}
+        .gray {}
 
 
     </style>
@@ -114,44 +114,57 @@
                 </form>
             </li>
 
-            <?php
+    <?php
 
             foreach ($parks_info as $key => $value) {
-            echo "<li name='parkitem' class='mui-table-view-cell parkitem'><a class='mui-navigate-right'  target='_blank' href=".U('parkinfo',array('parkid'=>$value['id'])).">";
-            if(strpos($value['style'], 'BDWKF')){
-            echo "<p style='color:#ddd'>";
+    echo "<li name='parkitem' class='mui-table-view-cell parkitem'><a class='mui-navigate-right'  target='_blank' href=".U('parkinfo',array('parkid'=>$value['id'])).">";
+    if(strpos($value['style'], 'BDWKF') || $value['status'] < 4){
+    echo "<div style='color:#ddd;font-size: 14px' alt='0'>";
+        }
+        else{
+        if($value['status']%10 == 4){
+        echo "<div style='color:#8f8f94;font-size: 14px;background-color: #ECECEC'  alt='1'>";
+            }
+            else{
+            echo "<div style='color:#8f8f94;font-size: 14px'  alt='1'>";
                 }
-                else{
-                echo "<p>";
                 }
 
                 echo $value['name'].tags($value)."<br>";
+                echo $value['chargingrules'];
                 echo "地址：".$value['address'];
-                echo "</p></a></li>";
+                echo "</div></a></li>";
 
-            }
+    }
 
-            //生成Tags,并且根据情况标注颜色
-            function tags($value){
+    //生成Tags,并且根据情况标注颜色
+    function tags($value){
 
-            $temp = " ";
-            $isAuto = false;
-            if(strpos($value['style'], 'BDWKF')){
-            $temp.="[不对外开放]";
-            $isAuto = true;
-            }
+    $temp = " ";
+    $isAuto = false;
+    if(strpos($value['style'], 'BDWKF') || $value['status'] < 4){
+    $isAuto = true;
+    if(strpos($value['style'], 'BDWKF')){
+    $temp.="[不对外开放]";
+    }
+    }
 
-            $temp.= "[".C('PARK_COR')[$value['status']%10]."]";
+    $t_s = $value['status']%10;
+    if($t_s){
+    $temp.= "[".C('PARK_COR')[$t_s]."]";
+    }
 
-            if($value['status']>=10){
-            $temp.= "[已发布]";
-            }
-            else{
-            $temp.= "[未发布]";
-            }
 
-            if($isAuto){
-            $temp.=" <span style='color: #dddddd'>";
+
+    if($value['status']>=10){
+    $temp.= "[已发布]";
+    }
+    else{
+    $temp.= "[未发布]";
+    }
+
+    if($isAuto){
+    $temp.=" <span style='color: #dddddd'>";
                 }
                 else{
                     $temp.=" <span style='color: #ff0000'>";
@@ -191,6 +204,15 @@
             $(".parkitem").hover(function() {$(this).addClass("gray")}, function() {$(this).removeClass("gray")});
             $(".filter > li > a").click(function(){
                 $(this).next('div').toggle();
+            });
+            $(".parkitem").each(function(index,element) {
+                var div = $(element).find('div');
+                var alt = div.attr('alt');
+                var p = div.find('p');
+                if(alt == 0){
+                    p.attr('style','color:#ddd');
+                    p.find("*").attr('style','color:#ddd');
+                }
             });
         });
     </script>
