@@ -22,7 +22,7 @@
             <?php
             foreach ($partimes as $key => $value) {
             echo "<li name='partitem' class='mui-table-view-cell partitem'><a class='mui-navigate-right'  target='_blank' href=".U('partime',array('partid'=>$value['id'])).">";
-            echo "<p>".$value['name']."</p>";
+            echo "<p>".$value['name']." [扫街中".(empty($value['undo'])?0:$value['undo'])."个] [今日完成".(empty($value['done'])?0:$value['done'])."个]</p>";
             echo "<p>在职：";
                 echo $value['iswork'] == 1 ? '是' : '否';
             echo "</p>";

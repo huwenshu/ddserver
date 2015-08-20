@@ -76,7 +76,7 @@
             z-index: 10;
             width: 100%;
         }
-        .mui-table-view-cell label{
+        .mui-table-view-cell > label{
             width: 25%;!important;
             text-align: right;
         }
@@ -177,6 +177,10 @@
         }
 
 
+        .mui-input-row label{
+            float: left;
+            padding: 10px;
+        }
     </style>
 </head>
 
@@ -206,7 +210,7 @@
                 <form id="form" action="{:U('Partime/tparkinfo')}" method="post">
                 <div class="mui-content">
                         <ul class="mui-table-view">
-                            <input id="tpid" type="hidden" name="tpid" value="{$tparkinfo['id']}">
+                            <input id="tpid" type="hidden" name="tpid" value="{$tpid}">
                             <li class="mui-table-view-cell">
                                 <label for="name">名称：</label>
                                 <input id="name" name="name" value="<?php echo empty($tparkinfo['name']) ? $tparkinfo['_name']:$tparkinfo['name'] ?>">
@@ -232,9 +236,10 @@
                                 <label for="opentime">开放时间：</label>
                                 <textarea id="opentime" name="opentime" rows="2">{$tparkinfo["opentime"]}</textarea>
                             </li>
-                            <li class="mui-table-view-cell mui-collapse"><a class="mui-navigate-right " style="font-weight: bold" href="#">停车场类型：</a>
-                                <ul class="mui-table-view mui-table-view-chevron">
-                                    <?php
+                            <li class="mui-table-view-cell">
+                                <label for="parkstyle">停车场类型：</label>
+                                <ul style="padding: 0">
+                                <?php
                         $styles = C('PARK_STYLE');
                         $cat = C('PARK_STYLE_CAT');
 
@@ -243,40 +248,34 @@
                         $v_styles =array();
                         $t = 0;
                         foreach($styles as $k => $v){
-                                    if(array_key_exists($k,$cat)){
-                                    array_push($t_arr,$t);
-                                    }
-                                    $t++;
-                                    array_push($k_styles,$k);
-                                    array_push($v_styles,$v);
-                                    }
-                                    array_push($t_arr,count($styles));
+                                if(array_key_exists($k,$cat)){
+                                array_push($t_arr,$t);
+                                }
+                                $t++;
+                                array_push($k_styles,$k);
+                                array_push($v_styles,$v);
+                                }
+                                array_push($t_arr,count($styles));
 
-                                    $i = 0;
-                                    foreach($cat as $key => $value){
-                                    echo '<li class="mui-table-view-cell">';
-                                    echo '<div class="type_left">'.$value.'</div>';
-                                    echo '<div class="type_right">';
-                                        $start = $t_arr[$i];
-                                        $end = $t_arr[$i+1];
-                                        for($j = $start;$j<$end;$j++){
-                                            $token = '|'.$k_styles[$j].'|';
-                                            $checked = "";
-                                            if (strstr($tparkinfo["style"], $token)) {
-                                                $checked = "checked";
-                                            }
-                                        echo '<span><label style="font-weight: normal;width: 33%;text-align: left;"><input type="checkbox" name="parkstyle[]" value='.$k_styles[$j].' '.$checked.'>'.$v_styles[$j].'</label></span>';
-                                        }
-                                        echo '</div>';
-                                    $i++;
-                                    }
-
-                                    ?>
-
-                                    <li class="mui-table-view-cell">
-                                        <div class="type_left"></div>
-                                        <div class="type_right"></div>
-                                    </li>
+                                $i = 0;
+                                foreach($cat as $key => $value){
+                                echo '<li class="mui-table-view-cell">';
+                            echo '<div class="type_left">'.$value.'</div>';
+                            echo '<div class="type_right">';
+                                $start = $t_arr[$i];
+                                $end = $t_arr[$i+1];
+                                for($j = $start;$j<$end;$j++){
+                                $token = '|'.$k_styles[$j].'|';
+                                $checked = "";
+                                if (strstr($tparkinfo["style"], $token)) {
+                                $checked = "checked";
+                                }
+                                echo '<span><label style="font-weight: normal;width: 33%;text-align: left;"><input style="margin: 0" type="checkbox" name="parkstyle[]" value='.$k_styles[$j].' '.$checked.'>'.$v_styles[$j].'</label></span>';
+                                }
+                                echo '</div>';
+                            $i++;
+                            }
+                            ?>
                                 </ul>
                             </li>
                             <li class="mui-table-view-cell">
@@ -284,13 +283,13 @@
                                 <textarea id="note" name="note" rows="2"></textarea>
                             </li>
                             <li class="mui-table-view-cell">
-                                <label for="intention">合作意愿：</label>
-                                <select  id="intention" name="intention">
-                                    <option value="0"  <?php echo $tparkinfo[intention] == 0 ? 'selected':'';?>>无</option>
-                                    <option value="1"  <?php echo $tparkinfo[intention] == 1 ? 'selected':'';?>>一般</option>
-                                    <option value="2"  <?php echo $tparkinfo[intention] == 2 ? 'selected':'';?>>强烈</option>
-                                </select>
-                            </li>
+                                <label style="vertical-align: middle">合作意愿：</label>
+
+                                <span><label style="font-weight: normal;text-align: center;width: 20%;"><input style="margin: 5px" type="radio" name="intention" value="0" <?php echo $tparkinfo[intention] == 0 ? 'checked':'';?>>无</label></span>
+                                <span><label style="font-weight: normal;text-align: center;width: 20%;"><input style="margin: 5px" type="radio" name="intention" value="1" <?php echo $tparkinfo[intention] == 1 ? 'checked':'';?>>一般</label></span>
+                                <span><label style="font-weight: normal;text-align: center;width: 20%;"><input style="margin: 5px" type="radio" name="intention" value="2" <?php echo $tparkinfo[intention] == 2 ? 'checked':'';?>>强烈</label></span>
+
+                                </li>
                         </ul>
                 </div>
             </div>

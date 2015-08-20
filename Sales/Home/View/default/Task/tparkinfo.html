@@ -29,6 +29,9 @@
             text-align: left;
             padding: 10px  0;
         }
+        .righthalf span{
+            padding: 20px 10px 10px 0px;
+        }
         input[type = text], textarea {
             width: 300px;
             background-color: transparent;
@@ -89,22 +92,18 @@
             <li>
                 <div class="lefthalf">审核:</div>
                 <div class="righthalf">
-                    <select id="tpark_status" name="status">
-                        <option value="-1" <?php echo $tpark['status']==-1 ? 'selected':'' ?>>作废</option>
-                        <option value="0" <?php echo $tpark['status']==0 ? 'selected':'' ?>>未审核</option>
-                        <option value="1" <?php echo $tpark['status']==1 ? 'selected':'' ?>>预审通过</option>
-                        <option value="2" <?php echo $tpark['status']==2 ? 'selected':'' ?>>已分派</option>
-                        <option value="3" <?php echo $tpark['status']==3 ? 'selected':'' ?>>审核通过</option>
-                    </select>
+                    <span><label style="font-weight: normal;text-align: center;"><input style="margin: 10px;width: 20px;height: 20px;" type="radio" name="status" value="-1" <?php echo $tpark[status] == -1 ? 'checked':'';?>>作废</label></span>
+                    <span><label style="font-weight: normal;text-align: center;"><input style="margin: 10px;width: 20px;height: 20px;" type="radio" name="status" value="1" <?php echo $tpark[status] == 1 ? 'checked':'';?>>预审通过</label></span>
                 </div>
             </li>
             <li>
                 <div class="lefthalf" style="padding: 10px;">
-                    <input id="submit" type="submit" class="mui-btn-blue" value="提交">
-                </div>
-                <div class="righthalf">
                     <button id="next" class="mui-btn-blue" type="button">下一个</button>
                 </div>
+                <div class="righthalf">
+                    <input id="submit" type="submit" class="mui-btn-blue" value="提交">
+                </div>
+
             </li>
             </form>
         </ul>
@@ -229,13 +228,13 @@
                     pano.setPano(result.svid);
                 });
             });
-//            qq.maps.event.addListener(pano, 'position_changed', function () {
-//                var point = pano.getPosition();
-//                $('#_lat').val(point.lat.toFixed(6));
-//                $('#_lng').val(point.lng.toFixed(6));
-//                map.setCenter(point);
-//                marker.setPosition(point);
-//            });
+            qq.maps.event.addListener(pano, 'position_changed', function () {
+                var point = pano.getPosition();
+                $('#_lat').val(point.lat.toFixed(6));
+                $('#_lng').val(point.lng.toFixed(6));
+                map.setCenter(point);
+                marker.setPosition(point);
+            });
         };
 
 
