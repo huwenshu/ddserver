@@ -96,6 +96,20 @@
                     <span><label style="font-weight: normal;text-align: center;"><input style="margin: 10px;width: 20px;height: 20px;" type="radio" name="status" value="1" <?php echo $tpark[status] == 1 ? 'checked':'';?>>预审通过</label></span>
                 </div>
             </li>
+                <li id="abolish" style="display: <?php echo ($tpark[status]==-1) ? 'block': 'none'; ?>">
+                    <div class="lefthalf">作废原因:</div>
+                    <div class="righthalf">
+                        <?php
+                            foreach(C('ABOLISH') as $key => $value){
+                                $check = '';
+                                if($key == $tpark['abolish']){
+                                    $check = 'checked';
+                                }
+                            echo '<span><label style="font-weight: normal;text-align: center;"><input style="margin: 10px;width: 20px;height: 20px;" type="radio" name="abolish" value="'.$key.'" '.$check.'></label>'.$value.'</span>' ;
+                            }
+                        ?>
+                    </div>
+                </li>
             <li>
                 <div class="lefthalf" style="padding: 10px;">
                     <button id="next" class="mui-btn-blue" type="button">下一个</button>
@@ -106,6 +120,7 @@
 
             </li>
             </form>
+            <div style="clear: both;"></div>
         </ul>
     </div>
     <div id="qqmap" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
@@ -253,10 +268,11 @@
             });
 
             $('#submit').click(function(){
-                if($('#tpark_status').val() > 1){
-                    alert('对不起，你还不能做后续的操作');
+                if( $("input[name='status']:checked").val() == -1 && typeof($("input[name='abolish']:checked").val()) == "undefined" ){
+                    alert("请填写作废原因！");
                     return false;
                 }
+                return true;
             });
 
             $('#next').click(function(){
@@ -268,6 +284,18 @@
                     window.location.href = "{:U('Task/tparkinfo', array('tpid'=>$nextid, 'search'=>$search))}";
                 }
             });
+
+            $('input[name=status]').change(function(){
+                var t = $(this).val();
+                if(t == -1){
+                    $('#abolish').css('display', 'block');
+                }
+                else{
+                    $('input[name=abolish]').val(0);
+                    $('#abolish').css('display', 'none');
+                }
+            });
+
         });
     </script>
 </block>

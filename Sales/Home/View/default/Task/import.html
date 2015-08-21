@@ -521,7 +521,7 @@
                 data: {data:$('#jsondata').val()},
                 success: function(json){
                     if(json.code ==200){
-                        alert('数据导入成功！将为你跳转至任务列表页面！');
+                        alert('成功导入'+json.data+'条数据！去重'+json.quit+'条数据！\n将为你跳转至任务列表页面！');
                         window.location.href = "{:U('Task/index')}";
                     }
                     else{

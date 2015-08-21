@@ -43,7 +43,8 @@ class TaskController extends BaseController{
             $json = html_entity_decode(I('post.data'));
             $jsondata = json_decode($json,true);
             $parks = $jsondata['data'];
-            $data = array();
+            $data = 0;
+            $sum = 0;
             foreach($parks as $key => $value){
                 foreach($value['places'] as $k => $v){
                     $t = array();
@@ -66,21 +67,21 @@ class TaskController extends BaseController{
                     $t['_source'] = array_key_exists("source",$v) ? $v['source']:'';
                     $t['createtime'] = date('Y-m-d H:i:s');
                     $t['status'] = 0;
-                    array_push($data, $t);
+                    $sum ++;
+                    $add = $this->addTaskPark($t);
+                    $data = $data + $add;
                 }
             }
 
             $result = array();
-
-            $TaskParkInfo = M('TaskParkInfo');
-            if(empty($data)){
+            if($data == 0){
                 $result['code'] = 100;
                 $result['data'] = '';
             }
             else{
-                $TaskParkInfo->addAll($data);
                 $result['code'] = 200;
-                $result['data'] = 'OK';
+                $result['data'] = $data;
+                $result['quit'] = $sum - $data;
             }
 
             echo json_encode($result);
@@ -105,7 +106,7 @@ class TaskController extends BaseController{
         //去重
         $existMIDS = array();
         foreach($arr as $value){
-            $existMIDS =array_merge($existMIDS,$this->existPark($value['center'][2],$value['center'][1],$distance));
+            $existMIDS =array_merge($existMIDS,$this->existParkMid($value['center'][2],$value['center'][1],$distance));
         }
         $jsonarr = array();
         $data = array();
@@ -114,7 +115,7 @@ class TaskController extends BaseController{
             $t['center'] = $v1['center'];
             $p = array();
             foreach($v1['places'] as $v2){
-                if(in_array($v2['id'], $existMIDS)){
+                if(in_array($v2['id'], $existMIDS) || $this->existPark($v2)){
 
                 }
                 else{
@@ -142,6 +143,7 @@ class TaskController extends BaseController{
             $_lat = I('post._lat');
             $_lng = I('post._lng');
             $status = I('post.status');
+            $abolish = I('post.abolish');
 
             $TaskParkInfo = M('TaskParkInfo');
             $data = array();
@@ -152,6 +154,7 @@ class TaskController extends BaseController{
             $data['_lat'] = $_lat;
             $data['_lng'] = $_lng;
             $data['status'] = $status;
+            $data['abolish'] = ($status==-1)? $abolish:0;
             $data['updater'] = UID;
             $TaskParkInfo->save($data);
 
@@ -419,13 +422,37 @@ class TaskController extends BaseController{
 
 
     //返回两倍范围内的所有停车场 mongoid
-    protected function existPark($lat,$lng,$distance){
+    protected function existParkMid($lat,$lng,$distance){
         $TaskParkInfo = M('TaskParkInfo');
         $gap = 0.009090*$distance*2;
         $con = '_lat > '.($lat-$gap).' AND _lat<'.($lat+$gap);
         $con .= ' AND _lng > '.($lng-$gap).' AND _lng<'.($lng+$gap);
         $result = $TaskParkInfo->where($con)->getField('m_id',true);
         return  empty($result) ? array():$result;
+    }
+
+    //判断线上库和任务库是否已经存在
+    protected function existPark($t){
+        //1.线上数据库，名称和地址去重
+        $ParkInfo = M('ParkInfo');
+        $map = array();
+        $map['name'] = $t['name'];
+        $map['address'] = $t['address'];
+        $map['_logic'] = 'OR';
+        $park = $ParkInfo->where($map)->select();
+        if(!empty($park)){
+            return true;
+        }
+        //2.Task数据库，名称和地址去重
+        $TaskParkInfo = M('TaskParkInfo');
+        $_string = "select * from dudu_task_park_info where `_name` ='".$t['name']."' OR `_address`='".$t['address']."' OR `name`='".$t['name']."' OR `address`='".$t['address']."'";
+        $Model = new \Think\Model();
+        $park = $Model->query($_string);
+        if(!empty($park)){
+            return true;
+        }
+
+        return false;
     }
 
     protected function condition($searchname, $marks, $state){
@@ -490,4 +517,30 @@ class TaskController extends BaseController{
 
     }
 
+
+    //添加任务停车场，考虑去重情况
+    //返回结果0：返回失败，1：返回成功
+    private function addTaskPark($t){
+
+        //1.线上数据库，名称和地址去重
+        $ParkInfo = M('ParkInfo');
+        $map = array();
+        $map['name'] = $t['_name'];
+        $map['address'] = $t['_address'];
+        $map['_logic'] = 'OR';
+        $park = $ParkInfo->where($map)->select();
+        if(!empty($park)){
+            return 0;
+        }
+        //2.Task数据库，名称和地址去重
+        $TaskParkInfo = M('TaskParkInfo');
+        $_string = "select * from dudu_task_park_info where `_name` ='".$t['_name']."' OR `_address`='".$t['_address']."' OR `name`='".$t['_name']."' OR `address`='".$t['_address']."'";
+        $Model = new \Think\Model();
+        $park = $Model->query($_string);
+        if(!empty($park)){
+            return 0;
+        }
+        $TaskParkInfo->add($t);
+        return 1;
+    }
 }
