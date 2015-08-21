@@ -1,4 +1,5 @@
 <?php
+use Utility\ChinaNet;
 
 /**
  * Driver公关页面控制器
@@ -396,7 +397,7 @@ class PublicController extends BaseController {
     }
 
 	/*
-	 * @desc 处理微信支付成功
+	 * @desc 处理支付成功
 	*/
 	protected function doOrderDone($out_trade_no, $isIn) {
 
@@ -490,6 +491,9 @@ class PublicController extends BaseController {
 			}
 		}
 
+        // send sms
+        $this->_sendSmsNotification($parkid, $park_order['carid'], $orderTime);
+
         //发送Email
         $parkName = $this->getParkName($parkid);
         $carid = $park_order_data['carid'];
@@ -516,11 +520,51 @@ class PublicController extends BaseController {
         $map['id'] = $parkid;
         $status = $ParkInfo->where($map)->getField('status');
         if($status > 3 && $_SERVER['HTTP_HOST'] != 't.duduche.me') {
-            $send = $this->sendemail('all@duduche.me', $title, $content);
-        } else {
-            $send = $this->sendemail('hejiachen@duduche.me', $title, $content);
+            $send = $this->sendEmail('all@duduche.me', $title, $content);
         }
 	}
+
+//    public function testAction() {
+//        $this->_sendSmsNotification(1, '沪A7N529', time() + 15 * 3600);
+//    }
+
+    protected function _sendSmsNotification($parkid, $license, $orderTime) {
+
+        $Park = M('ParkInfo');
+        $map = array();
+        $map['id'] = $parkid;
+        $parkData = $Park->where($map)->find();
+
+        if (empty($parkData) || $parkData['']) {
+            return null;
+        } else {
+            $shortname = $parkData['shortname'];
+        }
+
+        $ParkAdmin = M('ParkAdmin');
+        $map = array();
+        $map['parkname'] = $shortname;
+        $adminData = $ParkAdmin->where($map)->select();
+
+        $result = [];
+        if (empty($adminData)) {
+            return null;
+        } else {
+            foreach($adminData as $key => $value){
+                if ($this->perCompare($value['jobfunction'], 2)){
+                    $result[] = $value['phone'];
+                }
+            }
+        }
+
+        if (!empty($result)) {
+            $tmpl = ChinaNet::TEMPLATE_车位预付完成_停管;
+            $time = date('n月j日 G:i', $orderTime + 600 * 15);
+            $start = '15分钟后';
+//            array_unshift($result, '18602108024');
+            return ChinaNet::sendSms(current($result), $tmpl, compact('license', 'time', 'start'));
+        }
+    }
 
 	/*
 	 * @desc 预付成功，微信调用的回调函数

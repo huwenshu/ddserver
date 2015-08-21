@@ -1,0 +1,16 @@
+mysql:
+  host: localhost
+  user: dududbuser
+  password: Dudu8796
+  database: dudu_parking
+mongo:
+  host: localhost
+redis:
+  default:
+    host: localhost
+    password: Sh0wMeTheM0ney!
+    database: 1
+  cache:
+    host: localhost
+    password: Sh0wMeTheM0ney!
+    database: 1

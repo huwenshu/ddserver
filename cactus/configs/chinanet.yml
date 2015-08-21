@@ -1,0 +1,4 @@
+client:
+  app_id: 370978870000245242
+  app_secret: a20ef3d7759f858ee1769f7365c27caa
+  grant_type: client_credentials
