@@ -1,0 +1,10 @@
+production:
+  url: http://sdk.open.api.igexin.com/apiex.htm
+  app_id: 0J2ipM3D2V5WQDpWnQZC1
+  app_key: qaHlPWSeAu9M5bG9D8akm7
+  master_secret: FbBqTqUhAp7e4KCoiNmTx1
+development:
+  url: http://sdk.open.api.igexin.com/apiex.htm
+  app_id: cFxKuD1Z637RBA2MtlJEH9
+  app_key: v1gLNUqNVP87PQMiObVvS2
+  master_secret: SXaAURuavM6nh3IAVzRX01

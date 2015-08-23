@@ -4,3 +4,6 @@
 [submodule "cactus/vendors/phpmailer"]
 	path = cactus/vendors/phpmailer
 	url = git@github.com:PHPMailer/PHPMailer.git
+[submodule "cactus/vendors/getui"]
+	path = cactus/vendors/getui
+	url = git@github.com:imikay/IGeTui.git

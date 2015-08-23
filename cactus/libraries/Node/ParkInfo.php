@@ -36,6 +36,11 @@ class ParkInfo extends Data {
     public $status;
 
     /**
+     * @field
+     */
+    public $parkstate;
+
+    /**
      * @return array
      */
     public function getParkAdmin() {
