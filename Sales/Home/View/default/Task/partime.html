@@ -90,10 +90,13 @@
                     }
                     echo "<li name='parkitem' class='mui-table-view-cell mui-checkbox mui-left parkitem'>";
                     echo "<a class='mui-navigate-right'  target='_blank' href=".U('checkpark',array('partid'=>$value['partime'],'tpid'=>$value['id'])).">";
-                        echo "<p>".$value['_name']." ";
-                            echo "[".$value['landmark']."] ";
+                        $name = empty($value['_name'])? $value['name']:$value['_name'];
+                        $address = empty($value['_address'])? $value['address']:$value['_address'];
+                        $landmark = $value['landmark'];
+                        echo "<p>".$name." ";
+                            echo "[".$landmark."] ";
                             echo empty($value['_tags'])? '': "[".substr($value['_tags'],1,-1)."]";
-                            echo "</p><p>地址：".$value['_address']."</p>";
+                            echo "</p><p>地址：".$address."</p>";
                         echo "</a></li>";
                     }
                     ?>
@@ -102,19 +105,22 @@
             <div id="panel-2">
                 <ul class="mui-table-view">
                     <?php
-                    $date = $done_parks[0]['allocatedate'];
-                    echo "<h4>".$date."</h4>";
+                    $date = substr($done_parks[0]['updatetime'],0,10);
+                    echo "<h4>".$date." 共完成".$done_sum[$date]."个</h4>";
             foreach ($done_parks as $key => $value) {
-                    if($date != $value['allocatedate']){
-                    $date = $value['allocatedate'];
-                    echo "<h4>".$date."</h4>";
+                    if($date != substr($value['updatetime'],0,10)){
+                    $date = substr($value['updatetime'],0,10);
+                    echo "<h4>".$date." 共完成".$done_sum[$date]."个</h4>";
                     }
                     echo "<li name='parkitem' class='mui-table-view-cell mui-checkbox mui-left parkitem'>";
                     echo "<a class='mui-navigate-right'  target='_blank' href=".U('checkpark',array('partid'=>$value['partime'],'tpid'=>$value['id'])).">";
-                        echo "<p>".$value['_name']." ";
-                            echo "[".$value['landmark']."] ";
+                        $name = empty($value['_name'])? $value['name']:$value['_name'];
+                        $address = empty($value['_address'])? $value['address']:$value['_address'];
+                        $landmark = $value['landmark'];
+                        echo "<p>".$name." ";
+                            echo "[".$landmark."] ";
                             echo empty($value['_tags'])? '': "[".substr($value['_tags'],1,-1)."]";
-                            echo "</p><p>地址：".$value['_address']."</p>";
+                            echo "</p><p>地址：".$address."</p>";
                         echo "</a></li>";
                     }
                     ?>

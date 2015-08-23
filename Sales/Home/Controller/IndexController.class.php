@@ -241,7 +241,7 @@ class IndexController extends  BaseController {
             }
 
     		$Park = D('ParkInfo');
-            $info_arr = array(100,101,102,103);
+            $info_arr = array(100,101,102,103,104,105);
             if( in_array(UID, $info_arr) && UID!=$parkInfo['responsible']){
                 $saveParkId = 0;
             }

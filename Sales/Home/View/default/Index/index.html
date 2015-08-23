@@ -9,7 +9,7 @@
             text-decoration: none;
         }
 
-        .gray {background:#ddd;}
+        .gray {}
 
         
     </style>
@@ -52,16 +52,22 @@
 
             foreach ($parks_info as $key => $value) {
                 echo "<li name='parkitem' class='mui-table-view-cell parkitem'><a class='mui-navigate-right'  target='_blank' href=".U('parkinfo',array('parkid'=>$value['id'])).">";
-                if(strpos($value['style'], 'BDWKF')){
-                    echo "<p style='color:#ddd'>";
+                if(strpos($value['style'], 'BDWKF') || $value['status'] < 4){
+                    echo "<div style='color:#ddd;font-size: 14px' alt='0'>";
                 }
                 else{
-                    echo "<p>";
+                    if($value['status']%10 == 4){
+                        echo "<div style='color:#8f8f94;font-size: 14px;background-color: #ECECEC'  alt='1'>";
+                    }
+                    else{
+                        echo "<div style='color:#8f8f94;font-size: 14px'  alt='1'>";
+                    }
                 }
 
                 echo $value['name'].tags($value)."<br>";
+                echo $value['chargingrules'];
                 echo "地址：".$value['address'];
-                echo "</p></a></li>";
+                echo "</div></a></li>";
 
             }
 
@@ -70,12 +76,19 @@
 
                 $temp = " ";
                 $isAuto = false;
-                if(strpos($value['style'], 'BDWKF')){
-                    $temp.="[不对外开放]";
+                if(strpos($value['style'], 'BDWKF') || $value['status'] < 4){
                     $isAuto = true;
+                    if(strpos($value['style'], 'BDWKF')){
+                        $temp.="[不对外开放]";
+                    }
                 }
 
-                $temp.= "[".C('PARK_COR')[$value['status']%10]."]";
+                $t_s = $value['status']%10;
+                if($t_s){
+                    $temp.= "[".C('PARK_COR')[$t_s]."]";
+                }
+
+
 
                 if($value['status']>=10){
                     $temp.= "[已发布]";
@@ -122,6 +135,15 @@
 <script type="text/javascript">
     $(function(){
         $(".parkitem").hover(function() {$(this).addClass("gray")}, function() {$(this).removeClass("gray")});
+        $(".parkitem").each(function(index,element) {
+            var div = $(element).find('div');
+            var alt = div.attr('alt');
+            var p = div.find('p');
+            if(alt == 0){
+                p.attr('style','color:#ddd');
+                p.find("*").attr('style','color:#ddd');
+            }
+        });
     });
 </script>
 </block>

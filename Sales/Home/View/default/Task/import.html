@@ -424,7 +424,7 @@
     <script>
         $(function () {
             $("#choose").click(function(){
-                var str = $('#keyword').val() + ',' + $('#getlat').val() + ',' + $('#getlng').val() + '\n';
+                var str = $('#keyword').val() + ',' + $('#getlng').val() +',' + $('#getlat').val() +  '\n';
                 $("#locinput").val($("#locinput").val()+str);
                 $('#keyword').val('');
                 $('#getlat').val('');
@@ -521,10 +521,11 @@
                 data: {data:$('#jsondata').val()},
                 success: function(json){
                     if(json.code ==200){
-                        alert('OK');
+                        alert('数据导入成功！将为你跳转至任务列表页面！');
+                        window.location.href = "{:U('Task/index')}";
                     }
                     else{
-                        alert('导入错误，请检查参数！1');
+                        alert('导入错误，请检查参数！');
                     }
                 },
                 error: function(){

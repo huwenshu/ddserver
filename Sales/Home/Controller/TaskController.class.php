@@ -246,13 +246,17 @@ class TaskController extends BaseController{
 
         $Partime = M('PartTime');
         $map = array();
-        $map['id'] = array('not in', $ptss);
+        if(!empty($ptss)){
+            $map['id'] = array('not in', $ptss);
+        }
         $leftPT= $Partime->where($map)->order('iswork desc')->getField('id', true);
 
         $partimes = array();
         foreach($ptss as $v){
             $map['id'] = $v;
             $temp = $Partime->where($map)->find();
+            $temp['undo'] = $TaskParkInfo->where(array('status' => 2, 'partime' => $v))->count();
+            $temp['done'] = $TaskParkInfo->where(array('status' => 3, 'partime' => $v, 'updatetime' => array(array('gt', date('Y-m-d 00:00:00')),array('lt', date('Y-m-d 00:00:00',strtotime('+1 day'))))))->count();
             array_push($partimes, $temp);
         }
         foreach($leftPT as $v){
@@ -271,7 +275,21 @@ class TaskController extends BaseController{
     public function  partime($partid){
         $TaskParkInfo = M('TaskParkInfo');
         $undo_parks = $TaskParkInfo->where(array('status' => 2, 'partime' => $partid))->order('allocatedate asc, _address')->select();
-        $done_parks = $TaskParkInfo->where(array('status' => 3, 'partime' => $partid))->order('allocatedate asc, _address')->select();
+        $done_parks = $TaskParkInfo->where(array('status' => 3, 'partime' => $partid))->order('updatetime desc, _address')->select();
+        $done_date = substr($done_parks[0]['updatetime'],0,10);
+        $done_sum = array();
+        $k = 0 ;
+        foreach($done_parks as $key => $value){
+            if($done_date == substr($value['updatetime'],0,10)){
+               $k++;
+            }
+            else{
+                $done_sum[$done_date] = $k;
+                $done_date = substr($value['updatetime'],0,10);
+                $k = 1;
+            }
+        }
+        $done_sum[$done_date] = $k;
 
         $Partime = M('PartTime');
         $partime = $Partime->where(array('id' => $partid))->find();
@@ -279,6 +297,7 @@ class TaskController extends BaseController{
         $this->undo_parks = $undo_parks;
         $this->done_parks = $done_parks;
         $this->partime = $partime;
+        $this->done_sum = $done_sum;
         $this->title = '兼职信息';
         $this->display();
 

@@ -183,6 +183,32 @@ class IndexController extends BaseController {
 
     }
 
+    //包月零售异常状态订单
+    public function monunusual(){
+
+        $Model = new \Think\Model();
+        $ctime = time();
+        $timeout = date("Y-m-d 00:00:00",$ctime);
+        //停车时间超过一天离场确认
+        $sql = "SELECT o.id,o.pid,o.carid,o.cost,o.startime,p.name,d.telephone FROM dudu_park_order o, dudu_park_info p, dudu_driver_info d where o.pid = p.id and o.uid = d.id and o.state = 0 and startime < '".$timeout."' and p.corp_type =2";
+        $list = $Model->query($sql);
+
+        $ParkAdmin = M('ParkAdmin');
+        $admin = array();
+        foreach($list as $key => $value){
+            $map = array();
+            $map['parkid'] = $value['pid'];
+            $temp = $ParkAdmin->where($map)->getField('id,nickname,phone',true);
+            array_push($admin,$temp);
+        }
+
+        $this->list = $list;
+        $this->admin = $admin;
+        $this->meta_title = '离场异常 | 嘟嘟管理系统';
+        $this->display();
+
+    }
+
     //空车位8个小时以上未变动
     public function emptySpace(){
 

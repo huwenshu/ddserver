@@ -742,7 +742,8 @@ class IndexController extends BaseController {
         $result['cost_r'] = round($preSum_r,2);
 		
 		$ParkAdmin = M('ParkAdmin');
-		$con = "parkid=".$pid." && jobfunction&1<>0";
+		//$con = "parkid=".$pid." && jobfunction&1<>0";
+        $con = "parkid=".$pid;
 		$adminData = $ParkAdmin->where($con)->order('lastop desc')->field("nickname,phone")->select();
         //加入停车场销售负责人电话
         $responsible = $parkData['responsible'];

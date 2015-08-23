@@ -29,11 +29,12 @@ class PartimeController extends \Think\Controller{
         $this->display();
     }
 
-    public function  tparkinfo($tpid){
+    public function  tparkinfo(){
         $this->init();
         if(IS_POST){
+            $tpid = I('post.tpid');
             $next = I('post.next');
-            $id = I('post.tpid');
+            $id = $tpid;
             $name = I('post.name');
             $address = I('post.address');
             $latlng = I('post.latlng');
@@ -51,7 +52,6 @@ class PartimeController extends \Think\Controller{
             $intention = I('post.intention');
 
             $data = array();
-            $data['id'] = $id;
             $data['name'] = $name;
             $data['address'] = $address;
             $data['lat'] = $lat;
@@ -64,7 +64,22 @@ class PartimeController extends \Think\Controller{
             $data['intention'] = $intention;
             $data['updater'] = 'PT-'.PTID;
             $TaskParkInfo = M('TaskParkInfo');
-            $t= $TaskParkInfo->save($data);
+            if($id>0){
+                $data['id'] = $id;
+                $t= $TaskParkInfo->save($data);
+            }
+            else{
+                $data['landmark'] = '兼职添加';
+                $data['partime'] = PTID;
+                $data['status'] = 2;
+                $data['allocatedate'] = date('Y-m-d');
+                $data['creater'] = 'PT-'.PTID;
+                $data['createtime'] = date('Y-m-d H:i:s');
+                $data['updater'] = 'PT-'.PTID;
+                $t= $TaskParkInfo->add($data);
+                $tpid = $t;
+            }
+
 
             //下一个
             $map = array();
@@ -73,25 +88,27 @@ class PartimeController extends \Think\Controller{
             $ids = $TaskParkInfo->where($map)->order('allocatedate asc, _address')->getField('id', true);
             $key = array_search($tpid, $ids);
             if($key+1 == count($ids)){
-                $nextid = -1;
+                $nextid = $ids[$key];
             }
             else{
                 $nextid = $ids[$key+1];
             }
 
             if(empty($next)){
-                $this->redirect('Partime/tparkinfo', array('tpid' => $id));
+                $this->redirect('Partime/tparkinfo', array('tpid' => $tpid));
             }
             else{
                 $this->redirect('Partime/tparkinfo', array('tpid' => $nextid));
             }
         }
         else{
+            $tpid = I('get.tpid');
             $TaskParkInfo = M('TaskParkInfo');
             $map = array();
             $map['id'] = $tpid;
             $tparkinfo = $TaskParkInfo->where($map)->find();
             $this->tparkinfo = $tparkinfo;
+            $this->tpid = $tpid;
             $this->display();
         }
     }

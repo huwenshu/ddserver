@@ -326,15 +326,26 @@ class IndexController extends BaseController {
 		$orderData = $Order->where($con)->save($updateData);
         $driverId = $Order->where($con)->getField('uid');
         $change = 0;
+
+        //包月车辆离场，需要更新车位数
+        $ParkInfo = M('ParkInfo');
+        $map = array();
+        $map['id'] = $parkid;
+        $parkInfo = $ParkInfo->where($map)->find();
+        $corp_type = $parkInfo['corp_type'];
+        if($corp_type == C('CORP_TYPE')['Monthly']){
+            $spacesum = $parkInfo['spacesum'];
+            $leftsum = $parkInfo['parkstate'];
+            if($leftsum < $spacesum){//防止加多了
+                $ParkInfo->where($map)->setInc('parkstate',1);
+            }
+        }
         
         if(!array_key_exists($driverId,$conf_simulation_uids) || $conf_simulation_uids[$driverId]["type"] == 1){
             
             if(!array_key_exists($driverId,$conf_simulation_uids)){//非测试模式
                 //是否在活动中,来确定增加积分策略
-                $ParkInfo = M('ParkInfo');
-                $map = array();
-                $map['id'] = $parkid;
-                $parkInfo = $ParkInfo->where($map)->find();
+
                 $acType = $parkInfo['actype'];
                 $acScore = $parkInfo['acscore'];
                 $acEndtime = strtotime($parkInfo['acendtime']);
@@ -443,7 +454,8 @@ class IndexController extends BaseController {
             if($tmp['carid'] == '' && $value['uid'] == 0){
                 $tmp['carid'] = '测A88888';
             }
-            $tmp['tel'] = $this->getDriver($value['uid'])['telephone'];
+            $tmp['telephone'] = $this->getDriver($value['uid'])['telephone'];
+            $tmp['r_fee'] = $this->parkingFee(strtotime($value['startime']), $value['pid']) - $sum;
 
 			array_push($result, $tmp);
 

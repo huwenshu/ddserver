@@ -420,6 +420,7 @@ class PublicController extends BaseController {
         $cost = $park_order_data['cost'];
         $cost = $cost + $prdata[0]['money'];
 
+        $ParkInfo = M('ParkInfo');
         $now = time();
 		if($isIn){
 			include_once(dirname(__FILE__) . '/../Conf/' . 'config_biz.php');
@@ -427,7 +428,20 @@ class PublicController extends BaseController {
 			$payment_record->where(array('id'=>$out_trade_no))->save(array('state'=>1));
 			$endtime = $this->_parkingEndTime($now, $now+100, $parkid);
 			$park_order->where(array('id'=>$oid,'state'=>-1))->save(array('state'=>0, 'cost'=>$cost, 'startime'=>date("Y-m-d H:i:s", $now),'endtime'=>date("Y-m-d H:i:s", $endtime)));
-		}else{
+
+            //如果是包月合作方式，需要动态更新剩余停车位
+            $map = array();
+            $map['id'] = $parkid;
+            $parkInfo = $ParkInfo->where($map)->find();
+            $corp_type = $parkInfo['corp_type'];
+            if($corp_type == C('CORP_TYPE')['Monthly']){
+                $leftsum = $parkInfo['parkstate'];
+                if($leftsum > 0){//防止减多了
+                    $ParkInfo->where($map)->setDec('parkstate');
+                }
+            }
+
+        }else{
 			$payment_record->where(array('id'=>$out_trade_no))->save(array('state'=>1));
 			$starttime = strtotime($park_order_data['startime']);
             $map = array('oid' => $oid, 'state'=>1);
@@ -449,7 +463,6 @@ class PublicController extends BaseController {
         $change = $pay['money'];
         $note = $pay['id'];
 				//账户余额
-        $ParkInfo = M('ParkInfo');
         $map['id'] = $parkid;
         $balance = $ParkInfo->where($map)->getField('balance');
         $ParkInfo->where($map)->setInc('balance',$change); //账户余额更新
@@ -803,6 +816,8 @@ class PublicController extends BaseController {
             $tmp['lng'] = $value['lng'];
             $tmp['m'] = $value['spacesum'];
             $tmp['p'] = $value['prepay'];
+
+            $tmp['c_t'] = $value['corp_type'];
             
             $style = $value['style'];
             $styleArr = explode('|', $style);
@@ -954,6 +969,10 @@ class PublicController extends BaseController {
     protected function status_distance_sort( &$v1,&$v2){
         $dis1 = $this->getDistance($v1['lat'],$v1['lng'],$this->lat,$this->lng);
         $dis2 = $this->getDistance($v2['lat'],$v2['lng'],$this->lat,$this->lng);
+
+        //包月分销模式的停车场优先
+        $monthly1 = $v1['corp_type'];
+        $monthly2 = $v2['corp_type'];
         
         //实惠标记 + 在开放时间段
         $sh1 = ((strpos($v1['style'],'|SH|') !== false) && ($this->isClosedNow($v1) === false)) ? 1:0;
@@ -962,21 +981,24 @@ class PublicController extends BaseController {
         //先把合作+信息化的都改成合作。
         $v1['status'] = ($v1['status'] == 14 ? 4 : $v1['status']);
         $v2['status'] = ($v2['status'] == 14 ? 4 : $v2['status']);
+        //先把测试+信息化的都改成测试。
+        $v1['status'] = ($v1['status'] == 13 ? 3 : $v1['status']);
+        $v2['status'] = ($v2['status'] == 13 ? 3 : $v2['status']);
         
-        //针对合作但是已满，作信息化处理
-        if($v1['status'] == 4 && $v1['parkstate'] == 0){
-            $v1['status'] = 14;
+        //针对测试+合作但是已满，作信息化处理
+        if(($v1['status'] == 3||$v1['status'] == 4) && $v1['parkstate'] == 0){
+            $v1['status'] =  $v1['status']+10;
         }
-        if($v2['status'] == 4 && $v2['parkstate'] == 0){
-            $v2['status'] = 14;
+        if(($v2['status'] == 3 || $v2['status'] == 4) && $v2['parkstate'] == 0){
+            $v2['status'] = $v2['status'] + 10;
         }
         
         //针对已合作，但是不在开放时间段的，作信息化处理
-        if($v1['status'] == 4 && $this->isClosedNow($v1)){
-            $v1['status'] = 14;
+        if(($v1['status'] == 3||$v1['status'] == 4) && $this->isClosedNow($v1)){
+            $v1['status'] =  $v1['status']+10;
         }
-        if($v2['status'] == 4 && $this->isClosedNow($v2)){
-            $v2['status'] = 14;
+        if(($v2['status'] == 3 || $v2['status'] == 4) && $this->isClosedNow($v2)){
+            $v2['status'] = $v2['status'] + 10;
         }
         
         
@@ -1004,7 +1026,14 @@ class PublicController extends BaseController {
             return 1;
         }
         else{
-            //合作状态相同情况下先按照实惠排序
+            //合作状态相同情况下包月分销的停车场优先
+            if($monthly1 < $monthly2){
+                return 1;
+            }
+            elseif($monthly1 > $monthly2){
+                return -1;
+            }
+            //再按实惠排序
             if($sh1 < $sh2){
                 return 1;
             }else if($sh1 > $sh2){
@@ -1180,7 +1209,7 @@ class PublicController extends BaseController {
             $con['e_t'] = array('in','0,2');
         }
         $Park = M('ParkInfo');
-        $listdata = $Park->where($con)->select();
+        $listdata = $Park->where($con)->order('corp_type desc')->select();
         $list = $listdata;
         //封装返回值
         $result = array();
@@ -1203,6 +1232,8 @@ class PublicController extends BaseController {
             $tmp['lng'] = $value['lng'];
             $tmp['m'] = $value['spacesum'];
             $tmp['p'] = $value['prepay'];
+
+            $tmp['c_t'] = $value['corp_type'];
             
             $style = $value['style'];
             $styleArr = explode('|', $style);
@@ -1220,7 +1251,7 @@ class PublicController extends BaseController {
             //开放时间段
             $tmp['o'] = array($this->isClosedNow($value) ? 0 : 1, $value['startmon'], $value['endmon'], $value['startsat'], $value['endsat']);
             
-            if(($value['status'] == 4 || $value['status'] == 3 || $value['status'] == 14 || $value['status'] == 13) && $value['parkstate'] != 0){//合作停车场&&在开放时段&&非满
+            if(($value['status'] == 4 || $value['status'] == 3 || $value['status'] == 14 || $value['status'] == 13) && (!$this->isClosedNow($value)) &&$value['parkstate'] != 0){//合作停车场&&在开放时段&&非满
                 $tmp['c'] = 1; //合作停车场设为1
                 $tmp['s'] = $value['parkstate'];
             }
