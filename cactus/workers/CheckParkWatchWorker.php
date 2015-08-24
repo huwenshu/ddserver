@@ -23,7 +23,7 @@ class CheckParkWatchWorker extends Worker {
                      * 嘟嘟提醒
                      * 您关注的“光启城地面停车场”现在有3个空闲车位
                      */
-                    Getui::pushNotification($driver->pushid, "嘟嘟提醒", "您关注的“{$park->name}”现在有{$park->parkstate}个空闲车位");
+                    Getui::pushNotification($driver->pushid, "嘟嘟提醒", "“{$park->name}”现在有{$park->parkstate}个空闲车位");
                 }
             });
 

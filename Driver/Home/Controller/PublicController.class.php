@@ -1196,7 +1196,8 @@ class PublicController extends BaseController {
         //HardCode 用于测试
         $openid = $this->getOpenID($this->uid);
         $opens = C('OPENID');
-        if(in_array($openid, $opens)){
+        $testers = C('TESTER');
+        if(in_array($openid, $opens) || in_array($this->uid, $testers)) {
             $con['status'] = array('EGT', 3);
         }
         else{

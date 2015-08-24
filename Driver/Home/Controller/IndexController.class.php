@@ -39,11 +39,12 @@ class IndexController extends BaseController {
 			list($outgoing, $incoming) = Relationship::modify($this->uid, $targetId, $action);
 
 			$this->ajaxOk([
+				'targetId' => $targetId,
 				'outgoing' => $outgoing->status,
 				'incoming' => $incoming->status,
 			]);
 
-		} catch (\Foundation\Exception $e) {
+		} catch (Exception $e) {
 			$this->ajaxMsg($e->getMessage());
 		}
 	}
@@ -53,6 +54,7 @@ class IndexController extends BaseController {
 		$outgoing = Relationship::getInstance($sourceId, $targetId);
 		$incoming = Relationship::getInstance($targetId, $sourceId);
 		$this->ajaxOk([
+			'targetId' => $targetId,
 			'outgoing' => $outgoing->status,
 			'incoming' => $incoming->status,
 		]);

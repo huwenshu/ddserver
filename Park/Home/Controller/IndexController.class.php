@@ -1,6 +1,12 @@
 <?php
 
+use Foundation\AndQuery;
+use Foundation\EqualQuery;
+use Node\ParkInfo;
+use Node\ParkOrder;
+use Node\Relationship;
 use Think\Controller;
+use Utility\Getui;
 
 class IndexController extends BaseController {
 
@@ -315,7 +321,7 @@ class IndexController extends BaseController {
         
 		$cache = $this->getUsercache($this->uid);
 		$data = $cache['data'];
-		$parkid = $data['parkid'];
+		$parkid = $data['parkid']; // TODO: 同一个停管员有两个停车场如何区分？@Ryun
         
         $now = time();
 		$Order = M('ParkOrder');
@@ -387,6 +393,28 @@ class IndexController extends BaseController {
             takeCSV($msgs);
         }
 
+        // 空位提醒
+        if($corp_type == C('CORP_TYPE')['Monthly']) {
+            $order = (new ParkOrder())->load($oid);
+
+            $opts = ['from' => 0, 'size' => 1000];
+
+            $rels = (new Relationship())->find(new AndQuery(
+                new EqualQuery('targetId', $order->pid)
+                ,new EqualQuery('status', 'watches')), $opts);
+
+            array_walk($rels, function (Relationship $rel) {
+                $park = (new ParkInfo)->load($rel->targetId);
+                if ($park->parkstate > 0) {
+                    $driver = $rel->getSource();
+                    /**
+                     * 嘟嘟提醒
+                     * “光启城地面停车场”现在有3个空闲车位
+                     */
+                    Getui::pushNotification($driver->pushid, "嘟嘟提醒", "“{$park->name}”现在有{$park->parkstate}个空闲车位");
+                }
+            });
+        }
 
         if($orderData !== false){
 			$this->ajaxOk("");
