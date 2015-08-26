@@ -1,0 +1,6 @@
+qqmail:
+  host: smtp.exmail.qq.com
+  port: 465
+  username: hejiachen@duduche.me
+  password: DuduChe1234
+  fromname: noreply

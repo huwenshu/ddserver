@@ -1,6 +1,13 @@
 <?php
 
+use Foundation\AndQuery;
+use Foundation\Cookie;
+use Foundation\EqualQuery;
+use Node\ParkInfo;
+use Node\ParkOrder;
+use Node\Relationship;
 use Think\Controller;
+use Utility\Getui;
 
 class IndexController extends BaseController {
 
@@ -315,8 +322,8 @@ class IndexController extends BaseController {
         
 		$cache = $this->getUsercache($this->uid);
 		$data = $cache['data'];
-		$parkid = $data['parkid'];
-        
+		$parkid = $data['parkid']; // TODO: 同一个停管员有两个停车场如何区分？@Ryun
+
         $now = time();
 		$Order = M('ParkOrder');
 		$con = array('id' => $oid, 'pid' => $parkid);
@@ -337,7 +344,7 @@ class IndexController extends BaseController {
             $spacesum = $parkInfo['spacesum'];
             $leftsum = $parkInfo['parkstate'];
             if($leftsum < $spacesum){//防止加多了
-                $ParkInfo->where($map)->setInc('parkstate',1);
+                $ParkInfo->where($map)->setInc('parkstate',1); // TODO: INCR 1不太合理，如何防止接口重复调用问题？
             }
         }
 
@@ -387,6 +394,29 @@ class IndexController extends BaseController {
             takeCSV($msgs);
         }
 
+        // S:空位提醒
+        if ($corp_type == C('CORP_TYPE')['Monthly']) {
+            $order = (new ParkOrder())->load($oid);
+
+            $opts = ['from' => 0, 'size' => 1000];
+
+            $rels = (new Relationship())->find(new AndQuery(
+                new EqualQuery('targetId', $order->pid)
+                ,new EqualQuery('status', 'watches')), $opts);
+
+            array_walk($rels, function (Relationship $rel) {
+                $park = (new ParkInfo)->load($rel->targetId);
+                if ($park->parkstate == 1) { // 只在出现一个车位的时候发送提醒（保证拿到最新的ParkInfo状态）
+                    $driver = $rel->getSource();
+                    /**
+                     * 嘟嘟提醒
+                     * “光启城地面停车场”现在有3个空闲车位
+                     */
+                    Getui::pushNotification($driver->pushid, "嘟嘟提醒", "“{$park->name}”现在有{$park->parkstate}个空闲车位");
+                }
+            });
+        }
+        // E:空位提醒
 
         if($orderData !== false){
 			$this->ajaxOk("");
@@ -559,6 +589,8 @@ class IndexController extends BaseController {
 			$this->ajaxMsg("用户名错误:".$this->uid);
 		}
 		else{
+
+
 			$result['parkstate'] = $parkData['parkstate'];
             //停车场推广活动
             $result['actype'] = $parkData['actype'];
@@ -566,7 +598,6 @@ class IndexController extends BaseController {
             $result['acendtime'] = $parkData['acendtime'];
             $balance = $parkData['balance'] > $parkData['upfront']?$parkData['balance'] - $parkData['upfront']:0;
 		}
-
 
         //预付完，还未进场的
 		$Order = M('ParkOrder');

@@ -1,4 +1,7 @@
 <?php
+use Foundation\Cookie;
+use Foundation\Request;
+
 /**
  * 后台基础控制器
  * @Bin
@@ -35,6 +38,13 @@ class BaseController extends \Think\Controller {
     protected function getUsercache($uid){
         $key = $this->getCacheKey($uid);
         $data = S($key);
+
+        if ($pid = Request::getInstance()->get('pid')) {
+            if (!empty($pid)) {
+                $data['data']['parkid'] = $pid;
+            }
+        }
+
         return $data;
     }
 

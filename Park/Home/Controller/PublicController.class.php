@@ -27,23 +27,28 @@ class PublicController extends BaseController {
            $this->ajaxMsg('用户名或者密码错误！');
         }
 
-        $ParkInfo = M('ParkInfo');
-        $con = array('id' => $parkid);
-        $parkInfo = $ParkInfo->where($con)->find();
-
-        if(!empty($parkInfo)){
-            $parkFullName = $parkInfo['name'];
-            $parkCorpType = $parkInfo['corp_type'];
-        }
-        else{
-            $this->ajaxMsg('用户名或者密码错误！');
-        }
-
-
         $arr = array('parkid' => $parkid);
         $uuid = $this->createUUID($uid,$arr);
 
-        $temp = array('uid' => $uid, 'uuid' =>$uuid, 'permission' => $permission, 'type' => $parkCorpType,'fullname' => $parkFullName);
+        $ParkAdmin = M('ParkAdmin');
+        $map = array('username' => $username, 'password' => strtoupper(md5($password)));
+        $data = $ParkAdmin->where($map)->select();
+
+        $parks = array_map(function($admin) {
+            $ParkInfo = M('ParkInfo');
+            $con = ['id' => $admin['parkid']];
+            $parkInfo = $ParkInfo->where($con)->find();
+            if(!empty($parkInfo)){
+                $id = $parkInfo['id'];
+                $fullname = $parkInfo['name'];
+                $shortname = $parkInfo['shortname'];
+                $type = $parkInfo['corp_type'];
+                $permission = $admin['jobfunction'];
+                return compact('id', 'shortname', 'fullname', 'type', 'permission');
+            }
+        }, $data);
+
+        $temp = array('uid' => $uid, 'uuid' =>$uuid, 'parks' => $parks, );
         $this->ajaxOk($temp);
     }
 

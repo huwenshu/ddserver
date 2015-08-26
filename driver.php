@@ -20,6 +20,10 @@ define('APP_DEBUG',True);
 // 定义应用目录
 define('APP_PATH','./Driver/');
 
+define('__DOMAIN__', isset($_SERVER['HTTP_HOST']) ? $_SERVER['HTTP_HOST'] : null);
+define('__HTDOCS__', __DIR__);
+include './cactus/bootstrap.php';
+
 // 引入ThinkPHP入口文件
 require './ThinkPHP/ThinkPHP.php';
 
