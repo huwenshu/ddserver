@@ -340,16 +340,16 @@ class IndexController extends BaseController {
                 $ParkInfo->where($map)->setInc('parkstate',1);
             }
         }
-        
+
         if(!array_key_exists($driverId,$conf_simulation_uids) || $conf_simulation_uids[$driverId]["type"] == 1){
-            
+
             if(!array_key_exists($driverId,$conf_simulation_uids)){//非测试模式
                 //是否在活动中,来确定增加积分策略
 
                 $acType = $parkInfo['actype'];
                 $acScore = $parkInfo['acscore'];
                 $acEndtime = strtotime($parkInfo['acendtime']);
-                
+
                 if($acType == 1 && $acEndtime>= $now){//有补助活动，且没有过期
                     if($this->cacheScore($this->uid, $acScore)){//未达到奖励上限
                         $change = $acScore;
@@ -362,9 +362,9 @@ class IndexController extends BaseController {
             }else{
                 $change = $conf_simulation_uids[$driverId]["score_out"];
             }
-            
+
         }
-        
+
         if($change > 0){
             $ParkAdmin = M('ParkAdmin');
             $map = array();
@@ -383,7 +383,7 @@ class IndexController extends BaseController {
             $msgs['newValue'] = $newScore;//新值
             $msgs['change'] = $change;//获得积分
             $msgs['note'] = '';//补充信息
-            
+
             takeCSV($msgs);
         }
 
