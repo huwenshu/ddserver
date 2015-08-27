@@ -68,4 +68,34 @@ class PublicController extends \Think\Controller {
         echo ini_get('session.save_path');
     }
 
+
+    public function cleanDist(){
+        $TaskParkInfo = M('TaskParkInfo');
+        $landmarks =$TaskParkInfo->distinct(true)->field('landmark')->select();
+
+        $url = 'http://apis.map.qq.com/ws/geocoder/v1/';
+        $data = array('region' => '上海市', 'key' => 'PFPBZ-DBKH4-UIPUS-DQVBD-SARP2-C6BE7');
+
+        foreach($landmarks as $key => $value){
+            $data['address'] = $value['landmark'];
+            $json = $this->doCurlGetRequest($url, $data);
+            $arr = json_decode($json,true);
+            if($arr['status'] == 0){
+                $landmarks[$key]['district'] =  $arr['result']['address_components']['district'];
+            }
+            else{
+                $landmarks[$key]['district'] =  '未知区域';
+            }
+        }
+
+        foreach($landmarks as $k => $v){
+            $map = array();
+            $map['landmark'] = $v['landmark'];
+            $data = array();
+            $data['dist'] = $v['district'];
+            $TaskParkInfo->where($map)->save($data);
+        }
+
+    }
+
 }

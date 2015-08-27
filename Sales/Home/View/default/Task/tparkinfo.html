@@ -255,8 +255,10 @@
 
         $(function(){
             $('#mapcheck').click(function(){
-                $('#qqmap').modal('show');
-                init();
+//                $('#qqmap').modal('show');
+//                init();
+                var url = 'http://apis.map.qq.com/uri/v1/search?keyword='+$("input[name='_address']").val()+'&region=上海&referer=duduche';
+                window.open(url);
             });
             $('#btn-cancle').click(function(){
                 $('#qqmap').modal('hide');

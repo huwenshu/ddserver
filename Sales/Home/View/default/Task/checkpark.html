@@ -320,12 +320,25 @@
                     <tr>
                         <td><label for="status">任务状态：</label></td>
                         <td>
-                            <select  id="status" name="status">
-                                <option value="-1"  <?php echo $tpark[status] == -1 ? 'selected':'';?>>作废</option>
-                                <option value="1"  <?php echo $tpark[status] == 1 ? 'selected':'';?>>重新分配</option>
-                                <option value="2"  <?php echo $tpark[status] == 2 ? 'selected':'';?>>待审核</option>
-                                <option value="3"  <?php echo $tpark[status] == 3 ? 'selected':'';?>>完成任务</option>
-                            </select>
+                            <span><label style="font-weight: normal;text-align: center;"><input style="margin: 10px;width: 20px;height: 20px;" type="radio" name="status" value="-1" <?php echo $tpark[status] == -1 ? 'checked':'';?>>作废</label></span>
+                            <span><label style="font-weight: normal;text-align: center;"><input style="margin: 10px;width: 20px;height: 20px;" type="radio" name="status" value="1" <?php echo $tpark[status] == 1 ? 'checked':'';?>>重新分配</label></span>
+                            <span><label style="font-weight: normal;text-align: center;"><input style="margin: 10px;width: 20px;height: 20px;" type="radio" name="status" value="2" <?php echo $tpark[status] == 2 ? 'checked':'';?>>待审核</label></span>
+                            <span><label style="font-weight: normal;text-align: center;"><input style="margin: 10px;width: 20px;height: 20px;" type="radio" name="status" value="3" <?php echo $tpark[status] == 3 ? 'checked':'';?>>完成任务</label></span>
+
+                        </td>
+                    </tr>
+                    <tr id="abolish" style="display: <?php echo ($tpark[status]==-1) ? 'table-row': 'none'; ?>">
+                        <td><label>作废原因：</label></td>
+                        <td>
+                            <?php
+                            foreach(C('ABOLISH') as $key => $value){
+                            $check = '';
+                            if($key == $tpark['abolish']){
+                            $check = 'checked';
+                            }
+                            echo '<span><label style="font-weight: normal;text-align: center;"><input style="margin: 10px;width: 20px;height: 20px;" type="radio" name="abolish" value="'.$key.'" '.$check.'></label>'.$value.'</span>' ;
+                            }
+                            ?>
                         </td>
                     </tr>
                 </table>
@@ -826,6 +839,10 @@
                     return false;
                 }
 
+                if( $("input[name='status']:checked").val() == -1 && typeof($("input[name='abolish']:checked").val()) == "undefined" ){
+                    alert("请填写作废原因！");
+                    return false;
+                }
 
                 //根据错误提交
                 if(error == ""){
@@ -841,11 +858,22 @@
             $('#nextPark').click(function(){
                 $nextid = $(this).attr('alt');
                 if($nextid < 0){
-                    alert('这已经是当前列表最后一个停车场了！');
+                    alert('当前停车场已经全部审核完了！');
                     return false;
                 }
                 else{
                     return true;
+                }
+            });
+
+            $('input[name=status]').change(function(){
+                var t = $(this).val();
+                if(t == -1){
+                    $('#abolish').css('display', 'table-row');
+                }
+                else{
+                    $('input[name=abolish]').val(0);
+                    $('#abolish').css('display', 'none');
                 }
             });
 

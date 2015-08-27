@@ -17,7 +17,10 @@ class TaskController extends BaseController{
         $state = I('get.taskstate');
 
         $TaskParkInfo = M('TaskParkInfo');
-        $landmark =$TaskParkInfo->distinct(true)->field('landmark')->select();
+        $landmarks =$TaskParkInfo->distinct(true)->field('landmark, dist')->select();
+
+        usort($landmarks, array($this, "district_sort"));	//按距离远近排序
+
 
         $con = $this->condition($searchname,$marks,$state);
         $tasks = $TaskParkInfo->where($con)->order('landmark,_address')->select();
@@ -27,7 +30,7 @@ class TaskController extends BaseController{
         $con['iswork'] = 1;
         $partimes = $Parttime->where($con)->select();
 
-        $this->landmark = $landmark;
+        $this->landmark = $landmarks;
         $this->searchname = $searchname;
         $this->marks = empty($marks) ? array():$marks;
         $this->state = empty($state) ? array():$state;
@@ -46,9 +49,20 @@ class TaskController extends BaseController{
             $data = 0;
             $sum = 0;
             foreach($parks as $key => $value){
+
+                //获取区域
+                $url = 'http://apis.map.qq.com/ws/geocoder/v1/';
+                $datas = array('region' => '上海市', 'address'=>$value['center'][0], 'key' => 'PFPBZ-DBKH4-UIPUS-DQVBD-SARP2-C6BE7');
+                $json = $this->doCurlGetRequest($url, $datas);
+                $arr = json_decode($json,true);
+                $district = '';
+                if($arr['status'] == 0){
+                    $district =  $arr['result']['address_components']['district'];
+                }
                 foreach($value['places'] as $k => $v){
                     $t = array();
                     $t['landmark'] = $value['center'][0];
+                    $t['dist'] = $district;
                     $t['m_id'] = $v['id'];
                     $t['_type'] = array_key_exists("type",$v) ? $v['type']:'';
                     $t['_name'] = array_key_exists("name",$v) ? $v['name']:'';
@@ -136,7 +150,7 @@ class TaskController extends BaseController{
     public function tparkinfo(){
         if(IS_POST){
             $id = I('post.tpid');
-            $search = I('get.search');
+            $search = I('post.search');
             $_name = I('post._name');
             $_tags = I('post._tags');
             $_address = I('post._address');
@@ -259,7 +273,7 @@ class TaskController extends BaseController{
             $map['id'] = $v;
             $temp = $Partime->where($map)->find();
             $temp['undo'] = $TaskParkInfo->where(array('status' => 2, 'partime' => $v))->count();
-            $temp['done'] = $TaskParkInfo->where(array('status' => 3, 'partime' => $v, 'updatetime' => array(array('gt', date('Y-m-d 00:00:00')),array('lt', date('Y-m-d 00:00:00',strtotime('+1 day'))))))->count();
+            $temp['done'] = $TaskParkInfo->where(array('status' => array('in', '-1,3'), 'partime' => $v, 'updatetime' => array(array('gt', date('Y-m-d 00:00:00')),array('lt', date('Y-m-d 00:00:00',strtotime('+1 day'))))))->count();
             array_push($partimes, $temp);
         }
         foreach($leftPT as $v){
@@ -278,7 +292,7 @@ class TaskController extends BaseController{
     public function  partime($partid){
         $TaskParkInfo = M('TaskParkInfo');
         $undo_parks = $TaskParkInfo->where(array('status' => 2, 'partime' => $partid))->order('allocatedate asc, _address')->select();
-        $done_parks = $TaskParkInfo->where(array('status' => 3, 'partime' => $partid))->order('updatetime desc, _address')->select();
+        $done_parks = $TaskParkInfo->where(array('status' => array('in', '-1,3'), 'partime' => $partid))->order('updatetime desc, _address')->select();
         $done_date = substr($done_parks[0]['updatetime'],0,10);
         $done_sum = array();
         $k = 0 ;
@@ -331,6 +345,7 @@ class TaskController extends BaseController{
             $data['note'] = I('post.note');
             $data['intention'] = I('post.intention');
             $data['status'] = I('post.status');
+            $data['abolish'] = ($data['status']==-1)? I('post.abolish'):0;
 
             $TaskParkInfo = M('TaskParkInfo');
             $TaskParkInfo->save($data);
@@ -391,6 +406,7 @@ class TaskController extends BaseController{
             $undo_ids = $TaskParkInfo->where(array('status' => 2, 'partime' => $partid))->order('allocatedate asc, _address')->getField('id', true);
             $done_ids = $TaskParkInfo->where(array('status' => 3, 'partime' => $partid))->order('allocatedate asc, _address')->getField('id', true);
 
+            /*
             $key = array_search($tpid, $undo_ids);
             if($key === false){
                 $key = array_search($tpid, $done_ids);
@@ -408,6 +424,13 @@ class TaskController extends BaseController{
                 else{
                     $nextid = $undo_ids[$key+1];
                 }
+            }
+            */
+            if(empty($undo_ids)){
+                $nextid = -1;
+            }
+            else{
+                $nextid = $undo_ids[0];
             }
 
             $tpark = $TaskParkInfo->where(array('id'=>$tpid))->find();
@@ -542,5 +565,15 @@ class TaskController extends BaseController{
         }
         $TaskParkInfo->add($t);
         return 1;
+    }
+
+    //根据区排序
+    private function district_sort($v1, $v2){
+        if($v1['dist'] >= $v2['dist']){
+            return 0;
+        }
+        else{
+            return 1;
+        }
     }
 }

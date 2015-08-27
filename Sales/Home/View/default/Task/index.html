@@ -97,16 +97,27 @@
                                         <li class="mui-table-view-cell" ><a class="mui-navigate-right" href="#">地标筛选</a>
                                             <div class="filter-content" style="display: <?php if(empty($marks)){echo "none";}else{echo "block";}?>;">
                                             <?php
+                                                    if(!empty($landmark)){
+                                                        $district = $landmark[0]['dist'];
+                                                        echo "<h5>".$district.":</h5>";
                                                         echo '<span>';
                                                         foreach($landmark as $value){
-
-                                                            $check='';
-                                                            if(array_search($value['landmark'],$marks) !== false){
-                                                                $check='checked';
-                                                            }
-                                                            echo '<label style="font-weight: normal;"><input type="checkbox" name="marks[]" value="'.$value['landmark'].'" '.$check.'>'.$value['landmark'].'</label>';
+                                                        if($district != $value['dist']){
+                                                            $district = $value['dist'];
+                                                            echo '</span>';
+                                                            echo "<h5>".$district.":</h5>";
+                                                            echo '<span>';
+                                                        }
+                                                        $check='';
+                                                        if(array_search($value['landmark'],$marks) !== false){
+                                                            $check='checked';
+                                                        }
+                                                        echo '<label style="font-weight: normal;"><input type="checkbox" name="marks[]" value="'.$value['landmark'].'" '.$check.'>'.$value['landmark'].'</label>';
                                                         }
                                                         echo '</span>';
+                                                    }
+
+
                                             ?>
                                             </div>
                                         </li>
@@ -161,6 +172,9 @@
                     echo "<p>".$name." ";
                     echo "[".$landmark."] ";
                     echo empty($value['_tags'])? '': "[".substr($value['_tags'],1,-1)."]";
+                    if($value['status'] == -1){
+                        echo "<p>作废原因：".C('ABOLISH')[$value['abolish']]."</p>";
+                    }
                     echo "</p><p>地址：".$address."</p>";
                     echo "</a></li>";
                 }
