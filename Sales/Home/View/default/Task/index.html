@@ -165,7 +165,12 @@
                     if($value['status'] == 1){
                         echo "<input class='s_checkbox' name='checkbox' type='checkbox' value=".$value['id']." alt=".$value['status'].">";
                     }
-                    echo "<a class='mui-navigate-right'  target='_blank' href=".U('tparkinfo',array('tpid'=>$value['id'],'search'=>$search)).">";
+                    if($value['dist'] == '抓取数据'){
+                        echo "<a class='mui-navigate-right'  target='_blank' href=".U('gparkinfo',array('tpid'=>$value['id'],'search'=>$search)).">";
+                    }
+                    else{
+                        echo "<a class='mui-navigate-right'  target='_blank' href=".U('tparkinfo',array('tpid'=>$value['id'],'search'=>$search)).">";
+                    }
                     $name = empty($value['_name'])? $value['name']:$value['_name'];
                     $address = empty($value['_address'])? $value['address']:$value['_address'];
                     $landmark = $value['landmark'];

@@ -29,9 +29,7 @@
             text-align: left;
             padding: 10px  0;
         }
-        .righthalf span{
-            padding: 20px 10px 10px 0px;
-        }
+
         input[type = text], textarea {
             width: 300px;
             background-color: transparent;
@@ -66,60 +64,87 @@
     <!-- 主体 -->
     <div id="indexMain" class="index-main" >
         <ul>
-            <form action="{:U('Task/tparkinfo')}" method="post">
+            <form action="{:U('Task/gparkinfo')}" method="post">
                 <input type="hidden" name="tpid" value="{$tpark['id']}">
                 <input type="hidden" name="search" value="{$search}">
-            <li>
-                <div class="lefthalf">名字:</div>
-                <div class="righthalf"><input type="text" name="_name" value="{$tpark['_name']}"></div>
-            </li>
-            <li>
-                <div class="lefthalf">标签:</div>
-                <div class="righthalf"><input type="text" name="_tags" value="{$tpark['_tags']}"><span style="font-size: 13px;color: #888;"> 多个标签之间请用'|'分隔开</span></div>
-            </li>
-            <li>
-                <div class="lefthalf">地址:</div>
-                <div class="righthalf"><input type="text" name="_address" value="{$tpark['_address']}"></div>
-            </li>
-            <li>
-                <div class="lefthalf">经纬度:</div>
-                <div class="righthalf" style="font-size: 15px;">
-                    经度：<input id="id_lat" style="width: 130px;" type="text" name="_lat" value="{$tpark['_lat']}">
-                    纬度：<input id="id_lng" style="width: 130px;" type="text" name="_lng" value="{$tpark['_lng']}">
-                    <button class="mui-btn-blue" type="button" id="qqmapcheck">腾讯地图</button>
-                    <button class="mui-btn-blue" type="button" id="baidumapcheck">百度地图</button>
-                </div>
-            </li>
-            <li>
-                <div class="lefthalf">审核:</div>
-                <div class="righthalf">
-                    <span><label style="font-weight: normal;text-align: center;"><input style="margin: 10px;width: 20px;height: 20px;" type="radio" name="status" value="-1" <?php echo $tpark[status] == -1 ? 'checked':'';?>>作废</label></span>
-                    <span><label style="font-weight: normal;text-align: center;"><input style="margin: 10px;width: 20px;height: 20px;" type="radio" name="status" value="1" <?php echo $tpark[status] == 1 ? 'checked':'';?>>预审通过</label></span>
-                </div>
-            </li>
+                <input type="hidden" name="nextid" value="{$nextid}">
+                <li>
+                    <div class="lefthalf">经纬度:</div>
+                    <div class="righthalf" style="font-size: 15px;">
+                        纬度：<input id="id_lat" style="width: 130px;" type="text" name="_lat" value="{$tpark['_lat']}">
+                        经度：<input id="id_lng" style="width: 130px;" type="text" name="_lng" value="{$tpark['_lng']}">
+                        <button class="mui-btn-blue" type="button" id="mapcheck">街景检查</button>
+                        <button class="mui-btn-blue" type="button" id="qqmapcheck">腾讯地图</button>
+                         <span tabindex="0" class="" role="button" data-toggle="popover" data-trigger="focus"  data-content="请在街景中检查是否有停车场.">
+                            <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                </li>
+                <li>
+                    <div class="lefthalf">名字:</div>
+                    <div class="righthalf">
+                        <input type="text" name="_name" value="{$tpark['_name']}">
+                        <button id="fitName" class="mui-btn-blue" type="button">修正名字</button>
+                         <span tabindex="0" class="" role="button" data-toggle="popover" data-trigger="focus"  data-content="建筑物，小区，道路的名称 + 停车场后缀（地面停车场，地下车库，道路停车场）">
+                            <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                </li>
+                <li>
+                    <div class="lefthalf">地址:</div>
+                    <div class="righthalf"><input id="id_address" type="text" name="_address" value="{$tpark['_address']}">
+                        <span tabindex="0" class="" role="button" data-toggle="popover" data-trigger="focus"  data-content="只用写XX路XX号，不包含“市”，“区”，如浦电路400号">
+                            <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                </li>
+
+                <li>
+                    <div class="lefthalf">抓取的价格:</div>
+                    <div class="righthalf"><input type="text" name="_price" value="{$tpark['_price']}" readonly></div>
+                </li>
+                <li>
+                    <div class="lefthalf">处理过的价格:</div>
+                    <div class="righthalf"><input type="text" name="chargingrules" value="{$tpark['chargingrules']}">
+                     <span tabindex="0" class="" role="button" data-toggle="popover" data-trigger="focus"  data-content="根据“抓取价格”，重新描述，例如：10元/小时 或 15元/次">
+                            <span class="glyphicon glyphicon-info-sign" aria-hidden="true"></span>
+                        </span>
+                    </div>
+                </li>
+                <li style="display: none">
+                    <div class="lefthalf">预付金额:</div>
+                    <div class="righthalf"><input type="text" name="_prepay" value="{$tpark['_prepay']}">元</div>
+                </li>
+                <li>
+                    <div class="lefthalf">审核:</div>
+                    <div class="righthalf">
+                        <span><label style="font-weight: normal;text-align: center;"><input style="margin: 10px;width: 20px;height: 20px;" type="radio" name="status" value="-1" <?php echo $tpark[status] == -1 ? 'checked':'';?>>作废</label></span>
+                        <span><label style="font-weight: normal;text-align: center;"><input style="margin: 10px;width: 20px;height: 20px;" type="radio" name="status" value="3" <?php echo $tpark[status] == 3 ? 'checked':'';?>>通过</label></span>
+                    </div>
+                </li>
                 <li id="abolish" style="display: <?php echo ($tpark[status]==-1) ? 'block': 'none'; ?>">
                     <div class="lefthalf">作废原因:</div>
                     <div class="righthalf">
                         <?php
                             foreach(C('ABOLISH') as $key => $value){
-                                $check = '';
-                                if($key == $tpark['abolish']){
-                                    $check = 'checked';
-                                }
-                            echo '<span><label style="font-weight: normal;text-align: center;"><input style="margin: 10px;width: 20px;height: 20px;" type="radio" name="abolish" value="'.$key.'" '.$check.'></label>'.$value.'</span>' ;
-                            }
+                        $check = '';
+                        if($key == $tpark['abolish']){
+                        $check = 'checked';
+                        }
+                        echo '<span><label style="font-weight: normal;text-align: center;"><input style="margin: 10px;width: 20px;height: 20px;" type="radio" name="abolish" value="'.$key.'" '.$check.'></label>'.$value.'</span>' ;
+                        }
                         ?>
                     </div>
                 </li>
-            <li>
-                <div class="lefthalf" style="padding: 10px;">
-                    <button id="next" class="mui-btn-blue" type="button">下一个</button>
-                </div>
-                <div class="righthalf">
-                    <input id="submit" type="submit" class="mui-btn-blue" value="提交">
-                </div>
+                <li>
+                    <div class="lefthalf" style="padding: 10px;">
+                        <button id="next" class="mui-btn-blue" type="button">下一个</button>
+                    </div>
+                    <div class="righthalf">
+                        <input id="submit" type="submit" class="mui-btn-blue" value="提交">
+                    </div>
 
-            </li>
+                </li>
             </form>
             <div style="clear: both;"></div>
         </ul>
@@ -127,7 +152,7 @@
     <div id="qqmap" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
         <div class="modal-dialog modal-lg">
             <div class="modal-content" id="map-content">
-                <p>经度：<input id="_lat" type="text" style="width: 130px;margin: 10px 10px;"/>纬度：<input id="_lng" type="text" style="width: 130px;margin: 10px 10px;"/></p>
+                <p>停车场：<input  type="text" style="width: 200px;margin: 10px 10px;" value="{$tpark['_name']}"/> 经度：<input id="_lat" type="text" style="width: 130px;margin: 10px 10px;"/>纬度：<input id="_lng" type="text" style="width: 130px;margin: 10px 10px;"/></p>
                 <div style="width: 1280px;">
                     <div style="width:600px;height:480px;margin: 0px 10px;" id="container"></div>
                     <div style="width:600px;height:480px;margin: 0px 10px;" id="pano_holder"></div>
@@ -162,7 +187,6 @@
 
             // 创建街景
             var pano = new qq.maps.Panorama(document.getElementById('pano_holder'), {
-                pano: '10051001111220105028000',
                 disableMove: false,
                 pov: {
                     heading: 20,
@@ -225,7 +249,7 @@
             //     info.setPosition(marker.getPosition());
             // });
             //设置Marker停止拖动事件
-            pano_service = new qq.maps.PanoramaService();
+            var pano_service = new qq.maps.PanoramaService();
 
             qq.maps.event.addListener(marker, 'dragend', function () {
                 var point = marker.getPosition();
@@ -238,36 +262,46 @@
             });
             qq.maps.event.addListener(pano, 'position_changed', function () {
                 var point = pano.getPosition();
-                $('#_lat').val(point.lat.toFixed(6));
-                $('#_lng').val(point.lng.toFixed(6));
-                map.setCenter(point);
-                marker.setPosition(point);
+                if(point != null){
+                    $('#_lat').val(point.lat.toFixed(6));
+                    $('#_lng').val(point.lng.toFixed(6));
+                    map.setCenter(point);
+                    marker.setPosition(point);
+                }
+                else{
+                    alert('获取紧急失败！');
+                }
             });
 
             var point = marker.getPosition();
-            var radius =1000;
+            var radius = 5000;
             $('#_lat').val(point.lat.toFixed(6));
             $('#_lng').val(point.lng.toFixed(6));
             pano_service.getPano(point, radius, function (result) {
                 pano.setPano(result.svid);
             });
 
-
         };
 
 
         $(function(){
+
+            var tpid =  $('input[name=tpid]').val();
+            if(tpid == ""){
+                alert("恭喜你，你已经审核完当前列表!");
+            }
+
+            $('#mapcheck').click(function(){
+                $('#qqmap').modal('show');
+                init();
+//                var url = 'http://apis.map.qq.com/uri/v1/search?keyword='+$("input[name='_address']").val()+'&region=上海&referer=duduche';
+//                window.open(url);
+            });
             $('#qqmapcheck').click(function(){
-//                $('#qqmap').modal('show');
-//                init();
                 var url = 'http://apis.map.qq.com/uri/v1/search?keyword='+$("input[name='_address']").val()+'&region=上海&referer=duduche';
                 window.open(url);
             });
-            $('#baidumapcheck').click(function(){
-                var url = 'http://apis.map.qq.com/uri/v1/search?keyword='+$("input[name='_address']").val()+'&region=上海&referer=duduche';
-                var url = 'http://api.map.baidu.com/place/search?query='+$("input[name='_address']").val()+'&region=上海&zoom=20&output=html&src=duduche';
-                window.open(url);
-            });
+
             $('#btn-cancle').click(function(){
                 $('#qqmap').modal('hide');
             });
@@ -282,16 +316,21 @@
                     alert("请填写作废原因！");
                     return false;
                 }
+                var status = {$tpark[status]};
+                if(status == 3){
+                    alert('本次任务已经结束，更改已没有意义！');
+                    return false;
+                }
                 return true;
             });
 
             $('#next').click(function(){
-               $nextid = {$nextid};
+                $nextid = {$nextid};
                 if($nextid == -1){
                     alert('这已经是本列表最后一个停车场！');
                 }
                 else{
-                    window.location.href = "{:U('Task/tparkinfo', array('tpid'=>$nextid, 'search'=>$search))}";
+                    window.location.href = "{:U('Task/gparkinfo', array('tpid'=>$nextid, 'search'=>$search))}";
                 }
             });
 
@@ -305,6 +344,32 @@
                     $('#abolish').css('display', 'none');
                 }
             });
+
+            $('#fitName').click(function(){
+                $.ajax({
+                    url:'http://apis.map.qq.com/ws/place/v1/search?',
+                    type:'get',
+                    dataType:"jsonp",
+                    callback:'jsonpcallback',
+                    data:{
+                        boundary:"nearby("+$('#id_lat').val()+","+$('#id_lng').val()+",1000)",
+                        keyword:$('#id_address').val(),
+                        page_size:20,
+                        page_index:1,
+                        orderby:'_distance',
+                        key:'PFPBZ-DBKH4-UIPUS-DQVBD-SARP2-C6BE7',
+                        output:"jsonp"
+                    },
+                    error:function(data){
+                        alert('获取地标名字失败！');
+                    },
+                    success:function(data){
+                        $('input[name=_name]').val(data['data'][0]['title']+"停车场");
+                    }
+                });
+            });
+
+            $('[data-toggle="popover"]').popover()
 
         });
     </script>

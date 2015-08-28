@@ -156,6 +156,9 @@ return array(
     //规则说明相对地址
     'PARK_RULES_PATH' => './Public/Uploads/parkrules/rules.html',
 
+    //上传地址
+    'UPLOAD_PATH' => './Public/Uploads',
+
     //导入的停车场的类型
     'IN_PARK_STYLE' => array(
         0  => '未知',
@@ -176,6 +179,7 @@ return array(
         1 => '无此地址',
         2 => '此地无停车场',
         4 => '重复',
+        8 => '价格不实'
     ),
 
     'SH_OPEN_AREA'    =>  array(//1级地名，1级地名描述，2级地名列表

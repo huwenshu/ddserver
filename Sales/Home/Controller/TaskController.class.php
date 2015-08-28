@@ -444,6 +444,155 @@ class TaskController extends BaseController{
     }
 
 
+
+    //抓取数据入库
+    public  function grapParkInfo($filename){
+        $file =  C('UPLOAD_PATH').'/parkinfo/'.$filename.'.csv';
+        $file_dir = dirname($file);
+        if (!is_dir($file_dir)) {
+            mkdir($file_dir, 0755, true);
+        }
+        $fp = fopen($file, 'r');
+        $start = fgets($fp);
+        $fields = fgets($fp);
+        $sum = 0;
+        while(! feof($fp))
+        {
+            $line = fgets($fp);
+            if(strpos($line, 'INFO - Finish!') === false){
+                $arr = str_getcsv($line);
+                //数据去重
+                if($arr[0] == '' || $arr[0] == '停车场'){//当名字为空或者‘停车场’时候，只根据地址去重
+                    $t = array();
+                    $t['address'] = $arr[1];
+                    if($this->existParkAddr($t)){
+                        echo $t['address'].'<br/>';
+                        continue;
+                    }
+                }
+                else{//根据地址和名字去重
+                    $t = array();
+                    $t['name'] = $arr[0];
+                    $t['address'] = $arr[1];
+                    if($this->existPark($t)){
+                        echo $t['name'].'|'.$t['address'].'<br/>';
+                        continue;
+                    }
+                }
+                $data = array();
+                $data['_name'] = $arr[0];
+                $data['_address'] = $arr[1];
+                $data['_lat'] = $arr[2];
+                $data['_lng'] = $arr[3];
+                $data['_price'] = $arr[4];
+                $data['chargingrules'] = $arr[5];
+                $data['_prepay'] = $arr[6];
+                $data['landmark'] = $filename;
+                $data['dist'] = "抓取数据";
+                $data['status'] = 0;
+                $t['createtime'] = date('Y-m-d H:i:s');
+                $TaskParkInfo = M('TaskParkInfo');
+                $TaskParkInfo->add($data);
+                $sum++;
+                dump($sum);
+            }
+            else{
+                break;
+            }
+        }
+
+        fclose($fp);
+    }
+
+    //抓取数据审核
+    public function gparkinfo(){
+        if(IS_POST){
+            $id = I('post.tpid');
+            $search = I('post.search');
+            $nextid = I('post.nextid');
+            $_name = I('post._name');
+            $_address = I('post._address');
+            $_lat = I('post._lat');
+            $_lng = I('post._lng');
+            $chargingrules = I('post.chargingrules');
+            $_prepay = I('post._prepay');
+            $status = I('post.status');
+            $abolish = I('post.abolish');
+
+            $TaskParkInfo = M('TaskParkInfo');
+            $data = array();
+            $data['id'] = $id;
+            $data['_name'] = str_replace('-','',$_name);
+            $data['_address'] = $_address;
+            $data['_lat'] = $_lat;
+            $data['_lng'] = $_lng;
+            $data['chargingrules'] = $chargingrules;
+            $data['_prepay'] = $_prepay;
+            $data['status'] = $status;
+            $data['abolish'] = ($status==-1)? $abolish:0;
+            $data['updater'] = UID;
+            $TaskParkInfo->save($data);
+            dump($data);
+
+            if($status == 3){
+                $parkInfo = array();
+                $parkInfo['name'] = $data['_name'];
+                $parkInfo['address'] = $data['_address'];
+                $parkInfo['style'] = '|WYTG|';
+                $parkInfo['lat'] = $data['_lat'];
+                $parkInfo['lng'] = $data['_lng'];
+                $parkInfo['chargingrules'] = $data['chargingrules'];
+                $parkInfo['prepay'] = $data['_prepay'];
+                $parkInfo['status'] = 10;
+                $parkInfo['responsible'] = UID;
+                $PinYin = new Home\Common\PinYin();
+                $pinYin = strtoupper($PinYin->getFirstPY($parkInfo['name']));
+                $shortName = $this->getShort($pinYin, 0);
+                $parkInfo['shortname'] = $shortName;
+
+                $parkInfo['creater'] = UID;
+                $parkInfo['createtime'] = date('Y-m-d H:i:s');
+                $parkInfo['updater'] = UID;
+                $parkInfo['updatetime'] = date('Y-m-d H:i:s');
+
+                $ParkInfo = M('ParkInfo');
+                $ParkInfo->add($parkInfo);
+            }
+
+            $this->redirect('Task/gparkinfo', array('tpid'=>$nextid, 'search'=>$search));
+        }
+        else{
+            $tpid = I('get.tpid');
+            $search = I('get.search');
+            $search = urldecode($search);
+            $arr = explode('|',$search);
+            $searchname = $arr[0];
+            $marks = $arr[1]==''? array():explode(',', $arr[1]);
+            $state = $arr[2]==''? array():explode(',', $arr[2]);
+            $con = $this->condition($searchname,$marks,$state);
+            $TaskParkInfo = M('TaskParkInfo');
+            $ids = $TaskParkInfo->where($con)->order('landmark,_address')->getField('id', true);
+            $key = array_search($tpid, $ids);
+            if($key+1 == count($ids)){
+                $nextid = -1;
+            }
+            else{
+                $nextid = $ids[$key+1];
+            }
+
+            $TaskParkInfo = M('TaskParkInfo');
+            $map = array();
+            $map['id'] = $tpid;
+            $tpark = $TaskParkInfo->where($map)->find();
+
+            $this->title = '抓取数据审核';
+            $this->nextid = $nextid;
+            $this->search = $search;
+            $this->tpark = $tpark;
+            $this->display();
+        }
+    }
+
     //返回两倍范围内的所有停车场 mongoid
     protected function existParkMid($lat,$lng,$distance){
         $TaskParkInfo = M('TaskParkInfo');
@@ -452,6 +601,27 @@ class TaskController extends BaseController{
         $con .= ' AND _lng > '.($lng-$gap).' AND _lng<'.($lng+$gap);
         $result = $TaskParkInfo->where($con)->getField('m_id',true);
         return  empty($result) ? array():$result;
+    }
+
+    //判断线上库和任务库是否已经存在, 地址去重
+    protected function existParkAddr($t){
+        //1.线上数据库，地址去重
+        $ParkInfo = M('ParkInfo');
+        $map = array();
+        $map['address'] = $t['address'];
+        $park = $ParkInfo->where($map)->select();
+        if(!empty($park)){
+            return true;
+        }
+        //2.Task数据库，名称和地址去重
+        $_string = "select * from dudu_task_park_info where  `_address`='".$t['address']."' OR `address`='".$t['address']."'";
+        $Model = new \Think\Model();
+        $park = $Model->query($_string);
+        if(!empty($park)){
+            return true;
+        }
+
+        return false;
     }
 
     //判断线上库和任务库是否已经存在
