@@ -84,6 +84,40 @@ class StatisticController extends BaseController {
         $this->display();
     }
 
+    //生产带参数的二维码
+    public function genQRCode(){
+        if(IS_POST){
+            $scene_id = I('post.scene');
+
+            $token = $this->getToken();
+            $url1 = 'https://api.weixin.qq.com/cgi-bin/qrcode/create?access_token='.$token;
+            $json = '{"action_name": "QR_LIMIT_SCENE", "action_info": {"scene": {"scene_id": '.$scene_id.'}}}';
+            $r_json = $this->doCurlPostRequest($url1, $json);
+            $json_arr = json_decode($r_json,true);
+            $ticket = $json_arr['ticket'];
+            $url2 = 'https://mp.weixin.qq.com/cgi-bin/showqrcode?ticket='.$ticket;
+            $pic = $url2;
+
+            $WeixinEvent = M('WeixinEvent');
+            $data = $WeixinEvent->field('eventkey, event, count(fromusername) as sum')->group('eventkey,event')->select();
+
+            $this->data = $data;
+            $this->scene = $scene_id;
+            $this->pic = $pic;
+            $this->meta_title = "二维码统计";
+            $this->display();
+        }
+        else{
+            $WeixinEvent = M('WeixinEvent');
+            $data = $WeixinEvent->field('eventkey, event, count(fromusername) as sum')->group('eventkey,event')->select();
+
+            $this->data = $data;
+            $this->scene = '';
+            $this->meta_title = "二维码统计";
+            $this->pic = '';
+            $this->display();
+        }
+    }
 
 
 }

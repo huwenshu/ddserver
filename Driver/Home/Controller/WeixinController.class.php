@@ -147,6 +147,17 @@ class WeixinController extends BaseController {
 			$_event = (string)$postObj->Event;
 			$_eventKey = (string)$postObj->EventKey;
 			if($_event == 'subscribe'){
+                //记录扫描，关注事件
+                $WeixinEvent = M('WeixinEvent');
+                $data = array();
+                $data['fromusername'] = $_openid;
+                $data['createtime'] = (int)trim($postObj->CreateTime);
+                $data['msgtype'] = $_msgType;
+                $data['event'] = $_event;
+                $data['eventkey'] = substr($_eventKey,8);
+                $data['ticket'] = (string)$postObj->Ticket;
+                $WeixinEvent->add($data);
+
 				$content = '欢迎您关注嘟嘟停车！我们专注于解决您的停车难问题。
 嘟嘟停车有如下功能：
 
@@ -158,11 +169,24 @@ class WeixinController extends BaseController {
 
 目前只在上海提供服务，其他城市正在准备中。
 
-最新活动：合作停车场首停只要0.01元，包月费用8折起。手快有，手慢无！点击查看：<a href="http://dwz.cn/1d87hh">http://dwz.cn/1d87hh</a>';
+最新活动：六院停车只要5元/小时。手快有，手慢无！<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd417c2e70f817f89&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=userinfo#wechat_redirect">点击查看</a>';
 
-				$resultStr = sprintf ( C('HINT_TPL'), $_openid, C('USERNAME_WEIXIN'), time(), 'text', $content );
+                $resultStr = sprintf ( C('HINT_TPL'), $_openid, C('USERNAME_WEIXIN'), time(), 'text', $content );
 				echo  $resultStr;
 			}
+            elseif($_event == 'SCAN'){
+                //记录扫描，关注事件
+                //记录扫描，关注事件
+                $WeixinEvent = M('WeixinEvent');
+                $data = array();
+                $data['fromusername'] = $_openid;
+                $data['createtime'] = (int)trim($postObj->CreateTime);
+                $data['msgtype'] = $_msgType;
+                $data['event'] = $_event;
+                $data['eventkey'] = $_eventKey;
+                $data['ticket'] = (string)$postObj->Ticket;
+                $WeixinEvent->add($data);
+            }
 		}
 		else{
 			$content = '谢谢您的反馈，我们会努力做的更好！';

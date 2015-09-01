@@ -1,0 +1,59 @@
+<extend name="Public/base"/>
+
+
+<block name="style">
+    <style>
+        body{padding: 0}
+
+        #indexMain{
+            padding-top: 30px;
+            text-align: center;
+        }
+
+        #sence{
+            width: 200px;
+        }
+    </style>
+</block>
+
+<block name="body">
+    <!-- 主体 -->
+    <div id="indexMain" class="index-main">
+        <form action ='{:U("Statistic/genQRCode")}' method="post">
+            <label for="sence">参数ID：</label><input id="sence" type="text" name="scene" value="{$scene}">
+            <button class="mui-btn-blue">生成二维码</button><br>
+            <?php
+                if(!empty($pic)){
+                    echo '<img style="width: 300px;height: 300px;" src="'.$pic.'" />';
+                }
+            ?>
+        </form>
+
+        <table style="table-layout: auto; width: 600px;margin: 10px auto" class="mui-table-view">
+            <tbody>
+            <tr class="mui-table-view-cell">
+                <td>二维码参数</td>
+                <td>关注用户数</td>
+            </tr>
+            <?php
+                foreach($data as $key => $value){
+            if($value['event'] == 'subscribe'){
+            echo "<tr class='mui-table-view-cell'><td>".$value['eventkey']."</td>";
+                echo "<td>".$value['sum']."</td></tr>";
+            }
+            }
+
+            ?>
+            </tbody>
+        </table>
+
+    </div>
+</block>
+
+<block name="script">
+    <script type="text/javascript">
+        $(function(){
+
+        });
+    </script>
+</block>
