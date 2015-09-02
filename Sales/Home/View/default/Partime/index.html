@@ -48,6 +48,10 @@
             margin-top: 10px;
 
         }
+        .done-tag{
+            text-indent: 0;
+            margin-left: 10px;
+        }
     </style>
 </head>
 
@@ -77,12 +81,24 @@
 
                     <ul class="mui-table-view mui-table-view-chevron">
                         <?php
+                        if(!empty($parks)){
+                            $allocdate = $parks[0]['allocatedate'];
+                            echo '<h5 style="padding: 5px 5px 5px 15px; margin: 0; background-color: #EFEFF4">'.$allocdate.'</h5>';
+                        }
                         foreach($parks as $value){
+                        if($allocdate != $value['allocatedate']){
+                            $allocdate = $value['allocatedate'];
+                            echo '<h5 style="padding: 5px 5px 5px 15px; margin: 0; background-color: #EFEFF4">'.$allocdate.'</h5>';
+                        }
                         $name = empty($value["name"]) ? $value["_name"]:$value["name"];
                         $address = empty($value["address"]) ? $value["_address"]:$value["address"];
                         echo '<li class="mui-table-view-cell">';
                         echo '<a class="park_link mui-navigate-right" href="'.U("Partime/tparkinfo", array("tpid" => $value["id"])).'">';
-                        echo '<p>'.$name.'</p>';
+                        echo '<p><span>'.$name.'</span>';
+                            if($value['updater'] == 'PT-'.session('partime_auth.ptid')){
+                                echo '<span class="mui-badge mui-badge-success done-tag">已修改</span>';
+                            }
+                        echo '</p>';
                         echo '<p>地址：'.$address.'</p>';
                         echo '</a></li>';
                         }
