@@ -84,8 +84,8 @@
             <li>
                 <div class="lefthalf">经纬度:</div>
                 <div class="righthalf" style="font-size: 15px;">
-                    经度：<input id="id_lat" style="width: 130px;" type="text" name="_lat" value="{$tpark['_lat']}">
-                    纬度：<input id="id_lng" style="width: 130px;" type="text" name="_lng" value="{$tpark['_lng']}">
+                    纬度：<input id="id_lat" style="width: 130px;" type="text" name="_lat" value="{$tpark['_lat']}">
+                    经度：<input id="id_lng" style="width: 130px;" type="text" name="_lng" value="{$tpark['_lng']}">
                     <button class="mui-btn-blue" type="button" id="qqmapcheck">腾讯地图</button>
                     <button class="mui-btn-blue" type="button" id="baidumapcheck">百度地图</button>
                 </div>
@@ -127,7 +127,7 @@
     <div id="qqmap" class="modal fade bs-example-modal-lg" tabindex="-1" role="dialog" aria-labelledby="myLargeModalLabel">
         <div class="modal-dialog modal-lg">
             <div class="modal-content" id="map-content">
-                <p>经度：<input id="_lat" type="text" style="width: 130px;margin: 10px 10px;"/>纬度：<input id="_lng" type="text" style="width: 130px;margin: 10px 10px;"/></p>
+                <p>纬度：<input id="_lat" type="text" style="width: 130px;margin: 10px 10px;"/>经度：<input id="_lng" type="text" style="width: 130px;margin: 10px 10px;"/></p>
                 <div style="width: 1280px;">
                     <div style="width:600px;height:480px;margin: 0px 10px;" id="container"></div>
                     <div style="width:600px;height:480px;margin: 0px 10px;" id="pano_holder"></div>
