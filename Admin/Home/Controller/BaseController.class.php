@@ -195,13 +195,11 @@ class BaseController extends \Think\Controller {
 
 
     //每消耗一张折扣券，再自动发一个红包给这个用户
-    protected function autoSendGift($cid){
+    protected function autoSendGift($uid){
 
         //1.获取uid
         $DriverCoupon = M('DriverCoupon');
-        $map = array();
-        $map['id'] = $cid;
-        $uid = $DriverCoupon->where($map)->getField('uid');
+
 
         //2.获取已领过的红包id数组
         $map = array();

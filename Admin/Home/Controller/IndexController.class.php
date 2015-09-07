@@ -478,13 +478,12 @@ class IndexController extends BaseController {
 
     }
 
-    //自动针对昨天已使用过红包的用户发送红包
+    //自动针对昨天下过订单的用户发送红包
     public function autoSend(){
         $today =  date('Y-m-d 00:00:00');
         $yestoday =  date("Y-m-d 00:00:00",strtotime("-1 day"));
         $Payment = M('PaymentRecord');
         $map = array();
-        $map['cid'] = array('NEQ', 0);
         $map['state'] = 1;
         $map['createtime'] = array(array('EGT', $yestoday),array('LT', $today));
         $clist = $Payment->where($map)->select();
@@ -497,7 +496,7 @@ class IndexController extends BaseController {
             $GiftPack = M('DriverGiftpack');
             foreach($clist as $key => $value){
                 //$this->autoSendGift("873");
-                $hcode = $this->autoSendGift($value['cid']);
+                $hcode = $this->autoSendGift($value['creater']);
                 if($hcode){
                     $map = array();
                     $map['code'] = $hcode;
