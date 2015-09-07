@@ -107,105 +107,111 @@ class IndexController extends BaseController {
 		$Order = M('ParkOrder');
 		$con = array('id' => $oid, 'pid' => $parkid);
 		$parkorder = $Order->where($con)->find();
-		$updateData['state'] = 1;
-		$updateData['entrytime'] = date('Y-m-d H:i:s',$now);
-		$updateData['updater'] = $this->uid;
-        $starttime = strtotime($parkorder['startime']);
-        if($now < $starttime){
-            //修改停车起始和结束（计费）时间
-            $updateData['startime'] = $updateData['entrytime'];
-            $endtime = $this->_parkingEndTime($now, $now+100, $parkid);
-            $updateData['endtime'] = date('Y-m-d H:i:s',$endtime);
+        if($parkorder['state'] == 0){//防止多次重复提交
+            $updateData['state'] = 1;
+            $updateData['entrytime'] = date('Y-m-d H:i:s',$now);
+            $updateData['updater'] = $this->uid;
+            $starttime = strtotime($parkorder['startime']);
+            if($now < $starttime){
+                //修改停车起始和结束（计费）时间
+                $updateData['startime'] = $updateData['entrytime'];
+                $endtime = $this->_parkingEndTime($now, $now+100, $parkid);
+                $updateData['endtime'] = date('Y-m-d H:i:s',$endtime);
 
-            //推送微信模板信息给用户
-            $openid = $this->getOpenID($parkorder['uid']);
-            $parkname = $this->getParkName($parkid);
-            $adminNick = $this->getAdminNick($this->uid);
+                //推送微信模板信息给用户
+                $openid = $this->getOpenID($parkorder['uid']);
+                $parkname = $this->getParkName($parkid);
+                $adminNick = $this->getAdminNick($this->uid);
 
-            $msg_json =  sprintf ( C('NOTICE_TPL_IN'), $openid, C('TEMPLATE_ID_IN'), C('TEMPLATE_REDIRECT_URL_IN'), '恭喜你的订单已被停车场管理员确认！\n', $parkorder['carid'],$parkname, $updateData['entrytime'],'\n管理员【'.$adminNick.'】已确认你的订单，系统将从现在开始计费!\n如果你尚未到达现场，请在结算时跟管理员说明。');
-            $result = $this->noticeMsg($msg_json);
-            $result_array = json_decode($result,TRUE);
-            if($result_array['errcode'] !=0){
-                $this->sendEmail('dubin@duduche.me', "预定模板消息发送失败", "订单号OID：$oid, 错误码：".$result_array['errmsg']);
-            }
-        }
-		$orderData = $Order->where($con)->save($updateData);
-        
-        $driverId = $parkorder['uid'];
-        $carid = $parkorder['carid'];
-        $change = 0;                 
-                                     
-        //自动离场逻辑，同一车牌，在同一停车场，进场后自动把上次未完结的离场
-        $map = array();              
-        $map['carid'] = $carid;      
-        $map['pid'] = $parkid;       
-        $map['id'] = array('LT',$oid);
-        $map['state'] = array('IN','0,1,2');
-        $data = array();             
-        $data['state'] = 3;          
-        $data['leavetime'] = date('Y-m-d H:i:s');
-        $data['driverleave'] = 3;//3表示是后台自动处理的离场
-        $data['updater'] = 'Auto';   
-        $Order->where($map)->save($data);
-                                     
-        //添加推广活动积分                   
-        if(!array_key_exists($driverId,$conf_simulation_uids) || $conf_simulation_uids[$driverId]["type"] == 1){
-                                     
-            if(!array_key_exists($driverId,$conf_simulation_uids)){//非测试模式
-                                     
-                //是否在活动中,来确定增加积分策略   
-                $ParkInfo = M('ParkInfo');
-                $map = array();      
-                $map['id'] = $parkid;
-                $parkInfo = $ParkInfo->where($map)->find();
-                $acType = $parkInfo['actype'];
-                $acScore = $parkInfo['acscore'];
-                $acEndtime = strtotime($parkInfo['acendtime']);
-
-                if($acType == 2 && $acEndtime>= $now){//有补助活动，且没有过期
-                    if($this->cacheScore($this->uid, $acScore)){//未达到奖励上限
-                        $change = $acScore;
-                    }
+                $msg_json =  sprintf ( C('NOTICE_TPL_IN'), $openid, C('TEMPLATE_ID_IN'), C('TEMPLATE_REDIRECT_URL_IN'), '恭喜你的订单已被停车场管理员确认！\n', $parkorder['carid'],$parkname, $updateData['entrytime'],'\n管理员【'.$adminNick.'】已确认你的订单，系统将从现在开始计费!\n如果你尚未到达现场，请在结算时跟管理员说明。');
+                $result = $this->noticeMsg($msg_json);
+                $result_array = json_decode($result,TRUE);
+                if($result_array['errcode'] !=0){
+                    $this->sendEmail('dubin@duduche.me', "预定模板消息发送失败", "订单号OID：$oid, 错误码：".$result_array['errmsg']);
                 }
-                else{//没有补助或者补助已经过期，采用传统的加分模式
-                    $state = C('SCORE');
-                    $change = $state['in'];
-                }
-
-            }else{
-                $change = $conf_simulation_uids[$driverId]["score_in"];
             }
-            
-        }
-        
-        if($change > 0){
-            $ParkAdmin = M('ParkAdmin');
+            $orderData = $Order->where($con)->save($updateData);
+
+            $driverId = $parkorder['uid'];
+            $carid = $parkorder['carid'];
+            $change = 0;
+
+            //自动离场逻辑，同一车牌，在同一停车场，进场后自动把上次未完结的离场
             $map = array();
-            $map['id'] = $this->uid;
-            $parkadmin = $ParkAdmin->where($map)->find();
-            $oldScore = $parkadmin['score'];
-            $this->addScore($this->uid, $change);
-            $newScore = $oldScore + $change;
-            //记录日志到csv
-            $msgs = array();
-            $msgs['ip'] = $_SERVER['REMOTE_ADDR'];//用户ip
-            $msgs['parkid'] = $parkid;//停车场编号
-            $msgs['uid'] = $this->uid;//操作者id
-            $msgs['opt'] = 2;//2-代表车辆进场的操作类型
-            $msgs['oldValue'] = $oldScore;//原值
-            $msgs['newValue'] = $newScore;//新值
-            $msgs['change'] = $change;//获得积分
-            $msgs['note'] = '';//补充信息
-            
-            takeCSV($msgs);
+            $map['carid'] = $carid;
+            $map['pid'] = $parkid;
+            $map['id'] = array('LT',$oid);
+            $map['state'] = array('IN','0,1,2');
+            $data = array();
+            $data['state'] = 3;
+            $data['leavetime'] = date('Y-m-d H:i:s');
+            $data['driverleave'] = 3;//3表示是后台自动处理的离场
+            $data['updater'] = 'Auto';
+            $Order->where($map)->save($data);
+
+            //添加推广活动积分
+            if(!array_key_exists($driverId,$conf_simulation_uids) || $conf_simulation_uids[$driverId]["type"] == 1){
+
+                if(!array_key_exists($driverId,$conf_simulation_uids)){//非测试模式
+
+                    //是否在活动中,来确定增加积分策略
+                    $ParkInfo = M('ParkInfo');
+                    $map = array();
+                    $map['id'] = $parkid;
+                    $parkInfo = $ParkInfo->where($map)->find();
+                    $acType = $parkInfo['actype'];
+                    $acScore = $parkInfo['acscore'];
+                    $acEndtime = strtotime($parkInfo['acendtime']);
+
+                    if($acType == 2 && $acEndtime>= $now){//有补助活动，且没有过期
+                        if($this->cacheScore($this->uid, $acScore)){//未达到奖励上限
+                            $change = $acScore;
+                        }
+                    }
+                    else{//没有补助或者补助已经过期，采用传统的加分模式
+                        $state = C('SCORE');
+                        $change = $state['in'];
+                    }
+
+                }else{
+                    $change = $conf_simulation_uids[$driverId]["score_in"];
+                }
+
+            }
+
+            if($change > 0){
+                $ParkAdmin = M('ParkAdmin');
+                $map = array();
+                $map['id'] = $this->uid;
+                $parkadmin = $ParkAdmin->where($map)->find();
+                $oldScore = $parkadmin['score'];
+                $this->addScore($this->uid, $change);
+                $newScore = $oldScore + $change;
+                //记录日志到csv
+                $msgs = array();
+                $msgs['ip'] = $_SERVER['REMOTE_ADDR'];//用户ip
+                $msgs['parkid'] = $parkid;//停车场编号
+                $msgs['uid'] = $this->uid;//操作者id
+                $msgs['opt'] = 2;//2-代表车辆进场的操作类型
+                $msgs['oldValue'] = $oldScore;//原值
+                $msgs['newValue'] = $newScore;//新值
+                $msgs['change'] = $change;//获得积分
+                $msgs['note'] = '';//补充信息
+
+                takeCSV($msgs);
+            }
+
+            if($orderData){
+                $this->ajaxOk("");
+            }
+            else{
+                $this->ajaxMsg("进场失败！");
+            }
+        }
+        else{
+            $this->ajaxMsg("已确认进场，请不要重复提交！");
         }
 
-		if($orderData){
-			$this->ajaxOk("");
-		}
-		else{
-			$this->ajaxMsg("进场失败！");
-		}
 
 	}
 
@@ -327,103 +333,110 @@ class IndexController extends BaseController {
         $now = time();
 		$Order = M('ParkOrder');
 		$con = array('id' => $oid, 'pid' => $parkid);
-		$updateData['state'] = 3;
-		$updateData['leavetime'] = date('Y-m-d H:i:s');
-		$updateData['updater'] = $this->uid;
-		$orderData = $Order->where($con)->save($updateData);
-        $driverId = $Order->where($con)->getField('uid');
-        $change = 0;
+        $parkState = $Order->where($con)->getField('state');
+        if($parkState != 3) {//防止多次重复提交
+            $updateData['state'] = 3;
+            $updateData['leavetime'] = date('Y-m-d H:i:s');
+            $updateData['updater'] = $this->uid;
+            $orderData = $Order->where($con)->save($updateData);
+            $driverId = $Order->where($con)->getField('uid');
+            $change = 0;
 
-        //包月车辆离场，需要更新车位数
-        $ParkInfo = M('ParkInfo');
-        $map = array();
-        $map['id'] = $parkid;
-        $parkInfo = $ParkInfo->where($map)->find();
-        $corp_type = $parkInfo['corp_type'];
-        if($corp_type == C('CORP_TYPE')['Monthly']){
-            $spacesum = $parkInfo['spacesum'];
-            $leftsum = $parkInfo['parkstate'];
-            if($leftsum < $spacesum){//防止加多了
-                $ParkInfo->where($map)->setInc('parkstate',1); // TODO: INCR 1不太合理，如何防止接口重复调用问题？
-            }
-        }
-
-        if(!array_key_exists($driverId,$conf_simulation_uids) || $conf_simulation_uids[$driverId]["type"] == 1){
-
-            if(!array_key_exists($driverId,$conf_simulation_uids)){//非测试模式
-                //是否在活动中,来确定增加积分策略
-
-                $acType = $parkInfo['actype'];
-                $acScore = $parkInfo['acscore'];
-                $acEndtime = strtotime($parkInfo['acendtime']);
-
-                if($acType == 1 && $acEndtime>= $now){//有补助活动，且没有过期
-                    if($this->cacheScore($this->uid, $acScore)){//未达到奖励上限
-                        $change = $acScore;
-                    }
-                }
-                else{//没有补助或者补助已经过期，采用传统的加分模式
-                    $state = C('SCORE');
-                    $change = $state['out'];
-                }
-            }else{
-                $change = $conf_simulation_uids[$driverId]["score_out"];
-            }
-
-        }
-
-        if($change > 0){
-            $ParkAdmin = M('ParkAdmin');
+            //包月车辆离场，需要更新车位数
+            $ParkInfo = M('ParkInfo');
             $map = array();
-            $map['id'] = $this->uid;
-            $parkadmin = $ParkAdmin->where($map)->find();
-            $oldScore = $parkadmin['score'];
-            $this->addScore($this->uid, $change);
-            $newScore = $oldScore + $change;
-            //记录日志到csv
-            $msgs = array();
-            $msgs['ip'] = $_SERVER['REMOTE_ADDR'];//用户ip
-            $msgs['parkid'] = $parkid;//停车场编号
-            $msgs['uid'] = $this->uid;//操作者id
-            $msgs['opt'] = 3;//3-代表车辆离场的操作类型
-            $msgs['oldValue'] = $oldScore;//原值
-            $msgs['newValue'] = $newScore;//新值
-            $msgs['change'] = $change;//获得积分
-            $msgs['note'] = '';//补充信息
-
-            takeCSV($msgs);
-        }
-
-        // S:空位提醒
-        if ($corp_type == C('CORP_TYPE')['Monthly']) {
-            $order = (new ParkOrder())->load($oid);
-
-            $opts = ['from' => 0, 'size' => 1000];
-
-            $rels = (new Relationship())->find(new AndQuery(
-                new EqualQuery('targetId', $order->pid)
-                ,new EqualQuery('status', 'watches')), $opts);
-
-            array_walk($rels, function (Relationship $rel) {
-                $park = (new ParkInfo)->load($rel->targetId);
-                if ($park->parkstate == 1) { // 只在出现一个车位的时候发送提醒（保证拿到最新的ParkInfo状态）
-                    $driver = $rel->getSource();
-                    /**
-                     * 嘟嘟提醒
-                     * “光启城地面停车场”现在有3个空闲车位
-                     */
-                    Getui::pushNotification($driver->pushid, "嘟嘟提醒", "“{$park->name}”现在有{$park->parkstate}个空闲车位");
+            $map['id'] = $parkid;
+            $parkInfo = $ParkInfo->where($map)->find();
+            $corp_type = $parkInfo['corp_type'];
+            if($corp_type == C('CORP_TYPE')['Monthly']){
+                $spacesum = $parkInfo['spacesum'];
+                $leftsum = $parkInfo['parkstate'];
+                if($leftsum < $spacesum){//防止加多了
+                    $ParkInfo->where($map)->setInc('parkstate',1); // TODO: INCR 1不太合理，如何防止接口重复调用问题？
                 }
-            });
-        }
-        // E:空位提醒
+            }
 
-        if($orderData !== false){
-			$this->ajaxOk("");
-		}
-		else{
-			$this->ajaxMsg("车辆离场失败！");
-		}
+            if(!array_key_exists($driverId,$conf_simulation_uids) || $conf_simulation_uids[$driverId]["type"] == 1){
+
+                if(!array_key_exists($driverId,$conf_simulation_uids)){//非测试模式
+                    //是否在活动中,来确定增加积分策略
+
+                    $acType = $parkInfo['actype'];
+                    $acScore = $parkInfo['acscore'];
+                    $acEndtime = strtotime($parkInfo['acendtime']);
+
+                    if($acType == 1 && $acEndtime>= $now){//有补助活动，且没有过期
+                        if($this->cacheScore($this->uid, $acScore)){//未达到奖励上限
+                            $change = $acScore;
+                        }
+                    }
+                    else{//没有补助或者补助已经过期，采用传统的加分模式
+                        $state = C('SCORE');
+                        $change = $state['out'];
+                    }
+                }else{
+                    $change = $conf_simulation_uids[$driverId]["score_out"];
+                }
+
+            }
+
+            if($change > 0){
+                $ParkAdmin = M('ParkAdmin');
+                $map = array();
+                $map['id'] = $this->uid;
+                $parkadmin = $ParkAdmin->where($map)->find();
+                $oldScore = $parkadmin['score'];
+                $this->addScore($this->uid, $change);
+                $newScore = $oldScore + $change;
+                //记录日志到csv
+                $msgs = array();
+                $msgs['ip'] = $_SERVER['REMOTE_ADDR'];//用户ip
+                $msgs['parkid'] = $parkid;//停车场编号
+                $msgs['uid'] = $this->uid;//操作者id
+                $msgs['opt'] = 3;//3-代表车辆离场的操作类型
+                $msgs['oldValue'] = $oldScore;//原值
+                $msgs['newValue'] = $newScore;//新值
+                $msgs['change'] = $change;//获得积分
+                $msgs['note'] = '';//补充信息
+
+                takeCSV($msgs);
+            }
+
+            // S:空位提醒
+            if ($corp_type == C('CORP_TYPE')['Monthly']) {
+                $order = (new ParkOrder())->load($oid);
+
+                $opts = ['from' => 0, 'size' => 1000];
+
+                $rels = (new Relationship())->find(new AndQuery(
+                    new EqualQuery('targetId', $order->pid)
+                    ,new EqualQuery('status', 'watches')), $opts);
+
+                array_walk($rels, function (Relationship $rel) {
+                    $park = (new ParkInfo)->load($rel->targetId);
+                    if ($park->parkstate == 1) { // 只在出现一个车位的时候发送提醒（保证拿到最新的ParkInfo状态）
+                        $driver = $rel->getSource();
+                        /**
+                         * 嘟嘟提醒
+                         * “光启城地面停车场”现在有3个空闲车位
+                         */
+                        Getui::pushNotification($driver->pushid, "嘟嘟提醒", "“{$park->name}”现在有{$park->parkstate}个空闲车位");
+                    }
+                });
+            }
+            // E:空位提醒
+
+            if($orderData !== false){
+                $this->ajaxOk("");
+            }
+            else{
+                $this->ajaxMsg("车辆离场失败！");
+            }
+        }
+        else{
+            $this->ajaxMsg("车辆已经离场，请不要重复提交！");
+        }
+
 
 
 	}
@@ -464,7 +477,7 @@ class IndexController extends BaseController {
             $tmp['oid'] = $value['id'];
             $tmp['s'] = $value['state'];
             if($tmp['s'] < 1){//未入库
-                $tmp['startime'] = date('Y-m-d H:i:s', strtotime($value['startime'])-$config_order_wait_sesc);
+                $tmp['startime'] = date('Y-m-d H:i:s', strtotime($value['startime']));
                 $tmp['admin'] = null;
             }else{
                 $tmp['startime'] = $value['startime'];
@@ -486,7 +499,7 @@ class IndexController extends BaseController {
             }
             $tmp['telephone'] = $this->getDriver($value['uid'])['telephone'];
             $tmp['r_fee'] = $this->parkingFee(strtotime($value['startime']), $value['pid']) - $sum;
-
+            $tmp['tag'] = $value['tag'];
 			array_push($result, $tmp);
 
 		}
@@ -1137,6 +1150,30 @@ class IndexController extends BaseController {
         $result['p'] = $p;
 
         $this->ajaxOk($result);
+
+    }
+
+    /*
+   *  @desc 订单添加标注
+    * $oid 订单号
+    * $value 标注值
+  */
+    public function tag($oid, $value=0){
+
+        $ParkOrder = M('ParkOrder');
+        $map = array();
+        $map['id'] = $oid;
+        $data = array();
+        $data['tag'] = $value;
+
+        $reslut = $ParkOrder->where($map)->save($data);
+
+        if($reslut === false){
+            $this->ajaxMsg('添加标记出错！');
+        }
+        else{
+            $this->ajaxOk('');
+        }
 
     }
 }
