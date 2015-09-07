@@ -159,17 +159,8 @@ class WeixinController extends BaseController {
                 $WeixinEvent->add($data);
 
 				$content = '欢迎您关注嘟嘟停车！我们专注于解决您的停车难问题。
-嘟嘟停车有如下功能：
 
-1-找附近的停车场：<a href="'.$nearURL.'">点击这里>></a>
-
-2-免费停车点和商圈查询：<a href="'.$disURL.'">点击这里>></a>
-
-3-Android版APP下载：<a href="'.$downURL.'">点击这里>></a>
-
-目前只在上海提供服务，其他城市正在准备中。
-
-最新活动：六院停车只要5元/小时。手快有，手慢无！<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd417c2e70f817f89&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=userinfo#wechat_redirect">点击查看</a>';
+第六医院首停只要1分钱。<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd417c2e70f817f89&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=discover#wechat_redirect">立即预定</a>';
 
                 $resultStr = sprintf ( C('HINT_TPL'), $_openid, C('USERNAME_WEIXIN'), time(), 'text', $content );
 				echo  $resultStr;
