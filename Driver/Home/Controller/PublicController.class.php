@@ -1206,7 +1206,8 @@ class PublicController extends BaseController {
         //是否老用户?
         $payment = M('ParkOrder');
         $con2 = array('uid'=>$this->uid,'state'=>array('neq',-1));
-        if($payment->where($con2)->find()){//老用户
+        $isOld = $payment->where($con2)->find();
+        if($this->uid > 0 && $isOld){//老用户
             $con['e_t'] = array('in','0,2');
         }
         $Park = M('ParkInfo');

@@ -480,8 +480,8 @@ class IndexController extends BaseController {
 
     //自动针对昨天下过订单的用户发送红包
     public function autoSend(){
-        $today =  date('Y-m-d 00:00:00');
-        $yestoday =  date("Y-m-d 00:00:00",strtotime("-1 day"));
+        $today =  date("Y-m-d 00:00:00",strtotime("+1 day"));
+        $yestoday =  date('Y-m-d 00:00:00');
         $Payment = M('PaymentRecord');
         $map = array();
         $map['state'] = 1;

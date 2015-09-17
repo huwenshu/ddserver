@@ -227,13 +227,13 @@ class IndexController extends BaseController {
 		if(empty($oid)){
 			$this->ajaxMsg("创建订单失败");
 		}
-        
+
         //计算价格是否受驻场活动影响
         $remainFee = $parkinfo['prepay'];
         $remainFee_e = $remainFee;
         if($createtime > $parkinfo['e_start'] && $createtime < $parkinfo['e_end']){//活动期间
             if($parkinfo['e_t']&1){//只限第一单用户
-                $con2 = array('uid'=>$this->uid,'state'=>array('neq',－1));
+                $con2 = array('uid'=>$this->uid,'state'=>array('neq',-1));
                 if(!$Order->where($con2)->find()){
                     $showevent = true;
                 }
@@ -252,7 +252,7 @@ class IndexController extends BaseController {
             }
         }
 
-		//计算折扣劵
+        //计算折扣劵
 		$remianFee_r = $remainFee_e;
 		if($cid > 0){
 			$cpamount = $this->_checkCoupon($this->uid, $cid, $remianFee_r);
