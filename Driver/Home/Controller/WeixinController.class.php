@@ -160,7 +160,7 @@ class WeixinController extends BaseController {
 
 				$content = '欢迎您关注嘟嘟停车！我们专注于解决您的停车难问题。
 
-第六医院首停只要1分钱。<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd417c2e70f817f89&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=discover#wechat_redirect">立即预定</a>';
+第六医院首停只要3元。<a href="https://open.weixin.qq.com/connect/oauth2/authorize?appid=wxd417c2e70f817f89&redirect_uri=http%3a%2f%2fdriver.duduche.me%2fdriver.php%2fhome%2fweixin%2fmenuCallBack%2f&response_type=code&scope=snsapi_base&state=discover#wechat_redirect">立即预定</a>';
 
                 $resultStr = sprintf ( C('HINT_TPL'), $_openid, C('USERNAME_WEIXIN'), time(), 'text', $content );
 				echo  $resultStr;

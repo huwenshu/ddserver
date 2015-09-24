@@ -516,6 +516,7 @@ class IndexController extends BaseController {
              $this->msg = "抱歉！你今天已经发送过红包，共发出 ".count($list)." 个红包!";
         }
 
+        sendMail('dubin@duduche.me',"[自动红包]", $this->msg);
 
         $this->list = $list;
         $this->meta_title = '自动红包 | 嘟嘟后台管理系统';

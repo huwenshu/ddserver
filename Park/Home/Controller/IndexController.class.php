@@ -380,7 +380,7 @@ class IndexController extends BaseController {
 
             }
 
-            if($change > 0){
+            if($change >= 0){
                 $ParkAdmin = M('ParkAdmin');
                 $map = array();
                 $map['id'] = $this->uid;
@@ -397,7 +397,7 @@ class IndexController extends BaseController {
                 $msgs['oldValue'] = $oldScore;//原值
                 $msgs['newValue'] = $newScore;//新值
                 $msgs['change'] = $change;//获得积分
-                $msgs['note'] = '';//补充信息
+                $msgs['note'] = $parkState.'|'.$corp_type;//补充信息
 
                 takeCSV($msgs);
             }
